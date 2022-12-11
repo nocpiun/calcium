@@ -1,0 +1,27 @@
+.sidebar-container {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    background-color: #c8d2dd; // for dev
+    .mode-switcher {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        background-color: #434f5c; // for dev
+    }
+    .history {
+        flex: 4;
+        .history-header {
+            width: 100%;
+            font-family: @font;
+            h1 {
+                margin: 0;
+                padding: 30px;
+                font-size: 13pt;
+            }
+        }
+        .history-main {
+            width: 100%;
+        }
+    }
+}
