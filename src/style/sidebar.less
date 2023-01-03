@@ -2,15 +2,34 @@
     flex: 1;
     display: flex;
     flex-direction: row;
-    background-color: #c8d2dd; // for dev
     .mode-switcher {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        background-color: #434f5c; // for dev
+        flex: .8;
+        background-color: @deep1;
+        font-size: 0;
+        border-right: 1px solid @gray2;
+        .mode-button {
+            width: 100%;
+            height: 0;
+            padding-bottom: 100%;
+            background-color: transparent;
+            border: none;
+            mask-repeat: no-repeat;
+            mask-size: 50%;
+            mask-position: center center;
+            background-color: @gray1;
+            cursor: pointer;
+            &.active {
+                background-color: @gray-light !important;
+            }
+            &:hover {
+                background-color: @gray6;
+            }
+        }
     }
     .history {
         flex: 4;
+        background-color: @deep2;
+        border-right: 1px solid @gray2;
         .history-header {
             width: 100%;
             font-family: @font;

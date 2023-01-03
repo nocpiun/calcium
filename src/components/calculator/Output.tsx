@@ -2,7 +2,9 @@ import React from "react";
 
 const Output: React.FC = () => {
     return (
-        <div className="output-container"></div>
+        <div className="output-container">
+            <span className="output-tag">Output</span>
+        </div>
     );
 }
 
