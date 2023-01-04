@@ -1,17 +1,27 @@
 import React, { useState, useRef, useEffect } from "react";
 import { BlockMath } from "react-katex";
 
-import NumberBox from "./NumberBox";
+import { cursor } from "../../global";
 import { NumberType } from "../../types";
-import Cursor from "./Cursor";
 import Emitter from "../../utils/Emitter";
 import Utils from "../../utils/Utils";
 
-const cursor = "_";
+import NumberBox from "./NumberBox";
+import Cursor from "./Cursor";
 
 const ProgrammingOutput: React.FC = () => {
     const [displayContent, setDisplayContent] = useState<string>(cursor);
     const contentRef = useRef<string>(displayContent);
+
+    function moveCursorTo(index: number): void {
+        var contentArray = contentRef.current.split(" ");
+        var cursorIndex = contentArray.indexOf(cursor);
+
+        contentArray = Utils.arrayRemove(contentArray, cursorIndex);
+        contentArray = Utils.arrayPut(contentArray, index, cursor);
+
+        setDisplayContent(contentArray.join(" "));
+    }
 
     const handleInput = (symbol: string) => {
         var contentArray = contentRef.current.split(" ");
@@ -50,6 +60,12 @@ const ProgrammingOutput: React.FC = () => {
                 
                 setDisplayContent(contentArray.join(" "));
                 break;
+            case "\\ll":
+                /** @todo */
+                break;
+            case "\\gg":
+                /** @todo */
+                break;
             case "=":
                 /** @todo */
                 break;
@@ -58,6 +74,27 @@ const ProgrammingOutput: React.FC = () => {
                 break;
         }
     };
+
+    /**
+     * Click to move the cursor
+     */
+    const handleSymbolClick = (e: React.MouseEvent, index: number) => {
+        if(index > contentRef.current.split(" ").indexOf(cursor)) index--;
+
+        var symbolElem = e.target as HTMLElement;
+        var mouseX = e.clientX;
+        var symbolCenterX = Utils.getOffsetLeft(symbolElem) + (symbolElem.offsetWidth / 2);
+        if(mouseX > symbolCenterX) index++;
+
+        moveCursorTo(index);
+    };
+    const handleBlankClick = (e: React.MouseEvent) => {
+        // only the blank area of display box is available
+        if((e.target as HTMLElement).className !== "display") return;
+
+        moveCursorTo(0);
+    };
+    /*****/
 
     useEffect(() => {
         contentRef.current = displayContent;
@@ -86,13 +123,20 @@ const ProgrammingOutput: React.FC = () => {
             </ul>
 
             <div className="output-box">
-                <span className="display">
+                <span className="display" onClick={(e) => handleBlankClick(e)}>
                     {
                         displayContent.split(" ").map((symbol, index) => {
                             return (
                                 symbol === cursor
                                 ? <Cursor key={index}/>
-                                : <BlockMath key={index}>{symbol}</BlockMath>
+                                : (
+                                    <span
+                                        onClick={(e) => handleSymbolClick(e, index)}
+                                        data-index={index}
+                                        key={index}>
+                                        <BlockMath>{symbol}</BlockMath>
+                                    </span>
+                                )
                             )
                         })
                     }

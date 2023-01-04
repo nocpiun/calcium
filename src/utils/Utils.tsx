@@ -71,4 +71,12 @@ export default class Utils {
 
         return allowed.indexOf(symbol) > -1;
     }
+
+    // If directly get the offsetLeft of an elem, it may be a wrong value like 0
+    // And a recursion can solve this
+    public static getOffsetLeft(elem: HTMLElement): number {
+        var offset = elem.offsetLeft;
+        if(elem.offsetParent) offset += Utils.getOffsetLeft(elem.offsetParent as HTMLElement);
+        return offset;
+    }
 }
