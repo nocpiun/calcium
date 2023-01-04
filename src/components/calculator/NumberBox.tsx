@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from "react";
 
 import { NumberBoxProps, NumberType } from "../../types";
@@ -14,11 +15,6 @@ const NumberBox: React.FC<NumberBoxProps> = (props) => {
         Emitter.get().on("number-type-chose", (type: NumberType) => {
             setIsActive(type === props.type);
         });
-    });
-
-    useEffect(() => {
-        // default
-        Emitter.get().emit("number-type-chose", NumberType.DEC);
     }, []);
 
     return (

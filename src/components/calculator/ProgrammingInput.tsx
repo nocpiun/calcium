@@ -57,8 +57,10 @@ const ProgrammingInput: React.FC = () => {
                     <InputButton symbol="\text{OR}" grow={1}/>
                     <InputButton symbol="\text{A}" grow={1} group={["hex"]}/>
                     <div className="keypad-placeholder"/>
-                    <InputButton symbol="\ll" grow={2}/>
-                    <InputButton symbol="\gg" grow={2}/>
+                    <InputButton symbol="\ll" grow={1}/>
+                    <InputButton symbol="\gg" grow={1}/>
+                    <InputButton symbol="\leftarrow" grow={1}/>
+                    <InputButton symbol="\rightarrow" grow={1}/>
                     <div className="keypad-placeholder"/>
                     <div style={{ flexGrow: 5 }}/>
                     <div className="keypad-placeholder"/>

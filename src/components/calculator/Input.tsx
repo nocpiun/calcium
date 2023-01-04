@@ -127,7 +127,7 @@ const Input: React.FC = () => {
                     <div style={{ flexGrow: 5 }}/>
                     <div className="keypad-placeholder"/>
                     <InputButton symbol="\%" grow={2}/>
-                    <InputButton symbol="\dfrac{a}{b}" grow={1}/>
+                    <InputButton symbol="\dfrac{a}{b}" grow={1} disabled={true}/>
                     <InputButton symbol="/" grow={1}/>
                     <div className="keypad-placeholder"/>
                     <InputButton symbol="\epsilon" grow={1}/>

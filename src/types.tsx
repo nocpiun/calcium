@@ -24,4 +24,5 @@ export interface InputButtonProps {
     symbol: string
     grow: number
     group?: string[]
+    disabled?: boolean
 }

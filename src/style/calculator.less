@@ -7,6 +7,7 @@
         background-color: @deep1;
         border-bottom: 1px solid @gray2;
         position: relative;
+        min-height: 206px;
         .output-tag {
             position: absolute;
             left: 20px;
@@ -36,6 +37,30 @@
                 }
                 &:hover .name {
                     color: @gray-light;
+                }
+            }
+        }
+        .output-box {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            width: 60%;
+            padding-right: 50px;
+            .display {
+                display: flex;
+                justify-content: flex-end;
+                color: @gray-light;
+                font-size: 45px;
+                min-height: 156px;
+                cursor: text;
+                .cursor {
+                    margin: 1em 0; // keep the cursor fixed on the middle
+                    margin-left: -1px; // make the symbols fixed when the cursor moves
+                    border-right: 1px solid transparent;
+                    max-height: 60px;
+                    &.cursor-blink {
+                        border-right-color: @gray-light;
+                    }
                 }
             }
         }
@@ -101,9 +126,5 @@
     .graphing-container {
         height: 100%;
         background-color: @deep1;
-        .graphing-canvas {
-            // width: 100%;
-            // height: 100%;
-        }
     }
 }
