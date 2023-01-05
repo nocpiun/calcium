@@ -8,16 +8,16 @@ const Input: React.FC = () => {
         <div className="input-container">
             <div className="keypad">
                 <div className="keypad-row">
-                    <InputButton symbol="\sin" grow={1}/>
-                    <InputButton symbol="\cos" grow={1}/>
-                    <InputButton symbol="\tan" grow={1}/>
-                    <InputButton symbol="\cot" grow={1}/>
-                    <InputButton symbol="\sec" grow={1}/>
+                    <InputButton symbol="\sin" inputValue="\sin(" grow={1}/>
+                    <InputButton symbol="\cos" inputValue="\cos(" grow={1}/>
+                    <InputButton symbol="\tan" inputValue="\tan(" grow={1}/>
+                    <InputButton symbol="\cot" inputValue="\cot(" grow={1}/>
+                    <InputButton symbol="\sec" inputValue="\sec(" grow={1}/>
                     <div className="keypad-placeholder"/>
-                    <InputButton symbol="a^2" grow={1}/>
-                    <InputButton symbol="a^3" grow={1}/>
-                    <InputButton symbol="\sqrt{a}" grow={1}/>
-                    <InputButton symbol="\sqrt[3]{a}" grow={1}/>
+                    <InputButton symbol="a^2" inputValue="^2" grow={1}/>
+                    <InputButton symbol="a^3" inputValue="^3" grow={1}/>
+                    <InputButton symbol="\sqrt{a}" inputValue="√(" grow={1}/>
+                    <InputButton symbol="\sqrt[3]{a}" inputValue="^3√(" grow={1}/>
                     <div className="keypad-placeholder"/>
                     <InputButton symbol="a" grow={1}/>
                     <InputButton symbol="b" grow={1}/>
@@ -28,13 +28,13 @@ const Input: React.FC = () => {
                     <div style={{ flexGrow: 5 }}/>
                 </div>
                 <div className="keypad-row">
-                    <InputButton symbol="\csc" grow={1}/>
-                    <InputButton symbol="\sin^{-1}" grow={1}/>
-                    <InputButton symbol="\cos^{-1}" grow={1}/>
-                    <InputButton symbol="\tan^{-1}" grow={1}/>
-                    <InputButton symbol="\sinh" grow={1}/>
+                    <InputButton symbol="\csc" inputValue="\csc(" grow={1}/>
+                    <InputButton symbol="\sin^{-1}" inputValue="\sin^{-1}(" grow={1}/>
+                    <InputButton symbol="\cos^{-1}" inputValue="\cos^{-1}(" grow={1}/>
+                    <InputButton symbol="\tan^{-1}" inputValue="\tan^{-1}(" grow={1}/>
+                    <InputButton symbol="\sinh" inputValue="\sinh(" grow={1}/>
                     <div className="keypad-placeholder"/>
-                    <InputButton symbol="|a|" grow={1}/>
+                    <InputButton symbol="|a|" inputValue="|" grow={1}/>
                     <InputButton symbol="e" grow={1}/>
                     <InputButton symbol="\pi" grow={1}/>
                     <InputButton symbol="," grow={1}/>
@@ -48,16 +48,16 @@ const Input: React.FC = () => {
                     <div style={{ flexGrow: 5 }}/>
                 </div>
                 <div className="keypad-row">
-                    <InputButton symbol="\cosh" grow={1}/>
-                    <InputButton symbol="\tanh" grow={1}/>
-                    <InputButton symbol="\coth" grow={1}/>
-                    <InputButton symbol="\text{sech}" grow={1}/>
-                    <InputButton symbol="\text{csch}" grow={1}/>
+                    <InputButton symbol="\cosh" inputValue="\cosh(" grow={1}/>
+                    <InputButton symbol="\tanh" inputValue="\tanh(" grow={1}/>
+                    <InputButton symbol="\coth" inputValue="\coth(" grow={1}/>
+                    <InputButton symbol="\text{sech}" inputValue="\text{sech}(" grow={1}/>
+                    <InputButton symbol="\text{csch}" inputValue="\text{csch}(" grow={1}/>
                     <div className="keypad-placeholder"/>
                     <InputButton symbol="(" grow={1}/>
                     <InputButton symbol=")" grow={1}/>
-                    <InputButton symbol="\sin" grow={1}/>
-                    <InputButton symbol="\cos" grow={1}/>
+                    <InputButton symbol="\sin" inputValue="\sin(" grow={1}/>
+                    <InputButton symbol="\cos" inputValue="\cos(" grow={1}/>
                     <div className="keypad-placeholder"/>
                     <InputButton symbol="k" grow={1}/>
                     <InputButton symbol="l" grow={1}/>
@@ -68,16 +68,16 @@ const Input: React.FC = () => {
                     <div style={{ flexGrow: 5 }}/>
                 </div>
                 <div className="keypad-row">
-                    <InputButton symbol="\sinh^{-1}" grow={1}/>
-                    <InputButton symbol="\cosh^{-1}" grow={1}/>
-                    <InputButton symbol="\tanh^{-1}" grow={1}/>
-                    <InputButton symbol="\coth^{-1}" grow={1}/>
-                    <InputButton symbol="\text{sech}^{-1}" grow={1}/>
+                    <InputButton symbol="\sinh^{-1}" inputValue="\sinh^{-1}(" grow={1}/>
+                    <InputButton symbol="\cosh^{-1}" inputValue="\cosh^{-1}(" grow={1}/>
+                    <InputButton symbol="\tanh^{-1}" inputValue="\tanh^{-1}(" grow={1}/>
+                    <InputButton symbol="\coth^{-1}" inputValue="\coth^{-1}(" grow={1}/>
+                    <InputButton symbol="\text{sech}^{-1}" inputValue="\text{sech}^{-1}(" grow={1}/>
                     <div className="keypad-placeholder"/>
                     <InputButton symbol="[" grow={1} disabled={true}/>
                     <InputButton symbol="]" grow={1} disabled={true}/>
-                    <InputButton symbol="\tan" grow={1}/>
-                    <InputButton symbol="\cot" grow={1}/>
+                    <InputButton symbol="\tan" inputValue="\tan(" grow={1}/>
+                    <InputButton symbol="\cot" inputValue="\cot(" grow={1}/>
                     <div className="keypad-placeholder"/>
                     <InputButton symbol="p" grow={1}/>
                     <InputButton symbol="q" grow={1}/>
@@ -88,16 +88,16 @@ const Input: React.FC = () => {
                     <div style={{ flexGrow: 5 }}/>
                 </div>
                 <div className="keypad-row">
-                    <InputButton symbol="\text{csch}^{-1}" grow={1}/>
-                    <InputButton symbol="\ln" grow={1}/>
-                    <InputButton symbol="\lg" grow={1}/>
-                    <InputButton symbol="a!" grow={1}/>
-                    <InputButton symbol="\deg" grow={1} disabled={true}/>
+                    <InputButton symbol="\text{csch}^{-1}" inputValue="\text{csch}^{-1}(" grow={1}/>
+                    <InputButton symbol="\ln" inputValue="\ln(" grow={1}/>
+                    <InputButton symbol="\lg" inputValue="\lg(" grow={1}/>
+                    <InputButton symbol="\log_2{a}" inputValue="\log2(" grow={1}/>
+                    <InputButton symbol="a!" inputValue="!" grow={1}/>
                     <div className="keypad-placeholder"/>
                     <InputButton symbol="\{" grow={1} disabled={true}/>
                     <InputButton symbol="\}" grow={1} disabled={true}/>
-                    <InputButton symbol="\sec" grow={1}/>
-                    <InputButton symbol="\csc" grow={1}/>
+                    <InputButton symbol="\sec" inputValue="\sec(" grow={1}/>
+                    <InputButton symbol="\csc" inputValue="\csc(" grow={1}/>
                     <div className="keypad-placeholder"/>
                     <InputButton symbol="u" grow={1}/>
                     <InputButton symbol="v" grow={1}/>
@@ -108,7 +108,8 @@ const Input: React.FC = () => {
                     <div style={{ flexGrow: 5 }}/>
                 </div>
                 <div className="keypad-row">
-                    <div style={{ flexGrow: 5 }}/>
+                    <InputButton symbol="\deg" grow={1} disabled={true}/>
+                    <div style={{ flexGrow: 4 }}/>
                     <div className="keypad-placeholder"/>
                     <InputButton symbol="\leftarrow" grow={1}/>
                     <InputButton symbol="\rightarrow" grow={1}/>

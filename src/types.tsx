@@ -22,7 +22,12 @@ export enum NumberType {
 
 export interface InputButtonProps {
     symbol: string
+    inputValue?: string
     grow: number
     group?: string[]
     disabled?: boolean
+}
+
+export enum Operator {
+    ADD, SUB, MUL, DIV
 }

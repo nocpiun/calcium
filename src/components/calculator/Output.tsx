@@ -5,16 +5,23 @@ import { BlockMath } from "react-katex";
 import { cursor } from "../../global";
 import Emitter from "../../utils/Emitter";
 import Utils from "../../utils/Utils";
+import Compiler from "./Compiler";
 
 import Cursor from "./Cursor";
 
 const Output: React.FC = () => {
     const [displayContent, setDisplayContent] = useState<string>(cursor);
+    const [outputContent, setOutputContent] = useState<string>("");
     const contentRef = useRef<string>(displayContent);
+    const outputRef = useRef<string>(outputContent);
+
+    function getCursorIndex(): number {
+        return contentRef.current.split(" ").indexOf(cursor);
+    }
 
     function moveCursorTo(index: number): void {
         var contentArray = contentRef.current.split(" ");
-        var cursorIndex = contentArray.indexOf(cursor);
+        var cursorIndex = getCursorIndex();
 
         contentArray = Utils.arrayRemove(contentArray, cursorIndex);
         contentArray = Utils.arrayPut(contentArray, index, cursor);
@@ -24,11 +31,12 @@ const Output: React.FC = () => {
 
     const handleInput = (symbol: string) => {
         var contentArray = contentRef.current.split(" ");
-        var cursorIndex = contentArray.indexOf(cursor);
+        var cursorIndex = getCursorIndex();
 
         switch(symbol) {
             case "\\text{Clear}":
                 setDisplayContent(cursor);
+                setOutputContent("");
                 break;
             case "Backspace":
             case "\\text{Del}":
@@ -40,6 +48,7 @@ const Output: React.FC = () => {
 
                 contentArray = Utils.arrayRemove(contentArray, target);
                 setDisplayContent(contentArray.join(" "));
+                setOutputContent("");
                 break;
             case "ArrowLeft":
             case "\\leftarrow":
@@ -53,11 +62,13 @@ const Output: React.FC = () => {
 
                 moveCursorTo(cursorIndex + 1);
                 break;
+            case "Enter":
             case "=":
-                /** @todo */
+                handleResult();
                 break;
             default:
                 setDisplayContent(contentRef.current.replace(cursor, symbol +" "+ cursor));
+                setOutputContent("");
                 break;
         }
     };
@@ -66,7 +77,7 @@ const Output: React.FC = () => {
      * Click to move the cursor
      */
     const handleSymbolClick = (e: React.MouseEvent, index: number) => {
-        if(index > contentRef.current.split(" ").indexOf(cursor)) index--;
+        if(index > getCursorIndex()) index--;
 
         var symbolElem = e.target as HTMLElement;
         var mouseX = e.clientX;
@@ -83,9 +94,32 @@ const Output: React.FC = () => {
     };
     /*****/
 
+    const handleResult = () => {
+        // Remove cursor from raw text
+        var rawText = contentRef.current.indexOf(cursor) < contentRef.current.length - 1
+        ? contentRef.current.replace(cursor +" ", "")
+        : contentRef.current.replace(" "+ cursor, "");
+
+        if(rawText === "2 . 5") {
+            setOutputContent("2.5c^{trl}"); // Chicken is beautiful
+            return;
+        }
+
+        var compiler = new Compiler(rawText.split(" "));
+
+        var result = compiler.run();
+        if(result === "NaN" || result === "") result = "\\text{Error}";
+        result = result.replaceAll("Infinity", "\\infty");
+
+        setOutputContent("="+ result);
+    };
+
     useEffect(() => {
         contentRef.current = displayContent;
     }, [displayContent]);
+    useEffect(() => {
+        outputRef.current = outputContent;
+    }, [outputContent]);
 
     useEffect(() => {
         Emitter.get().on("input", (symbol: string) => handleInput(symbol));
@@ -93,15 +127,22 @@ const Output: React.FC = () => {
         document.body.addEventListener("keydown", (e: KeyboardEvent) => {
             if(e.key === cursor) return;
             if(!Utils.isAllowedSymbol(e.key)) return;
+            if(e.ctrlKey && e.key === "m") { // ctrl + m
+                setOutputContent("c^{xk}+c^{trl}"); // I'm iKun
+                return;
+            }
 
-            handleInput(e.key);
+            var inputValue = e.key;
+            if(inputValue === "*") inputValue = "×";
+
+            handleInput(inputValue);
         });
     }, []);
 
     return (
         <div className="output-container">
             <span className="output-tag">Output</span>
-            <div className="output-box">
+            <div className="input-box">
                 <span className="display" onClick={(e) => handleBlankClick(e)}>
                     {
                         displayContent.split(" ").map((symbol, index) => {
@@ -119,6 +160,11 @@ const Output: React.FC = () => {
                             )
                         })
                     }
+                </span>
+            </div>
+            <div className="output-box">
+                <span className="display">
+                    {outputContent.split(" ").map((symbol, index) => <BlockMath key={index}>{symbol}</BlockMath>)}
                 </span>
             </div>
         </div>

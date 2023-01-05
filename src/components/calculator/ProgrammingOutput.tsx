@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useRef, useEffect } from "react";
 import { BlockMath } from "react-katex";
 
@@ -13,9 +14,13 @@ const ProgrammingOutput: React.FC = () => {
     const [displayContent, setDisplayContent] = useState<string>(cursor);
     const contentRef = useRef<string>(displayContent);
 
+    function getCursorIndex(): number {
+        return contentRef.current.split(" ").indexOf(cursor);
+    }
+
     function moveCursorTo(index: number): void {
         var contentArray = contentRef.current.split(" ");
-        var cursorIndex = contentArray.indexOf(cursor);
+        var cursorIndex = getCursorIndex();
 
         contentArray = Utils.arrayRemove(contentArray, cursorIndex);
         contentArray = Utils.arrayPut(contentArray, index, cursor);
@@ -25,7 +30,7 @@ const ProgrammingOutput: React.FC = () => {
 
     const handleInput = (symbol: string) => {
         var contentArray = contentRef.current.split(" ");
-        var cursorIndex = contentArray.indexOf(cursor);
+        var cursorIndex = getCursorIndex();
 
         switch(symbol) {
             case "\\text{Clear}":
@@ -79,7 +84,7 @@ const ProgrammingOutput: React.FC = () => {
      * Click to move the cursor
      */
     const handleSymbolClick = (e: React.MouseEvent, index: number) => {
-        if(index > contentRef.current.split(" ").indexOf(cursor)) index--;
+        if(index > getCursorIndex()) index--;
 
         var symbolElem = e.target as HTMLElement;
         var mouseX = e.clientX;
@@ -122,7 +127,7 @@ const ProgrammingOutput: React.FC = () => {
                 <NumberBox name="Bin" number={0} type={NumberType.BIN}/>
             </ul>
 
-            <div className="output-box">
+            <div className="input-box">
                 <span className="display" onClick={(e) => handleBlankClick(e)}>
                     {
                         displayContent.split(" ").map((symbol, index) => {

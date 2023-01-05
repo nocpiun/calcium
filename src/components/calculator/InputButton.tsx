@@ -8,9 +8,10 @@ import Emitter from "../../utils/Emitter";
 
 const InputButton: React.FC<InputButtonProps> = (props) => {
     const [disabled, setDisabled] = useState<boolean>(props.disabled ?? false);
+    const inputValue = props.inputValue ?? props.symbol;
 
     const clickHandle = () => {
-        Emitter.get().emit("input", props.symbol);
+        Emitter.get().emit("input", inputValue);
     };
 
     useEffect(() => {

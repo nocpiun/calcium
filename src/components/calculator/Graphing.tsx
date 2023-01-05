@@ -132,8 +132,8 @@ class Render {
             this.drawVerticalLine(x2, "#8c949e");
 
             // number of the line
-            this.drawText((-k * this.spacing).toString(), x1 - 5, this.center.y - 5, "#cbd0df", 15);
-            this.drawText((k * this.spacing).toString(), x2 - 5, this.center.y - 5, "#cbd0df", 15);
+            this.drawText((-k * this.spacing).toString(), x1 - 5, this.center.y + 15, "#cbd0df", 15);
+            this.drawText((k * this.spacing).toString(), x2 - 5, this.center.y + 15, "#cbd0df", 15);
         }
         // thinner line
         for(
@@ -208,7 +208,7 @@ class Render {
         // O point
         this.drawText("O", this.center.x - 20, this.center.y + 20, "#cbd0df", 17);
 
-        // Mouse point
+        // Mouse point & fps
         var mouseCoordinatesPoint = this.screenToCoordinates(this.mousePoint);
         this.drawText("Mouse: "+ mouseCoordinatesPoint.x.toFixed(2) +", "+ mouseCoordinatesPoint.y.toFixed(2), 30, 30, "#cbd0df", 15);
 
