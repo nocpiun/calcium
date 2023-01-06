@@ -3,27 +3,69 @@ import List from "../../utils/List";
 import Float from "../../utils/Float";
 import { Operator } from "../../types";
 
+class MathFunction {
+    public readonly name: string;
+    private readonly f: (x: number) => number;
+
+    public constructor(name: string, f: (x: number) => number) {
+        this.name = name;
+        this.f = f;
+    }
+
+    public run(x: number): number {
+        return this.f(x);
+    }
+}
+
 export default class Compiler {
+    private functions: MathFunction[] = [];
+
     private raw: string[];
     private numberList: List<string> = new List<string>([]);
     private operatorList: List<Operator> = new List<Operator>([]);
 
     private layer: number = 0;
     private inAbs: boolean = false;
+    private inFunction: number = -1; // -1: false; >=0: the index of a function
     private secondaryRaw: string[] = [];
     
     public constructor(raw: string[]) {
         this.raw = raw;
+
+        this.functions.push(new MathFunction("sin", (x) => Math.sin(x)));
+        this.functions.push(new MathFunction("cos", (x) => Math.cos(x)));
+        this.functions.push(new MathFunction("tan", (x) => Math.tan(x)));
+        this.functions.push(new MathFunction("cot", (x) => 1 / Math.tan(x)));
+        this.functions.push(new MathFunction("sec", (x) => 1 / Math.cos(x)));
+        this.functions.push(new MathFunction("csc", (x) => 1 / Math.sin(x)));
+        this.functions.push(new MathFunction("sin^{-1}", (x) => Math.asin(x)));
+        this.functions.push(new MathFunction("cos^{-1}", (x) => Math.acos(x)));
+        this.functions.push(new MathFunction("tan^{-1}", (x) => Math.atan(x)));
+        this.functions.push(new MathFunction("sinh", (x) => Math.sinh(x)));
+        this.functions.push(new MathFunction("cosh", (x) => Math.cosh(x)));
+        this.functions.push(new MathFunction("tanh", (x) => Math.tanh(x)));
+        this.functions.push(new MathFunction("coth", (x) => 1 / Math.tanh(x)));
+        this.functions.push(new MathFunction("sech", (x) => 1 / Math.cosh(x)));
+        this.functions.push(new MathFunction("csch", (x) => 1 / Math.sinh(x)));
+        this.functions.push(new MathFunction("ln", (x) => Math.log(x)));
+        this.functions.push(new MathFunction("lg", (x) => Math.log10(x)));
+        this.functions.push(new MathFunction("log2", (x) => Math.log2(x)));
+        this.functions.push(new MathFunction("deg", (x) => x * (Math.PI / 180)));
+        this.functions.push(new MathFunction("√", (x) => Math.sqrt(x)));
+        this.functions.push(new MathFunction("^3√", (x) => Math.cbrt(x)));
+        this.functions.push(new MathFunction("%", (x) => x / 100));
+
         this.compile();
     }
 
     private compile(): void {
         for(let i = 0; i < this.raw.length; i++) {
             var symbol = this.raw[i];
+            console.log(symbol);
 
-            if(this.layer > 0) { // in bracket
-                if(symbol === "(") this.layer++;
-                if(symbol === ")") this.layer--;
+            if(this.layer > 0) { // in bracket or function
+                if(this.isLeftBracket(symbol) || this.isFunction(symbol)) this.layer++;
+                if(this.isRightBracket(symbol)) this.layer--;
 
                 if(this.layer > 0) {
                     this.secondaryRaw.push(symbol);
@@ -38,8 +80,11 @@ export default class Compiler {
 
             if(this.isNumber(symbol)) { // number
                 if(this.numberList.isEmpty()) this.numberList.add("");
-                var target = this.numberList.length - 1;
 
+                if(symbol === "e") symbol = Math.E.toString();
+                if(symbol === "\\pi") symbol = Math.PI.toString();
+
+                var target = this.numberList.length - 1;
                 this.numberList.set(target, this.numberList.get(target) + symbol);
             } else if(this.isOperator(symbol)) { // operator
                 switch(symbol) {
@@ -58,11 +103,19 @@ export default class Compiler {
                 }
 
                 this.numberList.add("");
-            } else if(symbol === "(") { // left bracket
+            } else if(this.isLeftBracket(symbol)) { // left bracket
                 this.layer++;
-            } else if(symbol === ")") { // right bracket
+            } else if(this.isRightBracket(symbol)) { // right bracket
                 if(this.numberList.isEmpty()) this.numberList.add("");
-                this.numberList.set(this.numberList.length - 1, new Compiler(this.secondaryRaw).run());
+
+                var bracketResult = new Compiler(this.secondaryRaw).run();
+                var target = this.numberList.length - 1;
+                if(this.inFunction > -1) {
+                    this.numberList.set(target, this.functions[this.inFunction].run(parseFloat(bracketResult)).toString());
+                    this.inFunction = -1;
+                } else {
+                    this.numberList.set(target, bracketResult);
+                }
 
                 this.secondaryRaw = [];
             } else if(symbol === "|") { // absolute value
@@ -77,18 +130,46 @@ export default class Compiler {
                 } else {
                     this.inAbs = true;
                 }
+            } else if(this.isFunction(symbol)) { // function
+                for(let j = 0; j < this.functions.length; j++) {
+                    if(this.functions[j].name === symbol.replace("\\", "").replace("(", "")) {
+                        this.inFunction = j;
+                        this.layer++;
+                        break;
+                    }
+                }
+            } else if(symbol[0] === "^") { // sqrt or cbrt
+                for(let j = 0; j < parseInt(symbol[1]) - 1; j++) {
+                    this.operatorList.add(Operator.MUL);
+                    this.numberList.add(this.numberList.get(this.numberList.length - 1));
+                }
             }
         }
     }
 
     private isNumber(symbol: string): boolean {
-        const number = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "."];
+        const number = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "e", "\\pi", "."];
         return number.indexOf(symbol) > -1;
     }
 
     private isOperator(symbol: string): boolean {
         const operator = ["+", "-", "×", "/"];
         return operator.indexOf(symbol) > -1;
+    }
+
+    private isLeftBracket(symbol: string): boolean {
+        const leftBracket = ["(", "["];
+        return leftBracket.indexOf(symbol) > -1;
+    }
+
+    private isRightBracket(symbol: string): boolean {
+        const rightBracket = [")", "]"];
+        return rightBracket.indexOf(symbol) > -1;
+    }
+
+    private isFunction(symbol: string): boolean {
+        const specialFunction = ["√(", "^3√("];
+        return (symbol[0] === "\\" && symbol.length > 1) || specialFunction.indexOf(symbol) > -1;
     }
 
     public run(): string {
@@ -109,6 +190,8 @@ export default class Compiler {
                         : this.numberList.set(i, Float.multiply(a, b).toString());
                         break;
                     case Operator.DIV:
+                        if(b === 0) return "NaN";
+
                         this.numberList.get(i).indexOf(".") === -1
                         ? this.numberList.set(i, (a / b).toString())
                         : this.numberList.set(i, Float.divide(a, b).toString());

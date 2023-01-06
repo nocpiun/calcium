@@ -53,7 +53,7 @@ export default class Utils {
     public static isAllowedSymbol(symbol: string): boolean {
         const blocked = [
             "Tab", "CapsLock", "Shift", "Control", "Alt", "Meta", "ContextMenu",
-            "Insert", "Home", "PageUp", "PageDown", "End", "Delete",
+            "Insert", "Home", "PageUp", "PageDown", "End", "Delete", "ArrowUp", "ArrowDown",
             "\\", "`", "@", "#", "$", "&", ";", ":", "\"",
             "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12"
         ];
@@ -72,8 +72,7 @@ export default class Utils {
         return allowed.indexOf(symbol) > -1;
     }
 
-    // If directly get the offsetLeft of an elem, it may be a wrong value like 0
-    // And a recursion can solve this
+    /** @see https://bbs.csdn.net/topics/310077618 */
     public static getOffsetLeft(elem: HTMLElement): number {
         var offset = elem.offsetLeft;
         if(elem.offsetParent) offset += Utils.getOffsetLeft(elem.offsetParent as HTMLElement);
@@ -113,4 +112,17 @@ export default class Utils {
         return true;
     }
     
+    /** @see https://www.cnblogs.com/jialuchun/p/6559422.html */
+    public static factorial(x: number): number {
+        if(x < 0) {
+            return -1;
+        } else if(x === 0 || x === 1) {
+            return 1;
+        } else {
+            for(let i = x - 1; i >= 1; i--) {
+                x *= i;
+            }
+        }
+        return x;
+    }
 }

@@ -64,7 +64,7 @@ const Output: React.FC = () => {
                 break;
             case "Enter":
             case "=":
-                handleResult();
+                if(contentArray.length > 1) handleResult();
                 break;
             default:
                 setDisplayContent(contentRef.current.replace(cursor, symbol +" "+ cursor));
@@ -109,7 +109,6 @@ const Output: React.FC = () => {
 
         var result = compiler.run();
         if(result === "NaN" || result === "") result = "\\text{Error}";
-        result = result.replaceAll("Infinity", "\\infty");
 
         setOutputContent("="+ result);
     };
@@ -125,6 +124,8 @@ const Output: React.FC = () => {
         Emitter.get().on("input", (symbol: string) => handleInput(symbol));
 
         document.body.addEventListener("keydown", (e: KeyboardEvent) => {
+            e.preventDefault();
+
             if(e.key === cursor) return;
             if(!Utils.isAllowedSymbol(e.key)) return;
             if(e.ctrlKey && e.key === "m") { // ctrl + m
