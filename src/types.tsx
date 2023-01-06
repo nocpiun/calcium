@@ -17,7 +17,10 @@ export interface NumberBoxProps {
 }
 
 export enum NumberType {
-    HEX, DEC, OCT, BIN
+    HEX = "hex",
+    DEC = "dec",
+    OCT = "oct",
+    BIN = "bin"
 }
 
 export interface InputButtonProps {
@@ -29,5 +32,8 @@ export interface InputButtonProps {
 }
 
 export enum Operator {
-    ADD, SUB, MUL, DIV
+    ADD = "+",
+    SUB = "-",
+    MUL = "×",
+    DIV = "/"
 }

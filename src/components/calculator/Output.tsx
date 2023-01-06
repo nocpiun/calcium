@@ -14,6 +14,7 @@ const Output: React.FC = () => {
     const [outputContent, setOutputContent] = useState<string>("");
     const contentRef = useRef<string>(displayContent);
     const outputRef = useRef<string>(outputContent);
+    const variableRef = useRef<Map<string, string>>(new Map<string, string>());
 
     function getCursorIndex(): number {
         return contentRef.current.split(" ").indexOf(cursor);
@@ -63,7 +64,7 @@ const Output: React.FC = () => {
                 moveCursorTo(cursorIndex + 1);
                 break;
             case "Enter":
-            case "=":
+            case "\\text{Result}":
                 if(contentArray.length > 1) handleResult();
                 break;
             default:
@@ -71,6 +72,37 @@ const Output: React.FC = () => {
                 setOutputContent("");
                 break;
         }
+    };
+
+    const handleResult = () => {
+        // Remove cursor from raw text
+        var rawText = contentRef.current.indexOf(cursor) < contentRef.current.length - 1
+        ? contentRef.current.replace(cursor +" ", "")
+        : contentRef.current.replace(" "+ cursor, "");
+        var raw = rawText.split(" ");
+
+        if(rawText === "2 . 5") {
+            setOutputContent("2.5c^{trl}"); // Chicken is beautiful
+            return;
+        }
+
+        if(Compiler.isVariable(raw[0]) && raw[1] === "=") { // variable declaring or setting
+            const varName = raw[0];
+
+            raw = Utils.arrayRemove(raw, 0);
+            raw = Utils.arrayRemove(raw, 0);
+
+            variableRef.current.set(varName, new Compiler(raw, variableRef.current).run());
+            setOutputContent(varName +"="+ variableRef.current.get(varName));
+            return;
+        }
+
+        var compiler = new Compiler(raw, variableRef.current);
+
+        var result = compiler.run();
+        if(result === "NaN" || result === "") result = "\\text{Error}";
+
+        setOutputContent("="+ result);
     };
 
     /**
@@ -93,25 +125,6 @@ const Output: React.FC = () => {
         moveCursorTo(0);
     };
     /*****/
-
-    const handleResult = () => {
-        // Remove cursor from raw text
-        var rawText = contentRef.current.indexOf(cursor) < contentRef.current.length - 1
-        ? contentRef.current.replace(cursor +" ", "")
-        : contentRef.current.replace(" "+ cursor, "");
-
-        if(rawText === "2 . 5") {
-            setOutputContent("2.5c^{trl}"); // Chicken is beautiful
-            return;
-        }
-
-        var compiler = new Compiler(rawText.split(" "));
-
-        var result = compiler.run();
-        if(result === "NaN" || result === "") result = "\\text{Error}";
-
-        setOutputContent("="+ result);
-    };
 
     useEffect(() => {
         contentRef.current = displayContent;

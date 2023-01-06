@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from "react";
 import { InlineMath } from "react-katex";
 
-import Utils from "../../utils/Utils";
 import { InputButtonProps, NumberType } from "../../types";
 import Emitter from "../../utils/Emitter";
 
@@ -20,7 +19,7 @@ const InputButton: React.FC<InputButtonProps> = (props) => {
         Emitter.get().on("number-type-chose", (type: NumberType) => {
             if(!props.group) return;
 
-            setDisabled(!props.group.includes(Utils.numberTypeToStr(type)));
+            setDisabled(!props.group.includes(type));
         });
 
         // default

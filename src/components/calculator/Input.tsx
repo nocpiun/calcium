@@ -70,7 +70,7 @@ const Input: React.FC = () => {
                 <div className="keypad-row">
                     <InputButton symbol="\ln" inputValue="\ln(" grow={1}/>
                     <InputButton symbol="\lg" inputValue="\lg(" grow={1}/>
-                    <InputButton symbol="\log_2{a}" inputValue="\log2(" grow={1}/>
+                    <InputButton symbol="\log_2{a}" inputValue="\log_2(" grow={1}/>
                     <InputButton symbol="a!" inputValue="!" grow={1} disabled={true}/>
                     <InputButton symbol="\deg" inputValue="\deg(" grow={1}/>
                     <div className="keypad-placeholder"/>
@@ -187,7 +187,8 @@ const Input: React.FC = () => {
                     <div className="keypad-placeholder"/>
                     <InputButton symbol="0" grow={1}/>
                     <InputButton symbol="." grow={1}/>
-                    <InputButton symbol="=" grow={2}/>
+                    <InputButton symbol="=" grow={1}/>
+                    <InputButton symbol="\text{Result}" grow={1}/>
                     <div className="keypad-placeholder"/>
                     <InputButton symbol="\Delta" grow={1}/>
                     <div style={{ flexGrow: 4 }}/>
