@@ -1,5 +1,4 @@
 import React from "react";
-import "https://cdn.jsdelivr.net/npm/hidpi-canvas@1.0.10/dist/hidpi-canvas.min.js";
 
 // Layout
 import "katex/dist/katex.min.css"
