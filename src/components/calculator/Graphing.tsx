@@ -54,7 +54,10 @@ class Render {
             this.center.y = this.mousePoint.y - this.mouseDY;
         });
         this.canvas.addEventListener("mouseup", () => this.stopMoving());
-        this.canvas.addEventListener("mouseleave", () => this.stopMoving());
+        this.canvas.addEventListener("mouseleave", () => {
+            this.stopMoving();
+            this.mousePoint = this.center;
+        });
 
         this.canvas.addEventListener("wheel", (e: WheelEvent) => {
             const delta = 7;
@@ -155,7 +158,7 @@ class Render {
         this.mouseDown = false;
         this.mouseDX = 0;
         this.mouseDY = 0;
-        this.mousePoint = this.center;
+        // this.mousePoint = this.center;
     }
 
     private drawLine(begin: Point, end: Point, color: string, width: number = 1): void {

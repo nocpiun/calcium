@@ -137,7 +137,7 @@ const Output: React.FC = () => {
         var compiler = new Compiler(raw, variableRef.current);
 
         var result = compiler.run();
-        if(result === "NaN" || result === "") result = "\\text{Error}";
+        if(result.indexOf("NaN") > -1 || result === "") result = "\\text{Error}";
 
         setOutputContent("="+ result);
     };

@@ -17,6 +17,10 @@ const ModeButton: React.FC<ModeButtonProps> = (props) => {
 
         Emitter.get().on("switch-mode", (newMode: Mode) => {
             setIsActive(newMode === props.mode);
+
+            if(newMode === props.mode) {
+                document.title = "Calcium - "+ props.modeName;
+            }
         });
     }, []);
 
