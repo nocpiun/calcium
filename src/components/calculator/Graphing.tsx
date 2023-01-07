@@ -254,9 +254,15 @@ const Graphing: React.FC = () => {
     }, []);
 
     return (
-        <div className="graphing-container" id="display-frame">
-            <canvas className="graphing-canvas" id="graphing"/>
-        </div>
+        <>
+            <div className="input-container">
+                
+            </div>
+            
+            <div className="graphing-container" id="display-frame">
+                <canvas className="graphing-canvas" id="graphing"/>
+            </div>
+        </>
     );
 }
 

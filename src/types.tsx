@@ -10,6 +10,11 @@ export enum Mode {
     PROGRAMMING
 }
 
+export interface HistoryItemProps {
+    input: string
+    output: string
+}
+
 export interface NumberBoxProps {
     name: string
     number: number

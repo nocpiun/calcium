@@ -1,6 +1,7 @@
 import React from "react";
 
 import ModeButton from "./ModeButton";
+import History from "./History";
 import { Mode } from "../../types";
 
 import GeneralIcon from "../../icons/general_mode.svg";
@@ -15,14 +16,8 @@ const Sidebar: React.FC = () => {
                 <ModeButton modeName="Graphing" mode={Mode.GRAPHING} icon={GraphingIcon}/>
                 <ModeButton modeName="Programming" mode={Mode.PROGRAMMING} icon={ProgrammingIcon}/>
             </div>
-            <div className="history">
-                <div className="history-header">
-                    <h1>History</h1>
-                </div>
-                <div className="history-main">
-
-                </div>
-            </div>
+            
+            <History />
         </aside>
     );
 }

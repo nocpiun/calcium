@@ -139,7 +139,11 @@ const Output: React.FC = () => {
         var result = compiler.run();
         if(result.indexOf("NaN") > -1 || result === "") result = "\\text{Error}";
 
+        // Display the result
         setOutputContent("="+ result);
+
+        // Add the result to history list
+        Emitter.get().emit("add-record", rawText, result);
     };
 
     /**
