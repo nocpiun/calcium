@@ -13,6 +13,9 @@ const History: React.FC = () => {
 
     useEffect(() => {
         Emitter.get().once("add-record", (input: string, output: string) => {
+            if(input.length > 45) input = input.substring(0, 45) +"...";
+            if(output.length > 20) output = output.substring(0, 20) +"...";
+
             setList([...list, { input, output }]);
         });
     }, [list]);
