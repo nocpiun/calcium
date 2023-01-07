@@ -9,6 +9,11 @@ import Compiler from "./Compiler";
 
 import Cursor from "./Cursor";
 
+const specialSymbols: string[] = [
+    "sin", "cos", "tan", "cot", "sec", "csc",
+    "ln", "lg", "deg"
+];
+
 const Output: React.FC = () => {
     const [displayContent, setDisplayContent] = useState<string>(cursor);
     const [outputContent, setOutputContent] = useState<string>("");
@@ -63,11 +68,43 @@ const Output: React.FC = () => {
 
                 moveCursorTo(cursorIndex + 1);
                 break;
+            case "i": // Pi
+                if(contentArray[cursorIndex - 1] === "p") {
+                    contentArray[cursorIndex - 1] = "\\pi";
+                    setDisplayContent(contentArray.join(" "));
+                } else {
+                    setDisplayContent(contentRef.current.replace(cursor, symbol +" "+ cursor));
+                    setOutputContent("");
+                }
+                break;
             case "Enter":
             case "\\text{Result}":
                 if(contentArray.length > 1) handleResult();
                 break;
             default:
+                for(let i = 0; i < specialSymbols.length; i++) {
+                    var specialSymbol = specialSymbols[i];
+                    if(symbol === specialSymbol[specialSymbol.length - 1]) {
+                        var splited = specialSymbol.split("");
+                        var passed = true;
+                        for(let j = splited.length - 2; j >= 0; j--) {
+                            if(contentArray[cursorIndex - (splited.length - j) + 1] !== splited[j]) {
+                                passed = false;
+                            }
+                        }
+                        if(passed) {
+                            var begin = cursorIndex - splited.length + 1;
+                            contentArray[begin] = "\\"+ specialSymbol +"(";
+                            for(let j = 0; j < splited.length - 2; j++) {
+                                contentArray = Utils.arrayRemove(contentArray, begin + 1);
+                            }
+
+                            setDisplayContent(contentArray.join(" "));
+                            return;
+                        }
+                    }
+                }
+                
                 setDisplayContent(contentRef.current.replace(cursor, symbol +" "+ cursor));
                 setOutputContent("");
                 break;

@@ -126,8 +126,12 @@ export default class Compiler {
                 var target = this.numberList.length - 1;
                 this.numberList.set(target, this.numberList.get(target) + symbol);
             } else if(Compiler.isOperator(symbol)) { // operator
+                if(symbol === "-" && i === 0) {
+                    this.numberList.add("-");
+                    continue;
+                }
+
                 this.operatorList.add(symbol as Operator);
-                
                 this.numberList.add("");
             } else if(Compiler.isLeftBracket(symbol)) { // left bracket
                 this.layer++;
