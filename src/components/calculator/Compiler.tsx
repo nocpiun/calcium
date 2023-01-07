@@ -40,7 +40,7 @@ export default class Compiler {
         this.functions.set("csch",     (x) => 1 / Math.sinh(x));
         this.functions.set("ln",       (x) => Math.log(x));
         this.functions.set("lg",       (x) => Math.log10(x));
-        this.functions.set("log_2",     (x) => Math.log2(x));
+        this.functions.set("log_2",    (x) => Math.log2(x));
         this.functions.set("deg",      (x) => x * (Math.PI / 180));
         this.functions.set("√",        (x) => Math.sqrt(x));
         this.functions.set("^3√",      (x) => Math.cbrt(x));

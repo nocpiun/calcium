@@ -1,0 +1,46 @@
+name: Deploy
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  deploy:
+
+    runs-on: windows-latest
+
+    environment: deploy
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v2
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    - run: npm install
+
+    - name: Run build
+      run: npm run build
+    
+    - name: Deploy to Netlify
+      uses: nwtgck/actions-netlify@v1.2
+      with:
+        publish-dir: './build'
+        netlify-config-path: './netlify.toml'
+        production-branch: main
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        deploy-message: 'Deploy from Github Actions'
+        enable-pull-request-comment: true
+        enable-commit-comment: true
+        overwrites-pull-request-comment: true
+      env:
+        NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+      timeout-minutes: 2
