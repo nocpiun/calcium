@@ -32,7 +32,7 @@
         flex-direction: column;
         background-color: @deep2;
         border-right: @border-style;
-        .history-header {
+        &-header {
             width: 100%;
             font-family: @font;
             h1 {
@@ -42,13 +42,15 @@
                 font-size: 13pt;
             }
         }
-        .history-main {
+        &-main {
             width: 100%;
-            overflow-y: auto;
-            overflow-x: hidden;
+            height: 100%;
+            overflow: auto;
+            .scrollbar-style();
             .history-item {
                 display: flex;
                 flex-direction: column;
+                width: 0;
                 height: 60px;
                 padding-left: 20px;
                 padding-bottom: 20px;
@@ -61,22 +63,8 @@
                     flex: 1;
                     color: @gray-light;
                     font-size: 13pt;
+                    white-space: nowrap;
                 }
-            }
-            &::-webkit-scrollbar {
-                width: 3px;
-            }
-            &::-webkit-scrollbar-thumb {
-                background-color: @gray2;
-                &:hover {
-                    background-color: @gray7;
-                }
-                &:active {
-                    background-color: @gray6;
-                }
-            }
-            &::-webkit-scrollbar-track {
-                background-color: transparent;
             }
         }
     }

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 
 import HistoryItem from "./HistoryItem";
 import Emitter from "../../utils/Emitter";
+import Utils from "../../utils/Utils";
 
 interface HistoryItemInfo {
     input: string
@@ -12,10 +13,9 @@ const History: React.FC = () => {
     const [list, setList] = useState<HistoryItemInfo[]>([]);
 
     useEffect(() => {
-        Emitter.get().once("add-record", (input: string, output: string) => {
-            if(input.length > 45) input = input.substring(0, 45) +"...";
-            if(output.length > 20) output = output.substring(0, 20) +"...";
+        Utils.scrollToEnd("history-list", 1, 0);
 
+        Emitter.get().once("add-record", (input: string, output: string) => {
             setList([...list, { input, output }]);
         });
     }, [list]);
@@ -25,7 +25,7 @@ const History: React.FC = () => {
             <div className="history-header">
                 <h1>History</h1>
             </div>
-            <div className="history-main">
+            <div className="history-main" id="history-list">
                 {
                     list.map((item, index) => <HistoryItem {...item} key={index}/>)
                 }

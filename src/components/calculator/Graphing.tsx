@@ -178,10 +178,6 @@ class Render {
         this.drawLine(new Point(x, 0), new Point(x, this.canvas.height), color, width);
     }
 
-    private drawPoint(point: Point, color: string): void {
-        this.drawLine(point, new Point(point.x + 1, point.y), color, 3);
-    }
-
     private drawText(text: string, x: number, y: number, color: string, fontSize: number = 20): void {
         this.ctx.font = fontSize +"px Ubuntu-Regular";
         this.ctx.fillStyle = color;
@@ -219,10 +215,15 @@ class Render {
         /** @todo */
         // var beginX = -this.center.x / (this.scale * this.spacing);
         // var endX = (this.canvas.width - this.center.x) / (this.scale * this.spacing);
-        // for(let x = beginX; x <= endX; x += .01) {
-        //     var y = Math.sin(x); // f(x)
+        // for(let x1 = beginX; x1 <= endX; x1 += .01) {
+        //     var f = (x: number) => 1 / x; // f(x)
+        //     var y1 = f(x1);
+        //     var x2 = x1 + .01;
+        //     var y2 = f(x2);
+        //     var p1 = this.coordinatesToScreen(new Point(x1, y1));
+        //     var p2 = this.coordinatesToScreen(new Point(x2, y2));
 
-        //     this.drawPoint(this.coordinatesToScreen(new Point(x, y)), "#fff");
+        //     this.drawLine(p1, p2, "#fff");
         // }
     }
 }

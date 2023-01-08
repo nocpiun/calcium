@@ -85,6 +85,26 @@ export default class Compiler {
     }
 
     private compile(): void {
+        /**
+         * Error handle
+         */
+
+        for(let i = 0; i < this.raw.length; i++) {
+            var symbol = this.raw[i];
+            var previous = this.raw[i - 1];
+            if(
+                (symbol === "e" || symbol === "\\pi" || Compiler.isVariable(symbol)) &&
+                (previous === "e" || previous === "\\pi" || Compiler.isVariable(previous))
+            ) {
+                this.hasError = true;
+                return;
+            }
+        }
+
+        /**
+         * Resolve raw input content
+         */
+
         for(let i = 0; i < this.raw.length; i++) {
             var symbol = this.raw[i];
 

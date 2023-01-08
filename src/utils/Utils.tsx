@@ -37,8 +37,8 @@ export default class Utils {
 
     public static isAllowedSymbol(symbol: string): boolean {
         const blocked = [
-            "Tab", "CapsLock", "Shift", "Control", "Alt", "Meta", "ContextMenu",
-            "Insert", "Home", "PageUp", "PageDown", "End", "Delete", "ArrowUp", "ArrowDown",
+            "Tab", "CapsLock", "NumLock", "ScrollLock", "Shift", "Control", "Alt", "Meta", "ContextMenu",
+            "Insert", "Home", "PageUp", "PageDown", "End", "Delete", "ArrowUp", "ArrowDown", "Pause", "Escape",
             "\\", "`", "@", "#", "$", "&", ";", ":", "\"",
             "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12"
         ];
@@ -109,5 +109,10 @@ export default class Utils {
             }
         }
         return x;
+    }
+
+    public static scrollToEnd(id: string, top: number = 1, left: number = 1): void {
+        var elem = Utils.getElem(id);
+        elem.scrollTo({ top: elem.scrollHeight * top, left: elem.scrollWidth * left });
     }
 }

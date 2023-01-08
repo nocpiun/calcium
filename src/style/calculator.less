@@ -9,11 +9,12 @@
         position: relative;
         min-height: 206px;
         .output-tag {
+            &:extend(p all);
             position: absolute;
             left: 20px;
             bottom: 20px;
             font-size: 11pt;
-            color: @gray1;
+            color: @gray1 !important;
         }
         .number-box-list {
             width: 40%;
@@ -48,11 +49,20 @@
             padding-right: 50px;
             .display {
                 display: flex;
-                justify-content: flex-end;
+                // justify-content: flex-end;
                 color: @gray-light;
                 font-size: 30px;
                 min-height: 100px;
+                overflow-x: auto;
                 cursor: text;
+                .scrollbar-style();
+                & > span {
+                    display: inline;
+                }
+                & > *:first-child {
+                    // see https://www.zhangxinxu.com/wordpress/2021/12/flex-end-overflow/
+                    margin-left: auto !important;
+                }
                 .cursor {
                     margin: 1em 0; // keep the cursor fixed on the middle
                     margin-left: -1px; // make the symbols fixed when the cursor moves
@@ -72,10 +82,15 @@
             padding-right: 50px;
             .display {
                 display: flex;
-                justify-content: flex-end;
+                // justify-content: flex-end;
                 color: @gray-light;
                 font-size: 45px;
                 min-height: 156px;
+                overflow-x: auto;
+                .scrollbar-style();
+                & > div:first-child {
+                    margin-left: auto;
+                }
             }
         }
     }
@@ -84,7 +99,7 @@
         background-color: @deep2;
         .keypad {
             padding: 3px;
-            .keypad-row {
+            &-row {
                 display: flex;
                 width: 100%;
                 height: 55px;
@@ -96,9 +111,10 @@
                     height: 50px;
                     .keypad-button {
                         display: flex;
-                        background-color: @gray3;
+                        background-color: transparent;
                         outline: none;
                         border: none;
+                        padding: 0;
                         position: absolute;
                         top: 2px;
                         left: 2px;
@@ -106,7 +122,7 @@
                         bottom: 2px;
                         flex-flow: row;
                         align-items: center;
-                        padding: 0;
+                        transition: background-color .08s;
                         cursor: pointer;
                         span {
                             flex: 1;
@@ -114,10 +130,10 @@
                             color: @gray-light;
                         }
                         &:hover {
-                            background-color: @gray4;
+                            background-color: @gray5;
                         }
                         &:active {
-                            background-color: @gray2;
+                            background-color: @gray3;
                         }
                         &:disabled {
                             cursor: default;
@@ -125,7 +141,7 @@
                                 color: @gray1;
                             }
                             &, &:hover, &:active {
-                                background-color: @gray5;
+                                background-color: transparent;
                             }
                         }
                     }

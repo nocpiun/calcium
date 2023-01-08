@@ -82,6 +82,7 @@ const Output: React.FC = () => {
                 if(contentArray.length > 1) handleResult();
                 break;
             default:
+                // Function auto complete
                 for(let i = 0; i < specialSymbols.length; i++) {
                     var specialSymbol = specialSymbols[i];
                     if(symbol === specialSymbol[specialSymbol.length - 1]) {
@@ -169,6 +170,8 @@ const Output: React.FC = () => {
 
     useEffect(() => {
         contentRef.current = displayContent;
+        
+        Utils.scrollToEnd("display");
     }, [displayContent]);
     useEffect(() => {
         outputRef.current = outputContent;
@@ -198,7 +201,7 @@ const Output: React.FC = () => {
         <div className="output-container">
             <span className="output-tag">Output</span>
             <div className="input-box">
-                <span className="display" onClick={(e) => handleBlankClick(e)}>
+                <span className="display" id="display" onClick={(e) => handleBlankClick(e)}>
                     {
                         displayContent.split(" ").map((symbol, index) => {
                             return (

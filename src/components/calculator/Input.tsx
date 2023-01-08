@@ -123,7 +123,7 @@ const Input: React.FC = () => {
                     <div style={{ flexGrow: 5 }}/>
                     <div className="keypad-placeholder"/>
                     <InputButton symbol="\%" inputValue="\%(" grow={2}/>
-                    <InputButton symbol="\dfrac{a}{b}" grow={1} disabled={true}/>
+                    <InputButton symbol="×" grow={1}/>
                     <InputButton symbol="/" grow={1}/>
                     <div className="keypad-placeholder"/>
                     <InputButton symbol="\epsilon" grow={1}/>
@@ -140,7 +140,7 @@ const Input: React.FC = () => {
                     <InputButton symbol="1" grow={1}/>
                     <InputButton symbol="2" grow={1}/>
                     <InputButton symbol="3" grow={1}/>
-                    <InputButton symbol="×" grow={1}/>
+                    <InputButton symbol="+" grow={1}/>
                     <div className="keypad-placeholder"/>
                     <InputButton symbol="\kappa" grow={1}/>
                     <InputButton symbol="\lambda" grow={1}/>
@@ -172,7 +172,7 @@ const Input: React.FC = () => {
                     <InputButton symbol="7" grow={1}/>
                     <InputButton symbol="8" grow={1}/>
                     <InputButton symbol="9" grow={1}/>
-                    <InputButton symbol="+" grow={1}/>
+                    <InputButton symbol="=" grow={1}/>
                     <div className="keypad-placeholder"/>
                     <InputButton symbol="\upsilon" grow={1}/>
                     <InputButton symbol="\phi" grow={1}/>
@@ -187,8 +187,7 @@ const Input: React.FC = () => {
                     <div className="keypad-placeholder"/>
                     <InputButton symbol="0" grow={1}/>
                     <InputButton symbol="." grow={1}/>
-                    <InputButton symbol="=" grow={1}/>
-                    <InputButton symbol="\text{Result}" grow={1}/>
+                    <InputButton symbol="\text{Result}" grow={2}/>
                     <div className="keypad-placeholder"/>
                     <InputButton symbol="\Delta" grow={1}/>
                     <div style={{ flexGrow: 4 }}/>
