@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 
-import Utils from "../../utils/Utils";
+import Utils from "../utils/Utils";
 
 const blinkClassName = "cursor-blink";
 

@@ -6,7 +6,7 @@ import "./style/layout.less";
 
 // Components
 import Sidebar from "./components/sidebar";
-import Calculator from "./components/calculator";
+import Calculator from "./components/Calculator";
 
 const App: React.FC = () => {
 	return (

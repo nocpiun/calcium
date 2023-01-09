@@ -8,7 +8,7 @@ import Emitter from "../../utils/Emitter";
 import Utils from "../../utils/Utils";
 
 import NumberBox from "./NumberBox";
-import Cursor from "./Cursor";
+import Cursor from "../Cursor";
 
 const ProgrammingOutput: React.FC = () => {
     const [displayContent, setDisplayContent] = useState<string>(cursor);

@@ -1,8 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from "react";
 
-import { ModeButtonProps, Mode } from "../../types";
+import { Mode } from "../../types";
 import Emitter from "../../utils/Emitter";
+
+interface ModeButtonProps {
+    modeName: string
+    mode: Mode
+    icon: string
+}
 
 const ModeButton: React.FC<ModeButtonProps> = (props) => {
     const [isActive, setIsActive] = useState<boolean>(false);

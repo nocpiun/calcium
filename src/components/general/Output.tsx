@@ -5,9 +5,9 @@ import { BlockMath } from "react-katex";
 import { cursor } from "../../global";
 import Emitter from "../../utils/Emitter";
 import Utils from "../../utils/Utils";
-import Compiler from "./Compiler";
+import Compiler from "../../utils/Compiler";
 
-import Cursor from "./Cursor";
+import Cursor from "../Cursor";
 
 const specialSymbols: string[] = [
     "sin", "cos", "tan", "cot", "sec", "csc",

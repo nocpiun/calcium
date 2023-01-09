@@ -1,8 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from "react";
 
-import { NumberBoxProps, NumberType } from "../../types";
+import { NumberType } from "../../types";
 import Emitter from "../../utils/Emitter";
+
+interface NumberBoxProps {
+    name: string
+    number: number
+    type: NumberType
+}
 
 const NumberBox: React.FC<NumberBoxProps> = (props) => {
     const [isActive, setIsActive] = useState<boolean>(false);

@@ -2,8 +2,16 @@
 import React, { useState, useEffect } from "react";
 import { InlineMath } from "react-katex";
 
-import { InputButtonProps, NumberType } from "../../types";
-import Emitter from "../../utils/Emitter";
+import { NumberType } from "../types";
+import Emitter from "../utils/Emitter";
+
+interface InputButtonProps {
+    symbol: string
+    inputValue?: string
+    grow: number
+    group?: string[]
+    disabled?: boolean
+}
 
 const InputButton: React.FC<InputButtonProps> = (props) => {
     const [disabled, setDisabled] = useState<boolean>(props.disabled ?? false);

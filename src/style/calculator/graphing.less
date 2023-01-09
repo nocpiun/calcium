@@ -1,0 +1,28 @@
+.calculator-container {
+    position: relative;
+    .function-input-container {
+        width: 300px;
+        height: 200px;
+        position: absolute;
+        left: 30px;
+        bottom: 30px;
+        border: @border-style;
+        border-radius: 3px;
+        background-color: @deep2;
+        padding: 7px;
+        .function-list {
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            justify-content: space-between;
+            .scrollbar-style();
+            &-item {
+                // todo
+            }
+        }
+    }
+    .graphing-container {
+        height: 100%;
+        background-color: @deep1;
+    }
+}

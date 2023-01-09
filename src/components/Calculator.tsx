@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 
-import { Mode } from "../../types";
-import Emitter from "../../utils/Emitter";
+import { Mode } from "../types";
+import Emitter from "../utils/Emitter";
 
-import Input from "./Input";
-import ProgrammingInput from "./ProgrammingInput";
-import Output from "./Output";
-import ProgrammingOutput from "./ProgrammingOutput";
-import Graphing from "./Graphing";
+import Input from "./general/Input";
+import ProgrammingInput from "./programming/ProgrammingInput";
+import Output from "./general/Output";
+import ProgrammingOutput from "./programming/ProgrammingOutput";
+import Graphing from "./graphing/Graphing";
 
 const Calculator: React.FC = () => {
     const [mode, setMode] = useState<Mode>(Mode.GENERAL);

@@ -1,7 +1,10 @@
 import React from "react";
 import { InlineMath } from "react-katex";
 
-import { HistoryItemProps } from "../../types";
+interface HistoryItemProps {
+    input: string
+    output: string
+}
 
 const HistoryItem: React.FC<HistoryItemProps> = (props) => {
     return (

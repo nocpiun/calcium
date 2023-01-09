@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-redeclare */
-import List from "../../utils/List";
-import Float from "../../utils/Float";
-import { Operator } from "../../types";
+import List from "./List";
+import Float from "./Float";
+import { Operator } from "../types";
 
 type MathFunction = (x: number) => number;
 
