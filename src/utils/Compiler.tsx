@@ -1,9 +1,7 @@
 /* eslint-disable @typescript-eslint/no-redeclare */
 import List from "./List";
 import Float from "./Float";
-import { Operator } from "../types";
-
-type MathFunction = (x: number) => number;
+import { Operator, MathFunction } from "../types";
 
 export default class Compiler {
     private functions: Map<string, MathFunction> = new Map();

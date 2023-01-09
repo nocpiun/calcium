@@ -17,3 +17,5 @@ export enum Operator {
     MUL = "×",
     DIV = "/"
 }
+
+export type MathFunction = (x: number) => number;

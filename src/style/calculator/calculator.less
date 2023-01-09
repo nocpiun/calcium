@@ -1,3 +1,4 @@
+@import "./mixin.less";
 @import "./graphing.less";
 
 .calculator-container {
@@ -112,40 +113,7 @@
                     position: relative;
                     height: 50px;
                     .keypad-button {
-                        display: flex;
-                        background-color: transparent;
-                        outline: none;
-                        border: none;
-                        padding: 0;
-                        position: absolute;
-                        top: 2px;
-                        left: 2px;
-                        right: 2px;
-                        bottom: 2px;
-                        flex-flow: row;
-                        align-items: center;
-                        transition: background-color .08s;
-                        cursor: pointer;
-                        span {
-                            flex: 1;
-                            text-align: center;
-                            color: @gray-light;
-                        }
-                        &:hover {
-                            background-color: @gray5;
-                        }
-                        &:active {
-                            background-color: @gray3;
-                        }
-                        &:disabled {
-                            cursor: default;
-                            span {
-                                color: @gray1;
-                            }
-                            &, &:hover, &:active {
-                                background-color: transparent;
-                            }
-                        }
+                        .button-style();
                     }
                 }
                 .keypad-placeholder {

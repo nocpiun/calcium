@@ -181,8 +181,6 @@ const Output: React.FC = () => {
         Emitter.get().on("input", (symbol: string) => handleInput(symbol));
 
         document.body.addEventListener("keydown", (e: KeyboardEvent) => {
-            e.preventDefault();
-
             if(e.key === cursor) return;
             if(!Utils.isAllowedSymbol(e.key)) return;
             if(e.ctrlKey && e.key === "m") { // ctrl + m

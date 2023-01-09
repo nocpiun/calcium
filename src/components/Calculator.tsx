@@ -7,7 +7,7 @@ import Input from "./general/Input";
 import ProgrammingInput from "./programming/ProgrammingInput";
 import Output from "./general/Output";
 import ProgrammingOutput from "./programming/ProgrammingOutput";
-import Graphing from "./graphing/Graphing";
+import Graphing from "./graphing";
 
 const Calculator: React.FC = () => {
     const [mode, setMode] = useState<Mode>(Mode.GENERAL);

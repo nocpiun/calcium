@@ -2,6 +2,9 @@
 /* eslint-disable no-self-assign */
 import Point from "./Point";
 
+import List from "../../utils/List";
+import { MathFunction } from "../../types";
+
 export default class Render {
     private canvas: HTMLCanvasElement;
     private ctx: CanvasRenderingContext2D;
@@ -14,6 +17,8 @@ export default class Render {
 
     private center: Point;
     private mousePoint: Point;
+
+    private functionList: List<MathFunction> = new List();
 
     public constructor(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) {
         this.canvas = canvas;
@@ -212,5 +217,9 @@ export default class Render {
 
         //     this.drawLine(p1, p2, "#fff");
         // }
+    }
+
+    public registerFunction(f: MathFunction): void {
+        this.functionList.add(f);
     }
 }
