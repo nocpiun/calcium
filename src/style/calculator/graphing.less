@@ -24,30 +24,35 @@
                 flex: 1;
                 .function-tag();
             }
-            .function-input {
+            .input-box {
                 flex: 4;
+                .input-box-style();
                 background-color: @gray5;
-                outline: none;
                 border: 1px solid @gray4;
                 border-radius: @border-radius;
                 margin: 5px;
+                margin-left: 0;
                 padding-left: 7px;
                 padding-right: 7px;
-                color: @gray-light;
-                font-family: @font;
-                &:focus {
-                    border-color: @gray2;
+                .display {
+                    font-size: 12px;
+                    min-height: 40px;
+                    max-height: 40px;
+                    .cursor {
+                        margin-left: 0;
+                        margin-right: -1px;
+                    }
                 }
             }
             .add-button-container {
-                flex: 1;
+                flex: 1.2;
                 display: inline-block;
                 position: relative;
-                margin: 5px;
+                margin: 2px;
                 .add-button {
                     .button-style();
                     span {
-                        font-size: 15pt;
+                        font-size: 11pt;
                     }
                 }
             }

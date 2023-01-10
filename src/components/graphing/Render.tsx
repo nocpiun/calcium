@@ -1,13 +1,17 @@
 /* eslint-disable @typescript-eslint/no-redeclare */
 /* eslint-disable no-self-assign */
 import Point from "./Point";
+import Compiler from "../../utils/Compiler";
 
 import List from "../../utils/List";
-import { MathFunction } from "../../types";
+
+import ComputeWorker from "../../workers/compute.worker.ts";
 
 export default class Render {
     private canvas: HTMLCanvasElement;
     private ctx: CanvasRenderingContext2D;
+    private worker: ComputeWorker = new ComputeWorker();
+
     private scale: number = 90; // px per unit length
     private spacing: number = 1; // unit length
 
@@ -18,7 +22,7 @@ export default class Render {
     private center: Point;
     private mousePoint: Point;
 
-    private functionList: List<MathFunction> = new List();
+    private functionList: List<string> = new List();
 
     public constructor(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) {
         this.canvas = canvas;
@@ -69,22 +73,24 @@ export default class Render {
     }
 
     private refreshAxisLine(): void {
+        var unitPx = this.spacing * this.scale;
+        var secondaryUnitPx = (this.spacing / 5) * this.scale;
         /**
          * X Direction
          */
         // X Axis
-        this.drawLine(new Point(0, this.center.y), new Point(this.canvas.width, this.center.y), "#cbd0df", 2);
+        this.drawStraightLine(this.center.y, "#cbd0df", 2);
         // thicker line
         for(
             let i = 1;
             (
-                this.center.y - i * this.spacing * this.scale >= 0 ||
-                this.center.y + i * this.spacing * this.scale <= this.canvas.height
+                this.center.y - i * unitPx >= 0 ||
+                this.center.y + i * unitPx <= this.canvas.height
             );
             i++
         ) {
-            var y1 = this.center.y - i * this.spacing * this.scale;
-            var y2 = this.center.y + i * this.spacing * this.scale;
+            var y1 = this.center.y - i * unitPx;
+            var y2 = this.center.y + i * unitPx;
             this.drawStraightLine(y1, "#8c949e");
             this.drawStraightLine(y2, "#8c949e");
 
@@ -96,13 +102,13 @@ export default class Render {
         for(
             let j = 1;
             (
-                this.center.y - j * (this.spacing / 5) * this.scale >= 0 ||
-                this.center.y + j * (this.spacing / 5) * this.scale <= this.canvas.height
+                this.center.y - j * secondaryUnitPx >= 0 ||
+                this.center.y + j * secondaryUnitPx <= this.canvas.height
             );
             j++
         ) {
-            var y1 = this.center.y - j * (this.spacing / 5) * this.scale;
-            var y2 = this.center.y + j * (this.spacing / 5) * this.scale;
+            var y1 = this.center.y - j * secondaryUnitPx;
+            var y2 = this.center.y + j * secondaryUnitPx;
             this.drawStraightLine(y1, "#8c949e", .3);
             this.drawStraightLine(y2, "#8c949e", .3);
         }
@@ -111,18 +117,18 @@ export default class Render {
          * Y Direction
          */
         // Y Axis
-        this.drawLine(new Point(this.center.x, 0), new Point(this.center.x, this.canvas.height), "#cbd0df", 2);
+        this.drawVerticalLine(this.center.x, "#cbd0df", 2);
         // thicker line
         for(
             let k = 1;
             (
-                this.center.x - k * this.spacing * this.scale >= 0 ||
-                this.center.x + k * this.spacing * this.scale <= this.canvas.width
+                this.center.x - k * unitPx >= 0 ||
+                this.center.x + k * unitPx <= this.canvas.width
             );
             k++
         ) {
-            var x1 = this.center.x - k * this.spacing * this.scale;
-            var x2 = this.center.x + k * this.spacing * this.scale;
+            var x1 = this.center.x - k * unitPx;
+            var x2 = this.center.x + k * unitPx;
             this.drawVerticalLine(x1, "#8c949e");
             this.drawVerticalLine(x2, "#8c949e");
 
@@ -134,13 +140,13 @@ export default class Render {
         for(
             let l = 1;
             (
-                this.center.x - l * (this.spacing / 5) * this.scale >= 0 ||
-                this.center.x + l * (this.spacing / 5) * this.scale <= this.canvas.width
+                this.center.x - l * secondaryUnitPx >= 0 ||
+                this.center.x + l * secondaryUnitPx <= this.canvas.width
             );
             l++
         ) {
-            var x1 = this.center.x - l * (this.spacing / 5) * this.scale;
-            var x2 = this.center.x + l * (this.spacing / 5) * this.scale;
+            var x1 = this.center.x - l * secondaryUnitPx;
+            var x2 = this.center.x + l * secondaryUnitPx;
             this.drawVerticalLine(x1, "#8c949e", .3);
             this.drawVerticalLine(x2, "#8c949e", .3);
         }
@@ -150,7 +156,6 @@ export default class Render {
         this.mouseDown = false;
         this.mouseDX = 0;
         this.mouseDY = 0;
-        // this.mousePoint = this.center;
     }
 
     private drawLine(begin: Point, end: Point, color: string, width: number = 1): void {
@@ -183,10 +188,12 @@ export default class Render {
 
     // Point transforming
     private screenToCoordinates(point: Point): Point {
-        return new Point((point.x - this.center.x) / (this.scale * this.spacing), -(point.y - this.center.y) / (this.scale * this.spacing));
+        var unitPx = this.scale * this.spacing;
+        return new Point((point.x - this.center.x) / unitPx, -(point.y - this.center.y) / unitPx);
     }
     private coordinatesToScreen(point: Point): Point {
-        return new Point(this.center.x + (point.x * this.scale * this.spacing), this.center.y - (point.y * this.scale * this.spacing));
+        var unitPx = this.scale * this.spacing;
+        return new Point(this.center.x + (point.x * unitPx), this.center.y - (point.y * unitPx));
     }
     /*****/
 
@@ -204,22 +211,27 @@ export default class Render {
         this.drawText("Mouse: "+ mouseCoordinatesPoint.x.toFixed(2) +", "+ mouseCoordinatesPoint.y.toFixed(2), 30, 30, "#cbd0df", 15);
 
         // Draw function images
-        /** @todo */
-        // var beginX = -this.center.x / (this.scale * this.spacing);
-        // var endX = (this.canvas.width - this.center.x) / (this.scale * this.spacing);
-        // for(let x1 = beginX; x1 <= endX; x1 += .01) {
-        //     var f = (x: number) => 1 / x; // f(x)
-        //     var y1 = f(x1);
-        //     var x2 = x1 + .01;
-        //     var y2 = f(x2);
-        //     var p1 = this.coordinatesToScreen(new Point(x1, y1));
-        //     var p2 = this.coordinatesToScreen(new Point(x2, y2));
+        this.functionList.forEach((rawText: string) => {
+            var unitPx = this.scale * this.spacing;
 
-        //     this.drawLine(p1, p2, "#fff");
-        // }
+            var beginX = -this.center.x / unitPx;
+            var endX = (this.canvas.width - this.center.x) / unitPx;
+
+            for(let x1 = beginX; x1 <= endX; x1 += .01) {
+                var y1 = parseFloat(new Compiler(rawText.split(" "), new Map([["x", x1.toString()]])).run());
+
+                var x2 = x1 + .01;
+                var y2 = parseFloat(new Compiler(rawText.split(" "), new Map([["x", x2.toString()]])).run());
+
+                var p1 = this.coordinatesToScreen(new Point(x1, y1));
+                var p2 = this.coordinatesToScreen(new Point(x2, y2));
+    
+                this.drawLine(p1, p2, "#fff");
+            }
+        });
     }
 
-    public registerFunction(f: MathFunction): void {
-        this.functionList.add(f);
+    public registerFunction(rawText: string): void {
+        this.functionList.add(rawText);
     }
 }

@@ -2,7 +2,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { BlockMath } from "react-katex";
 
-import { cursor } from "../../global";
+import { cursor } from "../InputBox";
 import { NumberType } from "../../types";
 import Emitter from "../../utils/Emitter";
 import Utils from "../../utils/Utils";

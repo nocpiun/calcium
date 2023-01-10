@@ -44,3 +44,33 @@
         color: @gray1;
     }
 }
+
+.input-box-style(@ltr: true) {
+    .display {
+        display: flex;
+        // justify-content: flex-end;
+        color: @gray-light;
+        overflow-x: auto;
+        cursor: text;
+        .scrollbar-style();
+        & > span {
+            display: inline;
+        }
+        & > *:first-child when (@ltr = false) {
+            // see https://www.zhangxinxu.com/wordpress/2021/12/flex-end-overflow/
+            margin-left: auto !important;
+        }
+        .cursor {
+            margin: 1em 0; // keep the cursor fixed on the middle
+            
+            // make the symbols fixed when the cursor moves
+            margin-left: if(@ltr = true, 0, -1px);
+            margin-right: if(@ltr = true, -1px, 0);
+
+            border-right: 1px solid transparent;
+            &.cursor-blink {
+                border-right-color: @gray-light;
+            }
+        }
+    }
+}

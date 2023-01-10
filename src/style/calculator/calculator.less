@@ -45,35 +45,17 @@
             }
         }
         .input-box {
+            .input-box-style(false);
             position: absolute;
             right: 0;
             top: 0;
             width: 60%;
             padding-right: 50px;
             .display {
-                display: flex;
-                // justify-content: flex-end;
-                color: @gray-light;
                 font-size: 30px;
                 min-height: 100px;
-                overflow-x: auto;
-                cursor: text;
-                .scrollbar-style();
-                & > span {
-                    display: inline;
-                }
-                & > *:first-child {
-                    // see https://www.zhangxinxu.com/wordpress/2021/12/flex-end-overflow/
-                    margin-left: auto !important;
-                }
                 .cursor {
-                    margin: 1em 0; // keep the cursor fixed on the middle
-                    margin-left: -1px; // make the symbols fixed when the cursor moves
-                    border-right: 1px solid transparent;
                     max-height: 40px;
-                    &.cursor-blink {
-                        border-right-color: @gray-light;
-                    }
                 }
             }
         }

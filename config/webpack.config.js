@@ -341,6 +341,13 @@ module.exports = function (webpackEnv) {
     module: {
       strictExportPresence: true,
       rules: [
+        {
+          test: /\.worker\.ts$/,
+          use: [
+            { loader: "worker-loader" },
+            { loader: "babel-loader" }
+          ]
+        },
         // Handle node_modules packages that contain sourcemaps
         shouldUseSourceMap && {
           enforce: 'pre',

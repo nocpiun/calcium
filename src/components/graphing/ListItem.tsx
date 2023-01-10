@@ -13,7 +13,7 @@ const ListItem: React.FC<ListItemProps> = (props) => {
                 <span><InlineMath>{"y_{"+ (props.index + 1).toString() +"} ="}</InlineMath></span>
             </div>
             <div className="function-list-item-value">
-                <span>{props.value}</span>
+                <span><InlineMath>{props.value}</InlineMath></span>
             </div>
         </div>
     );

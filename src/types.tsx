@@ -19,3 +19,7 @@ export enum Operator {
 }
 
 export type MathFunction = (x: number) => number;
+
+export interface WorkerMessageType {
+    
+}
