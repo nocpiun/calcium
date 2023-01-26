@@ -2,49 +2,30 @@
 import React, { useState, useRef, useEffect } from "react";
 import { BlockMath, InlineMath } from "react-katex";
 
-import { cursor } from "../InputBox";
 import Emitter from "../../utils/Emitter";
 import Utils from "../../utils/Utils";
 import Compiler from "../../utils/Compiler";
 import Dialog from "../Dialog";
-
-import Cursor from "../Cursor";
-
-const specialSymbols: string[] = [
-    "sin", "cos", "tan", "cot", "sec", "csc",
-    "ln", "lg", "deg"
-];
+import InputBox, { specialSymbols, cursor } from "../InputBox";
 
 const Output: React.FC = () => {
-    const [displayContent, setDisplayContent] = useState<string>(cursor);
     const [outputContent, setOutputContent] = useState<string>("");
     const variableRef = useRef<Map<string, string>>(new Map<string, string>());
+    const inputRef = useRef<InputBox>(null);
     const varsDialogRef = useRef<Dialog>(null);
     const funcsDialogRef = useRef<Dialog>(null);
 
-    function getCursorIndex(content: string): number {
-        return content.split(" ").indexOf(cursor);
-    }
-
-    function moveCursor(content: string, index: number): void {
-        var contentArray = content.split(" ");
-        var cursorIndex = getCursorIndex(content);
-
-        contentArray = Utils.arrayRemove(contentArray, cursorIndex);
-        contentArray = Utils.arrayPut(contentArray, index, cursor);
-
-        setDisplayContent(contentArray.join(" "));
-    }
-
-    const handleInput = async (symbol: string) => {
-        const currentContent = await Utils.getCurrentState(setDisplayContent);
+    const handleInput = (symbol: string) => {
+        if(!inputRef.current) return;
+        const inputBox = inputRef.current;
+        const currentContent = inputBox.state.displayContent;
 
         var contentArray = currentContent.split(" ");
-        var cursorIndex = getCursorIndex(currentContent);
+        var cursorIndex = inputBox.getCursorIndex();
 
         switch(symbol) {
             case "\\text{Clear}":
-                setDisplayContent(cursor);
+                inputBox.reset();
                 setOutputContent("");
                 break;
             case "Backspace":
@@ -57,9 +38,8 @@ const Output: React.FC = () => {
 
                 contentArray = Utils.arrayRemove(contentArray, target);
 
-                setDisplayContent(contentArray.join(" "));
                 setOutputContent("");
-                break;
+                return contentArray.join(" ");
             case "\\text{CH}":
                 /** @todo */
                 // Emitter.get().emit("add-record", undefined, undefined);
@@ -68,19 +48,16 @@ const Output: React.FC = () => {
             case "\\leftarrow":
                 if(cursorIndex === 0) return;
 
-                moveCursor(currentContent, cursorIndex - 1)
-                break;
+                return inputBox.moveCursorTo(cursorIndex - 1);
             case "ArrowRight":
             case "\\rightarrow":
                 if(cursorIndex === contentArray.length - 1) return;
 
-                moveCursor(currentContent, cursorIndex + 1)
-                break;
+                return inputBox.moveCursorTo(cursorIndex + 1);
             case "Enter":
             case "\\text{Result}":
                 if(contentArray.length > 1) handleResult(currentContent);
-                setDisplayContent(currentContent);
-                break;
+                return;
             case "\\text{Vars}":
                 varsDialogRef.current?.open();
                 break;
@@ -90,12 +67,11 @@ const Output: React.FC = () => {
             case "i": // Pi
                 if(contentArray[cursorIndex - 1] === "p") {
                     contentArray[cursorIndex - 1] = "\\pi";
-                    setDisplayContent(contentArray.join(" "));
+                    return contentArray.join(" ");
                 } else {
-                    setDisplayContent(currentContent.replace(cursor, symbol +" "+ cursor));
                     setOutputContent("");
+                    return currentContent.replace(cursor, symbol +" "+ cursor);
                 }
-                break;
             default:
                 // Function auto complete
                 for(let i = 0; i < specialSymbols.length; i++) {
@@ -115,14 +91,13 @@ const Output: React.FC = () => {
                                 contentArray = Utils.arrayRemove(contentArray, begin + 1);
                             }
 
-                            setDisplayContent(contentArray.join(" "));
-                            return;
+                            return contentArray.join(" ");
                         }
                     }
                 }
                 
-                setDisplayContent(currentContent.replace(cursor, symbol +" "+ cursor));
                 setOutputContent("");
+                return currentContent.replace(cursor, symbol +" "+ cursor);
         }
     };
 
@@ -163,69 +138,19 @@ const Output: React.FC = () => {
         Emitter.get().emit("add-record", rawText, result);
     };
 
-    /**
-     * Click to move the cursor
-     */
-    const handleSymbolClick = (e: React.MouseEvent, index: number) => {
-        if(index > getCursorIndex(displayContent)) index--;
-
-        var symbolElem = e.target as HTMLElement;
-        var mouseX = e.clientX;
-        var symbolCenterX = Utils.getOffsetLeft(symbolElem) + (symbolElem.offsetWidth / 2);
-        if(mouseX > symbolCenterX) index++;
-
-        moveCursor(displayContent, index)
-    };
-    const handleBlankClick = (e: React.MouseEvent) => {
-        // only the blank area of display box is available
-        if((e.target as HTMLElement).className !== "display") return;
-
-        moveCursor(displayContent, 0)
-    };
-    /*****/
-
     useEffect(() => {
-        Emitter.get().on("input", (symbol: string) => handleInput(symbol));
-
         document.body.addEventListener("keydown", (e: KeyboardEvent) => {
-            if(e.key === cursor) return;
-            if(!Utils.isAllowedSymbol(e.key)) return;
             if(e.ctrlKey && e.key === "m") { // ctrl + m
                 setOutputContent("c^{xk}+c^{trl}"); // I'm iKun
                 return;
             }
-            if(e.key === "Enter") e.preventDefault();
-
-            var inputValue = e.key;
-            if(inputValue === "*") inputValue = "×";
-
-            handleInput(inputValue);
         });
     }, []);
 
     return (
         <div className="output-container">
             <span className="output-tag">Output</span>
-            <div className="input-box">
-                <span className="display" id="display" onClick={(e) => handleBlankClick(e)}>
-                    {
-                        displayContent.split(" ").map((symbol, index) => {
-                            return (
-                                symbol === cursor
-                                ? <Cursor key={index}/>
-                                : (
-                                    <span
-                                        onClick={(e) => handleSymbolClick(e, index)}
-                                        data-index={index}
-                                        key={index}>
-                                        <BlockMath>{symbol}</BlockMath>
-                                    </span>
-                                )
-                            )
-                        })
-                    }
-                </span>
-            </div>
+            <InputBox ref={inputRef} ltr={true} onInput={(symbol) => handleInput(symbol)}/>
             <div className="output-box">
                 <span className="display">
                     {outputContent.split(" ").map((symbol, index) => <BlockMath key={index}>{symbol}</BlockMath>)}
@@ -255,13 +180,13 @@ const Output: React.FC = () => {
                             <td>{Math.E}</td>
                         </tr>
                         {
-                            Array.from(variableRef.current).map(([varName, value]) => {
+                            Array.from(variableRef.current).map(([varName, value], index) => {
                                 return (
-                                    <tr>
+                                    <tr key={index}>
                                         <td>
                                             <InlineMath>{varName}</InlineMath>
                                         </td>
-                                        <td>{varName}</td>
+                                        <td>{value}</td>
                                     </tr>
                                 );
                             })
@@ -278,9 +203,9 @@ const Output: React.FC = () => {
                     </thead>
                     <tbody>
                         {
-                            Array.from(Compiler.functions).map(([funcName, value]) => {
+                            Array.from(Compiler.functions).map(([funcName, value], index) => {
                                 return (
-                                    <tr>
+                                    <tr key={index}>
                                         <td>
                                             <InlineMath>{funcName}</InlineMath>
                                         </td>

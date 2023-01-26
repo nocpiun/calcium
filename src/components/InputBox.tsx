@@ -9,13 +9,14 @@ import Emitter from "../utils/Emitter";
 
 interface InputBoxProps {
     ltr: boolean
+    onInput?: (symbol: string) => string | void
 }
 
 interface InputBoxState {
     displayContent: string
 }
 
-const specialSymbols: string[] = [
+export const specialSymbols: string[] = [
     "sin", "cos", "tan", "cot", "sec", "csc",
     "ln", "lg", "deg"
 ];
@@ -49,91 +50,20 @@ export default class InputBox extends Component<InputBoxProps, InputBoxState> {
         return this.state.displayContent.split(" ").indexOf(cursor);
     }
 
-    public moveCursorTo(index: number): void {
+    public moveCursorTo(index: number): string {
         var contentArray = this.state.displayContent.split(" ");
         var cursorIndex = this.getCursorIndex();
 
         contentArray = Utils.arrayRemove(contentArray, cursorIndex);
         contentArray = Utils.arrayPut(contentArray, index, cursor);
 
-        this.value = contentArray.join(" ");
+        var result = contentArray.join(" ");
+        this.value = result;
+        return result;
     }
 
     private handleInput(symbol: string): void {
-        var contentArray = this.state.displayContent.split(" ");
-        var cursorIndex = this.getCursorIndex();
-
-        switch(symbol) {
-            case "\\text{Clear}":
-                this.reset();
-                // setOutputContent("");
-                break;
-            case "Backspace":
-            case "\\text{Del}":
-                var target = cursorIndex;
-                if(contentArray[target] === cursor) {
-                    target--;
-                    if(target < 0) return;
-                }
-
-                contentArray = Utils.arrayRemove(contentArray, target);
-                this.value = contentArray.join(" ");
-                // setOutputContent("");
-                break;
-            case "ArrowLeft":
-            case "\\leftarrow":
-                if(cursorIndex === 0) return;
-
-                this.moveCursorTo(cursorIndex - 1);
-                break;
-            case "ArrowRight":
-            case "\\rightarrow":
-                if(cursorIndex === contentArray.length - 1) return;
-
-                this.moveCursorTo(cursorIndex + 1);
-                break;
-            case "i": // Pi
-                if(contentArray[cursorIndex - 1] === "p") {
-                    contentArray[cursorIndex - 1] = "\\pi";
-                    this.value = contentArray.join(" ");
-                } else {
-                    this.value = this.state.displayContent.replace(cursor, symbol +" "+ cursor);
-                    // setOutputContent("");
-                }
-                break;
-            case "Enter":
-            case "\\text{Result}":
-                // if(contentArray.length > 1) handleResult();
-                break;
-            default:
-                // Function auto complete
-                for(let i = 0; i < specialSymbols.length; i++) {
-                    var specialSymbol = specialSymbols[i];
-                    if(symbol === specialSymbol[specialSymbol.length - 1]) {
-                        var splited = specialSymbol.split("");
-                        var passed = true;
-                        for(let j = splited.length - 2; j >= 0; j--) {
-                            if(contentArray[cursorIndex - (splited.length - j) + 1] !== splited[j]) {
-                                passed = false;
-                            }
-                        }
-                        if(passed) {
-                            var begin = cursorIndex - splited.length + 1;
-                            contentArray[begin] = "\\"+ specialSymbol +"(";
-                            for(let j = 0; j < splited.length - 2; j++) {
-                                contentArray = Utils.arrayRemove(contentArray, begin + 1);
-                            }
-
-                            this.value = contentArray.join(" ");
-                            return;
-                        }
-                    }
-                }
-                
-                this.value = this.state.displayContent.replace(cursor, symbol +" "+ cursor);
-                // setOutputContent("");
-                break;
-        }
+        if(this.props.onInput) this.value = this.props.onInput(symbol) ?? this.state.displayContent;
     }
 
     private handleSymbolClick(e: React.MouseEvent, index: number): void {
@@ -185,11 +115,8 @@ export default class InputBox extends Component<InputBoxProps, InputBoxState> {
         document.body.addEventListener("keydown", (e: KeyboardEvent) => {
             if(e.key === cursor) return;
             if(!Utils.isAllowedSymbol(e.key)) return;
-            // if(e.ctrlKey && e.key === "m") { // ctrl + m
-            //     setOutputContent("c^{xk}+c^{trl}"); // I'm iKun
-            //     return;
-            // }
-
+            if(e.key === "Enter") e.preventDefault();
+            
             var inputValue = e.key;
             if(inputValue === "*") inputValue = "×";
 

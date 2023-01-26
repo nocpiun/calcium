@@ -3,7 +3,7 @@ import React, { memo, useState, useRef, useEffect } from "react";
 import { InlineMath } from "react-katex";
 
 import ListItem from "./ListItem";
-import InputBox, { cursor } from "../InputBox";
+import InputBox, { specialSymbols, cursor } from "../InputBox";
 
 import Render from "./Render";
 import Utils from "../../utils/Utils";
@@ -23,6 +23,70 @@ const Graphing: React.FC = memo(() => {
         Emitter.get().emit("add-function", value);
 
         inputBox.reset();
+    };
+
+    const handleInput = (symbol: string) => {
+        if(!inputRef.current) return;
+        const inputBox = inputRef.current;
+        const currentContent = inputBox.state.displayContent;
+
+        var contentArray = currentContent.split(" ");
+        var cursorIndex = inputBox.getCursorIndex();
+
+        switch(symbol) {
+            case "Backspace":
+                var target = cursorIndex;
+                if(contentArray[target] === cursor) {
+                    target--;
+                    if(target < 0) return;
+                }
+
+                contentArray = Utils.arrayRemove(contentArray, target);
+
+                return contentArray.join(" ");
+            case "Enter":
+                if(contentArray.length > 1) handleAddFunction();
+                return;
+            case "i": // Pi
+                if(contentArray[cursorIndex - 1] === "p") {
+                    contentArray[cursorIndex - 1] = "\\pi";
+                    return contentArray.join(" ");
+                } else {
+
+                    return currentContent.replace(cursor, symbol +" "+ cursor);
+                }
+            default:
+                /**
+                 * Function auto complete
+                 * 
+                 * For example,
+                 * input 'lg', then it will auto complete it as '\lg('
+                 * which can be correctly displayed by KaTeX
+                 */
+                for(let i = 0; i < specialSymbols.length; i++) {
+                    var specialSymbol = specialSymbols[i];
+                    if(symbol === specialSymbol[specialSymbol.length - 1]) {
+                        var splited = specialSymbol.split("");
+                        var passed = true;
+                        for(let j = splited.length - 2; j >= 0; j--) {
+                            if(contentArray[cursorIndex - (splited.length - j) + 1] !== splited[j]) {
+                                passed = false;
+                            }
+                        }
+                        if(passed) {
+                            var begin = cursorIndex - splited.length + 1;
+                            contentArray[begin] = "\\"+ specialSymbol +"(";
+                            for(let j = 0; j < splited.length - 2; j++) {
+                                contentArray = Utils.arrayRemove(contentArray, begin + 1);
+                            }
+
+                            return contentArray.join(" ");
+                        }
+                    }
+                }
+                
+                return currentContent.replace(cursor, symbol +" "+ cursor);
+        }
     };
 
     useEffect(() => {
@@ -58,12 +122,6 @@ const Graphing: React.FC = memo(() => {
         });
     }, []);
 
-    useEffect(() => {
-        document.body.addEventListener("keydown", (e: KeyboardEvent) => {
-            if(e.key === "Enter" && inputRef.current?.value !== cursor) handleAddFunction();
-        });
-    }, []);
-
     return (
         <>
             <div className="function-input-container">
@@ -71,7 +129,7 @@ const Graphing: React.FC = memo(() => {
                     <div className="function-input-box-tag">
                         <span><InlineMath>y =</InlineMath></span>
                     </div>
-                    <InputBox ref={inputRef} ltr={true}/>
+                    <InputBox ref={inputRef} ltr={true} onInput={(symbol) => handleInput(symbol)}/>
                     <div className="add-button-container">
                         <button className="add-button" onClick={() => handleAddFunction()}>
                             <span>Add</span>
