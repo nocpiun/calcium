@@ -17,17 +17,15 @@ const specialSymbols: string[] = [
 const Output: React.FC = () => {
     const [displayContent, setDisplayContent] = useState<string>(cursor);
     const [outputContent, setOutputContent] = useState<string>("");
-    const contentRef = useRef<string>(displayContent);
-    const outputRef = useRef<string>(outputContent);
     const variableRef = useRef<Map<string, string>>(new Map<string, string>());
 
-    function getCursorIndex(): number {
-        return contentRef.current.split(" ").indexOf(cursor);
+    function getCursorIndex(content: string): number {
+        return content.split(" ").indexOf(cursor);
     }
 
-    function moveCursorTo(index: number): void {
-        var contentArray = contentRef.current.split(" ");
-        var cursorIndex = getCursorIndex();
+    function moveCursor(content: string, index: number): void {
+        var contentArray = content.split(" ");
+        var cursorIndex = getCursorIndex(content);
 
         contentArray = Utils.arrayRemove(contentArray, cursorIndex);
         contentArray = Utils.arrayPut(contentArray, index, cursor);
@@ -35,9 +33,11 @@ const Output: React.FC = () => {
         setDisplayContent(contentArray.join(" "));
     }
 
-    const handleInput = (symbol: string) => {
-        var contentArray = contentRef.current.split(" ");
-        var cursorIndex = getCursorIndex();
+    const handleInput = async (symbol: string) => {
+        const currentContent = await Utils.getCurrentState(setDisplayContent);
+
+        var contentArray = currentContent.split(" ");
+        var cursorIndex = getCursorIndex(currentContent);
 
         switch(symbol) {
             case "\\text{Clear}":
@@ -53,6 +53,7 @@ const Output: React.FC = () => {
                 }
 
                 contentArray = Utils.arrayRemove(contentArray, target);
+
                 setDisplayContent(contentArray.join(" "));
                 setOutputContent("");
                 break;
@@ -60,26 +61,27 @@ const Output: React.FC = () => {
             case "\\leftarrow":
                 if(cursorIndex === 0) return;
 
-                moveCursorTo(cursorIndex - 1);
+                moveCursor(currentContent, cursorIndex - 1)
                 break;
             case "ArrowRight":
             case "\\rightarrow":
                 if(cursorIndex === contentArray.length - 1) return;
 
-                moveCursorTo(cursorIndex + 1);
+                moveCursor(currentContent, cursorIndex + 1)
                 break;
             case "i": // Pi
                 if(contentArray[cursorIndex - 1] === "p") {
                     contentArray[cursorIndex - 1] = "\\pi";
                     setDisplayContent(contentArray.join(" "));
                 } else {
-                    setDisplayContent(contentRef.current.replace(cursor, symbol +" "+ cursor));
+                    setDisplayContent(currentContent.replace(cursor, symbol +" "+ cursor));
                     setOutputContent("");
                 }
                 break;
             case "Enter":
             case "\\text{Result}":
-                if(contentArray.length > 1) handleResult();
+                if(contentArray.length > 1) handleResult(currentContent);
+                setDisplayContent(currentContent);
                 break;
             default:
                 // Function auto complete
@@ -106,17 +108,18 @@ const Output: React.FC = () => {
                     }
                 }
                 
-                setDisplayContent(contentRef.current.replace(cursor, symbol +" "+ cursor));
+                setDisplayContent(currentContent.replace(cursor, symbol +" "+ cursor));
                 setOutputContent("");
-                break;
         }
     };
 
-    const handleResult = () => {
+    const handleResult = (currentContent: string) => {
+        if(currentContent.split(" ").length <= 1) return;
+
         // Remove cursor from raw text
-        var rawText = contentRef.current.indexOf(cursor) < contentRef.current.length - 1
-        ? contentRef.current.replace(cursor +" ", "")
-        : contentRef.current.replace(" "+ cursor, "");
+        var rawText = currentContent.indexOf(cursor) < currentContent.length - 1
+        ? currentContent.replace(cursor +" ", "")
+        : currentContent.replace(" "+ cursor, "");
         var raw = rawText.split(" ");
 
         if(rawText === "2 . 5") {
@@ -151,31 +154,22 @@ const Output: React.FC = () => {
      * Click to move the cursor
      */
     const handleSymbolClick = (e: React.MouseEvent, index: number) => {
-        if(index > getCursorIndex()) index--;
+        if(index > getCursorIndex(displayContent)) index--;
 
         var symbolElem = e.target as HTMLElement;
         var mouseX = e.clientX;
         var symbolCenterX = Utils.getOffsetLeft(symbolElem) + (symbolElem.offsetWidth / 2);
         if(mouseX > symbolCenterX) index++;
 
-        moveCursorTo(index);
+        moveCursor(displayContent, index)
     };
     const handleBlankClick = (e: React.MouseEvent) => {
         // only the blank area of display box is available
         if((e.target as HTMLElement).className !== "display") return;
 
-        moveCursorTo(0);
+        moveCursor(displayContent, 0)
     };
     /*****/
-
-    useEffect(() => {
-        contentRef.current = displayContent;
-        
-        Utils.scrollToEnd("display");
-    }, [displayContent]);
-    useEffect(() => {
-        outputRef.current = outputContent;
-    }, [outputContent]);
 
     useEffect(() => {
         Emitter.get().on("input", (symbol: string) => handleInput(symbol));

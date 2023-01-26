@@ -4,25 +4,26 @@ import Point from "./Point";
 import Compiler from "../../utils/Compiler";
 
 import List from "../../utils/List";
-
-import ComputeWorker from "../../workers/compute.worker.ts";
+import WorkerPool from "../../utils/WorkerPool";
+// import { WorkerResponse } from "../../types";
 
 export default class Render {
-    private canvas: HTMLCanvasElement;
+    public canvas: HTMLCanvasElement;
     private ctx: CanvasRenderingContext2D;
-    private worker: ComputeWorker = new ComputeWorker();
+    private workerPool: WorkerPool = new WorkerPool(window.navigator.hardwareConcurrency || 2);
 
-    private scale: number = 90; // px per unit length
-    private spacing: number = 1; // unit length
+    public scale: number = 90; // px per unit length
+    public spacing: number = 1; // unit length
 
     private mouseDown: boolean = false;
     private mouseDX: number = 0; // mouse delta x
     private mouseDY: number = 0; // mouse delta y
 
-    private center: Point;
+    public center: Point;
     private mousePoint: Point;
 
     private functionList: List<string> = new List();
+    private functionPoints: [Point, Point][] = []; // [p1, p2]
 
     public constructor(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) {
         this.canvas = canvas;
@@ -165,6 +166,7 @@ export default class Render {
         this.ctx.moveTo(begin.x, begin.y);
         this.ctx.lineTo(end.x, end.y);
         this.ctx.stroke();
+        this.ctx.closePath();
     }
 
     private drawStraightLine(y: number, color: string, width: number = 1): void {
@@ -206,12 +208,18 @@ export default class Render {
         // O point
         this.drawText("O", this.center.x - 20, this.center.y + 20, "#cbd0df", 17);
 
-        // Mouse point & fps
+        // Mouse point
         var mouseCoordinatesPoint = this.screenToCoordinates(this.mousePoint);
         this.drawText("Mouse: "+ mouseCoordinatesPoint.x.toFixed(2) +", "+ mouseCoordinatesPoint.y.toFixed(2), 30, 30, "#cbd0df", 15);
 
         // Draw function images
-        this.functionList.forEach((rawText: string) => {
+        for(let i = 0; i < this.functionPoints.length; i++) {
+            this.drawLine(this.functionPoints[i][0], this.functionPoints[i][1], "#fff");
+        }
+        this.functionPoints = [];
+
+        // Compute function points
+        /* var promises = */ this.functionList.value.map((rawText: string) => {
             var unitPx = this.scale * this.spacing;
 
             var beginX = -this.center.x / unitPx;
@@ -228,7 +236,33 @@ export default class Render {
     
                 this.drawLine(p1, p2, "#fff");
             }
+
+            return 0;
+            // return this.workerPool.addWorker({
+            //     rawText,
+            //     scale: this.scale,
+            //     spacing: this.spacing,
+            //     center: this.center,
+            //     canvasWidth: this.canvas.width
+            // });
         });
+
+        // Promise.all(promises)
+        //     .then((responses) => {
+        //         for(let i = 0; i < responses.length; i++) {
+        //             var pointsArray = responses[i];
+
+        //             for(let j = 0; j < pointsArray.length; j++) {
+        //                 var { x1, y1, x2, y2 } = pointsArray[j];
+
+        //                 var p1 = this.coordinatesToScreen(new Point(x1, y1));
+        //                 var p2 = this.coordinatesToScreen(new Point(x2, y2));
+                
+        //                 this.functionPoints.push([p1, p2]);
+        //             }
+        //         }
+        //     })
+        //     .catch((err) => { throw err });
     }
 
     public registerFunction(rawText: string): void {

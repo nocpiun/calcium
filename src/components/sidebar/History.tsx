@@ -15,10 +15,12 @@ const History: React.FC = () => {
     useEffect(() => {
         Utils.scrollToEnd("history-list", 1, 0);
 
-        Emitter.get().once("add-record", (input: string, output: string) => {
-            setList([...list, { input, output }]);
+        Emitter.get().on("add-record", (input: string, output: string) => {
+            setList((currentList) => {
+                return [...currentList, { input, output }];
+            });
         });
-    }, [list]);
+    }, []);
 
     return (
         <div className="history">

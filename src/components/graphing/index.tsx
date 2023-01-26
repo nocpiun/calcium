@@ -1,26 +1,25 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useRef, useEffect } from "react";
+import React, { memo, useState, useRef, useEffect } from "react";
 import { InlineMath } from "react-katex";
 
 import ListItem from "./ListItem";
 import InputBox, { cursor } from "../InputBox";
 
 import Render from "./Render";
-import Compiler from "../../utils/Compiler";
 import Utils from "../../utils/Utils";
 import Emitter from "../../utils/Emitter";
 
-const Graphing: React.FC = () => {
+const Graphing: React.FC = memo(() => {
     const [list, setList] = useState<string[]>([]);
-    const listRef = useRef<string[]>(list);
     const inputRef = useRef<InputBox>(null);
 
-    const handleAddFunction = () => {
+    const handleAddFunction = async () => {
         if(!inputRef.current) return;
+        const currentList = await Utils.getCurrentState(setList);
         var inputBox = inputRef.current;
 
         var value = inputBox.value;
-        setList([...listRef.current, value]);
+        setList([...currentList, value]);
         Emitter.get().emit("add-function", value);
 
         inputBox.reset();
@@ -28,8 +27,6 @@ const Graphing: React.FC = () => {
 
     useEffect(() => {
         Utils.scrollToEnd("function-list", 1, 0);
-        
-        listRef.current = list;
     }, [list]);
 
     useEffect(() => {
@@ -93,6 +90,6 @@ const Graphing: React.FC = () => {
             </div>
         </>
     );
-}
+})
 
 export default Graphing;

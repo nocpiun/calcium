@@ -1,3 +1,5 @@
+import React from "react";
+
 export default class Utils {
     public static getElem<E extends HTMLElement = HTMLElement>(id: string): E {
         return document.getElementById(id) as E ?? document.body;
@@ -114,5 +116,14 @@ export default class Utils {
     public static scrollToEnd(id: string, top: number = 1, left: number = 1): void {
         var elem = Utils.getElem(id);
         elem.scrollTo({ top: elem.scrollHeight * top, left: elem.scrollWidth * left });
+    }
+
+    public static getCurrentState<T>(setState: React.Dispatch<React.SetStateAction<T>>): Promise<T> {
+        return new Promise((resolve, reject) => {
+            setState((currentState) => {
+                resolve(currentState);
+                return currentState;
+            });
+        });
     }
 }
