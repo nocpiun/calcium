@@ -1,0 +1,85 @@
+#dialogs dialog {
+    flex-direction: column;
+    width: 650px;
+    height: 500px;
+    background-color: @gray5;
+    border-color: transparent;
+    border-radius: 7px;
+    box-shadow: 0 0 16px rgb(0, 0, 0, .12), 0 16px 16px rgb(0, 0, 0, .24);
+    overflow: hidden;
+    &[open] {
+        display: flex;
+    }
+    &::backdrop {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, .4);
+    }
+    .header-container {
+        flex: 1;
+        padding-left: 15px;
+        h1 {
+            display: inline-block;
+            font-size: 22pt;
+        }
+    }
+    .main-container {
+        flex: 5;
+        padding: 15px;
+        table {
+            width: 100%;
+            table-layout: fixed;
+            border-spacing: 5px;
+            font-family: @font;
+            thead th {
+                color: @gray1;
+                text-align: left;
+            }
+            tbody {
+                display: block;
+                width: 620px;
+                height: 330px;
+                overflow-y: auto;
+                .scrollbar-style();
+                tr {
+                    display: table;
+                    width: 100%;
+                    table-layout: fixed;
+                    td {
+                        width: 100%;
+                        color: @gray-light;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+                    }
+                }
+            }
+        }
+    }
+    .footer-container {
+        flex: 1;
+        display: flex;
+        justify-content: flex-end;
+        flex-flow: row;
+        align-items: flex-end;
+        .footer-button {
+            width: 62px;
+            height: 30px;
+            background-color: @gray2;
+            border-color: transparent;
+            border-radius: 3px;
+            color: @gray-light;
+            font-family: @font;
+            cursor: pointer;
+            &:hover {
+                background-color: @gray8;
+            }
+            &:active {
+                background-color: @gray4;
+            }
+        }
+    }
+}

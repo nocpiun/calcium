@@ -11,6 +11,7 @@ interface InputButtonProps {
     grow: number
     group?: string[]
     disabled?: boolean
+    title?: string
 }
 
 const InputButton: React.FC<InputButtonProps> = (props) => {
@@ -36,7 +37,7 @@ const InputButton: React.FC<InputButtonProps> = (props) => {
 
     return (
         <div className="keypad-button-container" style={{ flexGrow: props.grow }}>
-            <button className="keypad-button" onClick={() => clickHandle()} disabled={disabled}>
+            <button className="keypad-button" onClick={() => clickHandle()} disabled={disabled} title={props.title} tabIndex={-1}>
                 <span>
                     <InlineMath>{props.symbol}</InlineMath>
                 </span>

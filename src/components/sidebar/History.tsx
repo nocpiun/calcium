@@ -20,6 +20,10 @@ const History: React.FC = () => {
                 return [...currentList, { input, output }];
             });
         });
+
+        // Emitter.get().on("clear-record", () => {
+        //     setList(() => []);
+        // });
     }, []);
 
     return (

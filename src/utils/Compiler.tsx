@@ -4,7 +4,30 @@ import Float from "./Float";
 import { Operator, MathFunction } from "../types";
 
 export default class Compiler {
-    private functions: Map<string, MathFunction> = new Map();
+    public static functions: Map<string, MathFunction> = new Map([
+        ["sin",      (x) => Math.sin(x)],
+        ["cos",      (x) => Math.cos(x)],
+        ["tan",      (x) => Math.tan(x)],
+        ["cot",      (x) => 1 / Math.tan(x)],
+        ["sec",      (x) => 1 / Math.cos(x)],
+        ["csc",      (x) => 1 / Math.sin(x)],
+        ["sin^{-1}", (x) => Math.asin(x)],
+        ["cos^{-1}", (x) => Math.acos(x)],
+        ["tan^{-1}", (x) => Math.atan(x)],
+        ["sinh",     (x) => Math.sinh(x)],
+        ["cosh",     (x) => Math.cosh(x)],
+        ["tanh",     (x) => Math.tanh(x)],
+        ["coth",     (x) => 1 / Math.tanh(x)],
+        ["sech",     (x) => 1 / Math.cosh(x)],
+        ["csch",     (x) => 1 / Math.sinh(x)],
+        ["ln",       (x) => Math.log(x)],
+        ["lg",       (x) => Math.log10(x)],
+        ["log_2",    (x) => Math.log2(x)],
+        ["deg",      (x) => x * (Math.PI / 180)],
+        ["√",        (x) => Math.sqrt(x)],
+        ["^3√",      (x) => Math.cbrt(x)],
+        ["%",        (x) => x / 100],
+    ]);
     private variables: Map<string, string>;
 
     private raw: string[];
@@ -20,29 +43,6 @@ export default class Compiler {
     public constructor(raw: string[], variables: Map<string, string>) {
         this.raw = raw;
         this.variables = variables;
-
-        this.functions.set("sin",      (x) => Math.sin(x));
-        this.functions.set("cos",      (x) => Math.cos(x));
-        this.functions.set("tan",      (x) => Math.tan(x));
-        this.functions.set("cot",      (x) => 1 / Math.tan(x));
-        this.functions.set("sec",      (x) => 1 / Math.cos(x));
-        this.functions.set("csc",      (x) => 1 / Math.sin(x));
-        this.functions.set("sin^{-1}", (x) => Math.asin(x));
-        this.functions.set("cos^{-1}", (x) => Math.acos(x));
-        this.functions.set("tan^{-1}", (x) => Math.atan(x));
-        this.functions.set("sinh",     (x) => Math.sinh(x));
-        this.functions.set("cosh",     (x) => Math.cosh(x));
-        this.functions.set("tanh",     (x) => Math.tanh(x));
-        this.functions.set("coth",     (x) => 1 / Math.tanh(x));
-        this.functions.set("sech",     (x) => 1 / Math.cosh(x));
-        this.functions.set("csch",     (x) => 1 / Math.sinh(x));
-        this.functions.set("ln",       (x) => Math.log(x));
-        this.functions.set("lg",       (x) => Math.log10(x));
-        this.functions.set("log_2",    (x) => Math.log2(x));
-        this.functions.set("deg",      (x) => x * (Math.PI / 180));
-        this.functions.set("√",        (x) => Math.sqrt(x));
-        this.functions.set("^3√",      (x) => Math.cbrt(x));
-        this.functions.set("%",        (x) => x / 100);
 
         this.compile();
     }
@@ -180,12 +180,12 @@ export default class Compiler {
                 }
             } else if(Compiler.isFunction(symbol)) { // function
                 var functionName = symbol.replace("\\", "").replace("(", "");
-                if(!this.functions.has(functionName)) {
+                if(!Compiler.functions.has(functionName)) {
                     this.hasError = true;
                     return;
                 }
 
-                this.currentFunction = this.functions.get(functionName) ?? ((x) => x);
+                this.currentFunction = Compiler.functions.get(functionName) ?? ((x) => x);
                 this.layer++;
             } else if(symbol[0] === "^") { // sqrt or cbrt
                 for(let j = 0; j < parseInt(symbol[1]) - 1; j++) {

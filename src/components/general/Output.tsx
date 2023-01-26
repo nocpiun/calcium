@@ -1,11 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useRef, useEffect } from "react";
-import { BlockMath } from "react-katex";
+import { BlockMath, InlineMath } from "react-katex";
 
 import { cursor } from "../InputBox";
 import Emitter from "../../utils/Emitter";
 import Utils from "../../utils/Utils";
 import Compiler from "../../utils/Compiler";
+import Dialog from "../Dialog";
 
 import Cursor from "../Cursor";
 
@@ -18,6 +19,8 @@ const Output: React.FC = () => {
     const [displayContent, setDisplayContent] = useState<string>(cursor);
     const [outputContent, setOutputContent] = useState<string>("");
     const variableRef = useRef<Map<string, string>>(new Map<string, string>());
+    const varsDialogRef = useRef<Dialog>(null);
+    const funcsDialogRef = useRef<Dialog>(null);
 
     function getCursorIndex(content: string): number {
         return content.split(" ").indexOf(cursor);
@@ -57,6 +60,10 @@ const Output: React.FC = () => {
                 setDisplayContent(contentArray.join(" "));
                 setOutputContent("");
                 break;
+            case "\\text{CH}":
+                /** @todo */
+                // Emitter.get().emit("add-record", undefined, undefined);
+                break;
             case "ArrowLeft":
             case "\\leftarrow":
                 if(cursorIndex === 0) return;
@@ -69,6 +76,17 @@ const Output: React.FC = () => {
 
                 moveCursor(currentContent, cursorIndex + 1)
                 break;
+            case "Enter":
+            case "\\text{Result}":
+                if(contentArray.length > 1) handleResult(currentContent);
+                setDisplayContent(currentContent);
+                break;
+            case "\\text{Vars}":
+                varsDialogRef.current?.open();
+                break;
+            case "\\text{Funcs}":
+                funcsDialogRef.current?.open();
+                break;
             case "i": // Pi
                 if(contentArray[cursorIndex - 1] === "p") {
                     contentArray[cursorIndex - 1] = "\\pi";
@@ -77,11 +95,6 @@ const Output: React.FC = () => {
                     setDisplayContent(currentContent.replace(cursor, symbol +" "+ cursor));
                     setOutputContent("");
                 }
-                break;
-            case "Enter":
-            case "\\text{Result}":
-                if(contentArray.length > 1) handleResult(currentContent);
-                setDisplayContent(currentContent);
                 break;
             default:
                 // Function auto complete
@@ -181,6 +194,7 @@ const Output: React.FC = () => {
                 setOutputContent("c^{xk}+c^{trl}"); // I'm iKun
                 return;
             }
+            if(e.key === "Enter") e.preventDefault();
 
             var inputValue = e.key;
             if(inputValue === "*") inputValue = "×";
@@ -217,6 +231,66 @@ const Output: React.FC = () => {
                     {outputContent.split(" ").map((symbol, index) => <BlockMath key={index}>{symbol}</BlockMath>)}
                 </span>
             </div>
+
+            {/* Dialogs */}
+            <Dialog title="Variables" id="vars-dialog" ref={varsDialogRef}>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Variable Name</th>
+                            <th>Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <InlineMath>\pi</InlineMath>
+                            </td>
+                            <td>{Math.PI}</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <InlineMath>e</InlineMath>
+                            </td>
+                            <td>{Math.E}</td>
+                        </tr>
+                        {
+                            Array.from(variableRef.current).map(([varName, value]) => {
+                                return (
+                                    <tr>
+                                        <td>
+                                            <InlineMath>{varName}</InlineMath>
+                                        </td>
+                                        <td>{varName}</td>
+                                    </tr>
+                                );
+                            })
+                        }
+                    </tbody>
+                </table>
+            </Dialog>
+            <Dialog title="Functions" id="funcs-dialog" ref={funcsDialogRef}>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Function Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {
+                            Array.from(Compiler.functions).map(([funcName, value]) => {
+                                return (
+                                    <tr>
+                                        <td>
+                                            <InlineMath>{funcName}</InlineMath>
+                                        </td>
+                                    </tr>
+                                );
+                            })
+                        }
+                    </tbody>
+                </table>
+            </Dialog>
         </div>
     );
 }
