@@ -58,8 +58,8 @@ const ProgrammingInput: React.FC = () => {
                     <InputButton symbol="\text{OR}" grow={1}/>
                     <InputButton symbol="\text{A}" grow={1} group={["hex"]}/>
                     <div className="keypad-placeholder"/>
-                    <InputButton symbol="\ll" grow={1}/>
-                    <InputButton symbol="\gg" grow={1}/>
+                    <InputButton symbol="\ll" inputValue="\text{Lsh}" grow={1} title="Left Shift"/>
+                    <InputButton symbol="\gg" inputValue="\text{Rsh}" grow={1} title="Right Shift"/>
                     <InputButton symbol="\leftarrow" grow={1}/>
                     <InputButton symbol="\rightarrow" grow={1}/>
                     <div className="keypad-placeholder"/>
@@ -69,13 +69,13 @@ const ProgrammingInput: React.FC = () => {
                 </div>
                 <div className="keypad-row">
                     <div style={{ flexGrow: 2 }}/>
-                    <InputButton symbol="\text{NOT}" grow={1}/>
+                    <InputButton symbol="\text{NOT}" inputValue="\text{not}(" grow={1}/>
                     <InputButton symbol="\text{NAND}" grow={1}/>
                     <InputButton symbol="\text{B}" grow={1} group={["hex"]}/>
                     <div className="keypad-placeholder"/>
                     <InputButton symbol="\%" grow={1}/>
-                    <InputButton symbol="\text{Clear}" grow={1}/>
-                    <InputButton symbol="\text{Del}" grow={1}/>
+                    <InputButton symbol="\text{Clear}" grow={1} title="Clear Input"/>
+                    <InputButton symbol="\text{Del}" grow={1} title="Delete a Symbol"/>
                     <InputButton symbol="/" grow={1}/>
                     <div className="keypad-placeholder"/>
                     <div style={{ flexGrow: 5 }}/>
@@ -114,8 +114,8 @@ const ProgrammingInput: React.FC = () => {
                 </div>
                 <div className="keypad-row">
                     <div style={{ flexGrow: 2 }}/>
-                    <InputButton symbol="[" grow={1} disabled={true}/>
-                    <InputButton symbol="]" grow={1} disabled={true}/>
+                    <InputButton symbol="[" grow={1} disabled/>
+                    <InputButton symbol="]" grow={1} disabled/>
                     <InputButton symbol="\text{E}" grow={1} group={["hex"]}/>
                     <div className="keypad-placeholder"/>
                     <InputButton symbol="7" grow={1} group={["hex", "dec", "oct"]}/>
@@ -129,17 +129,17 @@ const ProgrammingInput: React.FC = () => {
                 </div>
                 <div className="keypad-row">
                     <div style={{ flexGrow: 2 }}/>
-                    <InputButton symbol="\{" grow={1} disabled={true}/>
-                    <InputButton symbol="\}" grow={1} disabled={true}/>
+                    <InputButton symbol="\{" grow={1} disabled/>
+                    <InputButton symbol="\}" grow={1} disabled/>
                     <InputButton symbol="\text{F}" grow={1} group={["hex"]}/>
                     <div className="keypad-placeholder"/>
                     <InputButton symbol="0" grow={1} group={["hex", "dec", "oct", "bin"]}/>
-                    <InputButton symbol="." grow={1}/>
-                    <InputButton symbol="=" grow={2}/>
+                    <InputButton symbol="." grow={1} disabled/>
+                    <InputButton symbol="\text{Result}" grow={2}/>
                     <div className="keypad-placeholder"/>
                     <div style={{ flexGrow: 5 }}/>
                     <div className="keypad-placeholder"/>
-                    <InputButton symbol={"\\text{Calcium "+ version +"}"} grow={5} disabled={true}/>
+                    <InputButton symbol={"\\text{Calcium "+ version +"}"} grow={5} disabled/>
                 </div>
             </div>
         </div>

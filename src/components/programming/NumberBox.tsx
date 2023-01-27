@@ -6,7 +6,7 @@ import Emitter from "../../utils/Emitter";
 
 interface NumberBoxProps {
     name: string
-    number: number
+    value: string
     type: NumberType
 }
 
@@ -26,7 +26,7 @@ const NumberBox: React.FC<NumberBoxProps> = (props) => {
     return (
         <li className={"number-box"+ (isActive ? " active" : "")} onClick={() => clickHandle()}>
             <span className="name">{props.name}</span>
-            <span className="number">{props.number}</span>
+            <span className="number">{props.value}</span>
         </li>
     );
 }

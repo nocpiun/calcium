@@ -33,9 +33,7 @@ export default class InputBox extends Component<InputBoxProps, InputBoxState> {
     }
 
     public get value(): string {
-        return this.state.displayContent.indexOf(cursor) < this.state.displayContent.length - 1
-        ? this.state.displayContent.replace(cursor +" ", "")
-        : this.state.displayContent.replace(" "+ cursor, "");
+        return InputBox.removeCursor(this.state.displayContent);
     }
 
     public set value(newValue: string) {
@@ -122,5 +120,11 @@ export default class InputBox extends Component<InputBoxProps, InputBoxState> {
 
             this.handleInput(inputValue);
         });
+    }
+
+    public static removeCursor(content: string): string {
+        return content.indexOf(cursor) < content.length - 1
+        ? content.replace(cursor +" ", "")
+        : content.replace(" "+ cursor, "");
     }
 }

@@ -3,36 +3,40 @@ import List from "./List";
 import Float from "./Float";
 import { Operator, MathFunction } from "../types";
 
+type NumberSymbol = string;
+
 export default class Compiler {
     public static functions: Map<string, MathFunction> = new Map([
-        ["sin",      (x) => Math.sin(x)],
-        ["cos",      (x) => Math.cos(x)],
-        ["tan",      (x) => Math.tan(x)],
-        ["cot",      (x) => 1 / Math.tan(x)],
-        ["sec",      (x) => 1 / Math.cos(x)],
-        ["csc",      (x) => 1 / Math.sin(x)],
-        ["sin^{-1}", (x) => Math.asin(x)],
-        ["cos^{-1}", (x) => Math.acos(x)],
-        ["tan^{-1}", (x) => Math.atan(x)],
-        ["sinh",     (x) => Math.sinh(x)],
-        ["cosh",     (x) => Math.cosh(x)],
-        ["tanh",     (x) => Math.tanh(x)],
-        ["coth",     (x) => 1 / Math.tanh(x)],
-        ["sech",     (x) => 1 / Math.cosh(x)],
-        ["csch",     (x) => 1 / Math.sinh(x)],
-        ["ln",       (x) => Math.log(x)],
-        ["lg",       (x) => Math.log10(x)],
-        ["log_2",    (x) => Math.log2(x)],
-        ["deg",      (x) => x * (Math.PI / 180)],
-        ["√",        (x) => Math.sqrt(x)],
-        ["^3√",      (x) => Math.cbrt(x)],
-        ["%",        (x) => x / 100],
+        ["sin",        (x) => Math.sin(x)],
+        ["cos",        (x) => Math.cos(x)],
+        ["tan",        (x) => Math.tan(x)],
+        ["cot",        (x) => 1 / Math.tan(x)],
+        ["sec",        (x) => 1 / Math.cos(x)],
+        ["csc",        (x) => 1 / Math.sin(x)],
+        ["sin^{-1}",   (x) => Math.asin(x)],
+        ["cos^{-1}",   (x) => Math.acos(x)],
+        ["tan^{-1}",   (x) => Math.atan(x)],
+        ["sinh",       (x) => Math.sinh(x)],
+        ["cosh",       (x) => Math.cosh(x)],
+        ["tanh",       (x) => Math.tanh(x)],
+        ["coth",       (x) => 1 / Math.tanh(x)],
+        ["text{sech}", (x) => 1 / Math.cosh(x)],
+        ["text{csch}", (x) => 1 / Math.sinh(x)],
+        ["ln",         (x) => Math.log(x)],
+        ["lg",         (x) => Math.log10(x)],
+        ["log_2",      (x) => Math.log2(x)],
+        ["deg",        (x) => x * (Math.PI / 180)],
+        ["√",          (x) => Math.sqrt(x)],
+        ["^3√",        (x) => Math.cbrt(x)],
+        ["%",          (x) => x / 100],
+        ["text{not}",  (x) => ~x],
     ]);
-    private variables: Map<string, string>;
+    private variables: Map<string, NumberSymbol>;
+    private isProgrammingMode: boolean;
 
     private raw: string[];
-    private numberList: List<string> = new List<string>([]);
-    private operatorList: List<Operator> = new List<Operator>([]);
+    private numberList: List<NumberSymbol> = new List([]);
+    private operatorList: List<Operator> = new List([]);
 
     private layer: number = 0;
     private inAbs: boolean = false;
@@ -40,20 +44,29 @@ export default class Compiler {
     private secondaryRaw: string[] = [];
     private hasError: boolean = false;
     
-    public constructor(raw: string[], variables: Map<string, string>) {
+    public constructor(raw: string[], variables: Map<string, string>, isProgrammingMode: boolean = false) {
         this.raw = raw;
         this.variables = variables;
+        this.isProgrammingMode = isProgrammingMode;
 
         this.compile();
     }
 
-    public static isNumber(symbol: string): boolean {
+    public static isNumber(symbol: string, isProgrammingMode: boolean): boolean {
         const number = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "e", "\\pi", "."];
-        return number.indexOf(symbol) > -1;
+        if(isProgrammingMode) {
+            return (number.indexOf(symbol) > -1 || (symbol.charCodeAt(0) >= 97 && symbol.charCodeAt(0) <= 122) /* a~z */) && symbol.length === 1;
+        } else {
+            return number.indexOf(symbol) > -1;
+        }
     }
 
     public static isOperator(symbol: string): boolean {
-        const operator = ["+", "-", "×", "/"];
+        const operator = [
+            "+", "-", "×", "/",
+            "and", "or", "nand", "nor", "xor",
+            "lsh", "rsh"
+        ];
         return operator.indexOf(symbol) > -1;
     }
 
@@ -87,7 +100,7 @@ export default class Compiler {
          * Error handle
          */
 
-        for(let i = 0; i < this.raw.length; i++) {
+        for(let i = 0; i < this.raw.length && !this.isProgrammingMode; i++) {
             var symbol = this.raw[i];
             var previous = this.raw[i - 1];
             if(
@@ -105,6 +118,12 @@ export default class Compiler {
 
         for(let i = 0; i < this.raw.length; i++) {
             var symbol = this.raw[i];
+            if(
+                this.isProgrammingMode &&
+                symbol !== "\\text{not}(" // To avoid "\\text{not}(" being transformed to "not(" and causing error
+            ) {
+                symbol = Compiler.purifyNumber(symbol);
+            }
 
             /**
              * Layers (inside brackets, absolute value)
@@ -129,15 +148,15 @@ export default class Compiler {
              * Main
              */
 
-            if(Compiler.isNumber(symbol) || (Compiler.isVariable(symbol) && this.raw[1] !== "=")) { // number
+            if(Compiler.isNumber(symbol, this.isProgrammingMode) || (Compiler.isVariable(symbol) && this.raw[1] !== "=")) { // number
                 if(this.numberList.isEmpty()) this.numberList.add("");
 
                 // Constant variable
-                if(symbol === "e") symbol = Math.E.toString();
+                if(symbol === "e" && !this.isProgrammingMode) symbol = Math.E.toString();
                 if(symbol === "\\pi") symbol = Math.PI.toString();
 
                 // Variable
-                if(Compiler.isVariable(symbol)) {
+                if(Compiler.isVariable(symbol) && !this.isProgrammingMode) {
                     symbol = this.variables.get(symbol) ?? "NaN";
                 }
 
@@ -196,8 +215,52 @@ export default class Compiler {
         }
     }
 
-    public run(): string {
+    public run(): NumberSymbol {
         if(this.hasError) return "NaN";
+
+        // Logical Operator
+        for(let i = 0; i < this.operatorList.length; i++) {
+            if(
+                this.operatorList.get(i) === Operator.AND ||
+                this.operatorList.get(i) === Operator.OR ||
+                this.operatorList.get(i) === Operator.NAND ||
+                this.operatorList.get(i) === Operator.NOR ||
+                this.operatorList.get(i) === Operator.XOR ||
+                this.operatorList.get(i) === Operator.LSH ||
+                this.operatorList.get(i) === Operator.RSH
+            ) {
+                var a = parseInt(this.numberList.get(i));
+                var b = parseInt(this.numberList.get(i + 1));
+                this.numberList.remove(i + 1);
+
+                switch(this.operatorList.get(i)) {
+                    case Operator.AND:
+                        this.numberList.set(i, (a & b).toString());
+                        break;
+                    case Operator.OR:
+                        this.numberList.set(i, (a | b).toString());
+                        break;
+                    case Operator.NAND:
+                        this.numberList.set(i, (~(a & b)).toString());
+                        break;
+                    case Operator.NOR:
+                        this.numberList.set(i, (~(a | b)).toString());
+                        break;
+                    case Operator.XOR:
+                        this.numberList.set(i, (a ^ b).toString());
+                        break;
+                    case Operator.LSH:
+                        this.numberList.set(i, (a << b).toString());
+                        break;
+                    case Operator.RSH:
+                        this.numberList.set(i, (a >> b).toString());
+                        break;
+                }
+
+                this.operatorList.remove(i);
+                i--;
+            }
+        }
 
         // Multiply & Divide
         for(let i = 0; i < this.operatorList.length; i++) {
@@ -253,5 +316,84 @@ export default class Compiler {
         }
 
         return this.numberList.get(0);
+    }
+
+    public runHex(): NumberSymbol {
+        console.log(this.numberList.value);
+        for(let i = 0; i < this.numberList.length; i++) {
+            this.numberList.set(i, Compiler.hexToDec(this.numberList.get(i)));
+        }
+        return Compiler.decToHex(this.run());
+    }
+
+    public runDec(): NumberSymbol {
+        return this.run();
+    }
+
+    public runOct(): NumberSymbol {
+        for(let i = 0; i < this.numberList.length; i++) {
+            this.numberList.set(i, Compiler.octToDec(this.numberList.get(i)));
+        }
+        return Compiler.decToOct(this.run());
+    }
+
+    public runBin(): NumberSymbol {
+        for(let i = 0; i < this.numberList.length; i++) {
+            this.numberList.set(i, Compiler.binToDec(this.numberList.get(i)));
+        }
+        return Compiler.decToBin(this.run());
+    }
+
+    public static hexToDec(hex: NumberSymbol): NumberSymbol {
+        return parseInt(hex, 16).toString(10);
+    }
+
+    public static hexToOct(hex: NumberSymbol): NumberSymbol {
+        return parseInt(hex, 16).toString(8);
+    }
+
+    public static hexToBin(hex: NumberSymbol): NumberSymbol {
+        return parseInt(hex, 16).toString(2);
+    }
+
+    public static decToHex(dec: NumberSymbol): NumberSymbol {
+        return parseInt(dec).toString(16).toUpperCase();
+    }
+
+    public static decToOct(dec: NumberSymbol): NumberSymbol {
+        return parseInt(dec).toString(8);
+    }
+
+    public static decToBin(dec: NumberSymbol): NumberSymbol {
+        return parseInt(dec).toString(2);
+    }
+
+    public static octToHex(oct: NumberSymbol): NumberSymbol {
+        return parseInt(oct, 8).toString(16).toUpperCase();
+    }
+
+    public static octToDec(oct: NumberSymbol): NumberSymbol {
+        return parseInt(oct, 8).toString(10);
+    }
+
+    public static octToBin(oct: NumberSymbol): NumberSymbol {
+        return parseInt(oct, 8).toString(2);
+    }
+
+    public static binToHex(bin: NumberSymbol): NumberSymbol {
+        return parseInt(bin, 2).toString(16).toUpperCase();
+    }
+
+    public static binToDec(bin: NumberSymbol): NumberSymbol {
+        return parseInt(bin, 2).toString(10);
+    }
+
+    public static binToOct(bin: NumberSymbol): NumberSymbol {
+        return parseInt(bin, 2).toString(8);
+    }
+
+    public static purifyNumber(number: NumberSymbol): NumberSymbol {
+        // e.g. "\\text{A}" -> "a"
+        return number.replaceAll("\\text{", "").replaceAll("}", "").toLowerCase();
     }
 }

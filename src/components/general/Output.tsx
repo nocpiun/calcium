@@ -6,6 +6,7 @@ import Emitter from "../../utils/Emitter";
 import Utils from "../../utils/Utils";
 import Compiler from "../../utils/Compiler";
 import Dialog from "../Dialog";
+
 import InputBox, { specialSymbols, cursor } from "../InputBox";
 
 const Output: React.FC = () => {
@@ -105,9 +106,7 @@ const Output: React.FC = () => {
         if(currentContent.split(" ").length <= 1) return;
 
         // Remove cursor from raw text
-        var rawText = currentContent.indexOf(cursor) < currentContent.length - 1
-        ? currentContent.replace(cursor +" ", "")
-        : currentContent.replace(" "+ cursor, "");
+        var rawText = InputBox.removeCursor(currentContent);
         var raw = rawText.split(" ");
 
         if(rawText === "2 . 5") {
@@ -150,7 +149,10 @@ const Output: React.FC = () => {
     return (
         <div className="output-container">
             <span className="output-tag">Output</span>
-            <InputBox ref={inputRef} ltr={true} onInput={(symbol) => handleInput(symbol)}/>
+            <InputBox
+                ref={inputRef}
+                ltr={true}
+                onInput={(symbol) => handleInput(symbol)}/>
             <div className="output-box">
                 <span className="display">
                     {outputContent.split(" ").map((symbol, index) => <BlockMath key={index}>{symbol}</BlockMath>)}

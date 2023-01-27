@@ -129,7 +129,10 @@ const Graphing: React.FC = memo(() => {
                     <div className="function-input-box-tag">
                         <span><InlineMath>y =</InlineMath></span>
                     </div>
-                    <InputBox ref={inputRef} ltr={true} onInput={(symbol) => handleInput(symbol)}/>
+                    <InputBox
+                        ref={inputRef}
+                        ltr={true}
+                        onInput={(symbol) => handleInput(symbol)}/>
                     <div className="add-button-container">
                         <button className="add-button" onClick={() => handleAddFunction()}>
                             <span>Add</span>

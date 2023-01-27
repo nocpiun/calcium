@@ -17,7 +17,14 @@ export enum Operator {
     ADD = "+",
     SUB = "-",
     MUL = "×",
-    DIV = "/"
+    DIV = "/",
+    AND = "and",
+    OR = "or",
+    NAND = "nand",
+    NOR = "nor",
+    XOR = "xor",
+    LSH = "lsh",
+    RSH = "rsh",
 }
 
 export type MathFunction = (x: number) => number;
