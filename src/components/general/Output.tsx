@@ -5,9 +5,9 @@ import { BlockMath, InlineMath } from "react-katex";
 import Emitter from "../../utils/Emitter";
 import Utils from "../../utils/Utils";
 import Compiler from "../../utils/Compiler";
-import Dialog from "../Dialog";
 
 import InputBox, { specialSymbols, cursor } from "../InputBox";
+import Dialog from "../Dialog";
 
 const Output: React.FC = () => {
     const [outputContent, setOutputContent] = useState<string>("");
@@ -206,10 +206,18 @@ const Output: React.FC = () => {
                     <tbody>
                         {
                             Array.from(Compiler.functions).map(([funcName, value], index) => {
+                                if(funcName === "%") funcName = "\\%"; // "%" won't display in KaTeX
+
                                 return (
                                     <tr key={index}>
                                         <td>
-                                            <InlineMath>{funcName}</InlineMath>
+                                            <InlineMath>
+                                                {
+                                                    funcName.indexOf("text{") > -1
+                                                    ? funcName.replace("text{", "").replace("}", "")
+                                                    : funcName
+                                                }
+                                            </InlineMath>
                                         </td>
                                     </tr>
                                 );

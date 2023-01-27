@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useRef, useEffect } from "react";
-import { BlockMath } from "react-katex";
+import { BlockMath, InlineMath } from "react-katex";
 
 import { NumberType } from "../../types";
 import Emitter from "../../utils/Emitter";
@@ -9,6 +9,7 @@ import Compiler from "../../utils/Compiler";
 
 import NumberBox from "./NumberBox";
 import InputBox, { cursor } from "../InputBox";
+import Dialog from "../Dialog";
 
 const ProgrammingOutput: React.FC = () => {
     const [outputContent, setOutputContent] = useState<string>("");
@@ -18,6 +19,7 @@ const ProgrammingOutput: React.FC = () => {
     const [octValue, setOct] = useState<string>("0");
     const [binValue, setBin] = useState<string>("0");
     const inputRef = useRef<InputBox>(null);
+    const funcsDialogRef = useRef<Dialog>(null);
 
     const handleInput = (symbol: string) => {
         if(!inputRef.current) return;
@@ -68,6 +70,9 @@ const ProgrammingOutput: React.FC = () => {
             case "\\text{Result}":
                 if(contentArray.length > 1) handleResult(currentContent);
                 return;
+            case "\\text{Funcs}":
+                funcsDialogRef.current?.open();
+                break;
             default:
                 setOutputContent("");
 
@@ -177,6 +182,38 @@ const ProgrammingOutput: React.FC = () => {
                     {outputContent.split(" ").map((symbol, index) => <BlockMath key={index}>{symbol}</BlockMath>)}
                 </span>
             </div>
+
+            {/* Dialogs */}
+            <Dialog title="Functions" id="funcs-dialog" ref={funcsDialogRef}>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Function Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {
+                            Array.from(Compiler.functions).map(([funcName, value], index) => {
+                                if(funcName === "%") funcName = "\\%"; // "%" won't display in KaTeX
+
+                                return (
+                                    <tr key={index}>
+                                        <td>
+                                            <InlineMath>
+                                                {
+                                                    funcName.indexOf("text{") > -1
+                                                    ? funcName.replace("text{", "").replace("}", "")
+                                                    : funcName
+                                                }
+                                            </InlineMath>
+                                        </td>
+                                    </tr>
+                                );
+                            })
+                        }
+                    </tbody>
+                </table>
+            </Dialog>
         </div>
     );
 }
