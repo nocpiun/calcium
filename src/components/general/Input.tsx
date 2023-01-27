@@ -25,11 +25,7 @@ const Input: React.FC = () => {
                     <InputButton symbol="d" grow={1}/>
                     <InputButton symbol="e" grow={1}/>
                     <div className="keypad-placeholder"/>
-                    <InputButton symbol="\leftarrow" grow={1} title="Move Cursor Forward"/>
-                    <InputButton symbol="\rightarrow" grow={1} title="Move Cursor Backward"/>
-                    <InputButton symbol="\text{Clear}" grow={1} title="Clear Input"/>
-                    <InputButton symbol="\text{Del}" grow={1} title="Delete a Symbol"/>
-                    <InputButton symbol="\text{CH}" grow={1} disabled title="Clear History Records"/>
+                    <div style={{ flexGrow: 5 }}/>
                 </div>
                 <div className="keypad-row">
                     <InputButton symbol="\csc" inputValue="\csc(" grow={1}/>
@@ -49,10 +45,7 @@ const Input: React.FC = () => {
                     <InputButton symbol="i" grow={1}/>
                     <InputButton symbol="j" grow={1}/>
                     <div className="keypad-placeholder"/>
-                    <InputButton symbol="\text{Result}" grow={1}/>
-                    <InputButton symbol="\text{Vars}" grow={1} title="Open Variable Dialog"/>
-                    <InputButton symbol="\text{Funcs}" grow={1} title="Open Function Dialog"/>
-                    <div style={{ flexGrow: 2 }}/>
+                    <div style={{ flexGrow: 5 }}/>
                 </div>
                 <div className="keypad-row">
                     <InputButton symbol="\cosh" inputValue="\cosh(" grow={1}/>
@@ -171,7 +164,11 @@ const Input: React.FC = () => {
                     <InputButton symbol="\sigma" grow={1}/>
                     <InputButton symbol="\tau" grow={1}/>
                     <div className="keypad-placeholder"/>
-                    <div style={{ flexGrow: 5 }}/>
+                    <InputButton symbol="\leftarrow" grow={1} title="Move Cursor Forward"/>
+                    <InputButton symbol="\rightarrow" grow={1} title="Move Cursor Backward"/>
+                    <InputButton symbol="\text{Clear}" grow={1} title="Clear Input"/>
+                    <InputButton symbol="\text{Del}" grow={1} title="Delete a Symbol"/>
+                    <InputButton symbol="\text{CH}" grow={1} disabled title="Clear History Records"/>
                 </div>
                 <div className="keypad-row">
                     <div style={{ flexGrow: 5 }}/>
@@ -187,7 +184,10 @@ const Input: React.FC = () => {
                     <InputButton symbol="\psi" grow={1}/>
                     <InputButton symbol="\omega" grow={1}/>
                     <div className="keypad-placeholder"/>
-                    <div style={{ flexGrow: 5 }}/>
+                    <InputButton symbol="\text{Result}" grow={1}/>
+                    <InputButton symbol="\text{Vars}" grow={1} title="Open Variable Dialog"/>
+                    <InputButton symbol="\text{Funcs}" grow={1} title="Open Function Dialog"/>
+                    <div style={{ flexGrow: 2 }}/>
                 </div>
                 <div className="keypad-row">
                     <div style={{ flexGrow: 5 }}/>
@@ -199,7 +199,8 @@ const Input: React.FC = () => {
                     <InputButton symbol="\Delta" grow={1}/>
                     <div style={{ flexGrow: 4 }}/>
                     <div className="keypad-placeholder"/>
-                    <InputButton symbol={"\\text{Calcium "+ version +"}"} grow={5} disabled/>
+                    <InputButton symbol="\text{About}" grow={1}/>
+                    <InputButton symbol={"\\text{Calcium "+ version +"}"} grow={4} disabled/>
                 </div>
             </div>
         </div>

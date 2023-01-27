@@ -29,6 +29,31 @@
     .main-container {
         flex: 5;
         padding: 15px;
+        color: @gray-light;
+        font-family: @font;
+        p {
+            margin: 0;
+            margin-bottom: 13px;
+        }
+        a {
+            color: @green1;
+            text-decoration: underline;
+        }
+        ul {
+            list-style: none;
+            padding: 10px 0;
+            font-size: 13pt;
+            li {
+                margin-bottom: 10px;
+                .item-name {
+                    vertical-align: super;
+                }
+                .item-content {
+                    float: right;
+                    font-family: @font-bold;
+                }
+            }
+        }
         table {
             width: 100%;
             table-layout: fixed;

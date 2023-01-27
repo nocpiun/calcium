@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useRef, useEffect } from "react";
-import { BlockMath, InlineMath } from "react-katex";
+import { BlockMath } from "react-katex";
 
 import Emitter from "../../utils/Emitter";
 import Utils from "../../utils/Utils";
@@ -8,6 +8,9 @@ import Compiler from "../../utils/Compiler";
 
 import InputBox, { specialSymbols, cursor } from "../InputBox";
 import Dialog from "../Dialog";
+import VariableDialog from "../../dialogs/VariableDialog";
+import FunctionDialog from "../../dialogs/FunctionDialog";
+import AboutDialog from "../../dialogs/AboutDialog";
 
 const Output: React.FC = () => {
     const [outputContent, setOutputContent] = useState<string>("");
@@ -15,6 +18,7 @@ const Output: React.FC = () => {
     const inputRef = useRef<InputBox>(null);
     const varsDialogRef = useRef<Dialog>(null);
     const funcsDialogRef = useRef<Dialog>(null);
+    const aboutDialogRef = useRef<Dialog>(null);
 
     const handleInput = (symbol: string) => {
         if(!inputRef.current) return;
@@ -64,6 +68,9 @@ const Output: React.FC = () => {
                 break;
             case "\\text{Funcs}":
                 funcsDialogRef.current?.open();
+                break;
+            case "\\text{About}":
+                aboutDialogRef.current?.open();
                 break;
             case "i": // Pi
                 if(contentArray[cursorIndex - 1] === "p") {
@@ -160,72 +167,9 @@ const Output: React.FC = () => {
             </div>
 
             {/* Dialogs */}
-            <Dialog title="Variables" id="vars-dialog" ref={varsDialogRef}>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Variable Name</th>
-                            <th>Value</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                <InlineMath>\pi</InlineMath>
-                            </td>
-                            <td>{Math.PI}</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <InlineMath>e</InlineMath>
-                            </td>
-                            <td>{Math.E}</td>
-                        </tr>
-                        {
-                            Array.from(variableRef.current).map(([varName, value], index) => {
-                                return (
-                                    <tr key={index}>
-                                        <td>
-                                            <InlineMath>{varName}</InlineMath>
-                                        </td>
-                                        <td>{value}</td>
-                                    </tr>
-                                );
-                            })
-                        }
-                    </tbody>
-                </table>
-            </Dialog>
-            <Dialog title="Functions" id="funcs-dialog" ref={funcsDialogRef}>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Function Name</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {
-                            Array.from(Compiler.functions).map(([funcName, value], index) => {
-                                if(funcName === "%") funcName = "\\%"; // "%" won't display in KaTeX
-
-                                return (
-                                    <tr key={index}>
-                                        <td>
-                                            <InlineMath>
-                                                {
-                                                    funcName.indexOf("text{") > -1
-                                                    ? funcName.replace("text{", "").replace("}", "")
-                                                    : funcName
-                                                }
-                                            </InlineMath>
-                                        </td>
-                                    </tr>
-                                );
-                            })
-                        }
-                    </tbody>
-                </table>
-            </Dialog>
+            <VariableDialog variableList={variableRef.current} ref={varsDialogRef}/>
+            <FunctionDialog ref={funcsDialogRef}/>
+            <AboutDialog ref={aboutDialogRef}/>
         </div>
     );
 }

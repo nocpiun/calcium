@@ -2,11 +2,11 @@ import React, { Component, ReactElement } from "react";
 import { createPortal } from "react-dom";
 
 import Utils from "../utils/Utils";
+import { PropsWithChildren } from "react";
 
-interface DialogProps {
+interface DialogProps extends PropsWithChildren {
     title: string
     id: string
-    children?: ReactElement
 }
 
 export default class Dialog extends Component<DialogProps, {}> {
@@ -27,7 +27,11 @@ export default class Dialog extends Component<DialogProps, {}> {
                     <h1>{this.props.title}</h1>
                 </div>
                 <div className="main-container">
-                    {this.props.children}
+                    {
+                        this.props.children instanceof Array
+                        ? [...this.props.children]
+                        : this.props.children
+                    }
                 </div>
                 <div className="footer-container">
                     <button className="footer-button" onClick={() => this.close()} tabIndex={-1}>Close</button>

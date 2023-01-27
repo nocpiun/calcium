@@ -1,3 +1,5 @@
+import React, { ReactElement } from "react";
+
 import Point from "./components/graphing/Point";
 
 export enum Mode {
@@ -51,4 +53,12 @@ export interface PromiseExecutor {
 
 export interface WorkerInfo extends PromiseExecutor {
     workData: WorkerRequest
+}
+
+export interface PropsWithRef<T> {
+    ref: React.Ref<T>
+}
+
+export interface PropsWithChildren {
+    children?: ReactElement | ReactElement[] | undefined
 }

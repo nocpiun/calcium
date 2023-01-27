@@ -19,6 +19,7 @@ const Graphing: React.FC = memo(() => {
         var inputBox = inputRef.current;
 
         var value = inputBox.value;
+        if(value === cursor) return;
         setList([...currentList, value]);
         Emitter.get().emit("add-function", value);
 

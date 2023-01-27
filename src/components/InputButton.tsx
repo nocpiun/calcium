@@ -12,6 +12,7 @@ interface InputButtonProps {
     group?: string[]
     disabled?: boolean
     title?: string
+    style?: React.CSSProperties
 }
 
 const InputButton: React.FC<InputButtonProps> = (props) => {
@@ -37,7 +38,13 @@ const InputButton: React.FC<InputButtonProps> = (props) => {
 
     return (
         <div className="keypad-button-container" style={{ flexGrow: props.grow }}>
-            <button className="keypad-button" onClick={() => clickHandle()} disabled={disabled} title={props.title} tabIndex={-1}>
+            <button
+                className="keypad-button"
+                onClick={() => clickHandle()}
+                disabled={disabled}
+                title={props.title}
+                style={props.style}
+                tabIndex={-1}>
                 <span>
                     <InlineMath>{props.symbol}</InlineMath>
                 </span>

@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useRef, useEffect } from "react";
-import { BlockMath, InlineMath } from "react-katex";
+import { BlockMath } from "react-katex";
 
 import { NumberType } from "../../types";
 import Emitter from "../../utils/Emitter";
@@ -10,6 +10,8 @@ import Compiler from "../../utils/Compiler";
 import NumberBox from "./NumberBox";
 import InputBox, { cursor } from "../InputBox";
 import Dialog from "../Dialog";
+import FunctionDialog from "../../dialogs/FunctionDialog";
+import AboutDialog from "../../dialogs/AboutDialog";
 
 const ProgrammingOutput: React.FC = () => {
     const [outputContent, setOutputContent] = useState<string>("");
@@ -20,6 +22,7 @@ const ProgrammingOutput: React.FC = () => {
     const [binValue, setBin] = useState<string>("0");
     const inputRef = useRef<InputBox>(null);
     const funcsDialogRef = useRef<Dialog>(null);
+    const aboutDialogRef = useRef<Dialog>(null);
 
     const handleInput = (symbol: string) => {
         if(!inputRef.current) return;
@@ -72,6 +75,9 @@ const ProgrammingOutput: React.FC = () => {
                 return;
             case "\\text{Funcs}":
                 funcsDialogRef.current?.open();
+                break;
+            case "\\text{About}":
+                aboutDialogRef.current?.open();
                 break;
             default:
                 setOutputContent("");
@@ -184,36 +190,8 @@ const ProgrammingOutput: React.FC = () => {
             </div>
 
             {/* Dialogs */}
-            <Dialog title="Functions" id="funcs-dialog" ref={funcsDialogRef}>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Function Name</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {
-                            Array.from(Compiler.functions).map(([funcName, value], index) => {
-                                if(funcName === "%") funcName = "\\%"; // "%" won't display in KaTeX
-
-                                return (
-                                    <tr key={index}>
-                                        <td>
-                                            <InlineMath>
-                                                {
-                                                    funcName.indexOf("text{") > -1
-                                                    ? funcName.replace("text{", "").replace("}", "")
-                                                    : funcName
-                                                }
-                                            </InlineMath>
-                                        </td>
-                                    </tr>
-                                );
-                            })
-                        }
-                    </tbody>
-                </table>
-            </Dialog>
+            <FunctionDialog ref={funcsDialogRef}/>
+            <AboutDialog ref={aboutDialogRef}/>
         </div>
     );
 }
