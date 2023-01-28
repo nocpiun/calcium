@@ -53,7 +53,7 @@ const AboutDialog: React.FC<AboutDialogProps> = forwardRef<Dialog, AboutDialogPr
 
         return (
             <Dialog title="About" id={"about-dialog--"+ useId()} ref={ref}>
-                <p><b>Calcium</b> is a web-based calculator written in React+Typescript.</p>
+                <p><img src="/icon.png" alt="icon" width={18}/> <b>Calcium</b> is a web-based calculator written in React+Typescript.</p>
 
                 <ul>
                     <li><AboutItem name="Version" content={version}/></li>
@@ -68,7 +68,7 @@ const AboutDialog: React.FC<AboutDialogProps> = forwardRef<Dialog, AboutDialogPr
                 <h3 style={{ textAlign: "center" }}>Thank you for using Calcium!</h3>
 
                 <IndialogPage title="License" visible={isLicenseVisible} onBack={() => setLicenseVisible(false)}>
-                    <textarea className="license-content" disabled>{licenseContent}</textarea>
+                    <textarea className="license-content" value={licenseContent} disabled/>
                 </IndialogPage>
             </Dialog>
         );
