@@ -8,7 +8,7 @@ export enum Mode {
     PROGRAMMING
 }
 
-export enum NumberType {
+export enum NumberSys {
     HEX = "hex",
     DEC = "dec",
     OCT = "oct",

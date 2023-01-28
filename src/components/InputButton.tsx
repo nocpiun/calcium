@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { InlineMath } from "react-katex";
 
-import { NumberType } from "../types";
+import { NumberSys } from "../types";
 import Emitter from "../utils/Emitter";
 
 interface InputButtonProps {
@@ -26,14 +26,14 @@ const InputButton: React.FC<InputButtonProps> = (props) => {
     useEffect(() => {
         if(!props.group) return;
 
-        Emitter.get().on("number-type-chose", (type: NumberType) => {
+        Emitter.get().on("number-sys-chose", (type: NumberSys) => {
             if(!props.group) return;
 
             setDisabled(!props.group.includes(type));
         });
 
         // default
-        Emitter.get().emit("number-type-chose", NumberType.DEC);
+        Emitter.get().emit("number-sys-chose", NumberSys.DEC);
     }, []);
 
     return (

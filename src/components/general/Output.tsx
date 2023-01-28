@@ -2,9 +2,11 @@
 import React, { useState, useRef, useEffect } from "react";
 import { BlockMath } from "react-katex";
 
+import { errorText } from "../../global";
 import Emitter from "../../utils/Emitter";
 import Utils from "../../utils/Utils";
-import Compiler from "../../utils/Compiler";
+import Compiler from "../../compiler";
+import Is from "../../compiler/Is";
 
 import InputBox, { specialSymbols, cursor } from "../InputBox";
 import type Dialog from "../Dialog";
@@ -121,24 +123,51 @@ const Output: React.FC = () => {
             return;
         }
 
-        if(Compiler.isVariable(raw[0]) && raw[1] === "=") { // variable declaring or setting
+        if(Is.variable(raw[0]) && raw[1] === "=") { // variable declaring or setting
             const varName = raw[0];
 
+            // Remove variableName and `=`
             raw = Utils.arrayRemove(raw, 0);
             raw = Utils.arrayRemove(raw, 0);
 
-            variableRef.current.set(varName, new Compiler(raw, variableRef.current).run());
-            setOutputContent(varName +"="+ variableRef.current.get(varName));
+            var variableCompiler = new Compiler(raw, variableRef.current);
+            var variableFormula = variableCompiler.compile();
+            var variableValue = "";
+            var variableError = false;
+
+            variableFormula
+            ? variableValue = variableFormula.evaluate()
+            : variableError = true;
+
+            if(variableValue.indexOf("NaN") > -1 || variableValue === "") variableError = true;
+
+            if(!variableError) {
+                variableRef.current.set(varName, variableValue);
+                setOutputContent(varName +"="+ variableRef.current.get(varName));
+            } else {
+                setOutputContent(varName +"=\\text{"+ errorText +"}");
+            }
+
             return;
         }
 
         var compiler = new Compiler(raw, variableRef.current);
+        var formula = compiler.compile();
+        var result = "";
+        var error = false;
 
-        var result = compiler.run();
-        if(result.indexOf("NaN") > -1 || result === "") result = "\\text{Error}";
+        formula
+        ? result = formula.evaluate()
+        : error = true;
+
+        if(result.indexOf("NaN") > -1 || result === "") error = true;
 
         // Display the result
-        setOutputContent("="+ result);
+        !error
+        ? setOutputContent("="+ result)
+        : setOutputContent("=\\text{"+ errorText +"}");
+
+        if(error) return;
 
         // Add the result to history list
         Emitter.get().emit("add-record", rawText, result);

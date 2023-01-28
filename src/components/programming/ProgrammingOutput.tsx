@@ -2,10 +2,12 @@
 import React, { useState, useRef, useEffect } from "react";
 import { BlockMath } from "react-katex";
 
-import { NumberType } from "../../types";
+import { errorText } from "../../global";
+import { NumberSys } from "../../types";
 import Emitter from "../../utils/Emitter";
 import Utils from "../../utils/Utils";
-import Compiler from "../../utils/Compiler";
+import Compiler from "../../compiler";
+import Transformer from "../../compiler/Transformer";
 
 import NumberBox from "./NumberBox";
 import InputBox, { cursor } from "../InputBox";
@@ -15,7 +17,7 @@ import AboutDialog from "../../dialogs/AboutDialog";
 
 const ProgrammingOutput: React.FC = () => {
     const [outputContent, setOutputContent] = useState<string>("");
-    const [numberType, setNumberType] = useState<NumberType>(NumberType.DEC);
+    const [numberSys, setNumberSys] = useState<NumberSys>(NumberSys.DEC);
     const [hexValue, setHex] = useState<string>("0");
     const [decValue, setDec] = useState<string>("0");
     const [octValue, setOct] = useState<string>("0");
@@ -101,61 +103,72 @@ const ProgrammingOutput: React.FC = () => {
         var raw = rawText.split(" ");
 
         var compiler = new Compiler(raw, new Map(), true);
+        var formula = compiler.compile();
+        var result = "";
+        var error = false;
 
-        var result: string;
-        switch(numberType) {
-            case NumberType.HEX:
-                result = compiler.runHex();
-                break;
-            case NumberType.DEC:
-                result = compiler.runDec();
-                break;
-            case NumberType.OCT:
-                result = compiler.runOct();
-                break;
-            case NumberType.BIN:
-                result = compiler.runBin();
-                break;
+        if(formula) {
+            switch(numberSys) {
+                case NumberSys.HEX:
+                    result = formula.evaluateHex();
+                    break;
+                case NumberSys.DEC:
+                    result = formula.evaluateDec();
+                    break;
+                case NumberSys.OCT:
+                    result = formula.evaluateOct();
+                    break;
+                case NumberSys.BIN:
+                    result = formula.evaluateBin();
+                    break;
+            }
+
+            if(result.indexOf("NaN") > -1 || result === "") error = true;
+        } else {
+            error = true;
         }
-        if(result.indexOf("NaN") > -1 || result === "") result = "\\text{Error}";
 
         // Display the result
-        setOutputContent("=\\text{"+ result +"}");
+        !error
+        ? setOutputContent("=\\text{"+ result +"}")
+        : setOutputContent("=\\text{"+ errorText +"}");
+
+        if(error) return;
 
         // Add the result to history list
         Emitter.get().emit("add-record", rawText, "\\text{"+ result +"}");
 
-        switch(numberType) {
-            case NumberType.HEX:
+        switch(numberSys) {
+            case NumberSys.HEX:
                 setHex(result);
-                setDec(Compiler.hexToDec(result));
-                setOct(Compiler.hexToOct(result));
-                setBin(Compiler.hexToBin(result));
+                setDec(Transformer.hexToDec(result));
+                setOct(Transformer.hexToOct(result));
+                setBin(Transformer.hexToBin(result));
                 break;
-            case NumberType.DEC:
-                setHex(Compiler.decToHex(result));
+            case NumberSys.DEC:
+                setHex(Transformer.decToHex(result));
                 setDec(result);
-                setOct(Compiler.decToOct(result));
-                setBin(Compiler.decToBin(result));
+                setOct(Transformer.decToOct(result));
+                setBin(Transformer.decToBin(result));
                 break;
-            case NumberType.OCT:
-                setHex(Compiler.octToHex(result));
-                setDec(Compiler.octToDec(result));
+            case NumberSys.OCT:
+                setHex(Transformer.octToHex(result));
+                setDec(Transformer.octToDec(result));
                 setOct(result);
-                setBin(Compiler.octToBin(result));
+                setBin(Transformer.octToBin(result));
                 break;
-            case NumberType.BIN:
-                setHex(Compiler.binToHex(result));
-                setDec(Compiler.binToDec(result));
-                setOct(Compiler.binToOct(result));
+            case NumberSys.BIN:
+                setHex(Transformer.binToHex(result));
+                setDec(Transformer.binToDec(result));
+                setOct(Transformer.binToOct(result));
                 setBin(result);
                 break;
         }
     };
 
     useEffect(() => {
-        Emitter.get().on("number-type-chose", (type: NumberType) => {
-            setNumberType(type);
+        Emitter.get().on("number-sys-chose", (type: NumberSys) => {
+            setNumberSys(type);
         });
     }, []);
 
@@ -173,10 +186,10 @@ const ProgrammingOutput: React.FC = () => {
             <span className="output-tag">Output</span>
 
             <ul className="number-box-list">
-                <NumberBox name="Hex" value={hexValue} type={NumberType.HEX}/>
-                <NumberBox name="Dec" value={decValue} type={NumberType.DEC}/>
-                <NumberBox name="Oct" value={octValue} type={NumberType.OCT}/>
-                <NumberBox name="Bin" value={binValue} type={NumberType.BIN}/>
+                <NumberBox name="Hex" value={hexValue} type={NumberSys.HEX}/>
+                <NumberBox name="Dec" value={decValue} type={NumberSys.DEC}/>
+                <NumberBox name="Oct" value={octValue} type={NumberSys.OCT}/>
+                <NumberBox name="Bin" value={binValue} type={NumberSys.BIN}/>
             </ul>
 
             <InputBox

@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-redeclare */
 /* eslint-disable no-self-assign */
 import Point from "./Point";
-import Compiler from "../../utils/Compiler";
+import Compiler from "../../compiler";
+import Formula from "../../compiler/Formula";
 
 import List from "../../utils/List";
 import WorkerPool from "../../utils/WorkerPool";
@@ -226,10 +227,19 @@ export default class Render {
             var endX = (this.canvas.width - this.center.x) / unitPx;
 
             for(let x1 = beginX; x1 <= endX; x1 += .01) {
-                var y1 = parseFloat(new Compiler(rawText.split(" "), new Map([["x", x1.toString()]])).run());
+                /*****/
+                var y1f = Render.getYFormula(rawText, x1.toString()); // y1 Formula
+                if(!y1f) return 0;
+                var y1 = parseFloat(y1f.evaluate());
+                /*****/
 
                 var x2 = x1 + .01;
-                var y2 = parseFloat(new Compiler(rawText.split(" "), new Map([["x", x2.toString()]])).run());
+
+                /*****/
+                var y2f = Render.getYFormula(rawText, x2.toString()); // y2 Formula
+                if(!y2f) return 0;
+                var y2 = parseFloat(y2f.evaluate());
+                /*****/
 
                 var p1 = this.coordinatesToScreen(new Point(x1, y1));
                 var p2 = this.coordinatesToScreen(new Point(x2, y2));
@@ -267,5 +277,13 @@ export default class Render {
 
     public registerFunction(rawText: string): void {
         this.functionList.add(rawText);
+    }
+
+    private static getYFormula(rawText: string, x: string): Formula | void {
+        var compiler = new Compiler(rawText.split(" "), new Map([["x", x.toString()]]));
+        var formula = compiler.compile();
+
+        if(!formula) return;
+        return formula;
     }
 }

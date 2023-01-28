@@ -1,24 +1,24 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from "react";
 
-import type { NumberType } from "../../types";
+import type { NumberSys } from "../../types";
 import Emitter from "../../utils/Emitter";
 
 interface NumberBoxProps {
     name: string
     value: string
-    type: NumberType
+    type: NumberSys
 }
 
 const NumberBox: React.FC<NumberBoxProps> = (props) => {
     const [isActive, setIsActive] = useState<boolean>(false);
 
     const clickHandle = () => {
-        Emitter.get().emit("number-type-chose", props.type);
+        Emitter.get().emit("number-sys-chose", props.type);
     };
 
     useEffect(() => {
-        Emitter.get().on("number-type-chose", (type: NumberType) => {
+        Emitter.get().on("number-sys-chose", (type: NumberSys) => {
             setIsActive(type === props.type);
         });
     }, []);

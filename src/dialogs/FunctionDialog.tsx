@@ -1,7 +1,7 @@
 import React, { forwardRef, useId } from "react";
 import { InlineMath } from "react-katex";
 
-import Compiler from "../utils/Compiler";
+import { functions } from "../compiler";
 import type { PropsWithRef } from "../types";
 
 import Dialog from "../components/Dialog";
@@ -22,7 +22,7 @@ const FunctionDialog: React.FC<FunctionDialogProps> = forwardRef<Dialog, Functio
                     </thead>
                     <tbody>
                         {
-                            Array.from(Compiler.functions).map(([funcName, value], index) => {
+                            Array.from(functions).map(([funcName, value], index) => {
                                 if(funcName === "%") funcName = "\\%"; // "%" won't display in KaTeX
 
                                 return (
