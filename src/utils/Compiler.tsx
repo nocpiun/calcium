@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-redeclare */
 import List from "./List";
 import Float from "./Float";
-import { Operator, MathFunction } from "../types";
+import { Operator } from "../types";
+import type { MathFunction } from "../types";
 
 type NumberSymbol = string;
 

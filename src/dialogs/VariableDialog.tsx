@@ -1,7 +1,7 @@
 import React, { forwardRef, useId } from "react";
 import { InlineMath } from "react-katex";
 
-import { PropsWithRef } from "../types";
+import type { PropsWithRef } from "../types";
 
 import Dialog from "../components/Dialog";
 

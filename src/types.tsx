@@ -1,6 +1,6 @@
 import React, { ReactElement } from "react";
 
-import Point from "./components/graphing/Point";
+import type Point from "./components/graphing/Point";
 
 export enum Mode {
     GENERAL,

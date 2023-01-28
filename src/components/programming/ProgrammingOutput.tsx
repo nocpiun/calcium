@@ -9,7 +9,7 @@ import Compiler from "../../utils/Compiler";
 
 import NumberBox from "./NumberBox";
 import InputBox, { cursor } from "../InputBox";
-import Dialog from "../Dialog";
+import type Dialog from "../Dialog";
 import FunctionDialog from "../../dialogs/FunctionDialog";
 import AboutDialog from "../../dialogs/AboutDialog";
 

@@ -2,7 +2,7 @@ import ComputeWorker from "../workers/compute.worker.ts";
 
 import List from "./List";
 import Queue from "./Queue";
-import {
+import type {
     WorkerRequest,
     WorkerResponse,
     PromiseExecutor,

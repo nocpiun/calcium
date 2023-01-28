@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from "react";
 
-import { NumberType } from "../../types";
+import type { NumberType } from "../../types";
 import Emitter from "../../utils/Emitter";
 
 interface NumberBoxProps {

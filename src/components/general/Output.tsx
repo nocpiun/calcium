@@ -7,7 +7,7 @@ import Utils from "../../utils/Utils";
 import Compiler from "../../utils/Compiler";
 
 import InputBox, { specialSymbols, cursor } from "../InputBox";
-import Dialog from "../Dialog";
+import type Dialog from "../Dialog";
 import VariableDialog from "../../dialogs/VariableDialog";
 import FunctionDialog from "../../dialogs/FunctionDialog";
 import AboutDialog from "../../dialogs/AboutDialog";
