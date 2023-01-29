@@ -24,7 +24,7 @@ export default class Render {
     private mousePoint: Point;
 
     private functionList: List<string> = new List();
-    private functionPoints: [Point, Point][] = []; // [p1, p2]
+    private displayedPoints: [Point, Point][] = []; // [p1, p2]
 
     public constructor(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) {
         this.canvas = canvas;
@@ -33,6 +33,11 @@ export default class Render {
         this.mousePoint = this.center;
 
         this.initListeners();
+    }
+
+    public reset(): void {
+        this.functionList.clear();
+        this.displayedPoints = [];
     }
 
     private initListeners(): void {
@@ -214,10 +219,10 @@ export default class Render {
         this.drawText("Mouse: "+ mouseCoordinatesPoint.x.toFixed(2) +", "+ mouseCoordinatesPoint.y.toFixed(2), 30, 30, "#cbd0df", 15);
 
         // Draw function images
-        for(let i = 0; i < this.functionPoints.length; i++) {
-            this.drawLine(this.functionPoints[i][0], this.functionPoints[i][1], "#fff");
+        for(let i = 0; i < this.displayedPoints.length; i++) {
+            this.drawLine(this.displayedPoints[i][0], this.displayedPoints[i][1], "#fff");
         }
-        this.functionPoints = [];
+        this.displayedPoints = [];
 
         // Compute function points
         /* var promises = */ this.functionList.value.map((rawText: string) => {
@@ -268,7 +273,7 @@ export default class Render {
         //                 var p1 = this.coordinatesToScreen(new Point(x1, y1));
         //                 var p2 = this.coordinatesToScreen(new Point(x2, y2));
                 
-        //                 this.functionPoints.push([p1, p2]);
+        //                 this.displayedPoints.push([p1, p2]);
         //             }
         //         }
         //     })

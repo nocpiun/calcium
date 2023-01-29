@@ -110,17 +110,23 @@ const Graphing: React.FC = memo(() => {
 
         // Init renderer
         var renderer = new Render(canvas, ctx);
+        var rafTimer: number;
 
         // Init timer
         function render() {
             renderer.render();
-            window.requestAnimationFrame(render);
+            rafTimer = window.requestAnimationFrame(render);
         }
-        window.requestAnimationFrame(render);
+        rafTimer = window.requestAnimationFrame(render);
 
         Emitter.get().on("add-function", (rawText: string) => {
             renderer.registerFunction(rawText);
         });
+
+        return () => { // Unregister renderer and timer
+            renderer.reset();
+            window.cancelAnimationFrame(rafTimer);
+        };
     }, []);
 
     return (
