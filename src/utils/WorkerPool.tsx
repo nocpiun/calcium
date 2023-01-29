@@ -63,4 +63,11 @@ export default class WorkerPool {
             }
         });
     }
+
+    public terminateAllWorkers(): void {
+        // Idle Workers
+        this.idleWorkers.forEach((worker) => worker.terminate());
+        // Working Workers
+        this.workers.forEach((executor, worker) => worker.terminate());
+    }
 }

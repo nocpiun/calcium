@@ -38,6 +38,7 @@ export default class Render {
     public reset(): void {
         this.functionList.clear();
         this.displayedPoints = [];
+        this.workerPool.terminateAllWorkers();
     }
 
     private initListeners(): void {
