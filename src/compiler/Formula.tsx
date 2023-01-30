@@ -2,26 +2,20 @@
 import List from "../utils/List";
 import Float from "../utils/Float";
 import Is from "./Is";
-import Transformer from "./Transformer";
+// import Transformer from "./Transformer";
 
-import { NumberSys, Operator, VoidToken } from "../types";
+import { NumberSys, Operator } from "../types";
 import type {
     ValueToken,
     ChildrenToken,
     NumberToken,
     FunctionToken
 } from "../types";
-import type { NumberSymbol } from ".";
+// import type { NumberSymbol } from ".";
 
 export default class Formula {
-    // public numbers: List<NumberSymbol>;
-    // public operators: List<Operator>;
     public token: ChildrenToken;
 
-    // public constructor(numbers: List<NumberSymbol>, operators: List<Operator>) {
-    //     this.numbers = numbers;
-    //     this.operators = operators;
-    // }
     public constructor(token: ChildrenToken) {
         this.token = token;
     }
@@ -72,134 +66,134 @@ export default class Formula {
         // }
 
         const root = this.token;
-        var numbers: Map<number, NumberToken> = new Map();
-        var lastIndex = -1;
+        var numbers: List<NumberToken> = new List();
+        var operators: List<ValueToken<Operator>> = new List();
 
         for(let i = 0; i < root.children.length; i++) {
             var token = root.children[i];
 
-            if(token.type === "number") {
-                numbers.set(i, token as NumberToken);
-            } else if(token.type === "bracket") {
-                var value = new Formula(token as ChildrenToken).evaluate();
-                numbers.set(i, {
-                    type: "number",
-                    value,
-                    float: Is.float(value),
-                    numberSys: NumberSys.DEC
-                });
-            } else if(token.type === "function") {
-                var { func, param } = token as FunctionToken;
-                var calculatedParam = [];
-                for(let i = 0; i < param.length; i++) {
-                    calculatedParam.push(new Formula(param[i] as ChildrenToken).evaluate());
-                }
-
-                var value = func(...calculatedParam);
-                numbers.set(i, {
-                    type: "number",
-                    value,
-                    float: Is.float(value),
-                    numberSys: NumberSys.DEC
-                });
-            }
-
-            if(i === root.children.length - 1) {
-                lastIndex = i;
+            switch(token.type) {
+                case "number":
+                    numbers.add(token as NumberToken);
+                    break;
+                case "operator":
+                    operators.add(token as ValueToken<Operator>);
+                    break;
+                case "bracket":
+                    var value = new Formula(token as ChildrenToken).evaluate();
+                    numbers.add({
+                        type: "number",
+                        value,
+                        float: Is.float(value),
+                        numberSys: NumberSys.DEC
+                    });
+                    break;
+                case "function":
+                    var { func, param } = token as FunctionToken;
+                    var calculatedParam = [];
+                    for(let i = 0; i < param.length; i++) {
+                        calculatedParam.push(new Formula(param[i] as ChildrenToken).evaluate());
+                    }
+    
+                    var value = func(...calculatedParam);
+                    numbers.add({
+                        type: "number",
+                        value,
+                        float: Is.float(value),
+                        numberSys: NumberSys.DEC
+                    });
+                    break;
             }
         }
-
-        // Multiply & Divide
-        for(let i = 0; i < root.children.length; i++) {
-            var token = root.children[i];
+        
+        for(let i = 0; i < operators.length; i++) {
+            var operator = operators.get(i).value;
             
-            if(
-                (token as ValueToken<Operator>).value === Operator.MUL ||
-                (token as ValueToken<Operator>).value === Operator.DIV
-            ) {
-                var a = numbers.get(i - 1);
+            if(operator === Operator.MUL || operator === Operator.DIV) {
+                var a = numbers.get(i);
                 var b = numbers.get(i + 1);
                 var result: number;
-                if(!a || !b) return NaN;
-
-                switch((token as ValueToken<Operator>).value) {
+    
+                switch(operator) {
                     case Operator.MUL:
                         a.float || b.float
                         ? result = Float.multiply(a.value, b.value)
                         : result = a.value * b.value;
-
-                        numbers.set(i + 1, {
+    
+                        numbers.set(i, {
                             type: "number",
                             value: result,
                             float: Is.float(result),
                             numberSys: NumberSys.DEC
                         } as NumberToken);
-                        numbers.delete(i - 1);
+                        numbers.remove(i + 1);
                         break;
                     case Operator.DIV:
                         if(b.value === 0) return NaN;
-
+    
                         a.float || b.float
                         ? result = Float.divide(a.value, b.value)
                         : result = a.value / b.value;
-
-                        numbers.set(i + 1, {
+    
+                        numbers.set(i, {
                             type: "number",
                             value: result,
                             float: Is.float(result),
                             numberSys: NumberSys.DEC
                         } as NumberToken);
-                        numbers.delete(i - 1);
+                        numbers.remove(i + 1);
                         break;
                 }
+
+                operators.remove(i);
+                i--;
             }
         }
 
-        // Plus & Minus
-        for(let i = 0; i < root.children.length; i++) {
-            var token = root.children[i];
+        for(let i = 0; i < operators.length; i++) {
+            var operator = operators.get(i).value;
             
-            if(
-                (token as ValueToken<Operator>).value === Operator.ADD ||
-                (token as ValueToken<Operator>).value === Operator.SUB
-            ) {
-                var a = numbers.get(i - 1);
+            if(operator === Operator.ADD || operator === Operator.SUB) {
+                var a = numbers.get(i);
                 var b = numbers.get(i + 1);
                 var result: number;
-                if(!a || !b) return NaN;
-
-                switch((token as ValueToken<Operator>).value) {
+    
+                switch(operator) {
                     case Operator.ADD:
                         a.float || b.float
                         ? result = Float.add(a.value, b.value)
                         : result = a.value + b.value;
-
-                        numbers.set(i + 1, {
+    
+                        numbers.set(i, {
                             type: "number",
                             value: result,
                             float: Is.float(result),
                             numberSys: NumberSys.DEC
                         } as NumberToken);
-                        numbers.delete(i - 1);
+                        numbers.remove(i + 1);
                         break;
                     case Operator.SUB:
                         a.float || b.float
                         ? result = Float.sub(a.value, b.value)
                         : result = a.value - b.value;
-
-                        numbers.set(i + 1, {
+    
+                        numbers.set(i, {
                             type: "number",
                             value: result,
                             float: Is.float(result),
                             numberSys: NumberSys.DEC
                         } as NumberToken);
-                        numbers.delete(i - 1);
+                        numbers.remove(i + 1);
                         break;
                 }
+
+                operators.remove(i);
+                i--;
             }
         }
+        console.log(numbers.value);
 
-        return numbers.get(lastIndex)?.value ?? NaN;
+        return numbers.get(0)?.value ?? NaN;
     }
 
     // public evaluateHex(): NumberSymbol {

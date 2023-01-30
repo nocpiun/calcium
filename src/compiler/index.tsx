@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-redeclare */
-import List from "../utils/List";
 import Formula from "./Formula";
 import Is from "./Is";
 
@@ -16,40 +15,6 @@ import type {
 import Utils from "../utils/Utils";
 
 export type NumberSymbol = string;
-
-// const _test_token = {
-//     type: "root",
-//     children: [
-//         {
-//             type: "number",
-//             value: 2,
-//             float: false
-//         },
-//         {
-//             type: "operator",
-//             value: "×"
-//         },
-//         {
-//             type: "bracket",
-//             children: [
-//                 {
-//                     type: "number",
-//                     value: 5,
-//                     float: false
-//                 },
-//                 {
-//                     type: "operator",
-//                     value: "-"
-//                 },
-//                 {
-//                     type: "number",
-//                     value: 3,
-//                     float: false
-//                 }
-//             ]
-//         }
-//     ]
-// };
 
 export const functions: Map<string, MathFunction> = new Map([
     ["sin",        [(x) => Math.sin(x),          1]],
@@ -83,8 +48,6 @@ export default class Compiler {
     private isProgrammingMode: boolean;
 
     private raw: string[];
-    // private numberList: List<NumberSymbol> = new List([]);
-    // private operatorList: List<Operator> = new List([]);
 
     private layer: number = 0;
     private inAbs: boolean = false;
@@ -96,8 +59,6 @@ export default class Compiler {
         this.raw = raw;
         this.variables = variables;
         this.isProgrammingMode = isProgrammingMode;
-
-        // this.compile();
     }
 
     public tokenize(): RootToken | void {
@@ -106,8 +67,6 @@ export default class Compiler {
             children: []
         };
 
-        // var numbers = new List<NumberSymbol>();
-        // var operators = new List<Operator>();
         var tempNumber: NumberSymbol = "";
         var tempParamRaw: NumberSymbol[] = [];
         var tempParamList: Token[] = [];
@@ -190,8 +149,6 @@ export default class Compiler {
              */
 
             if(Is.number(symbol, this.isProgrammingMode) || (Is.variable(symbol) && this.raw[1] !== "=")) { // number
-                // if(numbers.isEmpty()) numbers.add("");
-
                 // Constant variable
                 if(symbol === "e" && !this.isProgrammingMode) symbol = Math.E.toString();
                 if(symbol === "\\pi") symbol = Math.PI.toString();
@@ -201,8 +158,6 @@ export default class Compiler {
                     symbol = this.variables.get(symbol) ?? "NaN";
                 }
 
-                // var target = numbers.length - 1;
-                // numbers.set(target, numbers.get(target) + symbol);
                 tempNumber += symbol;
 
                 if(i === this.raw.length - 1) {
@@ -232,14 +187,9 @@ export default class Compiler {
                 } as ValueToken<Operator>);
 
                 tempNumber = "";
-
-                // operators.add(symbol as Operator);
-                // numbers.add("");
             } else if(Is.leftBracket(symbol)) { // left bracket
                 this.layer++;
             } else if(Is.rightBracket(symbol)) { // right bracket
-                // if(numbers.isEmpty()) numbers.add("");
-
                 var secondaryCompiler = new Compiler(this.secondaryRaw, this.variables);
                 var bracketContent = secondaryCompiler.tokenize();
                 if(!bracketContent) {
@@ -247,13 +197,6 @@ export default class Compiler {
                     return;
                 }
 
-                // var target = numbers.length - 1;
-                // if(this.currentFunction) {
-                //     numbers.set(target, this.currentFunction[0](parseFloat(bracketResult)).toString());
-                //     this.currentFunction = null;
-                // } else {
-                //     numbers.set(target, bracketResult);
-                // }
                 if(this.currentFunction) {
                     root.children.push({
                         type: "function",
@@ -317,7 +260,6 @@ export default class Compiler {
             }
         }
 
-        // return new Formula(numbers, operators);
         console.log(root);
         return root;
     }
@@ -325,7 +267,7 @@ export default class Compiler {
     public compile(): NumberSymbol {
         var tokenized = this.tokenize();
         
-        if(tokenized) return new Formula(tokenized).evaluate().toString();
+        if(tokenized && !this.hasError) return new Formula(tokenized).evaluate().toString();
         return "NaN";
     }
 
