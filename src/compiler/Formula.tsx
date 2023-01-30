@@ -88,6 +88,15 @@ export default class Formula {
                         numberSys: NumberSys.DEC
                     });
                     break;
+                case "abs":
+                    var value = Math.abs(new Formula(token as ChildrenToken).evaluate());
+                    numbers.add({
+                        type: "number",
+                        value,
+                        float: Is.float(value),
+                        numberSys: NumberSys.DEC
+                    });
+                    break;
                 case "function":
                     var { func, param } = token as FunctionToken;
                     var calculatedParam = [];
@@ -191,7 +200,6 @@ export default class Formula {
                 i--;
             }
         }
-        console.log(numbers.value);
 
         return numbers.get(0)?.value ?? NaN;
     }

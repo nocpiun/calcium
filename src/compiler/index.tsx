@@ -110,7 +110,7 @@ export default class Compiler {
 
                 if(
                     (
-                        this.layer === 1 ||
+                        this.layer >= 1 ||
                         (
                             Is.rightBracket(symbol) &&
                             this.layer === 0
@@ -118,7 +118,10 @@ export default class Compiler {
                     ) &&
                     this.currentFunction
                 ) {
-                    if(symbol === "," || Is.rightBracket(symbol)) {
+                    if(
+                        (symbol === "," && this.layer === 1) ||
+                        (Is.rightBracket(symbol) && this.layer === 0)
+                    ) {
                         var tokenized = new Compiler(tempParamRaw, this.variables).tokenize();
                         if(!tokenized) {
                             this.hasError = true;
@@ -215,23 +218,24 @@ export default class Compiler {
 
                 this.secondaryRaw = [];
             } else if(symbol === "|") { // absolute value
-                // if(this.inAbs) {
-                //     if(numbers.isEmpty()) numbers.add("");
+                if(this.inAbs) {
+                    var secondaryCompiler = new Compiler(this.secondaryRaw, this.variables);
+                    var absContent = secondaryCompiler.tokenize();
+                    if(!absContent) {
+                        this.hasError = true;
+                        return;
+                    }
 
-                //     var secondaryCompiler = new Compiler(this.secondaryRaw, this.variables);
-                //     var secondaryValue = secondaryCompiler.compile();
-                //     if(secondaryValue.indexOf("NaN") > -1 || secondaryValue === "") {
-                //         this.hasError = true;
-                //         return;
-                //     }
-
-                //     numbers.set(numbers.length - 1, Math.abs(parseFloat(secondaryValue)).toString());
+                    root.children.push({
+                        type: "abs",
+                        children: absContent.children
+                    } as ChildrenToken);
                     
-                //     this.secondaryRaw = [];
-                //     this.inAbs = false;
-                // } else {
-                //     this.inAbs = true;
-                // }
+                    this.secondaryRaw = [];
+                    this.inAbs = false;
+                } else {
+                    this.inAbs = true;
+                }
             } else if(Is.mathFunction(symbol)) { // function
                 var functionName = symbol.replace("\\", "").replace("(", "");
                 if(!functions.has(functionName)) {

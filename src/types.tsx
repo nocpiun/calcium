@@ -63,7 +63,7 @@ export interface PropsWithChildren {
     children?: ReactElement | ReactElement[] | undefined
 }
 
-type TokenType = "root" | "void" | "number" | "operator" | "bracket" | "function";
+type TokenType = "root" | "void" | "number" | "operator" | "bracket" | "abs" | "function";
 
 export interface Token {
     type: TokenType
