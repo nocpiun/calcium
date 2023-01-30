@@ -2,7 +2,7 @@
 import List from "../utils/List";
 import Float from "../utils/Float";
 import Is from "./Is";
-// import Transformer from "./Transformer";
+import Transformer from "./Transformer";
 
 import { NumberSys, Operator } from "../types";
 import type {
@@ -21,50 +21,6 @@ export default class Formula {
     }
 
     public evaluate(): number {
-        // // Logical Operator
-        // for(let i = 0; i < this.operators.length; i++) {
-        //     if(
-        //         this.operators.get(i) === Operator.AND ||
-        //         this.operators.get(i) === Operator.OR ||
-        //         this.operators.get(i) === Operator.NAND ||
-        //         this.operators.get(i) === Operator.NOR ||
-        //         this.operators.get(i) === Operator.XOR ||
-        //         this.operators.get(i) === Operator.LSH ||
-        //         this.operators.get(i) === Operator.RSH
-        //     ) {
-        //         var a = parseInt(this.numbers.get(i));
-        //         var b = parseInt(this.numbers.get(i + 1));
-        //         this.numbers.remove(i + 1);
-
-        //         switch(this.operators.get(i)) {
-        //             case Operator.AND:
-        //                 this.numbers.set(i, (a & b).toString());
-        //                 break;
-        //             case Operator.OR:
-        //                 this.numbers.set(i, (a | b).toString());
-        //                 break;
-        //             case Operator.NAND:
-        //                 this.numbers.set(i, (~(a & b)).toString());
-        //                 break;
-        //             case Operator.NOR:
-        //                 this.numbers.set(i, (~(a | b)).toString());
-        //                 break;
-        //             case Operator.XOR:
-        //                 this.numbers.set(i, (a ^ b).toString());
-        //                 break;
-        //             case Operator.LSH:
-        //                 this.numbers.set(i, (a << b).toString());
-        //                 break;
-        //             case Operator.RSH:
-        //                 this.numbers.set(i, (a >> b).toString());
-        //                 break;
-        //         }
-
-        //         this.operators.remove(i);
-        //         i--;
-        //     }
-        // }
-
         const root = this.token;
         var numbers: List<NumberToken> = new List();
         var operators: List<ValueToken<Operator>> = new List();
@@ -74,7 +30,30 @@ export default class Formula {
 
             switch(token.type) {
                 case "number":
-                    numbers.add(token as NumberToken);
+                    var numToken = token as NumberToken;
+                    var transformedValue: number;
+                    
+                    switch(numToken.numberSys) {
+                        case NumberSys.HEX:
+                            transformedValue = parseFloat(Transformer.hexToDec(numToken.value.toString()));
+                            break;
+                        case NumberSys.DEC:
+                            transformedValue = numToken.value;
+                            break;
+                        case NumberSys.OCT:
+                            transformedValue = parseFloat(Transformer.octToDec(numToken.value.toString()));
+                            break;
+                        case NumberSys.BIN:
+                            transformedValue = parseFloat(Transformer.binToDec(numToken.value.toString()));
+                            break;
+                    }
+
+                    numbers.add({
+                        type: "number",
+                        value: transformedValue,
+                        float: Is.float(transformedValue),
+                        numberSys: NumberSys.DEC
+                    });
                     break;
                 case "operator":
                     operators.add(token as ValueToken<Operator>);
@@ -114,7 +93,61 @@ export default class Formula {
                     break;
             }
         }
+
+        // Logical Operator
+        for(let i = 0; i < operators.length; i++) {
+            var operator = operators.get(i).value;
+
+            if(
+                operator === Operator.AND ||
+                operator === Operator.OR ||
+                operator === Operator.NAND ||
+                operator === Operator.NOR ||
+                operator === Operator.XOR ||
+                operator === Operator.LSH ||
+                operator === Operator.RSH
+            ) {
+                var a = numbers.get(i);
+                var b = numbers.get(i + 1);
+                var result: number;
+                
+                switch(operator) {
+                    case Operator.AND:
+                        result = a.value & b.value;
+                        break;
+                    case Operator.OR:
+                        result = a.value | b.value;
+                        break;
+                    case Operator.NAND:
+                        result = ~(a.value & b.value);
+                        break;
+                    case Operator.NOR:
+                        result = ~(a.value | b.value);
+                        break;
+                    case Operator.XOR:
+                        result = a.value ^ b.value;
+                        break;
+                    case Operator.LSH:
+                        result = a.value << b.value;
+                        break;
+                    case Operator.RSH:
+                        result = a.value >> b.value;
+                        break;
+                }
+
+                numbers.set(i, {
+                    type: "number",
+                    value: result,
+                    float: Is.float(result),
+                    numberSys: NumberSys.DEC
+                } as NumberToken);
+                numbers.remove(i + 1);
+                operators.remove(i);
+                i--;
+            }
+        }
         
+        // Multiply & Divide
         for(let i = 0; i < operators.length; i++) {
             var operator = operators.get(i).value;
             
@@ -128,37 +161,29 @@ export default class Formula {
                         a.float || b.float
                         ? result = Float.multiply(a.value, b.value)
                         : result = a.value * b.value;
-    
-                        numbers.set(i, {
-                            type: "number",
-                            value: result,
-                            float: Is.float(result),
-                            numberSys: NumberSys.DEC
-                        } as NumberToken);
-                        numbers.remove(i + 1);
                         break;
                     case Operator.DIV:
-                        if(b.value === 0) return NaN;
+                        if(b.value === 0) return Infinity;
     
                         a.float || b.float
                         ? result = Float.divide(a.value, b.value)
                         : result = a.value / b.value;
-    
-                        numbers.set(i, {
-                            type: "number",
-                            value: result,
-                            float: Is.float(result),
-                            numberSys: NumberSys.DEC
-                        } as NumberToken);
-                        numbers.remove(i + 1);
                         break;
                 }
 
+                numbers.set(i, {
+                    type: "number",
+                    value: result,
+                    float: Is.float(result),
+                    numberSys: NumberSys.DEC
+                } as NumberToken);
+                numbers.remove(i + 1);
                 operators.remove(i);
                 i--;
             }
         }
 
+        // Add & Sub
         for(let i = 0; i < operators.length; i++) {
             var operator = operators.get(i).value;
             
@@ -172,30 +197,21 @@ export default class Formula {
                         a.float || b.float
                         ? result = Float.add(a.value, b.value)
                         : result = a.value + b.value;
-    
-                        numbers.set(i, {
-                            type: "number",
-                            value: result,
-                            float: Is.float(result),
-                            numberSys: NumberSys.DEC
-                        } as NumberToken);
-                        numbers.remove(i + 1);
                         break;
                     case Operator.SUB:
                         a.float || b.float
                         ? result = Float.sub(a.value, b.value)
                         : result = a.value - b.value;
-    
-                        numbers.set(i, {
-                            type: "number",
-                            value: result,
-                            float: Is.float(result),
-                            numberSys: NumberSys.DEC
-                        } as NumberToken);
-                        numbers.remove(i + 1);
                         break;
                 }
 
+                numbers.set(i, {
+                    type: "number",
+                    value: result,
+                    float: Is.float(result),
+                    numberSys: NumberSys.DEC
+                } as NumberToken);
+                numbers.remove(i + 1);
                 operators.remove(i);
                 i--;
             }
@@ -203,29 +219,4 @@ export default class Formula {
 
         return numbers.get(0)?.value ?? NaN;
     }
-
-    // public evaluateHex(): NumberSymbol {
-    //     for(let i = 0; i < this.numbers.length; i++) {
-    //         this.numbers.set(i, Transformer.hexToDec(this.numbers.get(i)));
-    //     }
-    //     return Transformer.decToHex(this.evaluate());
-    // }
-
-    // public evaluateDec(): NumberSymbol {
-    //     return this.evaluate();
-    // }
-
-    // public evaluateOct(): NumberSymbol {
-    //     for(let i = 0; i < this.numbers.length; i++) {
-    //         this.numbers.set(i, Transformer.octToDec(this.numbers.get(i)));
-    //     }
-    //     return Transformer.decToOct(this.evaluate());
-    // }
-
-    // public evaluateBin(): NumberSymbol {
-    //     for(let i = 0; i < this.numbers.length; i++) {
-    //         this.numbers.set(i, Transformer.binToDec(this.numbers.get(i)));
-    //     }
-    //     return Transformer.decToBin(this.evaluate());
-    // }
 }

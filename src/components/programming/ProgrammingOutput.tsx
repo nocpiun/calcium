@@ -36,9 +36,8 @@ const ProgrammingOutput: React.FC = () => {
 
         switch(symbol) {
             case "\\text{Clear}":
-                inputBox.reset();
                 setOutputContent("");
-                break;
+                return cursor;
             case "Backspace":
             case "\\text{Del}":
                 var target = cursorIndex;
@@ -102,35 +101,30 @@ const ProgrammingOutput: React.FC = () => {
         var rawText = InputBox.removeCursor(currentContent);
         var raw = rawText.split(" ");
 
-        var compiler = new Compiler(raw, new Map(), true);
-        var formula = compiler.tokenize();
-        var result = "";
+        var compiler = new Compiler(raw, new Map(), true, numberSys);
+        var result = compiler.compile();
         var error = false;
 
-        // if(formula) {
-        //     switch(numberSys) {
-        //         case NumberSys.HEX:
-        //             result = formula.evaluateHex();
-        //             break;
-        //         case NumberSys.DEC:
-        //             result = formula.evaluateDec();
-        //             break;
-        //         case NumberSys.OCT:
-        //             result = formula.evaluateOct();
-        //             break;
-        //         case NumberSys.BIN:
-        //             result = formula.evaluateBin();
-        //             break;
-        //     }
-
-        //     if(result.indexOf("NaN") > -1 || result === "") error = true;
-        // } else {
-        //     error = true;
-        // }
+        if(result.indexOf("NaN") > -1 || result === "") error = true;
 
         // Display the result
+        var displayValue: string = result;
+        switch(numberSys) {
+            case NumberSys.HEX:
+                displayValue = Transformer.decToHex(result);
+                break;
+            case NumberSys.DEC:
+                /* Do nothing */
+                break;
+            case NumberSys.OCT:
+                displayValue = Transformer.decToOct(result);
+                break;
+            case NumberSys.BIN:
+                displayValue = Transformer.decToBin(result);
+                break;
+        }
         !error
-        ? setOutputContent("=\\text{"+ result +"}")
+        ? setOutputContent("=\\text{"+ displayValue +"}")
         : setOutputContent("=\\text{"+ errorText +"}");
 
         if(error) return;
@@ -138,32 +132,10 @@ const ProgrammingOutput: React.FC = () => {
         // Add the result to history list
         Emitter.get().emit("add-record", rawText, "\\text{"+ result +"}");
 
-        switch(numberSys) {
-            case NumberSys.HEX:
-                setHex(result);
-                setDec(Transformer.hexToDec(result));
-                setOct(Transformer.hexToOct(result));
-                setBin(Transformer.hexToBin(result));
-                break;
-            case NumberSys.DEC:
-                setHex(Transformer.decToHex(result));
-                setDec(result);
-                setOct(Transformer.decToOct(result));
-                setBin(Transformer.decToBin(result));
-                break;
-            case NumberSys.OCT:
-                setHex(Transformer.octToHex(result));
-                setDec(Transformer.octToDec(result));
-                setOct(result);
-                setBin(Transformer.octToBin(result));
-                break;
-            case NumberSys.BIN:
-                setHex(Transformer.binToHex(result));
-                setDec(Transformer.binToDec(result));
-                setOct(Transformer.binToOct(result));
-                setBin(result);
-                break;
-        }
+        setHex(Transformer.decToHex(result));
+        setDec(result);
+        setOct(Transformer.decToOct(result));
+        setBin(Transformer.decToBin(result));
     };
 
     useEffect(() => {

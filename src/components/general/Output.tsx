@@ -32,9 +32,8 @@ const Output: React.FC = () => {
 
         switch(symbol) {
             case "\\text{Clear}":
-                inputBox.reset();
                 setOutputContent("");
-                break;
+                return cursor;
             case "Backspace":
             case "\\text{Del}":
                 var target = cursorIndex;

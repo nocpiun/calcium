@@ -1,5 +1,8 @@
 import React from "react";
 
+import { NumberSys } from "../types";
+import Transformer from "../compiler/Transformer";
+
 export default class Utils {
     public static getElem<E extends HTMLElement = HTMLElement>(id: string): E {
         return document.getElementById(id) as E ?? document.body;
@@ -133,5 +136,13 @@ export default class Utils {
             sum += nums[i];
         }
         return sum / nums.length;
+    }
+
+    public static strToNum(str: string, numberSys: NumberSys): number {
+        if(numberSys === NumberSys.HEX) {
+            return parseInt(Transformer.hexToDec(str));
+        } else {
+            return parseFloat(str);
+        }
     }
 }

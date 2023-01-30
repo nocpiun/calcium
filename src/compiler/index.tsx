@@ -46,6 +46,7 @@ export const functions: Map<string, MathFunction> = new Map([
 export default class Compiler {
     private variables: Map<string, NumberSymbol>;
     private isProgrammingMode: boolean;
+    private numberSys: NumberSys;
 
     private raw: string[];
 
@@ -55,10 +56,16 @@ export default class Compiler {
     private secondaryRaw: string[] = [];
     private hasError: boolean = false;
     
-    public constructor(raw: string[], variables: Map<string, string>, isProgrammingMode: boolean = false) {
+    public constructor(
+        raw: string[],
+        variables: Map<string, string>,
+        isProgrammingMode: boolean = false,
+        numberSys: NumberSys = NumberSys.DEC
+    ) {
         this.raw = raw;
         this.variables = variables;
         this.isProgrammingMode = isProgrammingMode;
+        this.numberSys = numberSys;
     }
 
     public tokenize(): RootToken | void {
@@ -122,7 +129,7 @@ export default class Compiler {
                         (symbol === "," && this.layer === 1) ||
                         (Is.rightBracket(symbol) && this.layer === 0)
                     ) {
-                        var tokenized = new Compiler(tempParamRaw, this.variables).tokenize();
+                        var tokenized = new Compiler(tempParamRaw, this.variables, this.isProgrammingMode, this.numberSys).tokenize();
                         if(!tokenized) {
                             this.hasError = true;
                             return;
@@ -164,11 +171,12 @@ export default class Compiler {
                 tempNumber += symbol;
 
                 if(i === this.raw.length - 1) {
+                    var value = Utils.strToNum(tempNumber, this.numberSys);
                     root.children.push({
                         type: "number",
-                        value: parseFloat(tempNumber),
-                        float: Is.float(parseFloat(tempNumber)),
-                        numberSys: NumberSys.DEC
+                        value,
+                        float: Is.float(value),
+                        numberSys: this.numberSys === NumberSys.HEX ? NumberSys.DEC : this.numberSys
                     } as NumberToken);
                 }
             } else if(Is.operator(symbol)) { // operator
@@ -177,11 +185,12 @@ export default class Compiler {
                     continue;
                 }
                 if(i !== 0 && tempNumber !== "") {
+                    var value = Utils.strToNum(tempNumber, this.numberSys);
                     root.children.push({
                         type: "number",
-                        value: parseFloat(tempNumber),
-                        float: Is.float(parseFloat(tempNumber)),
-                        numberSys: NumberSys.DEC
+                        value,
+                        float: Is.float(value),
+                        numberSys: this.numberSys === NumberSys.HEX ? NumberSys.DEC : this.numberSys
                     } as NumberToken);
                 }
                 root.children.push({
@@ -193,7 +202,7 @@ export default class Compiler {
             } else if(Is.leftBracket(symbol)) { // left bracket
                 this.layer++;
             } else if(Is.rightBracket(symbol)) { // right bracket
-                var secondaryCompiler = new Compiler(this.secondaryRaw, this.variables);
+                var secondaryCompiler = new Compiler(this.secondaryRaw, this.variables, this.isProgrammingMode, this.numberSys);
                 var bracketContent = secondaryCompiler.tokenize();
                 if(!bracketContent) {
                     this.hasError = true;
@@ -219,7 +228,7 @@ export default class Compiler {
                 this.secondaryRaw = [];
             } else if(symbol === "|") { // absolute value
                 if(this.inAbs) {
-                    var secondaryCompiler = new Compiler(this.secondaryRaw, this.variables);
+                    var secondaryCompiler = new Compiler(this.secondaryRaw, this.variables, this.isProgrammingMode, this.numberSys);
                     var absContent = secondaryCompiler.tokenize();
                     if(!absContent) {
                         this.hasError = true;
@@ -246,11 +255,12 @@ export default class Compiler {
                 this.currentFunction = functions.get(functionName) ?? [((x) => x), 1];
                 this.layer++;
             } else if(symbol[0] === "^") { // pow
+                var baseValue = Utils.strToNum(tempNumber, this.numberSys);
                 var targetNumberToken: NumberToken = {
                     type: "number",
-                    value: parseFloat(tempNumber),
-                    float: Is.float(parseFloat(tempNumber)),
-                    numberSys: NumberSys.DEC
+                    value: baseValue,
+                    float: Is.float(baseValue),
+                    numberSys: this.numberSys === NumberSys.HEX ? NumberSys.DEC : this.numberSys
                 };
                 root.children.push(targetNumberToken);
 
