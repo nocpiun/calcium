@@ -103,30 +103,30 @@ const ProgrammingOutput: React.FC = () => {
         var raw = rawText.split(" ");
 
         var compiler = new Compiler(raw, new Map(), true);
-        var formula = compiler.compile();
+        var formula = compiler.tokenize();
         var result = "";
         var error = false;
 
-        if(formula) {
-            switch(numberSys) {
-                case NumberSys.HEX:
-                    result = formula.evaluateHex();
-                    break;
-                case NumberSys.DEC:
-                    result = formula.evaluateDec();
-                    break;
-                case NumberSys.OCT:
-                    result = formula.evaluateOct();
-                    break;
-                case NumberSys.BIN:
-                    result = formula.evaluateBin();
-                    break;
-            }
+        // if(formula) {
+        //     switch(numberSys) {
+        //         case NumberSys.HEX:
+        //             result = formula.evaluateHex();
+        //             break;
+        //         case NumberSys.DEC:
+        //             result = formula.evaluateDec();
+        //             break;
+        //         case NumberSys.OCT:
+        //             result = formula.evaluateOct();
+        //             break;
+        //         case NumberSys.BIN:
+        //             result = formula.evaluateBin();
+        //             break;
+        //     }
 
-            if(result.indexOf("NaN") > -1 || result === "") error = true;
-        } else {
-            error = true;
-        }
+        //     if(result.indexOf("NaN") > -1 || result === "") error = true;
+        // } else {
+        //     error = true;
+        // }
 
         // Display the result
         !error

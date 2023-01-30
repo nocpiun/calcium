@@ -131,13 +131,8 @@ const Output: React.FC = () => {
             raw = Utils.arrayRemove(raw, 0);
 
             var variableCompiler = new Compiler(raw, variableRef.current);
-            var variableFormula = variableCompiler.compile();
-            var variableValue = "";
+            var variableValue = variableCompiler.compile();
             var variableError = false;
-
-            variableFormula
-            ? variableValue = variableFormula.evaluate()
-            : variableError = true;
 
             if(variableValue.indexOf("NaN") > -1 || variableValue === "") variableError = true;
 
@@ -152,13 +147,8 @@ const Output: React.FC = () => {
         }
 
         var compiler = new Compiler(raw, variableRef.current);
-        var formula = compiler.compile();
-        var result = "";
+        var result = compiler.compile();
         var error = false;
-
-        formula
-        ? result = formula.evaluate()
-        : error = true;
 
         if(result.indexOf("NaN") > -1 || result === "") error = true;
 

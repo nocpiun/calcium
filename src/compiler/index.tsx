@@ -3,35 +3,79 @@ import List from "../utils/List";
 import Formula from "./Formula";
 import Is from "./Is";
 
-import { Operator } from "../types";
-import type { MathFunction } from "../types";
+import { Operator, NumberSys } from "../types";
+import type {
+    MathFunction,
+    Token,
+    ValueToken,
+    ChildrenToken,
+    RootToken,
+    NumberToken,
+    FunctionToken
+} from "../types";
+import Utils from "../utils/Utils";
 
 export type NumberSymbol = string;
 
+// const _test_token = {
+//     type: "root",
+//     children: [
+//         {
+//             type: "number",
+//             value: 2,
+//             float: false
+//         },
+//         {
+//             type: "operator",
+//             value: "×"
+//         },
+//         {
+//             type: "bracket",
+//             children: [
+//                 {
+//                     type: "number",
+//                     value: 5,
+//                     float: false
+//                 },
+//                 {
+//                     type: "operator",
+//                     value: "-"
+//                 },
+//                 {
+//                     type: "number",
+//                     value: 3,
+//                     float: false
+//                 }
+//             ]
+//         }
+//     ]
+// };
+
 export const functions: Map<string, MathFunction> = new Map([
-    ["sin",        (x) => Math.sin(x)],
-    ["cos",        (x) => Math.cos(x)],
-    ["tan",        (x) => Math.tan(x)],
-    ["cot",        (x) => 1 / Math.tan(x)],
-    ["sec",        (x) => 1 / Math.cos(x)],
-    ["csc",        (x) => 1 / Math.sin(x)],
-    ["sin^{-1}",   (x) => Math.asin(x)],
-    ["cos^{-1}",   (x) => Math.acos(x)],
-    ["tan^{-1}",   (x) => Math.atan(x)],
-    ["sinh",       (x) => Math.sinh(x)],
-    ["cosh",       (x) => Math.cosh(x)],
-    ["tanh",       (x) => Math.tanh(x)],
-    ["coth",       (x) => 1 / Math.tanh(x)],
-    ["text{sech}", (x) => 1 / Math.cosh(x)],
-    ["text{csch}", (x) => 1 / Math.sinh(x)],
-    ["ln",         (x) => Math.log(x)],
-    ["lg",         (x) => Math.log10(x)],
-    ["log_2",      (x) => Math.log2(x)],
-    ["deg",        (x) => x * (Math.PI / 180)],
-    ["√",          (x) => Math.sqrt(x)],
-    ["^3√",        (x) => Math.cbrt(x)],
-    ["%",          (x) => x / 100],
-    ["text{not}",  (x) => ~x],
+    ["sin",        [(x) => Math.sin(x),          1]],
+    ["cos",        [(x) => Math.cos(x),          1]],
+    ["tan",        [(x) => Math.tan(x),          1]],
+    ["cot",        [(x) => 1 / Math.tan(x),      1]],
+    ["sec",        [(x) => 1 / Math.cos(x),      1]],
+    ["csc",        [(x) => 1 / Math.sin(x),      1]],
+    ["sin^{-1}",   [(x) => Math.asin(x),         1]],
+    ["cos^{-1}",   [(x) => Math.acos(x),         1]],
+    ["tan^{-1}",   [(x) => Math.atan(x),         1]],
+    ["sinh",       [(x) => Math.sinh(x),         1]],
+    ["cosh",       [(x) => Math.cosh(x),         1]],
+    ["tanh",       [(x) => Math.tanh(x),         1]],
+    ["coth",       [(x) => 1 / Math.tanh(x),     1]],
+    ["text{sech}", [(x) => 1 / Math.cosh(x),     1]],
+    ["text{csch}", [(x) => 1 / Math.sinh(x),     1]],
+    ["ln",         [(x) => Math.log(x),          1]],
+    ["lg",         [(x) => Math.log10(x),        1]],
+    ["log_2",      [(x) => Math.log2(x),         1]],
+    ["deg",        [(x) => x * (Math.PI / 180),  1]],
+    ["√",          [(x) => Math.sqrt(x),         1]],
+    ["^3√",        [(x) => Math.cbrt(x),         1]],
+    ["%",          [(x) => x / 100,              1]],
+    ["text{not}",  [(x) => ~x,                   1]],
+    ["text{mean}", [(...n) => Utils.mean(...n), -1]],
 ]);
 
 export default class Compiler {
@@ -56,9 +100,17 @@ export default class Compiler {
         // this.compile();
     }
 
-    public compile(): Formula | void {
-        var numbers = new List<NumberSymbol>();
-        var operators = new List<Operator>();
+    public tokenize(): RootToken | void {
+        var root: RootToken = {
+            type: "root",
+            children: []
+        };
+
+        // var numbers = new List<NumberSymbol>();
+        // var operators = new List<Operator>();
+        var tempNumber: NumberSymbol = "";
+        var tempParamRaw: NumberSymbol[] = [];
+        var tempParamList: Token[] = [];
 
         /**
          * Error handle
@@ -97,6 +149,31 @@ export default class Compiler {
                 if(Is.leftBracket(symbol) || Is.mathFunction(symbol)) this.layer++;
                 if(Is.rightBracket(symbol)) this.layer--;
 
+                if(
+                    (
+                        this.layer === 1 ||
+                        (
+                            Is.rightBracket(symbol) &&
+                            this.layer === 0
+                        )
+                    ) &&
+                    this.currentFunction
+                ) {
+                    if(symbol === "," || Is.rightBracket(symbol)) {
+                        var tokenized = new Compiler(tempParamRaw, this.variables).tokenize();
+                        if(!tokenized) {
+                            this.hasError = true;
+                            return;
+                        }
+
+                        tempParamList.push(tokenized);
+                        tempParamRaw = [];
+                    } else {
+                        tempParamRaw.push(symbol);
+                    }
+                    if(!(Is.rightBracket(symbol) && this.layer === 0)) continue;
+                }
+
                 if(this.layer > 0) {
                     this.secondaryRaw.push(symbol);
                     continue;
@@ -113,7 +190,7 @@ export default class Compiler {
              */
 
             if(Is.number(symbol, this.isProgrammingMode) || (Is.variable(symbol) && this.raw[1] !== "=")) { // number
-                if(numbers.isEmpty()) numbers.add("");
+                // if(numbers.isEmpty()) numbers.add("");
 
                 // Constant variable
                 if(symbol === "e" && !this.isProgrammingMode) symbol = Math.E.toString();
@@ -124,57 +201,94 @@ export default class Compiler {
                     symbol = this.variables.get(symbol) ?? "NaN";
                 }
 
-                var target = numbers.length - 1;
-                numbers.set(target, numbers.get(target) + symbol);
+                // var target = numbers.length - 1;
+                // numbers.set(target, numbers.get(target) + symbol);
+                tempNumber += symbol;
+
+                if(i === this.raw.length - 1) {
+                    root.children.push({
+                        type: "number",
+                        value: parseFloat(tempNumber),
+                        float: Is.float(parseFloat(tempNumber)),
+                        numberSys: NumberSys.DEC
+                    } as NumberToken);
+                }
             } else if(Is.operator(symbol)) { // operator
                 if(symbol === "-" && i === 0) {
-                    numbers.add("-");
+                    tempNumber += "-";
                     continue;
                 }
+                if(i !== 0 && tempNumber !== "") {
+                    root.children.push({
+                        type: "number",
+                        value: parseFloat(tempNumber),
+                        float: Is.float(parseFloat(tempNumber)),
+                        numberSys: NumberSys.DEC
+                    } as NumberToken);
+                }
+                root.children.push({
+                    type: "operator",
+                    value: symbol as Operator
+                } as ValueToken<Operator>);
 
-                operators.add(symbol as Operator);
-                numbers.add("");
+                tempNumber = "";
+
+                // operators.add(symbol as Operator);
+                // numbers.add("");
             } else if(Is.leftBracket(symbol)) { // left bracket
                 this.layer++;
             } else if(Is.rightBracket(symbol)) { // right bracket
-                if(numbers.isEmpty()) numbers.add("");
+                // if(numbers.isEmpty()) numbers.add("");
 
                 var secondaryCompiler = new Compiler(this.secondaryRaw, this.variables);
-                var secondaryFormula = secondaryCompiler.compile();
-                if(!secondaryFormula) {
+                var bracketContent = secondaryCompiler.tokenize();
+                if(!bracketContent) {
                     this.hasError = true;
                     return;
                 }
 
-                var bracketResult = secondaryFormula.evaluate();
-                var target = numbers.length - 1;
+                // var target = numbers.length - 1;
+                // if(this.currentFunction) {
+                //     numbers.set(target, this.currentFunction[0](parseFloat(bracketResult)).toString());
+                //     this.currentFunction = null;
+                // } else {
+                //     numbers.set(target, bracketResult);
+                // }
                 if(this.currentFunction) {
-                    numbers.set(target, this.currentFunction(parseFloat(bracketResult)).toString());
+                    root.children.push({
+                        type: "function",
+                        func: this.currentFunction[0],
+                        param: tempParamList
+                    } as FunctionToken);
+                    tempParamRaw = [];
+                    tempParamList = [];
                     this.currentFunction = null;
                 } else {
-                    numbers.set(target, bracketResult);
+                    root.children.push({
+                        type: "bracket",
+                        children: bracketContent.children
+                    } as ChildrenToken);
                 }
 
                 this.secondaryRaw = [];
             } else if(symbol === "|") { // absolute value
-                if(this.inAbs) {
-                    if(numbers.isEmpty()) numbers.add("");
+                // if(this.inAbs) {
+                //     if(numbers.isEmpty()) numbers.add("");
 
-                    var secondaryCompiler = new Compiler(this.secondaryRaw, this.variables);
-                    var secondaryFormula = secondaryCompiler.compile();
-                    if(!secondaryFormula) {
-                        this.hasError = true;
-                        return;
-                    }
+                //     var secondaryCompiler = new Compiler(this.secondaryRaw, this.variables);
+                //     var secondaryValue = secondaryCompiler.compile();
+                //     if(secondaryValue.indexOf("NaN") > -1 || secondaryValue === "") {
+                //         this.hasError = true;
+                //         return;
+                //     }
 
-                    var value = parseFloat(secondaryFormula.evaluate());
-                    numbers.set(numbers.length - 1, Math.abs(value).toString());
+                //     numbers.set(numbers.length - 1, Math.abs(parseFloat(secondaryValue)).toString());
                     
-                    this.secondaryRaw = [];
-                    this.inAbs = false;
-                } else {
-                    this.inAbs = true;
-                }
+                //     this.secondaryRaw = [];
+                //     this.inAbs = false;
+                // } else {
+                //     this.inAbs = true;
+                // }
             } else if(Is.mathFunction(symbol)) { // function
                 var functionName = symbol.replace("\\", "").replace("(", "");
                 if(!functions.has(functionName)) {
@@ -182,17 +296,37 @@ export default class Compiler {
                     return;
                 }
 
-                this.currentFunction = functions.get(functionName) ?? ((x) => x);
+                this.currentFunction = functions.get(functionName) ?? [((x) => x), 1];
                 this.layer++;
-            } else if(symbol[0] === "^") { // sqrt or cbrt
+            } else if(symbol[0] === "^") { // pow
+                var targetNumberToken: NumberToken = {
+                    type: "number",
+                    value: parseFloat(tempNumber),
+                    float: Is.float(parseFloat(tempNumber)),
+                    numberSys: NumberSys.DEC
+                };
+                root.children.push(targetNumberToken);
+
                 for(let j = 0; j < parseInt(symbol[1]) - 1; j++) {
-                    operators.add(Operator.MUL);
-                    numbers.add(numbers.get(numbers.length - 1));
+                    root.children.push({
+                        type: "operator",
+                        value: Operator.MUL
+                    } as ValueToken<Operator>);
+                    root.children.push(targetNumberToken);
                 }
             }
         }
 
-        return new Formula(numbers, operators);
+        // return new Formula(numbers, operators);
+        console.log(root);
+        return root;
+    }
+
+    public compile(): NumberSymbol {
+        var tokenized = this.tokenize();
+        
+        if(tokenized) return new Formula(tokenized).evaluate().toString();
+        return "NaN";
     }
 
     public static purifyNumber(number: NumberSymbol): NumberSymbol {

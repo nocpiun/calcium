@@ -2,7 +2,6 @@
 /* eslint-disable no-self-assign */
 import Point from "./Point";
 import Compiler from "../../compiler";
-import Formula from "../../compiler/Formula";
 
 import List from "../../utils/List";
 import WorkerPool from "../../utils/WorkerPool";
@@ -234,17 +233,17 @@ export default class Render {
 
             for(let x1 = beginX; x1 <= endX; x1 += .01) {
                 /*****/
-                var y1f = Render.getYFormula(rawText, x1.toString()); // y1 Formula
-                if(!y1f) return 0;
-                var y1 = parseFloat(y1f.evaluate());
+                // var y1f = Render.getYFormula(rawText, x1.toString()); // y1 Formula
+                // if(!y1f) return 0;
+                var y1 = parseFloat(new Compiler(rawText.split(" "), new Map([["x", x1.toString()]])).compile());
                 /*****/
 
                 var x2 = x1 + .01;
 
                 /*****/
-                var y2f = Render.getYFormula(rawText, x2.toString()); // y2 Formula
-                if(!y2f) return 0;
-                var y2 = parseFloat(y2f.evaluate());
+                // var y2f = Render.getYFormula(rawText, x2.toString()); // y2 Formula
+                // if(!y2f) return 0;
+                var y2 = parseFloat(new Compiler(rawText.split(" "), new Map([["x", x2.toString()]])).compile());
                 /*****/
 
                 var p1 = this.coordinatesToScreen(new Point(x1, y1));
@@ -285,11 +284,11 @@ export default class Render {
         this.functionList.add(rawText);
     }
 
-    private static getYFormula(rawText: string, x: string): Formula | void {
-        var compiler = new Compiler(rawText.split(" "), new Map([["x", x.toString()]]));
-        var formula = compiler.compile();
+    // private static getYFormula(rawText: string, x: string): Formula | void {
+    //     var compiler = new Compiler(rawText.split(" "), new Map([["x", x.toString()]]));
+    //     var formula = compiler.compile();
 
-        if(!formula) return;
-        return formula;
-    }
+    //     if(!formula) return;
+    //     return formula;
+    // }
 }

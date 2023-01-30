@@ -41,4 +41,8 @@ export default class Is {
         ];
         return variableSymbol.indexOf(symbol) > -1;
     }
+
+    public static float(number: number): boolean {
+        return number.toString().indexOf(".") > -1;
+    }
 }

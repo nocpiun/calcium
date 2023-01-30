@@ -88,7 +88,8 @@ const Input: React.FC = () => {
                     <div style={{ flexGrow: 5 }}/>
                 </div>
                 <div className="keypad-row">
-                    <div style={{ flexGrow: 5 }}/>
+                    <InputButton symbol="\text{mean}" inputValue="\text{mean}(" grow={2}/>
+                    <div style={{ flexGrow: 3 }}/>
                     <div className="keypad-placeholder"/>
                     <InputButton symbol="\{" grow={1} disabled/>
                     <InputButton symbol="\}" grow={1} disabled/>
