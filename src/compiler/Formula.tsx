@@ -167,7 +167,10 @@ export default class Formula {
                         : result = a.value * b.value;
                         break;
                     case Operator.DIV:
-                        if(b.value === 0) return Infinity;
+                        // if(b.value === 0) {
+                        //     result = Infinity;
+                        //     break;
+                        // }
     
                         a.float || b.float
                         ? result = Float.divide(a.value, b.value)

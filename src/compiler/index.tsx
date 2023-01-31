@@ -83,6 +83,19 @@ export default class Compiler {
         var tempParamRaw: NumberSymbol[] = [];
         var tempParamList: Token[] = [];
 
+        const addNumber = (numberStr: string) => {
+            var value = Utils.strToNum(numberStr, this.numberSys);
+            var token: NumberToken = {
+                type: "number",
+                value,
+                float: Is.float(value),
+                numberSys: this.numberSys === NumberSys.HEX ? NumberSys.DEC : this.numberSys
+            };
+            root.children.push(token);
+            
+            return token;
+        };
+
         /**
          * Error handle
          */
@@ -170,34 +183,33 @@ export default class Compiler {
 
                 // Variable
                 if(Is.variable(symbol) && !this.isProgrammingMode) {
-                    symbol = this.variables.get(symbol) ?? "NaN";
+                    if(Is.number(this.raw[i - 1], this.isProgrammingMode)) {
+                        addNumber(tempNumber);
+                        
+                        root.children.push({
+                            type: "operator",
+                            value: Operator.MUL
+                        } as ValueToken<Operator>);
+
+                        symbol = this.variables.get(symbol) ?? "NaN";
+                        addNumber(symbol);
+    
+                        tempNumber = "";
+                        continue;
+                    } else {
+                        symbol = this.variables.get(symbol) ?? "NaN";
+                    }
                 }
 
                 tempNumber += symbol;
 
-                if(i === this.raw.length - 1) {
-                    var value = Utils.strToNum(tempNumber, this.numberSys);
-                    root.children.push({
-                        type: "number",
-                        value,
-                        float: Is.float(value),
-                        numberSys: this.numberSys === NumberSys.HEX ? NumberSys.DEC : this.numberSys
-                    } as NumberToken);
-                }
+                if(i === this.raw.length - 1) addNumber(tempNumber);
             } else if(Is.operator(symbol)) { // operator
                 if(symbol === "-" && i === 0) {
                     tempNumber += "-";
                     continue;
                 }
-                if(i !== 0 && tempNumber !== "") {
-                    var value = Utils.strToNum(tempNumber, this.numberSys);
-                    root.children.push({
-                        type: "number",
-                        value,
-                        float: Is.float(value),
-                        numberSys: this.numberSys === NumberSys.HEX ? NumberSys.DEC : this.numberSys
-                    } as NumberToken);
-                }
+                if(i !== 0 && tempNumber !== "") addNumber(tempNumber);
                 root.children.push({
                     type: "operator",
                     value: symbol as Operator
@@ -268,14 +280,7 @@ export default class Compiler {
                 this.currentFunction = functions.get(functionName) ?? [((x) => x), 1];
                 this.layer++;
             } else if(symbol[0] === "^") { // pow
-                var baseValue = Utils.strToNum(tempNumber, this.numberSys);
-                var targetNumberToken: NumberToken = {
-                    type: "number",
-                    value: baseValue,
-                    float: Is.float(baseValue),
-                    numberSys: this.numberSys === NumberSys.HEX ? NumberSys.DEC : this.numberSys
-                };
-                root.children.push(targetNumberToken);
+                var targetNumberToken = addNumber(tempNumber);
 
                 for(let j = 0; j < parseInt(symbol[1]) - 1; j++) {
                     root.children.push({
@@ -284,6 +289,8 @@ export default class Compiler {
                     } as ValueToken<Operator>);
                     root.children.push(targetNumberToken);
                 }
+
+                tempNumber = "";
             } else if(symbol[0] === "!") { // factorial
                 var value = Utils.factorial(parseInt(tempNumber));
                 root.children.push({
@@ -297,7 +304,6 @@ export default class Compiler {
             }
         }
 
-        console.log(root);
         return root;
     }
 

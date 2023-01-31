@@ -99,10 +99,16 @@ const Output: React.FC = () => {
                             for(let j = 0; j < splited.length - 2; j++) {
                                 contentArray = Utils.arrayRemove(contentArray, begin + 1);
                             }
+                            contentArray.push(")"); // Add right bracket automatically
 
                             return contentArray.join(" ");
                         }
                     }
+                }
+
+                if(Is.mathFunction(symbol)) { // Add right bracket automatically
+                    setOutputContent("");
+                    return currentContent.replace(cursor, symbol +" "+ cursor +" )");
                 }
                 
                 setOutputContent("");
@@ -152,6 +158,7 @@ const Output: React.FC = () => {
         if(result.indexOf("NaN") > -1 || result === "") error = true;
 
         // Display the result
+        if(result.indexOf("Infinity") > -1) result = "\\infty";
         !error
         ? setOutputContent("="+ result)
         : setOutputContent("=\\text{"+ errorText +"}");

@@ -7,6 +7,7 @@ import { NumberSys } from "../../types";
 import Emitter from "../../utils/Emitter";
 import Utils from "../../utils/Utils";
 import Compiler from "../../compiler";
+import Is from "../../compiler/Is";
 import Transformer from "../../compiler/Transformer";
 
 import NumberBox from "./NumberBox";
@@ -89,6 +90,11 @@ const ProgrammingOutput: React.FC = () => {
                     (symbol.charCodeAt(0) >= 97 && symbol.charCodeAt(0) <= 102)   // a~f
                 ) {
                     transformed = "\\text{"+ symbol.toUpperCase() +"}";
+                }
+
+                if(Is.mathFunction(symbol)) { // Add right bracket automatically
+                    setOutputContent("");
+                    return currentContent.replace(cursor, transformed +" "+ cursor +" )");
                 }
                 return currentContent.replace(cursor, transformed +" "+ cursor);
         }
