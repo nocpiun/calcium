@@ -1,2 +1,2 @@
-export const version = "0.2.0a";
+export const version = "0.2.0b";
 export const errorText = "\\text{Error}";

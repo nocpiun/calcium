@@ -91,6 +91,10 @@ export interface NumberToken extends ValueToken<number> {
     numberSys: NumberSys
 }
 
+export interface BracketToken extends ChildrenToken {
+    factorial: boolean
+}
+
 export interface FunctionToken extends Token {
     type: "function"
     func: MathFunction[0]

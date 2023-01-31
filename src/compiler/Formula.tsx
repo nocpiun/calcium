@@ -9,9 +9,10 @@ import type {
     ValueToken,
     ChildrenToken,
     NumberToken,
+    BracketToken,
     FunctionToken
 } from "../types";
-// import type { NumberSymbol } from ".";
+import Utils from "../utils/Utils";
 
 export default class Formula {
     public token: ChildrenToken;
@@ -59,7 +60,10 @@ export default class Formula {
                     operators.add(token as ValueToken<Operator>);
                     break;
                 case "bracket":
-                    var value = new Formula(token as ChildrenToken).evaluate();
+                    var value = (token as BracketToken).factorial
+                    ? Utils.factorial(new Formula(token as ChildrenToken).evaluate())
+                    : new Formula(token as ChildrenToken).evaluate();
+                    
                     numbers.add({
                         type: "number",
                         value,

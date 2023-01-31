@@ -138,6 +138,44 @@ export default class Utils {
         return sum / nums.length;
     }
 
+    public static stdev(...nums: number[]): number {
+        var average = Utils.mean(...nums);
+        var devPowList = [];
+        for(let i = 0; i < nums.length; i++) {
+            devPowList.push(Math.pow(nums[i] - average, 2));
+        }
+        
+        var devPowSum = 0;
+        for(let i = 0; i < devPowList.length; i++) {
+            devPowSum += devPowList[i];
+        }
+
+        return Math.sqrt(devPowSum / (nums.length - 1));
+    }
+
+    public static stdevp(...nums: number[]): number {
+        var average = Utils.mean(...nums);
+        var devPowList = [];
+        for(let i = 0; i < nums.length; i++) {
+            devPowList.push(Math.pow(nums[i] - average, 2));
+        }
+        
+        var devPowSum = 0;
+        for(let i = 0; i < devPowList.length; i++) {
+            devPowSum += devPowList[i];
+        }
+
+        return Math.sqrt(devPowSum / nums.length);
+    }
+
+    public static nPr(n: number, r: number): number {
+        return Utils.factorial(n) / Utils.factorial(n - r);
+    }
+
+    public static nCr(n: number, r: number): number {
+        return Utils.factorial(n) / (Utils.factorial(r) * Utils.factorial(n - r));
+    }
+
     public static strToNum(str: string, numberSys: NumberSys): number {
         if(numberSys === NumberSys.HEX) {
             return parseInt(Transformer.hexToDec(str));
