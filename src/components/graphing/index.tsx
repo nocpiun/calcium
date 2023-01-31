@@ -45,6 +45,14 @@ const Graphing: React.FC = memo(() => {
                 contentArray = Utils.arrayRemove(contentArray, target);
 
                 return contentArray.join(" ");
+            case "ArrowLeft":
+                if(cursorIndex === 0) return;
+
+                return inputBox.moveCursorTo(cursorIndex - 1);
+            case "ArrowRight":
+                if(cursorIndex === contentArray.length - 1) return;
+
+                return inputBox.moveCursorTo(cursorIndex + 1);
             case "Enter":
                 if(contentArray.length > 1) handleAddFunction();
                 return;
