@@ -1,3 +1,5 @@
+import { constants } from ".";
+
 export default class Is {
     public static number(symbol: string, isProgrammingMode: boolean): boolean {
         const number = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "e", "\\pi", "."];
@@ -40,6 +42,10 @@ export default class Is {
             "\\Delta"
         ];
         return variableSymbol.indexOf(symbol) > -1;
+    }
+
+    public static constant(symbol: string): boolean {
+        return constants.has(symbol);
     }
 
     public static float(number: number): boolean {

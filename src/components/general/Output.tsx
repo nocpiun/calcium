@@ -73,9 +73,13 @@ const Output: React.FC = () => {
             case "\\text{About}":
                 aboutDialogRef.current?.open();
                 break;
-            case "i": // Pi
-                if(contentArray[cursorIndex - 1] === "p") {
+            case "i": // Pi or Phi
+                if(contentArray[cursorIndex - 1] === "p") { // Pi
                     contentArray[cursorIndex - 1] = "\\pi";
+                    return contentArray.join(" ");
+                } else if(contentArray[cursorIndex - 2] === "p" && contentArray[cursorIndex - 1] === "h") { // Phi
+                    contentArray[cursorIndex - 2] = "\\phi";
+                    contentArray = Utils.arrayRemove(contentArray, cursorIndex - 1);
                     return contentArray.join(" ");
                 } else {
                     setOutputContent("");

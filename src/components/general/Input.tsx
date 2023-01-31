@@ -72,7 +72,7 @@ const Input: React.FC = () => {
                     <InputButton symbol="\lg" inputValue="\lg(" grow={1}/>
                     <InputButton symbol="\log_2{a}" inputValue="\log_2(" grow={1}/>
                     <InputButton symbol="a!" inputValue="!" grow={1}/>
-                    <InputButton symbol="\deg" inputValue="\deg(" grow={1}/>
+                    <InputButton symbol="\text{mean}" inputValue="\text{mean}(" grow={1}/>
                     <div className="keypad-placeholder"/>
                     <InputButton symbol="[" grow={1}/>
                     <InputButton symbol="]" grow={1}/>
@@ -90,7 +90,7 @@ const Input: React.FC = () => {
                 <div className="keypad-row">
                     <InputButton symbol="\text{stdev}" inputValue="\text{stdev}(" grow={2}/>
                     <InputButton symbol="\text{stdevp}" inputValue="\text{stdevp}(" grow={2}/>
-                    <InputButton symbol="\text{mean}" inputValue="\text{mean}(" grow={1}/>
+                    <InputButton symbol="\deg" inputValue="\deg(" grow={1}/>
                     <div className="keypad-placeholder"/>
                     <InputButton symbol="\{" grow={1} disabled/>
                     <InputButton symbol="\}" grow={1} disabled/>
@@ -108,7 +108,7 @@ const Input: React.FC = () => {
                 <div className="keypad-row">
                     <InputButton symbol="\text{nPr}" inputValue="\text{nPr}(" grow={2}/>
                     <InputButton symbol="\text{nCr}" inputValue="\text{nCr}(" grow={2}/>
-                    <div style={{ flexGrow: 1 }}/>
+                    <InputButton symbol="\text{rad}" inputValue="\text{rad}(" grow={1}/>
                     <div className="keypad-placeholder"/>
                     <InputButton symbol="\leftarrow" grow={1} title="Move Cursor Forward"/>
                     <InputButton symbol="\rightarrow" grow={1} title="Move Cursor Backward"/>

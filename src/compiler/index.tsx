@@ -37,6 +37,7 @@ export const functions: Map<string, MathFunction> = new Map([
     ["lg",           [(x) => Math.log10(x),          1]],
     ["log_2",        [(x) => Math.log2(x),           1]],
     ["deg",          [(x) => x * (Math.PI / 180),    1]],
+    ["text{rad}",    [(x) => x * (180 / Math.PI),    1]],
     ["√",            [(x) => Math.sqrt(x),           1]],
     ["^3√",          [(x) => Math.cbrt(x),           1]],
     ["%",            [(x) => x / 100,                1]],
@@ -46,6 +47,12 @@ export const functions: Map<string, MathFunction> = new Map([
     ["text{stdevp}", [(...n) => Utils.stdevp(...n), -1]],
     ["text{nPr}",    [(n, r) => Utils.nPr(n, r),     2]],
     ["text{nCr}",    [(n, r) => Utils.nCr(n, r),     2]],
+]);
+
+export const constants: Map<string, number> = new Map([
+    ["\\pi",  Math.PI],
+    ["e",     Math.E],
+    ["\\phi", (Math.sqrt(5) - 1) / 2],
 ]);
 
 export default class Compiler {
@@ -95,22 +102,6 @@ export default class Compiler {
             
             return token;
         };
-
-        /**
-         * Error handle
-         */
-
-        for(let i = 0; i < this.raw.length && !this.isProgrammingMode; i++) {
-            var symbol = this.raw[i];
-            var previous = this.raw[i - 1];
-            if(
-                (symbol === "e" || symbol === "\\pi" || Is.variable(symbol)) &&
-                (previous === "e" || previous === "\\pi" || Is.variable(previous))
-            ) {
-                this.hasError = true;
-                return;
-            }
-        }
 
         /**
          * Resolve raw input content
@@ -177,27 +168,31 @@ export default class Compiler {
              */
 
             if(Is.number(symbol, this.isProgrammingMode) || (Is.variable(symbol) && this.raw[1] !== "=")) { // number
-                // Constant variable
-                if(symbol === "e" && !this.isProgrammingMode) symbol = Math.E.toString();
-                if(symbol === "\\pi") symbol = Math.PI.toString();
-
-                // Variable
-                if(Is.variable(symbol) && !this.isProgrammingMode) {
-                    if(Is.number(this.raw[i - 1], this.isProgrammingMode)) {
-                        addNumber(tempNumber);
+                // Variable and Constant
+                if((Is.variable(symbol) || Is.constant(symbol)) && !this.isProgrammingMode) {
+                    if(
+                        Is.number(this.raw[i - 1], this.isProgrammingMode) ||
+                        Is.variable(this.raw[i - 1]) ||
+                        Is.constant(this.raw[i - 1])
+                    ) { // Process the formula like `eπ`, `ee` or `2π` which means `e*π`, `e*e` and `2*π`
+                        addNumber(
+                            tempNumber !== ""
+                            ? tempNumber
+                            : this.variables.get(this.raw[i - 1]) ?? (constants.get(symbol) ?? "NaN").toString()
+                        );
                         
                         root.children.push({
                             type: "operator",
                             value: Operator.MUL
                         } as ValueToken<Operator>);
 
-                        symbol = this.variables.get(symbol) ?? "NaN";
+                        symbol = this.variables.get(symbol) ?? (constants.get(symbol) ?? "NaN").toString();
                         addNumber(symbol);
     
                         tempNumber = "";
                         continue;
                     } else {
-                        symbol = this.variables.get(symbol) ?? "NaN";
+                        symbol = this.variables.get(symbol) ?? (constants.get(symbol) ?? "NaN").toString();
                     }
                 }
 

@@ -1,6 +1,7 @@
 import React, { forwardRef, useId } from "react";
 import { InlineMath } from "react-katex";
 
+import { constants } from "../compiler";
 import type { PropsWithRef } from "../types";
 
 import Dialog from "../components/Dialog";
@@ -21,18 +22,18 @@ const VariableDialog: React.FC<VariableDialogProps> = forwardRef<Dialog, Variabl
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>
-                                <InlineMath>\pi</InlineMath>
-                            </td>
-                            <td>{Math.PI}</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <InlineMath>e</InlineMath>
-                            </td>
-                            <td>{Math.E}</td>
-                        </tr>
+                        {
+                            Array.from(constants).map(([constName, value], index) => {
+                                return (
+                                    <tr key={index}>
+                                        <td>
+                                            <InlineMath>{constName}</InlineMath>
+                                        </td>
+                                        <td>{value}</td>
+                                    </tr>
+                                );
+                            })
+                        }
                         {
                             Array.from(props.variableList).map(([varName, value], index) => {
                                 return (
