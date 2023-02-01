@@ -1,0 +1,36 @@
+@media screen and (max-height: 818px) {
+    .keypad-row {
+        flex: 1;
+        height: auto !important;
+        .keypad-button span {
+            font-size: 10pt;
+        }
+    }
+}
+
+@media screen and (max-height: 762px) {
+    .input-container {
+        overflow: auto;
+        .scrollbar-style();
+        .keypad {
+            .keypad-button span {
+                font-size: 9pt;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 1480px) {
+    .mode-switcher {
+        min-width: 50px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    main {
+        display: none !important;
+    }
+    .no-mobile {
+        display: block !important;
+    }
+}

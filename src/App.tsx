@@ -10,10 +10,13 @@ import Calculator from "./components/Calculator";
 
 const App: React.FC = () => {
 	return (
-		<main className="calcium">
-			<Sidebar/>
-			<Calculator/>
-		</main>
+		<>
+			<main className="calcium">
+				<Sidebar/>
+				<Calculator/>
+			</main>
+			<p className="no-mobile">Please open the app in your computer!</p>
+		</>
 	);
 }
 
