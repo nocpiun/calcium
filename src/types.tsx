@@ -1,8 +1,5 @@
 import React, { ReactElement } from "react";
 
-import type Point from "./components/graphing/Point";
-import type List from "./utils/List";
-
 export enum Mode {
     GENERAL,
     GRAPHING,
@@ -31,15 +28,6 @@ export enum Operator {
 }
 
 export type MathFunction = [(...params: number[]) => number, number /* amount of params */];
-
-// export interface WorkerRequest {
-//     functionList: string[]
-//     scale: number
-//     spacing: number
-//     center: Point
-//     canvasWidth: number
-//     canvasHeight: number
-// }
 
 export type WorkerResponse = {
     imageBitmap: ImageBitmap

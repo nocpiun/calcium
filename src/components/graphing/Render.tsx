@@ -4,7 +4,6 @@ import Point from "./Point";
 import Compiler from "../../compiler";
 
 import List from "../../utils/List";
-import WorkerPool from "../../utils/WorkerPool";
 // import { WorkerResponse } from "../../types";
 
 export default class Render {
