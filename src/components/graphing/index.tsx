@@ -5,13 +5,15 @@ import { InlineMath } from "react-katex";
 import ListItem from "./ListItem";
 import InputBox, { specialSymbols, cursor } from "../InputBox";
 
-import Render from "./Render";
 import Utils from "../../utils/Utils";
 import Emitter from "../../utils/Emitter";
+
+import ComputeWorker from "../../workers/compute.worker.ts";
 
 const Graphing: React.FC = memo(() => {
     const [list, setList] = useState<string[]>([]);
     const inputRef = useRef<InputBox>(null);
+    const workerRef = useRef<ComputeWorker | null>(null);
 
     const handleAddFunction = async () => {
         if(!inputRef.current) return;
@@ -103,37 +105,57 @@ const Graphing: React.FC = memo(() => {
     }, [list]);
 
     useEffect(() => {
+        // Create worker
+        workerRef.current = new ComputeWorker();
+        if(!workerRef.current) return;
+
+        // Get canvas object
         const canvas = Utils.getElem<HTMLCanvasElement>("graphing");
-        const ctx = canvas.getContext("2d");
+        const ctx = canvas.getContext("bitmaprenderer");
         if(!ctx) return;
 
         // Init size
         canvas.width = Utils.getElem("display-frame").clientWidth;
         canvas.height = Utils.getElem("display-frame").clientHeight;
 
-        // Init ratio
-        const ratio = Utils.getPixelRatio(ctx);
-        canvas.width *= ratio;
-        canvas.height *= ratio;
+        // Init worker
+        var offscreenCanvas = new OffscreenCanvas(canvas.width, canvas.height);
+        workerRef.current.postMessage({ type: "init", canvas: offscreenCanvas }, [offscreenCanvas]);
+        workerRef.current.onmessage = (e) => {
+            ctx.transferFromImageBitmap(e.data.imageBitmap);
+        };
 
-        // Init renderer
-        var renderer = new Render(canvas, ctx);
-        var rafTimer: number;
-
-        // Init timer
-        function render() {
-            renderer.render();
-            rafTimer = window.requestAnimationFrame(render);
-        }
-        rafTimer = window.requestAnimationFrame(render);
-
-        Emitter.get().on("add-function", (rawText: string) => {
-            renderer.registerFunction(rawText);
+        // Init events
+        canvas.addEventListener("mousedown", (e: MouseEvent) => {
+            if(!workerRef.current) return;
+            workerRef.current.postMessage({ type: "mouse-down", rect: canvas.getBoundingClientRect(), cx: e.clientX, cy: e.clientY });
+        });
+        canvas.addEventListener("mousemove", (e: MouseEvent) => {
+            if(!workerRef.current) return;
+            workerRef.current.postMessage({ type: "mouse-move", rect: canvas.getBoundingClientRect(), cx: e.clientX, cy: e.clientY });
+        });
+        canvas.addEventListener("mouseup", () => {
+            if(!workerRef.current) return;
+            workerRef.current.postMessage({ type: "mouse-up" });
+        });
+        canvas.addEventListener("mouseleave", () => {
+            if(!workerRef.current) return;
+            workerRef.current.postMessage({ type: "mouse-leave" });
+        });
+        canvas.addEventListener("wheel", (e: WheelEvent) => {
+            if(!workerRef.current) return;
+            workerRef.current.postMessage({ type: "wheel", dy: e.deltaY });
         });
 
-        return () => { // Unregister renderer and timer
-            renderer.reset();
-            window.cancelAnimationFrame(rafTimer);
+        Emitter.get().on("add-function", (rawText: string) => {
+            if(!workerRef.current) return;
+            workerRef.current.postMessage({ type: "add-function", rawText });
+        });
+
+        return () => { // Unregister renderer and worker
+            if(!workerRef.current) return;
+            workerRef.current.postMessage({ type: "reset" });
+            workerRef.current.terminate();
         };
     }, []);
 

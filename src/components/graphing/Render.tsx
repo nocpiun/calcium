@@ -8,9 +8,10 @@ import WorkerPool from "../../utils/WorkerPool";
 // import { WorkerResponse } from "../../types";
 
 export default class Render {
-    public canvas: HTMLCanvasElement;
-    private ctx: CanvasRenderingContext2D;
-    private workerPool: WorkerPool = new WorkerPool(window.navigator.hardwareConcurrency || 2);
+    public canvas: OffscreenCanvas;
+    private ctx: OffscreenCanvasRenderingContext2D;
+    private workerCtx: Worker;
+    // private workerPool: WorkerPool = new WorkerPool(window.navigator.hardwareConcurrency || 2);
 
     public scale: number = 90; // px per unit length
     public spacing: number = 1; // unit length
@@ -25,57 +26,93 @@ export default class Render {
     private functionList: List<string> = new List();
     private displayedPoints: [Point, Point][] = []; // [p1, p2]
 
-    public constructor(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) {
+    public constructor(canvas: OffscreenCanvas, ctx: OffscreenCanvasRenderingContext2D, workerCtx: Worker) {
         this.canvas = canvas;
         this.ctx = ctx;
+        this.workerCtx = workerCtx;
         this.center = new Point(this.canvas.width / 2, this.canvas.height / 2);
         this.mousePoint = this.center;
 
-        this.initListeners();
+        // this.initListeners();
     }
 
     public reset(): void {
         this.functionList.clear();
         this.displayedPoints = [];
-        this.workerPool.terminateAllWorkers();
+        // this.workerPool.terminateAllWorkers();
     }
 
-    private initListeners(): void {
-        this.canvas.addEventListener("mousedown", (e: MouseEvent) => {
-            this.mouseDown = true;
+    // private initListeners(): void {
+    //     this.canvasElem.addEventListener("mousedown", (e: MouseEvent) => {
+    //         this.mouseDown = true;
 
-            this.refreshMousePoint(e);
-            this.mouseDX = this.mousePoint.x - this.center.x;
-            this.mouseDY = this.mousePoint.y - this.center.y;
-        });
-        this.canvas.addEventListener("mousemove", (e: MouseEvent) => {
-            this.refreshMousePoint(e);
+    //         this.refreshMousePoint(e);
+    //         this.mouseDX = this.mousePoint.x - this.center.x;
+    //         this.mouseDY = this.mousePoint.y - this.center.y;
+    //     });
+    //     this.canvasElem.addEventListener("mousemove", (e: MouseEvent) => {
+    //         this.refreshMousePoint(e);
 
-            if(!this.mouseDown) return;
+    //         if(!this.mouseDown) return;
 
-            this.center.x = this.mousePoint.x - this.mouseDX;
-            this.center.y = this.mousePoint.y - this.mouseDY;
-        });
-        this.canvas.addEventListener("mouseup", () => this.stopMoving());
-        this.canvas.addEventListener("mouseleave", () => {
-            this.stopMoving();
-            this.mousePoint = this.center;
-        });
+    //         this.center.x = this.mousePoint.x - this.mouseDX;
+    //         this.center.y = this.mousePoint.y - this.mouseDY;
+    //     });
+    //     this.canvasElem.addEventListener("mouseup", () => this.stopMoving());
+    //     this.canvasElem.addEventListener("mouseleave", () => {
+    //         this.stopMoving();
+    //         this.mousePoint = this.center;
+    //     });
 
-        this.canvas.addEventListener("wheel", (e: WheelEvent) => {
-            const delta = 7;
+    //     this.canvasElem.addEventListener("wheel", (e: WheelEvent) => {
+    //         const delta = 7;
 
-            e.deltaY > 0
-            ? this.scale -= delta
-            : this.scale += delta;
+    //         e.deltaY > 0
+    //         ? this.scale -= delta
+    //         : this.scale += delta;
 
-            if(this.scale < 53) this.scale = 53;
-        });
+    //         if(this.scale < 53) this.scale = 53;
+    //     });
+    // }
+
+    public handleMouseDown(rect: DOMRect, cx: number, cy: number): void {
+        this.mouseDown = true;
+
+        this.refreshMousePoint(rect, cx, cy);
+        this.mouseDX = this.mousePoint.x - this.center.x;
+        this.mouseDY = this.mousePoint.y - this.center.y;
     }
 
-    private refreshMousePoint(e: MouseEvent): void {
-        var rect = this.canvas.getBoundingClientRect();
-        var mousePoint = new Point(e.clientX - rect.left, e.clientY - rect.top);
+    public handleMouseMove(rect: DOMRect, cx: number, cy: number): void {
+        this.refreshMousePoint(rect, cx, cy);
+
+        if(!this.mouseDown) return;
+
+        this.center.x = this.mousePoint.x - this.mouseDX;
+        this.center.y = this.mousePoint.y - this.mouseDY;
+    }
+
+    public handleMouseUp(): void {
+        this.stopMoving();
+    }
+
+    public handleMouseLeave(): void {
+        this.stopMoving();
+        this.mousePoint = this.center;
+    }
+
+    public handleWheel(dy: number): void {
+        const delta = 7;
+
+        dy > 0
+        ? this.scale -= delta
+        : this.scale += delta;
+
+        if(this.scale < 53) this.scale = 53;
+    }
+
+    private refreshMousePoint(rect: DOMRect, cx: number, cy: number): void {
+        var mousePoint = new Point(cx - rect.left, cy - rect.top);
         this.mousePoint = mousePoint;
     }
 
@@ -225,70 +262,40 @@ export default class Render {
         this.displayedPoints = [];
 
         // Compute function points
-        /* var promises = */ this.functionList.value.map((rawText: string) => {
+        for(let i = 0; i < this.functionList.length; i++) {
+            var rawText = this.functionList.get(i);
+
             var unitPx = this.scale * this.spacing;
 
             var beginX = -this.center.x / unitPx;
             var endX = (this.canvas.width - this.center.x) / unitPx;
 
+            this.ctx.beginPath();
+
             for(let x1 = beginX; x1 <= endX; x1 += .01) {
-                /*****/
-                // var y1f = Render.getYFormula(rawText, x1.toString()); // y1 Formula
-                // if(!y1f) return 0;
                 var y1 = parseFloat(new Compiler(rawText.split(" "), new Map([["x", x1.toString()]])).compile());
-                /*****/
 
                 var x2 = x1 + .01;
-
-                /*****/
-                // var y2f = Render.getYFormula(rawText, x2.toString()); // y2 Formula
-                // if(!y2f) return 0;
                 var y2 = parseFloat(new Compiler(rawText.split(" "), new Map([["x", x2.toString()]])).compile());
-                /*****/
 
                 var p1 = this.coordinatesToScreen(new Point(x1, y1));
                 var p2 = this.coordinatesToScreen(new Point(x2, y2));
-    
-                this.drawLine(p1, p2, "#fff");
+
+                this.ctx.strokeStyle = "#fff";
+                this.ctx.lineWidth = 1;
+                this.ctx.moveTo(p1.x, p1.y);
+                this.ctx.lineTo(p2.x, p2.y);
             }
+            
+            this.ctx.stroke();
+            this.ctx.closePath();
+        }
 
-            return 0;
-            // return this.workerPool.addWorker({
-            //     rawText,
-            //     scale: this.scale,
-            //     spacing: this.spacing,
-            //     center: this.center,
-            //     canvasWidth: this.canvas.width
-            // });
-        });
-
-        // Promise.all(promises)
-        //     .then((responses) => {
-        //         for(let i = 0; i < responses.length; i++) {
-        //             var pointsArray = responses[i];
-
-        //             for(let j = 0; j < pointsArray.length; j++) {
-        //                 var { x1, y1, x2, y2 } = pointsArray[j];
-
-        //                 var p1 = this.coordinatesToScreen(new Point(x1, y1));
-        //                 var p2 = this.coordinatesToScreen(new Point(x2, y2));
-                
-        //                 this.displayedPoints.push([p1, p2]);
-        //             }
-        //         }
-        //     })
-        //     .catch((err) => { throw err });
+        var imageBitmap = this.canvas.transferToImageBitmap();
+        this.workerCtx.postMessage({ imageBitmap }, [imageBitmap]);
     }
 
     public registerFunction(rawText: string): void {
         this.functionList.add(rawText);
     }
-
-    // private static getYFormula(rawText: string, x: string): Formula | void {
-    //     var compiler = new Compiler(rawText.split(" "), new Map([["x", x.toString()]]));
-    //     var formula = compiler.compile();
-
-    //     if(!formula) return;
-    //     return formula;
-    // }
 }

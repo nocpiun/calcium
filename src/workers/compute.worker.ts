@@ -1,26 +1,59 @@
 /* eslint-disable no-restricted-globals */
-// import { WorkerRequest } from "../types";
-// import Compiler from "../utils/Compiler";
+import Render from "../components/graphing/Render";
+import Utils from "../utils/Utils";
 
 const ctx: Worker = self as any;
 
+let renderer: Render;
+let rafTimer: number;
+let req: any;
+
 ctx.addEventListener("message", (e) => {
-    // var { rawText, scale, spacing, center, canvasWidth } = e.data as WorkerRequest;
-    // var pointsArray = [];
+    req = e.data;
 
-    // var unitPx = scale * spacing;
-
-    // var beginX = -center.x / unitPx;
-    // var endX = (canvasWidth - center.x) / unitPx;
-
-    // for(let x1 = beginX; x1 <= endX; x1 += .01) {
-    //     var y1 = parseFloat(new Compiler(rawText.split(" "), new Map([["x", x1.toString()]])).run());
-
-    //     var x2 = x1 + .01;
-    //     var y2 = parseFloat(new Compiler(rawText.split(" "), new Map([["x", x2.toString()]])).run());
-
-    //     pointsArray.push({ x1, y1, x2, y2 });
-    // }
-
-    // ctx.postMessage(pointsArray);
+    switch(req.type) {
+        case "init":
+            renderer = new Render(req.canvas, req.canvas.getContext("2d"), ctx);
+            init(req.canvas);
+            break;
+        case "reset":
+            reset();
+            break;
+        case "add-function":
+            renderer.registerFunction(req.rawText);
+            break;
+        case "mouse-down":
+            renderer.handleMouseDown(req.rect, req.cx, req.cy);
+            break;
+        case "mouse-move":
+            renderer.handleMouseMove(req.rect, req.cx, req.cy);
+            break;
+        case "mouse-up":
+            renderer.handleMouseUp();
+            break;
+        case "mouse-leave":
+            renderer.handleMouseLeave();
+            break;
+        case "wheel":
+            renderer.handleWheel(req.dy);
+            break;
+    }
 });
+
+function init(canvas: OffscreenCanvas) {
+    // Init ratio
+    const ratio = Utils.getPixelRatio(ctx);
+    canvas.width *= ratio;
+    canvas.height *= ratio;
+
+    function render() {
+        renderer.render();
+        rafTimer = self.requestAnimationFrame(render);
+    }
+    rafTimer = self.requestAnimationFrame(render);
+}
+
+function reset() {
+    renderer.reset();
+    self.cancelAnimationFrame(rafTimer);
+}

@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 import React from "react";
 
 import { NumberSys } from "../types";
@@ -15,7 +16,7 @@ export default class Utils {
             ctx.msBackingStorePixelRatio ||
             ctx.oBackingStorePixelRatio ||
             ctx.backingStorePixelRatio || 1;
-        return (window.devicePixelRatio || 1) / backingStore;
+        return (self.devicePixelRatio || 1) / backingStore;
     }
 
     public static arrayRemove<T = any>(oldArray: T[], index: number): T[] {

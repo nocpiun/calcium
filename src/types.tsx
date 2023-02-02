@@ -1,6 +1,7 @@
 import React, { ReactElement } from "react";
 
 import type Point from "./components/graphing/Point";
+import type List from "./utils/List";
 
 export enum Mode {
     GENERAL,
@@ -31,20 +32,18 @@ export enum Operator {
 
 export type MathFunction = [(...params: number[]) => number, number /* amount of params */];
 
-export interface WorkerRequest {
-    rawText: string
-    scale: number
-    spacing: number
-    center: Point
-    canvasWidth: number
-}
+// export interface WorkerRequest {
+//     functionList: string[]
+//     scale: number
+//     spacing: number
+//     center: Point
+//     canvasWidth: number
+//     canvasHeight: number
+// }
 
 export type WorkerResponse = {
-    x1: number
-    y1: number
-    x2: number
-    y2: number
-}[]
+    imageBitmap: ImageBitmap
+}
 
 export interface PromiseExecutor {
     resolve: (value: WorkerResponse) => void
@@ -52,7 +51,7 @@ export interface PromiseExecutor {
 }
 
 export interface WorkerInfo extends PromiseExecutor {
-    workData: WorkerRequest
+    workData: any
 }
 
 export interface PropsWithRef<T> {

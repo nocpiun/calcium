@@ -3,7 +3,6 @@ import ComputeWorker from "../workers/compute.worker.ts";
 import List from "./List";
 import Queue from "./Queue";
 import type {
-    WorkerRequest,
     WorkerResponse,
     PromiseExecutor,
     WorkerInfo
@@ -51,7 +50,7 @@ export default class WorkerPool {
         response ? resolve(response) : reject(error);
     }
 
-    public addWorker(workData: WorkerRequest): Promise<WorkerResponse> {
+    public addWorker(workData: any): Promise<WorkerResponse> {
         return new Promise((resolve, reject) => {
             if(!this.idleWorkers.isEmpty()) {
                 var worker = this.idleWorkers.value.pop();
