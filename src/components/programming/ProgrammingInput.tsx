@@ -135,7 +135,7 @@ const ProgrammingInput: React.FC = () => {
                     <div style={{ flexGrow: 2 }}/>
                 </div>
                 <div className="keypad-row">
-                    <div style={{ flexGrow: 2 }}/>
+                    <InputButton symbol="\text{Shortcuts}" grow={2} title="Open Shortcut List"/>
                     <InputButton symbol="\{" grow={1} disabled/>
                     <InputButton symbol="\}" grow={1} disabled/>
                     <InputButton symbol="\text{F}" grow={1} group={["hex"]}/>

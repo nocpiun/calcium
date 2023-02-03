@@ -21,9 +21,9 @@ const History: React.FC = () => {
             });
         });
 
-        // Emitter.get().on("clear-record", () => {
-        //     setList(() => []);
-        // });
+        Emitter.get().on("clear-record", () => {
+            setList(() => []);
+        });
     }, []);
 
     return (

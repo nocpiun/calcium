@@ -87,3 +87,8 @@ export interface FunctionToken extends Token {
     func: MathFunction[0]
     param: Token[]
 }
+
+export interface Shortcut {
+    description: string
+    action: () => void
+}

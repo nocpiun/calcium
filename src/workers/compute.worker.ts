@@ -1,6 +1,7 @@
 /* eslint-disable no-restricted-globals */
 import Render from "../components/graphing/Render";
 import Utils from "../utils/Utils";
+import List from "../utils/List";
 
 const ctx: Worker = self as any;
 
@@ -21,6 +22,9 @@ ctx.addEventListener("message", (e) => {
             break;
         case "add-function":
             renderer.registerFunction(req.rawText);
+            break;
+        case "clear-function":
+            renderer.functionList = new List();
             break;
         case "mouse-down":
             renderer.handleMouseDown(req.rect, req.cx, req.cy);

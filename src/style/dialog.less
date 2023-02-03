@@ -58,6 +58,13 @@
                 color: @gray1;
             }
         }
+        kbd {
+            // see https://zxuqian.cn/use-kbd-html-tag-to-display-shortcuts/
+            background-color: hsl(0deg, 0%, 22%);
+            border-radius: 3px;
+            border: 1px solid hsl(0deg, 0%, 35%);
+            padding: 1px 3px;
+        }
         ul {
             list-style: none;
             padding: 10px 0;
@@ -84,7 +91,7 @@
             }
             tbody {
                 display: block;
-                width: 620px;
+                width: 600px;
                 height: 330px;
                 overflow-y: auto;
                 .scrollbar-style();
@@ -149,7 +156,7 @@
         }
     }
     .footer-container {
-        flex: 1;
+        flex: .5;
         display: flex;
         justify-content: flex-end;
         flex-flow: row;

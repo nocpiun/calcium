@@ -151,6 +151,12 @@ const Graphing: React.FC = memo(() => {
             if(!workerRef.current) return;
             workerRef.current.postMessage({ type: "add-function", rawText });
         });
+        
+        Emitter.get().on("clear-function", () => {
+            if(!workerRef.current) return;
+            setList([]);
+            workerRef.current.postMessage({ type: "clear-function" });
+        });
 
         return () => { // Unregister renderer and worker
             if(!workerRef.current) return;

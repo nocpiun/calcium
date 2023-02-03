@@ -194,7 +194,8 @@ const Input: React.FC = () => {
                     <div style={{ flexGrow: 2 }}/>
                 </div>
                 <div className="keypad-row">
-                    <div style={{ flexGrow: 5 }}/>
+                    <InputButton symbol="\text{Shortcuts}" grow={2} title="Open Shortcut List"/>
+                    <div style={{ flexGrow: 3 }}/>
                     <div className="keypad-placeholder"/>
                     <InputButton symbol="0" grow={1}/>
                     <InputButton symbol="." grow={1}/>

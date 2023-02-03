@@ -13,6 +13,7 @@ import type Dialog from "../Dialog";
 import VariableDialog from "../../dialogs/VariableDialog";
 import FunctionDialog from "../../dialogs/FunctionDialog";
 import AboutDialog from "../../dialogs/AboutDialog";
+import ShortcutDialog from "../../dialogs/ShortcutDialog";
 
 const Output: React.FC = () => {
     const [outputContent, setOutputContent] = useState<string>("");
@@ -21,6 +22,7 @@ const Output: React.FC = () => {
     const varsDialogRef = useRef<Dialog>(null);
     const funcsDialogRef = useRef<Dialog>(null);
     const aboutDialogRef = useRef<Dialog>(null);
+    const shortcutDialogRef = useRef<Dialog>(null);
 
     const handleInput = (symbol: string) => {
         if(!inputRef.current) return;
@@ -72,6 +74,9 @@ const Output: React.FC = () => {
                 break;
             case "\\text{About}":
                 aboutDialogRef.current?.open();
+                break;
+            case "\\text{Shortcuts}":
+                shortcutDialogRef.current?.open();
                 break;
             case "i": // Pi or Phi
                 if(contentArray[cursorIndex - 1] === "p") { // Pi
@@ -174,6 +179,8 @@ const Output: React.FC = () => {
     };
 
     useEffect(() => {
+        Emitter.get().on("clear-input", () => setOutputContent(""));
+
         document.body.addEventListener("keydown", (e: KeyboardEvent) => {
             if(e.ctrlKey && e.key === "m") { // ctrl + m
                 setOutputContent("c^{xk}+c^{trl}"); // I'm iKun
@@ -199,6 +206,7 @@ const Output: React.FC = () => {
             <VariableDialog variableList={variableRef.current} ref={varsDialogRef}/>
             <FunctionDialog ref={funcsDialogRef}/>
             <AboutDialog ref={aboutDialogRef}/>
+            <ShortcutDialog ref={shortcutDialogRef}/>
         </div>
     );
 }

@@ -113,9 +113,13 @@ export default class InputBox extends Component<InputBoxProps, InputBoxState> {
 
     public componentDidMount(): void {
         Emitter.get().on("input", (symbol: string) => this.handleInput(symbol));
+        Emitter.get().on("clear-input", () => this.reset());
+        Emitter.get().on("move-front", () => this.value = cursor +" "+ this.value);
+        Emitter.get().on("move-back", () => this.value = this.value +" "+ cursor);
 
         document.body.addEventListener("keydown", (e: KeyboardEvent) => {
             if(e.key === cursor) return;
+            if(e.ctrlKey) return;
             if(!Utils.isAllowedSymbol(e.key)) return;
             if(e.key === "Enter") e.preventDefault();
             

@@ -1,4 +1,4 @@
-import { constants } from ".";
+import { constants } from "../global";
 
 export default class Is {
     public static number(symbol: string, isProgrammingMode: boolean): boolean {

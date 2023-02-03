@@ -22,7 +22,7 @@ export default class Render {
     public center: Point;
     private mousePoint: Point;
 
-    private functionList: List<string> = new List();
+    public functionList: List<string> = new List();
     private displayedPoints: [Point, Point][] = []; // [p1, p2]
 
     public constructor(canvas: OffscreenCanvas, ctx: OffscreenCanvasRenderingContext2D, workerCtx: Worker) {
