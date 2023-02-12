@@ -4,13 +4,11 @@ import Point from "./Point";
 import Compiler from "../../compiler";
 
 import List from "../../utils/List";
-// import { WorkerResponse } from "../../types";
 
 export default class Render {
     public canvas: OffscreenCanvas;
     private ctx: OffscreenCanvasRenderingContext2D;
     private workerCtx: Worker;
-    // private workerPool: WorkerPool = new WorkerPool(window.navigator.hardwareConcurrency || 2);
 
     public scale: number = 90; // px per unit length
     public spacing: number = 1; // unit length
@@ -18,6 +16,8 @@ export default class Render {
     private mouseDown: boolean = false;
     private mouseDX: number = 0; // mouse delta x
     private mouseDY: number = 0; // mouse delta y
+
+    private lastTime: number = 0; // for FPS calculating
 
     public center: Point;
     private mousePoint: Point;
@@ -31,48 +31,12 @@ export default class Render {
         this.workerCtx = workerCtx;
         this.center = new Point(this.canvas.width / 2, this.canvas.height / 2);
         this.mousePoint = this.center;
-
-        // this.initListeners();
     }
 
     public reset(): void {
         this.functionList.clear();
         this.displayedPoints = [];
-        // this.workerPool.terminateAllWorkers();
     }
-
-    // private initListeners(): void {
-    //     this.canvasElem.addEventListener("mousedown", (e: MouseEvent) => {
-    //         this.mouseDown = true;
-
-    //         this.refreshMousePoint(e);
-    //         this.mouseDX = this.mousePoint.x - this.center.x;
-    //         this.mouseDY = this.mousePoint.y - this.center.y;
-    //     });
-    //     this.canvasElem.addEventListener("mousemove", (e: MouseEvent) => {
-    //         this.refreshMousePoint(e);
-
-    //         if(!this.mouseDown) return;
-
-    //         this.center.x = this.mousePoint.x - this.mouseDX;
-    //         this.center.y = this.mousePoint.y - this.mouseDY;
-    //     });
-    //     this.canvasElem.addEventListener("mouseup", () => this.stopMoving());
-    //     this.canvasElem.addEventListener("mouseleave", () => {
-    //         this.stopMoving();
-    //         this.mousePoint = this.center;
-    //     });
-
-    //     this.canvasElem.addEventListener("wheel", (e: WheelEvent) => {
-    //         const delta = 7;
-
-    //         e.deltaY > 0
-    //         ? this.scale -= delta
-    //         : this.scale += delta;
-
-    //         if(this.scale < 53) this.scale = 53;
-    //     });
-    // }
 
     public handleMouseDown(rect: DOMRect, cx: number, cy: number): void {
         this.mouseDown = true;
@@ -241,6 +205,13 @@ export default class Render {
     }
     /*****/
 
+    private getFPS(): number {
+        const now = (+new Date());
+        var fps = 1000 / (now - this.lastTime);
+        this.lastTime = now;
+        return fps;
+    }
+
     // To render each frame
     public render(): void {
         this.clear();
@@ -252,7 +223,13 @@ export default class Render {
 
         // Mouse point
         var mouseCoordinatesPoint = this.screenToCoordinates(this.mousePoint);
-        this.drawText("Mouse: "+ mouseCoordinatesPoint.x.toFixed(2) +", "+ mouseCoordinatesPoint.y.toFixed(2), 30, 30, "#cbd0df", 15);
+        this.drawText("("+ mouseCoordinatesPoint.x.toFixed(2) +", "+ mouseCoordinatesPoint.y.toFixed(2) +")", 30, 30, "#cbd0df", 15);
+        
+        // Is mouse down
+        this.drawText(this.mouseDown ? "Moving" : "", this.canvas.width - 150, 30, "#cbd0df", 15);
+        
+        // FPS
+        this.drawText("FPS: "+ this.getFPS().toFixed(0), this.canvas.width - 80, 30, "#b3b7c4", 15);
 
         // Draw function images
         for(let i = 0; i < this.displayedPoints.length; i++) {

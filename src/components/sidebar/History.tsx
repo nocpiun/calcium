@@ -30,6 +30,7 @@ const History: React.FC = () => {
         <div className="history">
             <div className="history-header">
                 <h1>History</h1>
+                <span className="tip"><kbd>ctrl+d</kbd> to reset records</span>
             </div>
             <div className="history-main" id="history-list">
                 {

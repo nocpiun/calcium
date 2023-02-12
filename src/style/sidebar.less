@@ -33,13 +33,21 @@
         background-color: @deep2;
         border-right: @border-style;
         &-header {
-            width: 100%;
+            padding: 30px;
+            padding-bottom: 20px;
             font-family: @font;
             h1 {
+                display: inline-block;
                 margin: 0;
-                padding: 30px;
-                padding-bottom: 20px;
                 font-size: 13pt;
+            }
+            span.tip {
+                margin-left: 10px;
+                color: @gray1;
+                font-size: 10pt;
+                kbd {
+                    margin-right: 3px;
+                }
             }
         }
         &-main {

@@ -45,13 +45,13 @@ export const constants: Map<string, number> = new Map([
 
 export const shortcuts: Map<string[], Shortcut> = new Map([
     [["ctrl", "x"], {
-        description: "Clear Input",
+        description: "Reset Input",
         action: () => {
             Emitter.get().emit("clear-input");
         }
     }],
     [["ctrl", "d"], {
-        description: "Clear History Records",
+        description: "Reset History Records",
         action: () => {
             Emitter.get().emit("clear-record");
         }

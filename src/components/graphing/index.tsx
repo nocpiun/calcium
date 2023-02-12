@@ -8,12 +8,12 @@ import InputBox, { specialSymbols, cursor } from "../InputBox";
 import Utils from "../../utils/Utils";
 import Emitter from "../../utils/Emitter";
 
-import ComputeWorker from "../../workers/compute.worker.ts";
+import GraphingWorker from "../../workers/graphing.worker.ts";
 
 const Graphing: React.FC = memo(() => {
     const [list, setList] = useState<string[]>([]);
     const inputRef = useRef<InputBox>(null);
-    const workerRef = useRef<ComputeWorker | null>(null);
+    const workerRef = useRef<GraphingWorker | null>(null);
 
     const handleAddFunction = async () => {
         if(!inputRef.current) return;
@@ -106,7 +106,7 @@ const Graphing: React.FC = memo(() => {
 
     useEffect(() => {
         // Create worker
-        workerRef.current = new ComputeWorker();
+        workerRef.current = new GraphingWorker();
         if(!workerRef.current) return;
 
         // Get canvas object
