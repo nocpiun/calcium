@@ -163,10 +163,10 @@ export default class Compiler {
 
                 if(i === this.raw.length - 1) addNumber(tempNumber);
             } else if(Is.operator(symbol)) { // operator
-                if(symbol === "-" && i === 0) {
-                    tempNumber += "-";
-                    continue;
-                }
+                // if(symbol === "-" && i === 0) {
+                //     tempNumber += "-";
+                //     continue;
+                // }
                 if(i !== 0 && tempNumber !== "") addNumber(tempNumber);
                 root.children.push({
                     type: "operator",
@@ -262,6 +262,7 @@ export default class Compiler {
             }
         }
 
+        console.log(root);
         return root;
     }
 

@@ -186,10 +186,25 @@ export default class Formula {
         }
 
         // Add & Sub
+        var firstLoop = true;
         for(let i = 0; i < operators.length; i++) {
             var operator = operators.get(i).value;
-            
+
             if(operator === Operator.ADD || operator === Operator.SUB) {
+                if(i === 0 && operator === Operator.SUB && firstLoop) {
+                    var origin = numbers.get(i);
+                    numbers.set(i, {
+                        type: "number",
+                        value: -origin.value,
+                        float: origin.float,
+                        numberSys: origin.numberSys
+                    });
+                    operators.remove(i);
+                    i--;
+                    firstLoop = false;
+                    continue;
+                }
+
                 var a = numbers.get(i);
                 var b = numbers.get(i + 1);
                 var result: number;
