@@ -4,6 +4,8 @@ import Point from "./Point";
 import Compiler from "../../compiler";
 
 import List from "../../utils/List";
+import Utils from "../../utils/Utils";
+import { MouseDirection, ZoomDirection } from "../../types";
 
 export default class Render {
     public canvas: OffscreenCanvas;
@@ -46,13 +48,15 @@ export default class Render {
         this.mouseDY = this.mousePoint.y - this.center.y;
     }
 
-    public handleMouseMove(rect: DOMRect, cx: number, cy: number): void {
+    public handleMouseMove(rect: DOMRect, cx: number, cy: number, direction: MouseDirection): void {
         this.refreshMousePoint(rect, cx, cy);
 
         if(!this.mouseDown) return;
 
         this.center.x = this.mousePoint.x - this.mouseDX;
         this.center.y = this.mousePoint.y - this.mouseDY;
+
+        this.moveFunctionImage(direction);
     }
 
     public handleMouseUp(): void {
@@ -72,6 +76,8 @@ export default class Render {
         : this.scale += delta;
 
         if(this.scale < 53) this.scale = 53;
+
+        this.zoomFunctionImage(dy > 0 ? ZoomDirection.ZOOM_OUT : ZoomDirection.ZOOM_IN);
     }
 
     private refreshMousePoint(rect: DOMRect, cx: number, cy: number): void {
@@ -107,15 +113,15 @@ export default class Render {
         }
         // thinner line
         for(
-            let j = 1;
+            let i = 1;
             (
-                this.center.y - j * secondaryUnitPx >= 0 ||
-                this.center.y + j * secondaryUnitPx <= this.canvas.height
+                this.center.y - i * secondaryUnitPx >= 0 ||
+                this.center.y + i * secondaryUnitPx <= this.canvas.height
             );
-            j++
+            i++
         ) {
-            var y1 = this.center.y - j * secondaryUnitPx;
-            var y2 = this.center.y + j * secondaryUnitPx;
+            var y1 = this.center.y - i * secondaryUnitPx;
+            var y2 = this.center.y + i * secondaryUnitPx;
             this.drawStraightLine(y1, "#8c949e", .3);
             this.drawStraightLine(y2, "#8c949e", .3);
         }
@@ -159,6 +165,109 @@ export default class Render {
         }
     }
 
+    private moveFunctionImage(direction: MouseDirection): void {
+        if(this.displayedPoints.length === 0) return;
+
+        var unitPx = this.scale * this.spacing;
+        var oldBegin = this.displayedPoints[0][0].x,
+            newBegin = -this.center.x / unitPx,
+            oldEnd = this.displayedPoints[this.displayedPoints.length - 1][0].x,
+            newEnd = (this.canvas.width - this.center.x) / unitPx;
+        var beginX1 = NaN, endX1 = NaN, beginX2 = NaN, endX2 = NaN;
+
+        if(direction === MouseDirection.LEFT) {
+            beginX1 = oldBegin;
+            endX1 = newBegin;
+            beginX2 = oldEnd;
+            endX2 = newEnd;
+        } else {
+            beginX1 = newEnd;
+            endX1 = oldEnd;
+            beginX2 = newBegin;
+            endX2 = oldBegin;
+        }
+
+        // Delete out-screen points
+        for(let i = 0; i < this.displayedPoints.length; i++) {
+            var coordinatePoint = this.displayedPoints[i][0];
+            
+            if(beginX1 <= coordinatePoint.x && coordinatePoint.x <= endX1) {
+                direction === MouseDirection.RIGHT
+                ? this.displayedPoints = Utils.arrayRemove(this.displayedPoints, i)
+                : this.displayedPoints.shift();
+                i--;
+            }
+        }
+
+        // Add newly in-screen points
+        for(let i = 0; i < this.functionList.length; i++) {
+            var rawText = this.functionList.get(i);
+
+            if(direction === MouseDirection.LEFT) {
+                for(let x1 = beginX2; x1 <= endX2; x1 += .01) {
+                    var y1 = parseFloat(new Compiler(rawText.split(" "), new Map([["x", x1.toString()]])).compile());
+    
+                    var x2 = x1 + .01;
+                    var y2 = parseFloat(new Compiler(rawText.split(" "), new Map([["x", x2.toString()]])).compile());
+    
+                    this.displayedPoints.push([new Point(x1, y1), new Point(x2, y2)]);
+                }
+            } else {
+                for(let x1 = endX2; x1 >= beginX2; x1 -= .01) {
+                    var y1 = parseFloat(new Compiler(rawText.split(" "), new Map([["x", x1.toString()]])).compile());
+    
+                    var x2 = x1 + .01;
+                    var y2 = parseFloat(new Compiler(rawText.split(" "), new Map([["x", x2.toString()]])).compile());
+    
+                    this.displayedPoints.unshift([new Point(x1, y1), new Point(x2, y2)]);
+                }
+            }
+        }
+    }
+
+    private zoomFunctionImage(direction: ZoomDirection) {
+        var unitPx = this.scale * this.spacing;
+        var oldBegin = this.displayedPoints[0][0].x,
+            newBegin = -this.center.x / unitPx,
+            oldEnd = this.displayedPoints[this.displayedPoints.length - 1][0].x,
+            newEnd = (this.canvas.width - this.center.x) / unitPx;
+
+        if(direction === ZoomDirection.ZOOM_IN) {
+            for(let i = 0; i < this.displayedPoints.length; i++) {
+                var coordinatePoint = this.displayedPoints[i][0];
+                
+                if(
+                    (oldBegin <= coordinatePoint.x && coordinatePoint.x <= newBegin) ||
+                    (newEnd <= coordinatePoint.x && coordinatePoint.x <= oldEnd)
+                ) {
+                    this.displayedPoints = Utils.arrayRemove(this.displayedPoints, i)
+                    i--;
+                }
+            }
+        } else {
+            for(let i = 0; i < this.functionList.length; i++) {
+                var rawText = this.functionList.get(i);
+
+                for(let x1 = oldBegin; x1 >= newBegin; x1 -= .01) {
+                    var y1 = parseFloat(new Compiler(rawText.split(" "), new Map([["x", x1.toString()]])).compile());
+    
+                    var x2 = x1 + .01;
+                    var y2 = parseFloat(new Compiler(rawText.split(" "), new Map([["x", x2.toString()]])).compile());
+    
+                    this.displayedPoints.unshift([new Point(x1, y1), new Point(x2, y2)]);
+                }
+                for(let x1 = oldEnd; x1 <= newEnd; x1 += .01) {
+                    var y1 = parseFloat(new Compiler(rawText.split(" "), new Map([["x", x1.toString()]])).compile());
+    
+                    var x2 = x1 + .01;
+                    var y2 = parseFloat(new Compiler(rawText.split(" "), new Map([["x", x2.toString()]])).compile());
+    
+                    this.displayedPoints.push([new Point(x1, y1), new Point(x2, y2)]);
+                }
+            }
+        }
+    }
+
     private stopMoving(): void {
         this.mouseDown = false;
         this.mouseDX = 0;
@@ -187,6 +296,22 @@ export default class Render {
         this.ctx.font = fontSize +"px Ubuntu-Regular";
         this.ctx.fillStyle = color;
         this.ctx.fillText(text, x, y);
+    }
+
+    private drawCompleteFunction(rawText: string): void {
+        var unitPx = this.scale * this.spacing;
+
+        var beginX = -this.center.x / unitPx;
+        var endX = (this.canvas.width - this.center.x) / unitPx;
+
+        for(let x1 = beginX; x1 <= endX; x1 += .01) {
+            var y1 = parseFloat(new Compiler(rawText.split(" "), new Map([["x", x1.toString()]])).compile());
+
+            var x2 = x1 + .01;
+            var y2 = parseFloat(new Compiler(rawText.split(" "), new Map([["x", x2.toString()]])).compile());
+
+            this.displayedPoints.push([new Point(x1, y1), new Point(x2, y2)]);
+        }
     }
 
     private clear(): void {
@@ -233,38 +358,7 @@ export default class Render {
 
         // Draw function images
         for(let i = 0; i < this.displayedPoints.length; i++) {
-            this.drawLine(this.displayedPoints[i][0], this.displayedPoints[i][1], "#fff");
-        }
-        this.displayedPoints = [];
-
-        // Compute function points
-        for(let i = 0; i < this.functionList.length; i++) {
-            var rawText = this.functionList.get(i);
-
-            var unitPx = this.scale * this.spacing;
-
-            var beginX = -this.center.x / unitPx;
-            var endX = (this.canvas.width - this.center.x) / unitPx;
-
-            this.ctx.beginPath();
-
-            for(let x1 = beginX; x1 <= endX; x1 += .01) {
-                var y1 = parseFloat(new Compiler(rawText.split(" "), new Map([["x", x1.toString()]])).compile());
-
-                var x2 = x1 + .01;
-                var y2 = parseFloat(new Compiler(rawText.split(" "), new Map([["x", x2.toString()]])).compile());
-
-                var p1 = this.coordinatesToScreen(new Point(x1, y1));
-                var p2 = this.coordinatesToScreen(new Point(x2, y2));
-
-                this.ctx.strokeStyle = "#fff";
-                this.ctx.lineWidth = 1;
-                this.ctx.moveTo(p1.x, p1.y);
-                this.ctx.lineTo(p2.x, p2.y);
-            }
-            
-            this.ctx.stroke();
-            this.ctx.closePath();
+            this.drawLine(this.coordinatesToScreen(this.displayedPoints[i][0]), this.coordinatesToScreen(this.displayedPoints[i][1]), "#fff");
         }
 
         var imageBitmap = this.canvas.transferToImageBitmap();
@@ -273,5 +367,6 @@ export default class Render {
 
     public registerFunction(rawText: string): void {
         this.functionList.add(rawText);
+        this.drawCompleteFunction(rawText);
     }
 }

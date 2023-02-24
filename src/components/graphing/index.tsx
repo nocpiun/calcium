@@ -7,6 +7,7 @@ import InputBox, { specialSymbols, cursor } from "../InputBox";
 
 import Utils from "../../utils/Utils";
 import Emitter from "../../utils/Emitter";
+import { MouseDirection } from "../../types";
 
 import GraphingWorker from "../../workers/graphing.worker.ts";
 
@@ -132,7 +133,15 @@ const Graphing: React.FC = memo(() => {
         });
         canvas.addEventListener("mousemove", (e: MouseEvent) => {
             if(!workerRef.current) return;
-            workerRef.current.postMessage({ type: "mouse-move", rect: canvas.getBoundingClientRect(), cx: e.clientX, cy: e.clientY });
+
+            var direction;
+            if(e.movementX < 0) {
+                direction = MouseDirection.LEFT;
+            } else {
+                direction = MouseDirection.RIGHT;
+            }
+
+            workerRef.current.postMessage({ type: "mouse-move", rect: canvas.getBoundingClientRect(), cx: e.clientX, cy: e.clientY, direction });
         });
         canvas.addEventListener("mouseup", () => {
             if(!workerRef.current) return;

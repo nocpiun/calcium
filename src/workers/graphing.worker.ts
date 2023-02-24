@@ -30,7 +30,7 @@ ctx.addEventListener("message", (e) => {
             renderer.handleMouseDown(req.rect, req.cx, req.cy);
             break;
         case "mouse-move":
-            renderer.handleMouseMove(req.rect, req.cx, req.cy);
+            renderer.handleMouseMove(req.rect, req.cx, req.cy, req.direction);
             break;
         case "mouse-up":
             renderer.handleMouseUp();

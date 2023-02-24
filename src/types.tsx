@@ -92,3 +92,11 @@ export interface Shortcut {
     description: string
     action: () => void
 }
+
+export enum MouseDirection {
+    LEFT, RIGHT
+}
+
+export enum ZoomDirection {
+    ZOOM_IN, ZOOM_OUT
+}
