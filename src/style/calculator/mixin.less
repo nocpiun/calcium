@@ -16,18 +16,18 @@
     span {
         flex: 1;
         text-align: center;
-        color: @gray-light;
+        color: var(--ca-gray-light);
     }
     &:hover {
-        background-color: @gray5;
+        background-color: var(--ca-gray5);
     }
     &:active {
-        background-color: @gray3;
+        background-color: var(--ca-gray3);
     }
     &:disabled {
         cursor: default;
         span {
-            color: @gray1;
+            color: var(--ca-gray1);
         }
         &, &:hover, &:active {
             background-color: transparent;
@@ -41,7 +41,7 @@
     span {
         flex: 1;
         text-align: center;
-        color: @gray1;
+        color: var(--ca-gray1);
     }
 }
 
@@ -49,7 +49,7 @@
     .display {
         display: flex;
         // justify-content: flex-end;
-        color: @gray-light;
+        color: var(--ca-gray-light);
         overflow-x: auto;
         cursor: text;
         .scrollbar-style();
@@ -69,7 +69,7 @@
 
             border-right: 1px solid transparent;
             &.cursor-blink {
-                border-right-color: @gray-light;
+                border-right-color: var(--ca-gray-light);
             }
         }
     }

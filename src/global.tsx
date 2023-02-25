@@ -2,7 +2,7 @@ import Utils from "./utils/Utils";
 import Emitter from "./utils/Emitter";
 import { MathFunction, Shortcut } from "./types";
 
-export const version = "0.3.0a";
+export const version = "0.3.0b";
 export const errorText = "\\text{Error}";
 
 export const functions: Map<string, MathFunction> = new Map([

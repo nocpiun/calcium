@@ -2,7 +2,7 @@
     flex-direction: column;
     width: 650px;
     height: 500px;
-    background-color: @gray5;
+    background-color: var(--ca-gray5);
     border-color: transparent;
     border-radius: 7px;
     box-shadow: 0 0 16px rgb(0, 0, 0, .12), 0 16px 16px rgb(0, 0, 0, .24);
@@ -30,7 +30,7 @@
         flex: 5;
         position: relative;
         padding: 15px 25px;
-        color: @gray-light;
+        color: var(--ca-gray-light);
         font-family: @font;
         overflow: hidden;
         p {
@@ -41,7 +41,7 @@
             }
         }
         a {
-            color: @green1;
+            color: var(--ca-green1);
             text-decoration: underline;
         }
         button {
@@ -49,13 +49,13 @@
             outline: none;
             border: none;
             padding: 0;
-            color: @gray-light;
+            color: var(--ca-gray-light);
             font-family: @font;
             font-size: 12pt;
             text-decoration: underline;
             cursor: pointer;
             &:hover {
-                color: @gray1;
+                color: var(--ca-gray1);
             }
         }
         ul {
@@ -79,7 +79,7 @@
             border-spacing: 5px;
             font-family: @font;
             thead th {
-                color: @gray1;
+                color: var(--ca-gray1);
                 text-align: left;
             }
             tbody {
@@ -94,7 +94,7 @@
                     table-layout: fixed;
                     td {
                         width: 100%;
-                        color: @gray-light;
+                        color: var(--ca-gray-light);
                         overflow: hidden;
                         text-overflow: ellipsis;
                         white-space: nowrap;
@@ -110,7 +110,7 @@
             right: 0;
             bottom: 0;
             z-index: 100;
-            background-color: @gray5;
+            background-color: var(--ca-gray5);
             padding: 5px 25px;
             &.on {
                 display: block;
@@ -121,7 +121,7 @@
                 align-items: center;
                 margin-bottom: 10px;
                 .back-button {
-                    color: @gray1;
+                    color: var(--ca-gray1);
                     font-size: 11pt;
                     text-decoration: none;
                 }
@@ -141,7 +141,7 @@
                     white-space: pre-line;
                     background-color: transparent;
                     border: none;
-                    color: @gray-light;
+                    color: var(--ca-gray-light);
                     font-family: monospace;
                     resize: none;
                 }
@@ -157,17 +157,17 @@
         .footer-button {
             width: 62px;
             height: 30px;
-            background-color: @gray2;
+            background-color: var(--ca-gray2);
             border-color: transparent;
             border-radius: 3px;
-            color: @gray-light;
+            color: var(--ca-gray-light);
             font-family: @font;
             cursor: pointer;
             &:hover {
-                background-color: @gray8;
+                background-color: var(--ca-gray8);
             }
             &:active {
-                background-color: @gray4;
+                background-color: var(--ca-gray4);
             }
         }
     }

@@ -1,17 +1,49 @@
-@gray-light: #cbd0df;
-@gray1: #8c949e;
-@gray2: #4a4e53;
-@gray3: #232629;
-@gray4: #383d42;
-@gray5: #1a1c1f;
-@gray6: #acb0bd;
-@gray7: #83848d;
-@gray8: #3d4247;
-@deep1: #0e1117;
-@deep2: #010409;
-@green1: #62b669;
+:root {
+    // Dark Mode
+    --ca-gray-light: #cbd0df;
+    --ca-gray1: #8c949e;
+    --ca-gray2: #4a4e53;
+    --ca-gray3: #232629;
+    --ca-gray4: #383d42;
+    --ca-gray5: #1a1c1f;
+    --ca-gray6: #acb0bd;
+    --ca-gray7: #83848d;
+    --ca-gray8: #3d4247;
+    --ca-deep1: #0e1117;
+    --ca-deep2: #010409;
+    --ca-green1: #62b669;
 
-@border-style: 1px solid @gray2;
+    // Light Mode
+    body[theme=light] {
+        --ca-gray-light: #404041;
+        --ca-gray1: #787e85;
+        --ca-gray2: #a2a3a3;
+        --ca-gray3: #95989b;
+        --ca-gray4: #797979;
+        --ca-gray5: #b7b8b9;
+        --ca-gray6: #898d96;
+        --ca-gray7: #83848d;
+        --ca-gray8: #8d9194;
+        --ca-deep1: #f7f7f7;
+        --ca-deep2: #ececec;
+        --ca-green1: #1c7e24;
+
+        kbd {
+            background-color: #dad8d8;
+            border-color: var(--ca-gray1);
+        }
+
+        #dialogs dialog {
+            box-shadow: 0 0 16px #504f4f, 0 16px 16px #7e7e7e;
+        }
+
+        .calculator-container .output-container .number-box-list .number-box.active .name {
+            color: #3b3c3c !important;
+        }
+    }
+}
+
+@border-style: 1px solid var(--ca-gray2);
 
 .scrollbar-style() {
     @size: 3px;
@@ -20,12 +52,12 @@
         height: @size;
     }
     &::-webkit-scrollbar-thumb {
-        background-color: @gray2;
+        background-color: var(--ca-gray2);
         &:hover {
-            background-color: @gray7;
+            background-color: var(--ca-gray7);
         }
         &:active {
-            background-color: @gray6;
+            background-color: var(--ca-gray6);
         }
     }
     &::-webkit-scrollbar-track {

@@ -7,7 +7,7 @@
     flex-direction: column;
     .output-container {
         flex: 1;
-        background-color: @deep1;
+        background-color: var(--ca-deep1);
         border-bottom: @border-style;
         position: relative;
         min-height: 206px;
@@ -17,7 +17,7 @@
             left: 20px;
             bottom: 20px;
             font-size: 11pt;
-            color: @gray1 !important;
+            color: var(--ca-gray1) !important;
         }
         .number-box-list {
             width: 40%;
@@ -30,17 +30,17 @@
                     display: inline-block;
                     min-width: 40px;
                     text-align: right;
-                    color: @gray1;
+                    color: var(--ca-gray1);
                     margin-right: 10px;
                 }
                 .number {
-                    color: @gray-light;
+                    color: var(--ca-gray-light);
                 }
                 &.active .name {
                     color: #dde3f5 !important;
                 }
                 &:hover .name {
-                    color: @gray-light;
+                    color: var(--ca-gray-light);
                 }
             }
         }
@@ -68,7 +68,7 @@
             .display {
                 display: flex;
                 // justify-content: flex-end;
-                color: @gray-light;
+                color: var(--ca-gray-light);
                 font-size: 45px;
                 min-height: 156px;
                 overflow-x: auto;
@@ -81,7 +81,7 @@
     }
     .input-container {
         flex: 2;
-        background-color: @deep2;
+        background-color: var(--ca-deep2);
         .keypad {
             padding: 3px;
             &-row {

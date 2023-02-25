@@ -2,27 +2,38 @@
     flex: 1;
     display: flex;
     flex-direction: row;
-    .mode-switcher {
+    .control-panel-container {
         flex: .8;
-        background-color: @deep1;
-        font-size: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        background-color: var(--ca-deep1);
         border-right: @border-style;
-        .mode-button {
-            width: 100%;
-            height: 0;
-            padding-bottom: 100%;
-            background-color: transparent;
-            border: none;
-            mask-repeat: no-repeat;
-            mask-size: 50%;
-            mask-position: center center;
-            background-color: @gray1;
-            cursor: pointer;
-            &.active {
-                background-color: @gray-light !important;
+        .mode-switcher {
+            font-size: 0;
+            .mode-button {
+                width: 100%;
+                height: 0;
+                padding-bottom: 100%;
+                background-color: transparent;
+                border: none;
+                mask-repeat: no-repeat;
+                mask-size: 50%;
+                mask-position: center center;
+                background-color: var(--ca-gray1);
+                cursor: pointer;
+                &.active {
+                    background-color: var(--ca-gray-light) !important;
+                }
+                &:hover {
+                    background-color: var(--ca-gray6);
+                }
             }
-            &:hover {
-                background-color: @gray6;
+        }
+        .theme-switcher {
+            margin: 15px 0;
+            .toggle {
+                margin: 0 auto;
             }
         }
     }
@@ -30,7 +41,7 @@
         flex: 4;
         display: flex;
         flex-direction: column;
-        background-color: @deep2;
+        background-color: var(--ca-deep2);
         border-right: @border-style;
         &-header {
             padding: 30px;
@@ -43,7 +54,7 @@
             }
             span.tip {
                 margin-left: 10px;
-                color: @gray1;
+                color: var(--ca-gray1);
                 font-size: 10pt;
                 kbd {
                     margin-right: 3px;
@@ -64,13 +75,13 @@
                 padding-bottom: 20px;
                 .item-input {
                     flex: 1;
-                    color: @gray1;
+                    color: var(--ca-gray1);
                     font-size: 10pt;
                     white-space: nowrap;
                 }
                 .item-output {
                     flex: 1;
-                    color: @gray-light;
+                    color: var(--ca-gray-light);
                     font-size: 13pt;
                     white-space: nowrap;
                 }

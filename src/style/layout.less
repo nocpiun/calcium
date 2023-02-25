@@ -30,7 +30,7 @@ main.calcium {
 }
 
 h1, h2, h3, h4, h5, h6, p {
-    color: @gray-light;
+    color: var(--ca-gray-light);
     cursor: default;
     &::selection {
         background-color: transparent;
@@ -52,4 +52,35 @@ kbd {
     border-radius: 3px;
     border: 1px solid hsl(0deg, 0%, 35%);
     padding: 1px 3px;
+}
+
+.toggle {
+    width: 34px;
+    position: relative;
+    cursor: pointer;
+    &-bar {
+        z-index: 0;
+        width: 28px;
+        height: 12px;
+        border-radius: 8px;
+        position: absolute;
+        left: 3px;
+        top: 2px;
+        background-color: #9e9e9e;
+    }
+    &-knob {
+        z-index: 1;
+        display: block;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        position: relative;
+        transition: transform ease 80ms;
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .4);
+        background-color: #dbdbdb;
+    }
+}
+
+.katex-logo {
+    color: var(--ca-gray-light) !important;
 }

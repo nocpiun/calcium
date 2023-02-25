@@ -184,4 +184,8 @@ export default class Utils {
             return parseFloat(str);
         }
     }
+
+    public static isDarkMode(): boolean {
+        return document.body.getAttribute("theme") === "dark";
+    }
 }

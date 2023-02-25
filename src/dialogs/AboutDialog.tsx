@@ -58,7 +58,7 @@ const AboutDialog: React.FC<AboutDialogProps> = forwardRef<Dialog, AboutDialogPr
                 <ul>
                     <li><AboutItem name="Version" content={version}/></li>
                     <li><AboutItem name="Author" content="NoahHrreion"/></li>
-                    <li><AboutItem name="Math Displaying" content={<a href="https://github.com/talyssonoc/react-katex" target="_blank" rel="noreferrer" style={{ color: "#cbd0df" }}><InlineMath>\KaTeX</InlineMath></a>}/></li>
+                    <li><AboutItem name="Math Displaying" content={<a href="https://github.com/talyssonoc/react-katex" target="_blank" rel="noreferrer" className="katex-logo"><InlineMath>\KaTeX</InlineMath></a>}/></li>
                     <li><AboutItem name="Webpage" content={<a href="https://calc.nin.red" target="_blank" rel="noreferrer">calc.nin.red</a>}/></li>
                     <li><AboutItem name="Github Repo" content={<a href="https://github.com/nocpiun/calcium" target="_blank" rel="noreferrer">nocpiun/calcium</a>}/></li>
                     <li><AboutItem name="License" content={<button onClick={() => setLicenseVisible(true)}>View</button>}/></li>

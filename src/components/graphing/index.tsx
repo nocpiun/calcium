@@ -121,7 +121,7 @@ const Graphing: React.FC = memo(() => {
 
         // Init worker
         var offscreenCanvas = new OffscreenCanvas(canvas.width, canvas.height);
-        workerRef.current.postMessage({ type: "init", canvas: offscreenCanvas }, [offscreenCanvas]);
+        workerRef.current.postMessage({ type: "init", canvas: offscreenCanvas, isDarkMode: Utils.isDarkMode() }, [offscreenCanvas]);
         workerRef.current.onmessage = (e) => {
             ctx.transferFromImageBitmap(e.data.imageBitmap);
         };
