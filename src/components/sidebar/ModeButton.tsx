@@ -31,7 +31,10 @@ const ModeButton: React.FC<ModeButtonProps> = (props) => {
     }, []);
 
     return (
-        <button
+        <div className="mode-button-container">
+            <div className={"highlight-bar"+ (isActive ? " active" : "")}/>
+            
+            <button
             className={"mode-button"+ (isActive ? " active" : "")}
             title={props.modeName}
             onClick={() => handleClick()}
@@ -39,6 +42,7 @@ const ModeButton: React.FC<ModeButtonProps> = (props) => {
                 maskImage: "url("+ props.icon +")",
                 WebkitMaskImage: "url("+ props.icon +")"
             }}/>
+        </div>
     );
 }
 

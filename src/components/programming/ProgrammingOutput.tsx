@@ -14,8 +14,6 @@ import NumberBox from "./NumberBox";
 import InputBox, { cursor } from "../InputBox";
 import type Dialog from "../Dialog";
 import FunctionDialog from "../../dialogs/FunctionDialog";
-import AboutDialog from "../../dialogs/AboutDialog";
-import ShortcutDialog from "../../dialogs/ShortcutDialog";
 
 const ProgrammingOutput: React.FC = () => {
     const [outputContent, setOutputContent] = useState<string>("");
@@ -26,8 +24,6 @@ const ProgrammingOutput: React.FC = () => {
     const [binValue, setBin] = useState<string>("0");
     const inputRef = useRef<InputBox>(null);
     const funcsDialogRef = useRef<Dialog>(null);
-    const aboutDialogRef = useRef<Dialog>(null);
-    const shortcutDialogRef = useRef<Dialog>(null);
 
     const handleInput = (symbol: string) => {
         if(!inputRef.current) return;
@@ -79,12 +75,6 @@ const ProgrammingOutput: React.FC = () => {
                 return;
             case "\\text{Funcs}":
                 funcsDialogRef.current?.open();
-                break;
-            case "\\text{About}":
-                aboutDialogRef.current?.open();
-                break;
-            case "\\text{Shortcuts}":
-                shortcutDialogRef.current?.open();
                 break;
             default:
                 setOutputContent("");
@@ -189,8 +179,6 @@ const ProgrammingOutput: React.FC = () => {
 
             {/* Dialogs */}
             <FunctionDialog ref={funcsDialogRef}/>
-            <AboutDialog ref={aboutDialogRef}/>
-            <ShortcutDialog ref={shortcutDialogRef}/>
         </div>
     );
 }

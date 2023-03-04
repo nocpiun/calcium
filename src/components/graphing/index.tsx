@@ -13,6 +13,7 @@ import GraphingWorker from "../../workers/graphing.worker.ts";
 
 const Graphing: React.FC = memo(() => {
     const [list, setList] = useState<string[]>([]);
+    const [reloadTrigger, reloader] = useState(0);
     const inputRef = useRef<InputBox>(null);
     const workerRef = useRef<GraphingWorker | null>(null);
 
@@ -167,12 +168,21 @@ const Graphing: React.FC = memo(() => {
             workerRef.current.postMessage({ type: "clear-function" });
         });
 
+        Emitter.get().on("graphing-reload", () => {
+            if(!workerRef.current) return;
+            workerRef.current.postMessage({ type: "reset" });
+            workerRef.current.terminate();
+            setList([]);
+
+            reloader(reloadTrigger + 1);
+        });
+
         return () => { // Unregister renderer and worker
             if(!workerRef.current) return;
             workerRef.current.postMessage({ type: "reset" });
             workerRef.current.terminate();
         };
-    }, []);
+    }, [reloadTrigger]);
 
     return (
         <>

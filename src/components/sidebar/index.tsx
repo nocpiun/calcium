@@ -12,7 +12,7 @@ import GraphingIcon from "../../icons/graphing_mode.svg";
 import ProgrammingIcon from "../../icons/programming_mode.svg";
 
 const Sidebar: React.FC = () => {
-    const themeValue = Storage.get().getItem("theme", "dark");
+    const themeValue = Storage.get().getItem("theme", "light");
 
     const handleToggle = (isActive: boolean) => {
         document.body.setAttribute("theme", isActive ? "light" : "dark");

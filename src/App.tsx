@@ -9,6 +9,7 @@ import "./style/layout.less";
 // Components
 import Sidebar from "./components/sidebar";
 import Calculator from "./components/Calculator";
+import StatusBar from "./components/statusbar";
 
 const App: React.FC = () => {
 	useEffect(() => {
@@ -31,8 +32,11 @@ const App: React.FC = () => {
 	return (
 		<>
 			<main className="calcium">
-				<Sidebar/>
-				<Calculator/>
+				<div className="app">
+					<Sidebar/>
+					<Calculator/>
+				</div>
+				<StatusBar />
 			</main>
 			<p className="no-mobile">Please open the app in your computer!</p>
 		</>

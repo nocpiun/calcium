@@ -4,6 +4,7 @@
 @import "./dialog.less";
 @import "./sidebar.less";
 @import "./calculator/calculator.less";
+@import "./status-bar.less";
 
 @import "./adaptation.less";
 
@@ -15,12 +16,17 @@ body {
 
 main.calcium {
     display: flex;
-    flex-direction: row;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    flex-direction: column;
+    height: 100vh;
+    .app {
+        display: flex;
+        flex-direction: row;
+        height: 100%;
+        overflow: hidden;
+    }
+    .status-bar {
+        min-height: 25px;
+    }
 }
 
 .no-mobile {

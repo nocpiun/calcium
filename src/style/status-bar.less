@@ -1,0 +1,38 @@
+footer.status-bar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    background-color: var(--ca-light1);
+    border-top: 1px solid var(--ca-gray2);
+    .split {
+        display: flex;
+        .star-repo {
+            background-color: var(--ca-blue1);
+            span {
+                color: #eee !important;
+            }
+            &:hover {
+                background-color: var(--ca-blue2) !important;
+            }
+        }
+        .bar-item {
+            display: flex;
+            flex-flow: row;
+            align-items: center;
+            padding-left: 7px;
+            padding-right: 7px;
+            transition: background-color .08s;
+            cursor: pointer;
+            span {
+                color: var(--ca-gray1);
+                font-size: 10pt;
+            }
+            &.disabled {
+                cursor: default;
+            }
+            &:hover {
+                background-color: var(--ca-light2);
+            }
+        }
+    }
+}
