@@ -18,7 +18,8 @@ interface InputBoxState {
 
 export const specialSymbols: string[] = [
     "sin", "cos", "tan", "cot", "sec", "csc",
-    "ln", "lg", "deg"
+    "ln", "lg", "deg",
+    "sqrt", "cbrt"
 ];
 
 export const cursor = "$";

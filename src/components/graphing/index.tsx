@@ -87,11 +87,20 @@ const Graphing: React.FC = memo(() => {
                             }
                         }
                         if(passed) {
+                            if(specialSymbol === "sqrt") {
+                                specialSymbol = "√(";
+                            } else if(specialSymbol === "cbrt") {
+                                specialSymbol = "^3√(";
+                            } else {
+                                specialSymbol = "\\"+ specialSymbol +"(";
+                            }
+
                             var begin = cursorIndex - splited.length + 1;
-                            contentArray[begin] = "\\"+ specialSymbol +"(";
+                            contentArray[begin] = specialSymbol;
                             for(let j = 0; j < splited.length - 2; j++) {
                                 contentArray = Utils.arrayRemove(contentArray, begin + 1);
                             }
+                            contentArray.push(")"); // Add right bracket automatically
 
                             return contentArray.join(" ");
                         }
