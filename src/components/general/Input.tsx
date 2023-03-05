@@ -1,6 +1,5 @@
 import React from "react";
 
-import { version } from "../../global";
 import InputButton from "../InputButton";
 
 const Input: React.FC = () => {
