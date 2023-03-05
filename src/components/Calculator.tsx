@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useContext } from "react";
 
 import { Mode } from "../types";
 import Emitter from "../utils/Emitter";
@@ -9,9 +9,11 @@ import Output from "./general/Output";
 import ProgrammingOutput from "./programming/ProgrammingOutput";
 import Graphing from "./graphing";
 
-const Calculator: React.FC = () => {
-    const [mode, setMode] = useState<Mode>(Mode.GENERAL);
+import MainContext from "../contexts/MainContext";
 
+const Calculator: React.FC = () => {
+    const { mode, setMode } = useContext(MainContext);
+    
     const layoutSwitch = (calcMode: Mode) => {
         switch(calcMode) {
             case Mode.GENERAL:

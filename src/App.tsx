@@ -1,6 +1,7 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
 import { shortcuts } from "./global";
+import { Mode } from "./types";
 
 // Layout
 import "katex/dist/katex.min.css"
@@ -11,7 +12,12 @@ import Sidebar from "./components/sidebar";
 import Calculator from "./components/Calculator";
 import StatusBar from "./components/statusbar";
 
+// Contexts
+import MainContext from "./contexts/MainContext";
+
 const App: React.FC = () => {
+	const [mode, setMode] = useState<Mode>(Mode.GENERAL);
+
 	useEffect(() => {
 		document.body.addEventListener("keydown", (e: KeyboardEvent) => {
 			shortcuts.forEach((shortcut, key) => {
@@ -32,11 +38,13 @@ const App: React.FC = () => {
 	return (
 		<>
 			<main className="calcium">
-				<div className="app">
-					<Sidebar/>
-					<Calculator/>
-				</div>
-				<StatusBar />
+				<MainContext.Provider value={{ mode, setMode }}>
+					<div className="app">
+						<Sidebar/>
+						<Calculator/>
+					</div>
+					<StatusBar />
+				</MainContext.Provider>
 			</main>
 			<p className="no-mobile">Please open the app in your computer!</p>
 		</>

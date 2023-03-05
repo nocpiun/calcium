@@ -6,15 +6,6 @@ footer.status-bar {
     border-top: 1px solid var(--ca-gray2);
     .split {
         display: flex;
-        .star-repo {
-            background-color: var(--ca-blue1);
-            span {
-                color: #eee !important;
-            }
-            &:hover {
-                background-color: var(--ca-blue2) !important;
-            }
-        }
         .bar-item {
             display: flex;
             flex-flow: row;
@@ -28,7 +19,19 @@ footer.status-bar {
                 font-size: 10pt;
             }
             &.disabled {
+                &:hover {
+                    background-color: transparent;
+                }
                 cursor: default;
+            }
+            &.primary {
+                background-color: var(--ca-blue1);
+                span {
+                    color: #eee !important;
+                }
+                &:hover {
+                    background-color: var(--ca-blue2) !important;
+                }
             }
             &:hover {
                 background-color: var(--ca-light2);

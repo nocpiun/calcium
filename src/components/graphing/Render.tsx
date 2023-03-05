@@ -13,6 +13,8 @@ const colors = {
     highlight: "#fff"
 };
 
+// Inside of Service Worker
+
 export default class Render {
     public canvas: OffscreenCanvas;
     private ctx: OffscreenCanvasRenderingContext2D;
@@ -25,6 +27,8 @@ export default class Render {
     private mouseDX: number = 0; // mouse delta x
     private mouseDY: number = 0; // mouse delta y
 
+    private fpsUpdater: NodeJS.Timer;
+    private currentFPS: number = 0;
     private lastTime: number = 0; // for FPS calculating
 
     public center: Point;
@@ -40,6 +44,8 @@ export default class Render {
         this.center = new Point(this.canvas.width / 2, this.canvas.height / 2);
         this.mousePoint = this.center;
 
+        this.fpsUpdater = setInterval(() => this.workerCtx.postMessage({ type: "fps", fps: this.currentFPS }), 1000);
+
         if(!isDarkMode) {
             colors.primary = "#404041";
             colors.highlight = "#222";
@@ -49,6 +55,7 @@ export default class Render {
     public reset(): void {
         this.functionList.clear();
         this.displayedPoints = [];
+        clearInterval(this.fpsUpdater);
     }
 
     public handleMouseDown(rect: DOMRect, cx: number, cy: number): void {
@@ -341,15 +348,17 @@ export default class Render {
     }
     /*****/
 
-    private getFPS(): number {
+    private updateFPS(): void {
         const now = (+new Date());
         var fps = 1000 / (now - this.lastTime);
         this.lastTime = now;
-        return fps;
+
+        this.currentFPS = fps;
     }
 
     // To render each frame
     public render(): void {
+        this.updateFPS();
         this.clear();
 
         this.refreshAxisLine();
@@ -362,10 +371,7 @@ export default class Render {
         this.drawText("("+ mouseCoordinatesPoint.x.toFixed(2) +", "+ mouseCoordinatesPoint.y.toFixed(2) +")", 30, 30, colors.primary, 15);
         
         // Is mouse down
-        this.drawText(this.mouseDown ? "Moving" : "", this.canvas.width - 150, 30, colors.primary, 15);
-        
-        // FPS
-        this.drawText("FPS: "+ this.getFPS().toFixed(0), this.canvas.width - 80, 30, colors.primary, 15);
+        this.drawText(this.mouseDown ? "Moving" : "", this.canvas.width - 80, 30, colors.primary, 15);
 
         // Draw function images
         for(let i = 0; i < this.displayedPoints.length; i++) {
@@ -373,7 +379,7 @@ export default class Render {
         }
 
         var imageBitmap = this.canvas.transferToImageBitmap();
-        this.workerCtx.postMessage({ imageBitmap }, [imageBitmap]);
+        this.workerCtx.postMessage({ type: "render", imageBitmap }, [imageBitmap]);
     }
 
     public registerFunction(rawText: string): void {

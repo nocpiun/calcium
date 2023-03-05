@@ -124,7 +124,14 @@ const Graphing: React.FC = memo(() => {
         var offscreenCanvas = new OffscreenCanvas(canvas.width, canvas.height);
         workerRef.current.postMessage({ type: "init", canvas: offscreenCanvas, isDarkMode: Utils.isDarkMode() }, [offscreenCanvas]);
         workerRef.current.onmessage = (e) => {
-            ctx.transferFromImageBitmap(e.data.imageBitmap);
+            switch(e.data.type) {
+                case "render":
+                    ctx.transferFromImageBitmap(e.data.imageBitmap);
+                    break;
+                case "fps":
+                    Emitter.get().emit("graphing-fps", e.data.fps);
+                    break;
+            }
         };
 
         // Init events

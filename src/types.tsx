@@ -1,5 +1,7 @@
 import React, { ReactElement } from "react";
 
+export type StateSetter<S> = React.Dispatch<React.SetStateAction<S>>;
+
 export enum Mode {
     GENERAL,
     GRAPHING,
