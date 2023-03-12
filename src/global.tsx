@@ -45,19 +45,19 @@ export const constants: Map<string, number> = new Map([
 
 export const shortcuts: Map<string[], Shortcut> = new Map([
     [["ctrl", "x"], {
-        description: "Reset Input",
+        description: "清空输入框",
         action: () => {
             Emitter.get().emit("clear-input");
         }
     }],
     [["ctrl", "d"], {
-        description: "Reset History Records",
+        description: "清空历史记录",
         action: () => {
             Emitter.get().emit("clear-record");
         }
     }],
     [["ctrl", "r"], {
-        description: "Reset Input, History and Function List",
+        description: "清空输入框、历史记录以及函数图像列表",
         action: () => {
             Emitter.get().emit("clear-record");
             Emitter.get().emit("clear-input");
@@ -65,13 +65,13 @@ export const shortcuts: Map<string[], Shortcut> = new Map([
         }
     }],
     [["shift", "ArrowLeft"], {
-        description: "Move the Cursor to the Front",
+        description: "将光标移到前部",
         action: () => {
             Emitter.get().emit("move-front");
         }
     }],
     [["shift", "ArrowRight"], {
-        description: "Move the Cursor to the Back",
+        description: "将光标移到尾部",
         action: () => {
             Emitter.get().emit("move-back");
         }

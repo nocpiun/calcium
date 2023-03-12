@@ -32,8 +32,8 @@ const StatusBar: React.FC = () => {
         <>
             <footer className="status-bar">
                 <div className="split">
-                    <BarItem title="Star" to="https://github.com/nocpiun/calcium" className="primary" tooltip="Star the Repo"/>
-                    <BarItem title="Feedback" to="https://github.com/nocpiun/calcium/issues" tooltip="Issues"/>
+                    <BarItem title="Star" to="https://github.com/nocpiun/calcium" className="primary" tooltip="为本项目加星"/>
+                    <BarItem title="反馈" to="https://github.com/nocpiun/calcium/issues" tooltip="Issues"/>
                 </div>
                 <div className="split">
                     {
@@ -41,8 +41,8 @@ const StatusBar: React.FC = () => {
                         ? <BarItem title={"FPS: "+ fps.toFixed(0)} disabled/>
                         : <></>
                     }
-                    <BarItem title="Reload" onClick={() => Emitter.get().emit("graphing-reload")} tooltip="Reload Graphing Worker"/>
-                    <BarItem title="Shortcuts" onClick={() => shortcutDialogRef.current?.open()}/>
+                    <BarItem title="重载" onClick={() => Emitter.get().emit("graphing-reload")} tooltip="Reload Graphing Worker"/>
+                    <BarItem title="快捷键" onClick={() => shortcutDialogRef.current?.open()}/>
                     <BarItem title={"Calcium "+ version} onClick={() => aboutDialogRef.current?.open()}/>
                 </div>
             </footer>

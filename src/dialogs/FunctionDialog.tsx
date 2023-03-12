@@ -13,11 +13,11 @@ interface FunctionDialogProps extends PropsWithRef<Dialog> {
 const FunctionDialog: React.FC<FunctionDialogProps> = forwardRef<Dialog, FunctionDialogProps>(
     (props, ref) => {
         return (
-            <Dialog title="Functions" id={"funcs-dialog--"+ useId()} ref={ref}>
+            <Dialog title="函数列表" id={"funcs-dialog--"+ useId()} ref={ref}>
                 <table>
                     <thead>
                         <tr>
-                            <th>Function Name</th>
+                            <th>函数名</th>
                         </tr>
                     </thead>
                     <tbody>

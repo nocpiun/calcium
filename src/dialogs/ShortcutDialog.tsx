@@ -12,12 +12,12 @@ interface ShortcutDialogProps extends PropsWithRef<Dialog> {
 const ShortcutDialog: React.FC<ShortcutDialogProps> = forwardRef<Dialog, ShortcutDialogProps>(
     (props, ref) => {
         return (
-            <Dialog title="Shortcut List" id={"shortcut-dialog--"+ useId()} ref={ref}>
+            <Dialog title="快捷键" id={"shortcut-dialog--"+ useId()} ref={ref}>
                 <table>
                     <thead>
                         <tr>
-                            <th>Shortcut</th>
-                            <th>Description</th>
+                            <th>快捷键</th>
+                            <th>功能</th>
                         </tr>
                     </thead>
                     <tbody>

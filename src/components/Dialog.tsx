@@ -34,7 +34,7 @@ export default class Dialog extends Component<DialogProps, {}> {
                     }
                 </div>
                 <div className="footer-container">
-                    <button className="footer-button" onClick={() => this.close()} tabIndex={-1}>Close</button>
+                    <button className="footer-button" onClick={() => this.close()} tabIndex={-1}>关闭</button>
                 </div>
             </dialog>
         ), Utils.getElem("dialogs"));

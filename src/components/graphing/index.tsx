@@ -213,7 +213,7 @@ const Graphing: React.FC = memo(() => {
                         onInput={(symbol) => handleInput(symbol)}/>
                     <div className="add-button-container">
                         <button className="add-button" onClick={() => handleAddFunction()}>
-                            <span>Add</span>
+                            <span>添加</span>
                         </button>
                     </div>
                 </div>

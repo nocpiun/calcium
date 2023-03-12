@@ -13,12 +13,12 @@ interface VariableDialogProps extends PropsWithRef<Dialog> {
 const VariableDialog: React.FC<VariableDialogProps> = forwardRef<Dialog, VariableDialogProps>(
     (props, ref) => {
         return (
-            <Dialog title="Variables" id={"vars-dialog--"+ useId()} ref={ref}>
+            <Dialog title="变量列表" id={"vars-dialog--"+ useId()} ref={ref}>
                 <table>
                     <thead>
                         <tr>
-                            <th>Variable Name</th>
-                            <th>Value</th>
+                            <th>变量名</th>
+                            <th>变量值</th>
                         </tr>
                     </thead>
                     <tbody>

@@ -52,20 +52,20 @@ const AboutDialog: React.FC<AboutDialogProps> = forwardRef<Dialog, AboutDialogPr
         const [isLicenseVisible, setLicenseVisible] = useState<boolean>(false);
 
         return (
-            <Dialog title="About" id={"about-dialog--"+ useId()} ref={ref}>
-                <p><img src="/icon.png" alt="icon" width={18}/> <b>Calcium</b> is a web-based calculator written in React+Typescript.</p>
+            <Dialog title="关于" id={"about-dialog--"+ useId()} ref={ref}>
+                <p><img src="/icon.png" alt="icon" width={18}/> <b>Calcium</b> 是一个由React+Typescript编写的基于web的网页计算器.</p>
 
                 <ul>
-                    <li><AboutItem name="Version" content={version}/></li>
-                    <li><AboutItem name="Author" content="NoahHrreion"/></li>
-                    <li><AboutItem name="Math Displaying" content={<a href="https://github.com/talyssonoc/react-katex" target="_blank" rel="noreferrer" className="katex-logo"><InlineMath>\KaTeX</InlineMath></a>}/></li>
-                    <li><AboutItem name="Webpage" content={<a href="https://calc.nin.red" target="_blank" rel="noreferrer">calc.nin.red</a>}/></li>
+                    <li><AboutItem name="版本" content={version}/></li>
+                    <li><AboutItem name="作者" content="NoahHrreion"/></li>
+                    <li><AboutItem name="数学显示" content={<a href="https://github.com/talyssonoc/react-katex" target="_blank" rel="noreferrer" className="katex-logo"><InlineMath>\KaTeX</InlineMath></a>}/></li>
+                    <li><AboutItem name="网页" content={<a href="https://calc.nin.red" target="_blank" rel="noreferrer">calc.nin.red</a>}/></li>
                     <li><AboutItem name="Github Repo" content={<a href="https://github.com/nocpiun/calcium" target="_blank" rel="noreferrer">nocpiun/calcium</a>}/></li>
-                    <li><AboutItem name="License" content={<button onClick={() => setLicenseVisible(true)}>View</button>}/></li>
+                    <li><AboutItem name="License" content={<button onClick={() => setLicenseVisible(true)}>查看</button>}/></li>
                 </ul>
 
-                <p>If you have any problem or idea, it's welcome to open an <a href="https://github.com/nocpiun/calcium/issues" target="_blank" rel="noreferrer">issue</a> to let me know.</p>
-                <h3 style={{ textAlign: "center" }}>Thank you for using Calcium!</h3>
+                <p>如果有任何问题或想法, 欢迎提交 <a href="https://github.com/nocpiun/calcium/issues" target="_blank" rel="noreferrer">issue</a> 来让我知道.</p>
+                <h3 style={{ textAlign: "center" }}>感谢使用 Calcium!</h3>
 
                 <IndialogPage title="License" visible={isLicenseVisible} onBack={() => setLicenseVisible(false)}>
                     <textarea className="license-content" value={licenseContent} disabled/>

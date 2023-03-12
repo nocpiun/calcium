@@ -27,12 +27,12 @@ const Sidebar: React.FC = () => {
         <aside className="sidebar-container">
             <div className="control-panel-container">
                 <div className="mode-switcher">
-                    <ModeButton modeName="General" mode={Mode.GENERAL} icon={GeneralIcon}/>
-                    <ModeButton modeName="Graphing" mode={Mode.GRAPHING} icon={GraphingIcon}/>
-                    <ModeButton modeName="Programming" mode={Mode.PROGRAMMING} icon={ProgrammingIcon}/>
+                    <ModeButton modeName="通用" mode={Mode.GENERAL} icon={GeneralIcon}/>
+                    <ModeButton modeName="图像" mode={Mode.GRAPHING} icon={GraphingIcon}/>
+                    <ModeButton modeName="程序员" mode={Mode.PROGRAMMING} icon={ProgrammingIcon}/>
                 </div>
                 <div className="theme-switcher">
-                    <Toggle tooltip="Dark / Light Mode" onChange={(e) => handleToggle(e)} defaultValue={themeValue === "light"}/>
+                    <Toggle tooltip="浅色 / 深色主题" onChange={(e) => handleToggle(e)} defaultValue={themeValue === "light"}/>
                 </div>
             </div>
             

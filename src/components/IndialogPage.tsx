@@ -16,7 +16,7 @@ const IndialogPage: React.FC<IndialogPageProps> = (props) => {
     return (
         <div className={"indialog-page"+ (props.visible ? " on" : "")}>
             <div className="indialog-page-header">
-                <button className="back-button" onClick={() => handleBack()}>&lt;Back</button>
+                <button className="back-button" onClick={() => handleBack()}>&lt;返回</button>
                 <h2>{props.title}</h2>
             </div>
             <div className="indialog-page-content">

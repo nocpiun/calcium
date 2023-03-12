@@ -109,10 +109,10 @@ const Input: React.FC = () => {
                     <InputButton symbol="\text{nCr}" inputValue="\text{nCr}(" grow={2}/>
                     <InputButton symbol="\text{rad}" inputValue="\text{rad}(" grow={1}/>
                     <div className="keypad-placeholder"/>
-                    <InputButton symbol="\leftarrow" grow={1} title="Move Cursor Forward"/>
-                    <InputButton symbol="\rightarrow" grow={1} title="Move Cursor Backward"/>
-                    <InputButton symbol="\text{Clear}" grow={1} title="Clear Input"/>
-                    <InputButton symbol="\text{Del}" grow={1} title="Delete a Symbol"/>
+                    <InputButton symbol="\leftarrow" grow={1} title="向前移动光标"/>
+                    <InputButton symbol="\rightarrow" grow={1} title="向后移动光标"/>
+                    <InputButton symbol="\text{Clear}" grow={1} title="清空输入框"/>
+                    <InputButton symbol="\text{Del}" grow={1} title="退格"/>
                     <div className="keypad-placeholder"/>
                     <InputButton symbol="z" grow={1}/>
                     <InputButton symbol="\alpha" grow={1}/>
@@ -183,11 +183,11 @@ const Input: React.FC = () => {
                     <InputButton symbol="\psi" grow={1}/>
                     <InputButton symbol="\omega" grow={1}/>
                     <div className="keypad-placeholder"/>
-                    <InputButton symbol="\leftarrow" grow={1} title="Move Cursor Forward"/>
-                    <InputButton symbol="\rightarrow" grow={1} title="Move Cursor Backward"/>
-                    <InputButton symbol="\text{Clear}" grow={1} title="Clear Input"/>
-                    <InputButton symbol="\text{Del}" grow={1} title="Delete a Symbol"/>
-                    <InputButton symbol="\text{CH}" grow={1} disabled title="Clear History Records"/>
+                    <InputButton symbol="\leftarrow" grow={1} title="向前移动光标"/>
+                    <InputButton symbol="\rightarrow" grow={1} title="向后移动光标"/>
+                    <InputButton symbol="\text{Clear}" grow={1} title="清空输入框"/>
+                    <InputButton symbol="\text{Del}" grow={1} title="退格"/>
+                    <InputButton symbol="\text{CH}" grow={1} disabled title="清空历史记录"/>
                 </div>
                 <div className="keypad-row">
                     <div style={{ flexGrow: 5 }}/>
@@ -200,8 +200,8 @@ const Input: React.FC = () => {
                     <div style={{ flexGrow: 4 }}/>
                     <div className="keypad-placeholder"/>
                     <InputButton symbol="\text{Result}" grow={1}/>
-                    <InputButton symbol="\text{Vars}" grow={1} title="Open Variable Dialog"/>
-                    <InputButton symbol="\text{Funcs}" grow={1} title="Open Function Dialog"/>
+                    <InputButton symbol="\text{Vars}" grow={1} title="查看变量列表"/>
+                    <InputButton symbol="\text{Funcs}" grow={1} title="查看函数列表"/>
                     <div style={{ flexGrow: 2 }}/>
                 </div>
             </div>

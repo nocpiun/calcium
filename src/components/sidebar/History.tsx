@@ -29,8 +29,8 @@ const History: React.FC = () => {
     return (
         <div className="history">
             <div className="history-header">
-                <h1>History</h1>
-                <span className="tip"><kbd>ctrl+d</kbd> to reset records</span>
+                <h1>历史记录</h1>
+                <span className="tip"><kbd>ctrl+d</kbd> 清空记录</span>
             </div>
             <div className="history-main" id="history-list">
                 {
