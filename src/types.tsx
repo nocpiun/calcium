@@ -80,6 +80,10 @@ export interface NumberToken extends ValueToken<number> {
     numberSys: NumberSys
 }
 
+export interface OperatorToken extends ValueToken<Operator> {
+    isFirst: boolean
+}
+
 export interface BracketToken extends ChildrenToken {
     factorial: boolean
 }

@@ -7,10 +7,10 @@ import { Operator, NumberSys } from "../types";
 import type {
     MathFunction,
     Token,
-    ValueToken,
     ChildrenToken,
     RootToken,
     NumberToken,
+    OperatorToken,
     BracketToken,
     FunctionToken
 } from "../types";
@@ -146,8 +146,9 @@ export default class Compiler {
                         
                         root.children.push({
                             type: "operator",
-                            value: Operator.MUL
-                        } as ValueToken<Operator>);
+                            value: Operator.MUL,
+                            isFirst: false
+                        } as OperatorToken);
 
                         symbol = this.variables.get(symbol) ?? (constants.get(symbol) ?? "NaN").toString();
                         addNumber(symbol);
@@ -170,8 +171,9 @@ export default class Compiler {
                 if(i !== 0 && tempNumber !== "") addNumber(tempNumber);
                 root.children.push({
                     type: "operator",
-                    value: symbol as Operator
-                } as ValueToken<Operator>);
+                    value: symbol as Operator,
+                    isFirst: i === 0
+                } as OperatorToken);
 
                 tempNumber = "";
             } else if(Is.leftBracket(symbol)) { // left bracket
@@ -243,8 +245,9 @@ export default class Compiler {
                 for(let j = 0; j < parseInt(symbol[1]) - 1; j++) {
                     root.children.push({
                         type: "operator",
-                        value: Operator.MUL
-                    } as ValueToken<Operator>);
+                        value: Operator.MUL,
+                        isFirst: false
+                    } as OperatorToken);
                     root.children.push(targetNumberToken);
                 }
 

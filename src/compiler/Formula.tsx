@@ -6,9 +6,9 @@ import Transformer from "./Transformer";
 
 import { NumberSys, Operator } from "../types";
 import type {
-    ValueToken,
     ChildrenToken,
     NumberToken,
+    OperatorToken,
     BracketToken,
     FunctionToken
 } from "../types";
@@ -24,7 +24,7 @@ export default class Formula {
     public evaluate(): number {
         const root = this.token;
         var numbers: List<NumberToken> = new List();
-        var operators: List<ValueToken<Operator>> = new List();
+        var operators: List<OperatorToken> = new List();
 
         for(let i = 0; i < root.children.length; i++) {
             var token = root.children[i];
@@ -57,7 +57,7 @@ export default class Formula {
                     });
                     break;
                 case "operator":
-                    operators.add(token as ValueToken<Operator>);
+                    operators.add(token as OperatorToken);
                     break;
                 case "bracket":
                     var value = (token as BracketToken).factorial
@@ -191,7 +191,7 @@ export default class Formula {
             var operator = operators.get(i).value;
 
             if(operator === Operator.ADD || operator === Operator.SUB) {
-                if(i === 0 && operator === Operator.SUB && firstLoop) {
+                if(firstLoop && operators.get(i).isFirst) {
                     var origin = numbers.get(i);
                     numbers.set(i, {
                         type: "number",
