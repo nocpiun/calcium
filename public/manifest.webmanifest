@@ -1,0 +1,27 @@
+{
+    "short_name": "Calcium",
+    "name": "Calcium: A web-based calculator app",
+    "icons": [
+        {
+            "src": "/icon.png",
+            "type": "image/png",
+            "sizes": "300x300"
+        }
+    ],
+    "id": "/",
+    "start_url": "/",
+    "background_color": "#0e1117",
+    "display": "standalone",
+    "scope": "/",
+    "theme_color": "#0e1117",
+    "shortcuts": [
+        {
+            "name": "Calcium Calculator",
+            "short_name": "Calcium",
+            "description": "A web-based calculator app",
+            "url": "/",
+            "icons": [{ "src": "/icon.png", "sizes": "300x300" }]
+        }
+    ],
+    "description": "A web-based calculator app"
+}
