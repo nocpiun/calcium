@@ -8,7 +8,7 @@
         flex-direction: column;
         justify-content: space-between;
         background-color: var(--ca-light1);
-        border-right: @border-style;
+        .border-line(right);
         .mode-switcher {
             font-size: 0;
             .mode-button-container {
@@ -55,7 +55,7 @@
         display: flex;
         flex-direction: column;
         background-color: var(--ca-light2);
-        border-right: @border-style;
+        .border-line(right);
         &-header {
             padding: 30px;
             padding-bottom: 20px;
@@ -86,6 +86,7 @@
                 height: 60px;
                 padding-left: 20px;
                 padding-bottom: 20px;
+                cursor: default;
                 .item-input {
                     flex: 1;
                     color: var(--ca-gray1);

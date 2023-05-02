@@ -74,3 +74,25 @@
         }
     }
 }
+
+@border-style: 1px solid var(--ca-gray2);
+
+.border-line(@position) when (@position = top) {
+    border-top: @border-style;
+}
+
+.border-line(@position) when (@position = bottom) {
+    border-bottom: @border-style;
+}
+
+.border-line(@position) when (@position = left) {
+    border-left: @border-style;
+}
+
+.border-line(@position) when (@position = right) {
+    border-right: @border-style;
+}
+
+.border-line(@position) when (@position = all) {
+    border: @border-style;
+}
