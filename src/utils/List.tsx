@@ -1,4 +1,5 @@
 import Utils from "./Utils";
+import Logger from "./Logger";
 
 export default class List<T = any> {
     public value: T[];
@@ -29,7 +30,7 @@ export default class List<T = any> {
     }
 
     public get(index: number): T {
-        if(index < 0 || index >= this.length) throw new Error("Cannot find the specified item in the list.");
+        if(index < 0 || index >= this.length) Logger.error("Cannot find the specified item in the list.");
 
         return this.value[index];
     }
@@ -39,7 +40,7 @@ export default class List<T = any> {
     }
 
     public remove(index: number): void {
-        if(index < 0 || index >= this.length) throw new Error("Cannot find the specified item in the list.");
+        if(index < 0 || index >= this.length) Logger.error("Cannot find the specified item in the list.");
 
         var j = index;
         while(j < this.value.length) {

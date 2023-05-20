@@ -9,6 +9,10 @@ import Utils from "../../utils/Utils";
 import Compiler from "../../compiler";
 import Is from "../../compiler/Is";
 import Transformer from "../../compiler/Transformer";
+import Logger from "../../utils/Logger";
+
+import useEmitter from "../../hooks/useEmitter";
+import useEaster from "../../hooks/useEaster";
 
 import NumberBox from "./NumberBox";
 import InputBox, { cursor } from "../InputBox";
@@ -124,9 +128,13 @@ const ProgrammingOutput: React.FC = () => {
                 displayValue = Transformer.decToBin(result);
                 break;
         }
-        !error
-        ? setOutputContent("=\\text{"+ displayValue +"}")
-        : setOutputContent("=\\text{"+ errorText +"}");
+        if(!error) {
+            setOutputContent("=\\text{"+ displayValue +"}");
+            Logger.info(rawText.replaceAll(" ", "") +"="+ result);
+        } else {
+            setOutputContent("=\\text{"+ errorText +"}");
+            Logger.error("Error");
+        }
 
         if(error) return;
 
@@ -140,14 +148,6 @@ const ProgrammingOutput: React.FC = () => {
     };
 
     useEffect(() => {
-        Emitter.get().on("clear-input", () => setOutputContent(""));
-        
-        Emitter.get().on("number-sys-chose", (type: NumberSys) => {
-            setNumberSys(type);
-        });
-    }, []);
-
-    useEffect(() => {
         if(outputContent !== "") return;
 
         setHex("0");
@@ -155,6 +155,15 @@ const ProgrammingOutput: React.FC = () => {
         setOct("0");
         setBin("0");
     }, [outputContent]);
+
+    useEmitter([
+        ["clear-input", () => setOutputContent("")],
+        ["number-sys-chose", (type: NumberSys) => {
+            setNumberSys(type);
+        }]
+    ]);
+
+    useEaster(setOutputContent); // Sing, Dance, Rap, Basketball
 
     return (
         <div className="output-container">

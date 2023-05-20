@@ -7,6 +7,7 @@ import InputBox, { specialSymbols, cursor } from "../InputBox";
 
 import Utils from "../../utils/Utils";
 import Emitter from "../../utils/Emitter";
+import Logger from "../../utils/Logger";
 import { MouseDirection } from "../../types";
 
 import GraphingWorker from "../../workers/graphing.worker.ts";
@@ -26,6 +27,7 @@ const Graphing: React.FC = memo(() => {
         if(value === cursor) return;
         setList([...currentList, value]);
         Emitter.get().emit("add-function", value);
+        Logger.info("Function rendered: "+ value.replaceAll(" ", ""));
 
         inputBox.reset();
     };

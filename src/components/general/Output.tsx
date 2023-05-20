@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import { BlockMath } from "react-katex";
 
 import { errorText } from "../../global";
@@ -7,6 +7,10 @@ import Emitter from "../../utils/Emitter";
 import Utils from "../../utils/Utils";
 import Compiler from "../../compiler";
 import Is from "../../compiler/Is";
+import Logger from "../../utils/Logger";
+
+import useEmitter from "../../hooks/useEmitter";
+import useEaster from "../../hooks/useEaster";
 
 import InputBox, { specialSymbols, cursor } from "../InputBox";
 import type Dialog from "../Dialog";
@@ -166,9 +170,13 @@ const Output: React.FC = () => {
 
         // Display the result
         if(result.indexOf("Infinity") > -1) result = "\\infty";
-        !error
-        ? setOutputContent("="+ result)
-        : setOutputContent("=\\text{"+ errorText +"}");
+        if(!error) {
+            setOutputContent("="+ result);
+            Logger.info("Calculated: "+ rawText.replaceAll(" ", "") +"="+ result);
+        } else {
+            setOutputContent("=\\text{"+ errorText +"}");
+            Logger.error("Error");
+        }
 
         if(error) return;
 
@@ -176,16 +184,11 @@ const Output: React.FC = () => {
         Emitter.get().emit("add-record", rawText, result);
     };
 
-    useEffect(() => {
-        Emitter.get().on("clear-input", () => setOutputContent(""));
+    useEmitter([
+        ["clear-input", () => setOutputContent("")]
+    ]);
 
-        document.body.addEventListener("keydown", (e: KeyboardEvent) => {
-            if(e.ctrlKey && e.key === "m") { // ctrl + m
-                setOutputContent("c^{xk}+c^{trl}"); // I'm iKun
-                return;
-            }
-        });
-    }, []);
+    useEaster(setOutputContent); // K U N
 
     return (
         <div className="output-container">
