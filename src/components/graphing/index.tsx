@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { memo, useState, useRef, useEffect } from "react";
 import { InlineMath } from "react-katex";
+import download from "downloadjs";
 
 import ListItem from "./ListItem";
 import InputBox, { specialSymbols, cursor } from "../InputBox";
@@ -193,6 +194,62 @@ const Graphing: React.FC = memo(() => {
             setList([]);
 
             reloader(reloadTrigger + 1);
+        });
+
+        Emitter.get().on("graphing-capture", () => {
+            const dataUrl = canvas.toDataURL();
+            var tempCanvas = document.createElement("canvas");
+            var tempCtx = tempCanvas.getContext("2d");
+            var image = new Image();
+            if(!tempCtx) return;
+
+            image.src = dataUrl;
+            image.onload = () => {
+                if(!tempCtx) return;
+
+                tempCanvas.width = image.width;
+                tempCanvas.height = image.height;
+                tempCtx.drawImage(image, 0, 0, image.width, image.height);
+                var imageData = tempCtx.getImageData(0, 0, image.width, image.height).data;
+
+                for(let i = 0; i < imageData.length; i += 4) {
+                    var r = imageData[i],
+                        g = imageData[i + 1],
+                        b = imageData[i + 2];
+
+                    if(!(
+                        (r === g && g === b && b === 30) ||
+                        (r === g && g === b && b === 31) ||
+                        (r === g && g === b && b === 32) ||
+                        (r === g && g === b && b === 33) ||
+                        (r === g && g === b && b === 34) ||
+                        (r === g && g === b && b === 35) ||
+                        (r === g && g === b && b === 36)
+                    )) {
+                        imageData[i] = imageData[i + 1] = imageData[i + 2] = imageData[i + 3] = 255;
+                    }
+                }
+
+                var matrix = tempCtx.createImageData(image.width, image.height);
+                matrix.data.set(imageData);
+                tempCtx.putImageData(matrix, 0, 0);
+
+                tempCanvas.toBlob((blob) => {
+                    if(!blob) return;
+                    const url = URL.createObjectURL(blob);
+                    window.open(url, "_blank");
+                    download(url);
+                    Logger.info("Image Captured: "+ url);
+                });
+            };
+
+            // tempCanvas.toBlob((blob) => {
+            //     if(!blob) return;
+            //     const url = URL.createObjectURL(blob);
+            //     window.open(url, "_blank");
+            //     download(url);
+            //     Logger.info("Image Captured: "+ url);
+            // });
         });
 
         return () => { // Unregister renderer and worker

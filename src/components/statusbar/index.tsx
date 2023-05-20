@@ -41,7 +41,16 @@ const StatusBar: React.FC = () => {
                         ? <BarItem title={"FPS: "+ fps.toFixed(0)} disabled/>
                         : <></>
                     }
-                    <BarItem title="重载" onClick={() => Emitter.get().emit("graphing-reload")} tooltip="Reload Graphing Worker"/>
+                    {
+                        mode === Mode.GRAPHING
+                        ? <BarItem title="捕捉图像" onClick={() => Emitter.get().emit("graphing-capture")} tooltip="捕捉并下载函数图像"/>
+                        : <></>
+                    }
+                    {
+                        mode === Mode.GRAPHING
+                        ? <BarItem title="重载" onClick={() => Emitter.get().emit("graphing-reload")} tooltip="函数图像渲染重载"/>
+                        : <></>
+                    }
                     <BarItem title="快捷键" onClick={() => shortcutDialogRef.current?.open()}/>
                     <BarItem title={"Calcium "+ version} onClick={() => aboutDialogRef.current?.open()}/>
                 </div>
