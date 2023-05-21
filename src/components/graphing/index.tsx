@@ -6,6 +6,8 @@ import download from "downloadjs";
 import ListItem from "./ListItem";
 import InputBox, { specialSymbols, cursor } from "../InputBox";
 
+import useEmitter from "../../hooks/useEmitter";
+
 import Utils from "../../utils/Utils";
 import Emitter from "../../utils/Emitter";
 import Logger from "../../utils/Logger";
@@ -176,17 +178,7 @@ const Graphing: React.FC = memo(() => {
             workerRef.current.postMessage({ type: "wheel", dy: e.deltaY });
         });
 
-        Emitter.get().on("add-function", (rawText: string) => {
-            if(!workerRef.current) return;
-            workerRef.current.postMessage({ type: "add-function", rawText });
-        });
-        
-        Emitter.get().on("clear-function", () => {
-            if(!workerRef.current) return;
-            setList([]);
-            workerRef.current.postMessage({ type: "clear-function" });
-        });
-
+        // "graphing-reload" cannot be moved into `useEmitter` hook
         Emitter.get().on("graphing-reload", () => {
             if(!workerRef.current) return;
             workerRef.current.postMessage({ type: "reset" });
@@ -196,7 +188,25 @@ const Graphing: React.FC = memo(() => {
             reloader(reloadTrigger + 1);
         });
 
-        Emitter.get().on("graphing-capture", () => {
+        return () => { // Unregister renderer and worker
+            if(!workerRef.current) return;
+            workerRef.current.postMessage({ type: "reset" });
+            workerRef.current.terminate();
+        };
+    }, [reloadTrigger]);
+
+    useEmitter([
+        ["add-function", (rawText: string) => {
+            if(!workerRef.current) return;
+            workerRef.current.postMessage({ type: "add-function", rawText });
+        }],
+        ["clear-function", () => {
+            if(!workerRef.current) return;
+            setList([]);
+            workerRef.current.postMessage({ type: "clear-function" });
+        }],
+        ["graphing-capture", () => {
+            const canvas = Utils.getElem<HTMLCanvasElement>("graphing");
             const dataUrl = canvas.toDataURL();
             var tempCanvas = document.createElement("canvas");
             var tempCtx = tempCanvas.getContext("2d");
@@ -217,15 +227,27 @@ const Graphing: React.FC = memo(() => {
                         g = imageData[i + 1],
                         b = imageData[i + 2];
 
-                    if(!(
-                        (r === g && g === b && b === 30) ||
-                        (r === g && g === b && b === 31) ||
-                        (r === g && g === b && b === 32) ||
-                        (r === g && g === b && b === 33) ||
-                        (r === g && g === b && b === 34) ||
-                        (r === g && g === b && b === 35) ||
-                        (r === g && g === b && b === 36)
-                    )) {
+                    if(
+                        (
+                            !(
+                                (r === g && g === b && b === 30) ||
+                                (r === g && g === b && b === 31) ||
+                                (r === g && g === b && b === 32) ||
+                                (r === g && g === b && b === 33) ||
+                                (r === g && g === b && b === 34) ||
+                                (r === g && g === b && b === 35) ||
+                                (r === g && g === b && b === 36)
+                            ) && !Utils.isDarkMode()
+                        ) ||
+                        (
+                            !(
+                                (r === g && g === b && b === 252) ||
+                                (r === g && g === b && b === 253) ||
+                                (r === g && g === b && b === 254) ||
+                                (r === g && g === b && b === 255)
+                            ) && Utils.isDarkMode()
+                        )
+                    ) {
                         imageData[i] = imageData[i + 1] = imageData[i + 2] = imageData[i + 3] = 255;
                     }
                 }
@@ -242,22 +264,8 @@ const Graphing: React.FC = memo(() => {
                     Logger.info("Image Captured: "+ url);
                 });
             };
-
-            // tempCanvas.toBlob((blob) => {
-            //     if(!blob) return;
-            //     const url = URL.createObjectURL(blob);
-            //     window.open(url, "_blank");
-            //     download(url);
-            //     Logger.info("Image Captured: "+ url);
-            // });
-        });
-
-        return () => { // Unregister renderer and worker
-            if(!workerRef.current) return;
-            workerRef.current.postMessage({ type: "reset" });
-            workerRef.current.terminate();
-        };
-    }, [reloadTrigger]);
+        }]
+    ]);
 
     return (
         <>
