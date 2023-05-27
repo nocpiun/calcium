@@ -1,0 +1,342 @@
+[
+    {
+        "id": "length",
+        "name": "长度",
+        "isDefault": true,
+        "units": [
+            {
+                "name": "nm",
+                "displayName": "纳米",
+                "transform": 0.000000001,
+                "isBase": false
+            },
+            {
+                "name": "μm",
+                "displayName": "微米",
+                "transform": 0.000001,
+                "isBase": false
+            },
+            {
+                "name": "mm",
+                "displayName": "毫米",
+                "transform": 0.001,
+                "isBase": false
+            },
+            {
+                "name": "cm",
+                "displayName": "厘米",
+                "transform": 0.01,
+                "isBase": false
+            },
+            {
+                "name": "dm",
+                "displayName": "分米",
+                "transform": 0.1,
+                "isBase": false
+            },
+            {
+                "name": "m",
+                "displayName": "米",
+                "transform": 1,
+                "isBase": true
+            },
+            {
+                "name": "km",
+                "displayName": "千米",
+                "transform": 1000,
+                "isBase": false
+            }
+        ]
+    },
+    {
+        "id": "weight",
+        "name": "质量",
+        "isDefault": false,
+        "units": [
+            {
+                "name": "μg",
+                "displayName": "微克",
+                "transform": 0.000000001,
+                "isBase": false
+            },
+            {
+                "name": "mg",
+                "displayName": "毫克",
+                "transform": 0.000001,
+                "isBase": false
+            },
+            {
+                "name": "g",
+                "displayName": "克",
+                "transform": 0.001,
+                "isBase": false
+            },
+            {
+                "name": "jin",
+                "displayName": "斤",
+                "transform": 0.5,
+                "isBase": false
+            },
+            {
+                "name": "kg",
+                "displayName": "千克",
+                "transform": 1,
+                "isBase": true
+            },
+            {
+                "name": "t",
+                "displayName": "吨",
+                "transform": 1000,
+                "isBase": false
+            }
+        ]
+    },
+    {
+        "id": "area",
+        "name": "面积",
+        "isDefault": false,
+        "units": [
+            {
+                "name": "μm²",
+                "displayName": "平方微米",
+                "transform": 0.000000000001,
+                "isBase": false
+            },
+            {
+                "name": "mm²",
+                "displayName": "平方毫米",
+                "transform": 0.000001,
+                "isBase": false
+            },
+            {
+                "name": "cm²",
+                "displayName": "平方厘米",
+                "transform": 0.0001,
+                "isBase": false
+            },
+            {
+                "name": "dm²",
+                "displayName": "平方分米",
+                "transform": 0.01,
+                "isBase": false
+            },
+            {
+                "name": "m²",
+                "displayName": "平方米",
+                "transform": 1,
+                "isBase": true
+            },
+            {
+                "name": "are",
+                "displayName": "公亩",
+                "transform": 100,
+                "isBase": false
+            },
+            {
+                "name": "ha",
+                "displayName": "公顷",
+                "transform": 10000,
+                "isBase": false
+            },
+            {
+                "name": "km²",
+                "displayName": "平方千米",
+                "transform": 1000000,
+                "isBase": false
+            }
+        ]
+    },
+    {
+        "id": "volume",
+        "name": "体积",
+        "isDefault": false,
+        "units": [
+            {
+                "name": "mm³",
+                "displayName": "立方毫米",
+                "transform": 0.000000001,
+                "isBase": false
+            },
+            {
+                "name": "cm³",
+                "displayName": "立方厘米",
+                "transform": 0.000001,
+                "isBase": false
+            },
+            {
+                "name": "mL",
+                "displayName": "毫升",
+                "transform": 0.000001,
+                "isBase": false
+            },
+            {
+                "name": "dm³",
+                "displayName": "立方分米",
+                "transform": 0.001,
+                "isBase": false
+            },
+            {
+                "name": "L",
+                "displayName": "升",
+                "transform": 0.001,
+                "isBase": false
+            },
+            {
+                "name": "hL",
+                "displayName": "百升",
+                "transform": 0.1,
+                "isBase": false
+            },
+            {
+                "name": "m³",
+                "displayName": "立方米",
+                "transform": 1,
+                "isBase": true
+            },
+            {
+                "name": "km³",
+                "displayName": "立方千米",
+                "transform": 1000000,
+                "isBase": false
+            }
+        ]
+    },
+    {
+        "id": "temperature",
+        "name": "温度",
+        "isDefault": false,
+        "units": [
+            {
+                "name": "°C",
+                "displayName": "摄氏度",
+                "transform": 1,
+                "isBase": true
+            }
+        ]
+    },
+    {
+        "id": "velocity",
+        "name": "速度",
+        "isDefault": false,
+        "units": [
+            {
+                "name": "m/s",
+                "displayName": "米每秒",
+                "transform": 1,
+                "isBase": true
+            }
+        ]
+    },
+    {
+        "id": "thermal",
+        "name": "热能",
+        "isDefault": false,
+        "units": [
+            {
+                "name": "J",
+                "displayName": "焦耳",
+                "transform": 1,
+                "isBase": true
+            },
+            {
+                "name": "kJ",
+                "displayName": "千焦",
+                "transform": 1000,
+                "isBase": false
+            },
+            {
+                "name": "kW·h",
+                "displayName": "千瓦时",
+                "transform": 3600000,
+                "isBase": false
+            },
+            {
+                "name": "kg·m",
+                "displayName": "千克米",
+                "transform": 9.80392,
+                "isBase": false
+            }
+        ]
+    },
+    {
+        "id": "pressure",
+        "name": "压强",
+        "isDefault": false,
+        "units": [
+            {
+                "name": "Pa",
+                "displayName": "帕斯卡",
+                "transform": 1,
+                "isBase": true
+            },
+            {
+                "name": "hPa",
+                "displayName": "百帕",
+                "transform": 100,
+                "isBase": false
+            },
+            {
+                "name": "kPa",
+                "displayName": "千帕",
+                "transform": 1000,
+                "isBase": false
+            },
+            {
+                "name": "bar",
+                "displayName": "巴",
+                "transform": 100000,
+                "isBase": false
+            },
+            {
+                "name": "atm",
+                "displayName": "大气压",
+                "transform": 101325,
+                "isBase": false
+            }
+        ]
+    },
+    {
+        "id": "power",
+        "name": "功率",
+        "isDefault": false,
+        "units": [
+            {
+                "name": "W",
+                "displayName": "瓦特",
+                "transform": 1,
+                "isBase": true
+            },
+            {
+                "name": "kW",
+                "displayName": "千瓦",
+                "transform": 1000,
+                "isBase": false
+            }
+        ]
+    },
+    {
+        "id": "force",
+        "name": "力",
+        "isDefault": false,
+        "units": [
+            {
+                "name": "dyn",
+                "displayName": "达因",
+                "transform": 0.00001,
+                "isBase": false
+            },
+            {
+                "name": "N",
+                "displayName": "牛顿",
+                "transform": 1,
+                "isBase": true
+            },
+            {
+                "name": "kN",
+                "displayName": "千牛",
+                "transform": 1000,
+                "isBase": false
+            }
+        ]
+    }
+]

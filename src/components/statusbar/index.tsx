@@ -9,6 +9,7 @@ import BarItem from "./BarItem";
 import Dialog from "../Dialog";
 import AboutDialog from "../../dialogs/AboutDialog";
 import ShortcutDialog from "../../dialogs/ShortcutDialog";
+import ConvertingDialog from "../../dialogs/ConvertingDialog";
 
 import Emitter from "../../utils/Emitter";
 import { version } from "../../global";
@@ -21,6 +22,7 @@ const StatusBar: React.FC = () => {
     const [fps, setFPS] = useState<number>(0);
     const aboutDialogRef = useRef<Dialog>(null);
     const shortcutDialogRef = useRef<Dialog>(null);
+    const convertingDialogRef = useRef<Dialog>(null);
 
     useEffect(() => {
         Emitter.get().on("graphing-fps", (currentFPS: number) => {
@@ -51,6 +53,7 @@ const StatusBar: React.FC = () => {
                         ? <BarItem title="重载" onClick={() => Emitter.get().emit("graphing-reload")} tooltip="函数图像渲染重载"/>
                         : <></>
                     }
+                    <BarItem title="换算 (Beta)" onClick={() => convertingDialogRef.current?.open()}/>
                     <BarItem title="快捷键" onClick={() => shortcutDialogRef.current?.open()}/>
                     <BarItem title={"Calcium "+ version} onClick={() => aboutDialogRef.current?.open()}/>
                 </div>
@@ -59,6 +62,7 @@ const StatusBar: React.FC = () => {
             {/* Dialogs */}
             <AboutDialog ref={aboutDialogRef}/>
             <ShortcutDialog ref={shortcutDialogRef}/>
+            <ConvertingDialog ref={convertingDialogRef}/>
         </>
     );
 }

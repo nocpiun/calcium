@@ -52,7 +52,7 @@ const AboutDialog: React.FC<AboutDialogProps> = forwardRef<Dialog, AboutDialogPr
         const [isLicenseVisible, setLicenseVisible] = useState<boolean>(false);
 
         return (
-            <Dialog title="关于" id={"about-dialog--"+ useId()} ref={ref}>
+            <Dialog title="关于" className="about-dialog" id={"about-dialog--"+ useId()} ref={ref}>
                 <p><img src="/icon.png" alt="icon" width={18}/> <b>Calcium</b> 是一个由React+Typescript编写的基于web的网页计算器.</p>
 
                 <ul>

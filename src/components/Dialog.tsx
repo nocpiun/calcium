@@ -7,6 +7,7 @@ import type { PropsWithChildren } from "../types";
 interface DialogProps extends PropsWithChildren {
     title: string
     id: string
+    className?: string
 }
 
 export default class Dialog extends Component<DialogProps, {}> {
@@ -22,7 +23,7 @@ export default class Dialog extends Component<DialogProps, {}> {
 
     public render(): ReactElement {
         return createPortal((
-            <dialog id={this.props.id} ref={this.dialogRef}>
+            <dialog id={this.props.id} className={this.props.className} ref={this.dialogRef}>
                 <div className="header-container">
                     <h1>{this.props.title}</h1>
                 </div>

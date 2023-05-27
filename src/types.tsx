@@ -106,3 +106,17 @@ export enum MouseDirection {
 export enum ZoomDirection {
     ZOOM_IN, ZOOM_OUT
 }
+
+export interface UnitType {
+    id: string
+    name: string
+    isDefault: boolean
+    units: UnitInfo[]
+}
+
+export interface UnitInfo {
+    name: string
+    displayName: string
+    transform: number
+    isBase: boolean
+}

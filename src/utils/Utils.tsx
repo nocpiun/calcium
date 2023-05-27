@@ -188,4 +188,12 @@ export default class Utils {
     public static isDarkMode(): boolean {
         return document.body.getAttribute("theme") === "dark";
     }
+
+    public static isAnyDialogOpen(): boolean {
+        var dialogs = document.getElementsByTagName("dialog");
+        for(let i = 0; i < dialogs.length; i++) {
+            if(dialogs[i].open) return true;
+        }
+        return false;
+    }
 }
