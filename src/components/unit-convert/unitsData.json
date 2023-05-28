@@ -11,6 +11,12 @@
                 "isBase": false
             },
             {
+                "name": "mil",
+                "displayName": "密尔",
+                "transform": 0.0000254,
+                "isBase": false
+            },
+            {
                 "name": "μm",
                 "displayName": "微米",
                 "transform": 0.000001,
@@ -29,9 +35,21 @@
                 "isBase": false
             },
             {
+                "name": "in",
+                "displayName": "英寸",
+                "transform": 0.0254,
+                "isBase": false
+            },
+            {
                 "name": "dm",
                 "displayName": "分米",
                 "transform": 0.1,
+                "isBase": false
+            },
+            {
+                "name": "ft",
+                "displayName": "英尺",
+                "transform": 0.3048,
                 "isBase": false
             },
             {
@@ -41,9 +59,33 @@
                 "isBase": true
             },
             {
+                "name": "li",
+                "displayName": "里",
+                "transform": 500,
+                "isBase": false
+            },
+            {
                 "name": "km",
                 "displayName": "千米",
                 "transform": 1000,
+                "isBase": false
+            },
+            {
+                "name": "mi",
+                "displayName": "英里",
+                "transform": 1609.26939,
+                "isBase": false
+            },
+            {
+                "name": "au",
+                "displayName": "天文单位",
+                "transform": 149600000000,
+                "isBase": false
+            },
+            {
+                "name": "ly",
+                "displayName": "光年",
+                "transform": 9467000000000000,
                 "isBase": false
             }
         ]
@@ -66,9 +108,27 @@
                 "isBase": false
             },
             {
+                "name": "ct",
+                "displayName": "克拉",
+                "transform": 0.000002,
+                "isBase": false
+            },
+            {
                 "name": "g",
                 "displayName": "克",
                 "transform": 0.001,
+                "isBase": false
+            },
+            {
+                "name": "qian",
+                "displayName": "钱",
+                "transform": 0.005,
+                "isBase": false
+            },
+            {
+                "name": "liang",
+                "displayName": "两",
+                "transform": 0.05,
                 "isBase": false
             },
             {
@@ -82,6 +142,12 @@
                 "displayName": "千克",
                 "transform": 1,
                 "isBase": true
+            },
+            {
+                "name": "dan",
+                "displayName": "担",
+                "transform": 50,
+                "isBase": false
             },
             {
                 "name": "t",
@@ -170,6 +236,18 @@
                 "isBase": false
             },
             {
+                "name": "cL",
+                "displayName": "厘升",
+                "transform": 0.00001,
+                "isBase": false
+            },
+            {
+                "name": "dL",
+                "displayName": "公升",
+                "transform": 0.0001,
+                "isBase": false
+            },
+            {
                 "name": "dm³",
                 "displayName": "立方分米",
                 "transform": 0.001,
@@ -211,6 +289,12 @@
                 "displayName": "摄氏度",
                 "transform": 1,
                 "isBase": true
+            },
+            {
+                "name": "°Re",
+                "displayName": "列氏度",
+                "transform": 1.25,
+                "isBase": false
             }
         ]
     },
@@ -224,6 +308,18 @@
                 "displayName": "米每秒",
                 "transform": 1,
                 "isBase": true
+            },
+            {
+                "name": "km/s",
+                "displayName": "千米每秒",
+                "transform": 1000,
+                "isBase": false
+            },
+            {
+                "name": "c",
+                "displayName": "光速",
+                "transform": 299796000,
+                "isBase": false
             }
         ]
     },
@@ -335,6 +431,61 @@
                 "name": "kN",
                 "displayName": "千牛",
                 "transform": 1000,
+                "isBase": false
+            }
+        ]
+    },
+    {
+        "id": "data",
+        "name": "数据",
+        "isDefault": false,
+        "units": [
+            {
+                "name": "bit",
+                "displayName": "比特",
+                "transform": 0.125,
+                "isBase": false
+            },
+            {
+                "name": "b",
+                "displayName": "字节",
+                "transform": 1,
+                "isBase": true
+            },
+            {
+                "name": "kb",
+                "displayName": "千字节",
+                "transform": 1024,
+                "isBase": false
+            },
+            {
+                "name": "mb",
+                "displayName": "兆字节",
+                "transform": 1048576,
+                "isBase": false
+            },
+            {
+                "name": "gb",
+                "displayName": "千兆字节",
+                "transform": 1073741824,
+                "isBase": false
+            },
+            {
+                "name": "tb",
+                "displayName": "太字节",
+                "transform": 1099511627776,
+                "isBase": false
+            },
+            {
+                "name": "pb",
+                "displayName": "拍字节",
+                "transform": 1125900000000000,
+                "isBase": false
+            },
+            {
+                "name": "eb",
+                "displayName": "艾字节",
+                "transform": 1152900000000000000,
                 "isBase": false
             }
         ]

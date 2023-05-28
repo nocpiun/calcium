@@ -40,7 +40,7 @@ const ConvertingDialog: React.FC<ConvertingDialogProps> = forwardRef<Dialog, Con
                         // To prevent the data (state etc.) of the page component being not removed completely
                         unitsData.map((value: UnitType, index: number) => {
                             if(value.id === currentUnitType) {
-                                return <UnitsPage id={value.id}/>
+                                return <UnitsPage id={value.id} key={index}/>
                             }
                             return null;
                         })

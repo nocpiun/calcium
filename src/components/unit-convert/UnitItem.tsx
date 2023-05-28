@@ -22,11 +22,20 @@ const UnitItem: React.FC<UnitItemType> = (props) => {
         return -1;
     }
 
+    const handleClick = () => {
+        Emitter.get().emit("unit-value-reset");
+    };
+
     const handleInput = (value: string) => {
         Emitter.get().emit("unit-value-input", props.name, parseFloat(value) || 0);
     };
 
     useEmitter([
+        ["unit-value-reset", () => {
+            if(!inputRef.current) return;
+
+            inputRef.current.value = "0";
+        }],
         ["unit-value-input", (originUnitId: string, value: number) => {
             if(!inputRef.current) return;
             var originRate = getTransformRate(originUnitId);
@@ -51,6 +60,7 @@ const UnitItem: React.FC<UnitItemType> = (props) => {
                 <input
                     type="text"
                     id={"value-input--"+ props.name}
+                    onClick={() => handleClick()}
                     onChange={(e) => handleInput(e.target.value)}
                     defaultValue={0}
                     autoComplete="off"
