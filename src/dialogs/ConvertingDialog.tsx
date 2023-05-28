@@ -1,5 +1,4 @@
 import React, { forwardRef, useState, useId } from "react";
-import { InlineMath } from "react-katex";
 
 import UnitTypeButton from "../components/unit-convert/UnitTypeButton";
 import UnitsPage from "../components/unit-convert/UnitsPage";
