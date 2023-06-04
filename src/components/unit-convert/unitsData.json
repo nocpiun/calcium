@@ -372,6 +372,12 @@
                 "isBase": false
             },
             {
+                "name": "mbar",
+                "displayName": "巴",
+                "transform": 100,
+                "isBase": false
+            },
+            {
                 "name": "kPa",
                 "displayName": "千帕",
                 "transform": 1000,
@@ -381,6 +387,12 @@
                 "name": "bar",
                 "displayName": "巴",
                 "transform": 100000,
+                "isBase": false
+            },
+            {
+                "name": "mPa",
+                "displayName": "兆帕",
+                "transform": 1000000,
                 "isBase": false
             },
             {

@@ -27,6 +27,10 @@ const UnitItem: React.FC<UnitItemType> = (props) => {
     };
 
     const handleInput = (value: string) => {
+        // If inputing a float number (which has ".")
+        // This is in order to make the "." available for inputing
+        if(value[value.length - 1] === ".") return;
+
         Emitter.get().emit("unit-value-input", props.name, parseFloat(value) || 0);
     };
 
