@@ -13,6 +13,8 @@
 
 </div>
 
+![Screenshot](./images/screenshot.png)
+
 ## Description
 
 Calcium is a web-based calculator written in React + Typescript.
@@ -24,6 +26,15 @@ If you have any problem or idea, it's welcome to open an issue to let me know.
 ```
 Calculator -> calc -> Ca (Chemical Element) -> Calcium
 ```
+
+#### What functions does it include?
+
+- Basic calculating
+- Variable creating and storing
+- Function Images Graphing
+- Base conversion
+- Unit conversion
+- History recording
 
 ## Deploy & Use
 
