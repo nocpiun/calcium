@@ -158,6 +158,67 @@
         ]
     },
     {
+        "id": "time",
+        "name": "时间",
+        "isDefault": false,
+        "units": [
+            {
+                "name": "ns",
+                "displayName": "纳秒",
+                "transform": 0.000000001,
+                "isBase": false
+            },
+            {
+                "name": "μs",
+                "displayName": "微秒",
+                "transform": 0.000001,
+                "isBase": false
+            },
+            {
+                "name": "ms",
+                "displayName": "毫秒",
+                "transform": 0.001,
+                "isBase": false
+            },
+            {
+                "name": "s",
+                "displayName": "秒",
+                "transform": 1,
+                "isBase": true
+            },
+            {
+                "name": "min",
+                "displayName": "分",
+                "transform": 60,
+                "isBase": false
+            },
+            {
+                "name": "h",
+                "displayName": "时",
+                "transform": 3600,
+                "isBase": false
+            },
+            {
+                "name": "day",
+                "displayName": "天",
+                "transform": 86400,
+                "isBase": false
+            },
+            {
+                "name": "week",
+                "displayName": "周",
+                "transform": 604800,
+                "isBase": false
+            },
+            {
+                "name": "yrs",
+                "displayName": "年",
+                "transform": 31536000,
+                "isBase": false
+            }
+        ]
+    },
+    {
         "id": "area",
         "name": "面积",
         "isDefault": false,

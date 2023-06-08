@@ -123,6 +123,10 @@ export default class InputBox extends Component<InputBoxProps, InputBoxState> {
             if(e.ctrlKey) return;
             if(!Utils.isAllowedSymbol(e.key)) return;
             if(e.key === "Enter") e.preventDefault();
+            if(e.key === " ") {
+                e.preventDefault();
+                return;
+            }
             if(Utils.isAnyDialogOpen()) return;
             
             var inputValue = e.key;

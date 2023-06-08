@@ -36,7 +36,7 @@ const Input: React.FC = () => {
                     <InputButton symbol="|a|" inputValue="|" grow={1}/>
                     <InputButton symbol="e" grow={1}/>
                     <InputButton symbol="\pi" grow={1}/>
-                    <InputButton symbol="," grow={1}/>
+                    <InputButton symbol="x^x" inputValue="\text{xPx}(" grow={1}/>
                     <div className="keypad-placeholder"/>
                     <InputButton symbol="f" grow={1}/>
                     <InputButton symbol="g" grow={1}/>
@@ -197,7 +197,8 @@ const Input: React.FC = () => {
                     <InputButton symbol="\text{Result}" grow={2}/>
                     <div className="keypad-placeholder"/>
                     <InputButton symbol="\Delta" grow={1}/>
-                    <div style={{ flexGrow: 4 }}/>
+                    <InputButton symbol="," grow={1}/>
+                    <div style={{ flexGrow: 3 }}/>
                     <div className="keypad-placeholder"/>
                     <InputButton symbol="\text{Result}" grow={1}/>
                     <InputButton symbol="\text{Vars}" grow={1} title="查看变量列表"/>

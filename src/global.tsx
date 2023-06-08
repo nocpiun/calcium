@@ -35,6 +35,7 @@ export const functions: Map<string, MathFunction> = new Map([
     ["text{stdevp}", [(...n) => Utils.stdevp(...n), -1]],
     ["text{nPr}",    [(n, r) => Utils.nPr(n, r),     2]],
     ["text{nCr}",    [(n, r) => Utils.nCr(n, r),     2]],
+    ["text{xPx}",    [(x) => Math.pow(x, x),         1]],
 ]);
 
 export const constants: Map<string, number> = new Map([
