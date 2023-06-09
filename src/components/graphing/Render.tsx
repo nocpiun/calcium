@@ -332,6 +332,26 @@ export default class Render {
         }
     }
 
+    private fullyRefreshFunctions(): void {
+        this.displayedPoints = [];
+
+        var unitPx = this.scale * this.spacing;
+
+        var beginX = -this.center.x / unitPx;
+        var endX = (this.canvas.width - this.center.x) / unitPx;
+
+        this.functionList.forEach((rawText: string) => {
+            for(let x1 = beginX; x1 <= endX; x1 += .01) {
+                var y1 = parseFloat(new Compiler(rawText.split(" "), new Map([["x", x1.toString()]])).compile());
+    
+                var x2 = x1 + .01;
+                var y2 = parseFloat(new Compiler(rawText.split(" "), new Map([["x", x2.toString()]])).compile());
+    
+                this.displayedPoints.push([new Point(x1, y1), new Point(x2, y2)]);
+            }
+        });
+    }
+
     private clear(): void {
         this.canvas.width = this.canvas.width;
         this.canvas.height = this.canvas.height;
@@ -385,5 +405,10 @@ export default class Render {
     public registerFunction(rawText: string): void {
         this.functionList.add(rawText);
         this.drawCompleteFunction(rawText);
+    }
+
+    public unregisterFunction(index: number): void {
+        this.functionList.remove(index);
+        this.fullyRefreshFunctions();
     }
 }

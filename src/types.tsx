@@ -2,6 +2,11 @@ import React, { ReactElement } from "react";
 
 export type StateSetter<S> = React.Dispatch<React.SetStateAction<S>>;
 
+export interface ReducerAction<T> {
+    type: T
+    payload: number
+}
+
 export enum Mode {
     GENERAL,
     GRAPHING,
@@ -30,6 +35,19 @@ export enum Operator {
 }
 
 export type MathFunction = [(...params: number[]) => number, number /* amount of params */];
+
+export interface RenderedFunction {
+    id: number
+    value: string
+}
+
+export interface IdReducerStateType {
+    id: number
+}
+
+export interface IdReducerActionType extends ReducerAction<"refresh"> {
+    
+}
 
 export type WorkerResponse = {
     imageBitmap: ImageBitmap

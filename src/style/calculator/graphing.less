@@ -76,6 +76,22 @@
                     align-items: center;
                     color: var(--ca-gray-light);
                 }
+                &-remove {
+                    flex: .5;
+                    display: flex;
+                    align-items: center;
+                    flex-flow: row;
+                    svg {
+                        width: 19px;
+                        height: 19px;
+                        margin-top: 3px;
+                        fill: var(--ca-gray-light);
+                        cursor: pointer;
+                        &:hover {
+                            fill: var(--ca-gray1);
+                        }
+                    }
+                }
             }
         }
     }

@@ -23,6 +23,9 @@ ctx.addEventListener("message", (e) => {
         case "add-function":
             renderer.registerFunction(req.rawText);
             break;
+        case "remove-function":
+            renderer.unregisterFunction(req.index);
+            break;
         case "clear-function":
             renderer.functionList = new List();
             break;

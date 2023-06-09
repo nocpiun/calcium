@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { memo, useState, useRef, useEffect } from "react";
+import React, { memo, useState, useRef, useReducer, useEffect } from "react";
 import { InlineMath } from "react-katex";
 import download from "downloadjs";
 
@@ -11,13 +11,28 @@ import useEmitter from "../../hooks/useEmitter";
 import Utils from "../../utils/Utils";
 import Emitter from "../../utils/Emitter";
 import Logger from "../../utils/Logger";
-import { MouseDirection } from "../../types";
+import {
+    MouseDirection,
+    RenderedFunction,
+    IdReducerStateType,
+    IdReducerActionType
+} from "../../types";
 
 import GraphingWorker from "../../workers/graphing.worker.ts";
 
+function idReducer(state: IdReducerStateType, action: IdReducerActionType) {
+    switch(action.type) {
+        case "refresh":
+            return { id: state.id + action.payload };
+        default:
+            return { id: state.id };
+    }
+}
+
 const Graphing: React.FC = memo(() => {
-    const [list, setList] = useState<string[]>([]);
+    const [list, setList] = useState<RenderedFunction[]>([]);
     const [reloadTrigger, reloader] = useState(0);
+    const [unusedId, dispatchId] = useReducer(idReducer, { id: 0 });
     const inputRef = useRef<InputBox>(null);
     const workerRef = useRef<GraphingWorker | null>(null);
 
@@ -28,7 +43,8 @@ const Graphing: React.FC = memo(() => {
 
         var value = inputBox.value;
         if(value === cursor) return;
-        setList([...currentList, value]);
+        setList([...currentList, { id: unusedId.id, value }]);
+        dispatchId({ type: "refresh", payload: 1 });
         Emitter.get().emit("add-function", value);
         Logger.info("Function rendered: "+ value.replaceAll(" ", ""));
 
@@ -195,6 +211,24 @@ const Graphing: React.FC = memo(() => {
         };
     }, [reloadTrigger]);
 
+    useEffect(() => {
+        Emitter.get().on("remove-function", async (id: number, index: number) => {
+            if(!workerRef.current) return;
+            workerRef.current.postMessage({ type: "remove-function", index });
+            
+            // Remove the function from the list
+            const currentList = await Utils.getCurrentState(setList);
+            for(let i = 0; i < currentList.length; i++) {
+                if(currentList[i].id === id) {
+                    // Clone the object of edited array by `Object.create`
+                    // Otherwise, `setList` won't work.
+                    setList(Object.create(Utils.arrayRemove(currentList, i)));
+                    break;
+                }
+            }
+        });
+    }, []);
+
     useEmitter([
         ["add-function", (rawText: string) => {
             if(!workerRef.current) return;
@@ -286,7 +320,7 @@ const Graphing: React.FC = memo(() => {
                 </div>
                 <div className="function-list" id="function-list">
                     {
-                        list.map((value, index) => <ListItem value={value} index={index} key={index}/>)
+                        list.map((item, index) => <ListItem {...item} index={index} key={index}/>)
                     }
                 </div>
             </div>
