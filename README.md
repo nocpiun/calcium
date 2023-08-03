@@ -40,33 +40,21 @@ Calculator -> calc -> Ca (Chemical Element) -> Calcium
 
 **It's recommended to use Calcium by [calc.nin.red](https://calc.nin.red). But if you want to deploy it locally, please continue reading the following content.**
 
-First, you need to make sure that your server (or computer) has installed Nodejs.
+First, you need to make sure that your server (or computer) has installed Nodejs & Docker.
 
-1. Download and install
+1. Pull docker repository
 
 ```bash
-git clone https://github.com/nocpiun/calcium.git
-cd calcium
-npm i
+docker pull noahhrreion/calcium
 ```
 
-2. Run the app
+2. Create container
 
 ```bash
-npm run start
+docker run -p 3000:3000 noahhrreion/calcium
 ```
 
 3. Enter `http://localhost:3000`, and you can start using Calcium.
-
-### To get update
-
-Do the following commands, then do `npm run start`.
-
-```bash
-git fetch origin main:temp
-git merge temp
-npm i
-```
 
 ## Contributing
 
