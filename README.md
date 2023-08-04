@@ -40,7 +40,7 @@ Calculator -> calc -> Ca (Chemical Element) -> Calcium
 
 **It's recommended to use Calcium by [calc.nin.red](https://calc.nin.red). But if you want to deploy it locally, please continue reading the following content.**
 
-First, you need to make sure that your server (or computer) has installed Nodejs & Docker.
+First, you need to make sure that your server (or computer) has installed Docker.
 
 1. Pull docker repository
 
