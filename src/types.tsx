@@ -76,6 +76,10 @@ export interface Token {
     type: TokenType
 }
 
+export interface PowerableToken extends Token {
+    exponential?: number
+}
+
 export interface ValueToken<V> extends Token {
     value: V
 }

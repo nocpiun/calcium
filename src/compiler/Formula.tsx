@@ -10,7 +10,8 @@ import type {
     NumberToken,
     OperatorToken,
     BracketToken,
-    FunctionToken
+    FunctionToken,
+    PowerableToken
 } from "../types";
 import Utils from "../utils/Utils";
 
@@ -63,10 +64,11 @@ export default class Formula {
                     var value = (token as BracketToken).factorial
                     ? Utils.factorial(new Formula(token as ChildrenToken).evaluate())
                     : new Formula(token as ChildrenToken).evaluate();
+                    var exponential = (token as PowerableToken).exponential ?? 1;
                     
                     numbers.add({
                         type: "number",
-                        value,
+                        value: Math.pow(value, exponential),
                         float: Is.float(value),
                         numberSys: NumberSys.DEC
                     });
@@ -86,11 +88,12 @@ export default class Formula {
                     for(let i = 0; i < param.length; i++) {
                         calculatedParam.push(new Formula(param[i] as ChildrenToken).evaluate());
                     }
-    
+
+                    var exponential = (token as PowerableToken).exponential ?? 1;
                     var value = func(...calculatedParam);
                     numbers.add({
                         type: "number",
-                        value,
+                        value: Math.pow(value, exponential),
                         float: Is.float(value),
                         numberSys: NumberSys.DEC
                     });

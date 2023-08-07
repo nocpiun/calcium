@@ -12,7 +12,8 @@ import type {
     NumberToken,
     OperatorToken,
     BracketToken,
-    FunctionToken
+    FunctionToken,
+    PowerableToken
 } from "../types";
 import Utils from "../utils/Utils";
 
@@ -53,7 +54,7 @@ export default class Compiler {
         var tempParamRaw: NumberSymbol[] = [];
         var tempParamList: Token[] = [];
 
-        const addNumber = (numberStr: string) => {
+        const addNumber = (numberStr: string): NumberToken => {
             var value = Utils.strToNum(numberStr, this.numberSys);
             var token: NumberToken = {
                 type: "number",
@@ -211,6 +212,15 @@ export default class Compiler {
                 }
 
                 this.secondaryRaw = [];
+
+                // pow (after right bracket or factorial sign)
+                // (i + di) is where the "^x" sign is
+                const di = this.raw[i + 1] === "!" ? 2 : 1;
+                if(i + di < this.raw.length && this.raw[i + di][0] === "^") {
+                    (root.children[root.children.length - di] as PowerableToken).exponential = parseInt(this.raw[i + di][1]);
+                    i++;
+                    continue;
+                }
             } else if(symbol === "|") { // absolute value
                 if(this.inAbs) {
                     var secondaryCompiler = new Compiler(this.secondaryRaw, this.variables, this.isProgrammingMode, this.numberSys);
@@ -262,6 +272,12 @@ export default class Compiler {
                 } as NumberToken);
                 
                 tempNumber = "";
+
+                if(i + 1 < this.raw.length && this.raw[i + 1][0] === "^") {
+                    (root.children[root.children.length - 1] as NumberToken).value = Math.pow(value, parseInt(this.raw[i + 1][1]));
+                    i++;
+                    continue;
+                }
             }
         }
 
