@@ -3,10 +3,13 @@ import React, { useState, useEffect, useRef } from "react";
 import HistoryItem from "./HistoryItem";
 import Emitter from "../../utils/Emitter";
 import Utils from "../../utils/Utils";
+import { NumberSys, RecordType } from "../../types";
 
-interface HistoryItemInfo {
+export interface HistoryItemInfo {
     input: string
     output: string
+    type: RecordType
+    numberSys?: NumberSys
 }
 
 const History: React.FC = () => {
@@ -16,9 +19,9 @@ const History: React.FC = () => {
     useEffect(() => {
         Utils.scrollToEnd("history-list", 1, 0);
 
-        Emitter.get().on("add-record", (input: string, output: string) => {
+        Emitter.get().on("add-record", (input: string, output: string, type: RecordType, numberSys?: NumberSys) => {
             setList((currentList) => {
-                return [...currentList, { input, output }];
+                return [...currentList, { input, output, type, numberSys }];
             });
         });
 

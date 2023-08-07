@@ -2,6 +2,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import { BlockMath } from "react-katex";
 
+import { HistoryItemInfo } from "../sidebar/History";
+
 import { errorText } from "../../global";
 import { NumberSys } from "../../types";
 import Emitter from "../../utils/Emitter";
@@ -10,6 +12,7 @@ import Compiler from "../../compiler";
 import Is from "../../compiler/Is";
 import Transformer from "../../compiler/Transformer";
 import Logger from "../../utils/Logger";
+import { RecordType } from "../../types";
 
 import useEmitter from "../../hooks/useEmitter";
 import useEaster from "../../hooks/useEaster";
@@ -139,7 +142,7 @@ const ProgrammingOutput: React.FC = () => {
         if(error) return;
 
         // Add the result to history list
-        Emitter.get().emit("add-record", rawText, "\\text{"+ result +"}");
+        Emitter.get().emit("add-record", rawText, "\\text{"+ displayValue +"}", RecordType.PROGRAMMING, numberSys);
 
         setHex(Transformer.decToHex(result));
         setDec(result);
@@ -160,6 +163,14 @@ const ProgrammingOutput: React.FC = () => {
         ["clear-input", () => setOutputContent("")],
         ["number-sys-chose", (type: NumberSys) => {
             setNumberSys(type);
+        }],
+        ["history-item-click", (itemInfo: HistoryItemInfo) => {
+            if(itemInfo.type !== RecordType.PROGRAMMING) return;
+            if(!inputRef.current) return;
+
+            inputRef.current.value = itemInfo.input +" "+ cursor;
+            setOutputContent("="+ itemInfo.output);
+            Emitter.get().emit("number-sys-chose", itemInfo.numberSys);
         }]
     ]);
 

@@ -142,3 +142,7 @@ export interface UnitInfo {
     transform: number
     isBase: boolean
 }
+
+export enum RecordType {
+    GENERAL, PROGRAMMING
+}

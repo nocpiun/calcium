@@ -2,12 +2,15 @@
 import React, { useState, useRef } from "react";
 import { BlockMath } from "react-katex";
 
+import { HistoryItemInfo } from "../sidebar/History";
+
 import { errorText } from "../../global";
 import Emitter from "../../utils/Emitter";
 import Utils from "../../utils/Utils";
 import Compiler from "../../compiler";
 import Is from "../../compiler/Is";
 import Logger from "../../utils/Logger";
+import { RecordType } from "../../types";
 
 import useEmitter from "../../hooks/useEmitter";
 import useEaster from "../../hooks/useEaster";
@@ -181,11 +184,18 @@ const Output: React.FC = () => {
         if(error) return;
 
         // Add the result to history list
-        Emitter.get().emit("add-record", rawText, result);
+        Emitter.get().emit("add-record", rawText, result, RecordType.GENERAL);
     };
 
     useEmitter([
-        ["clear-input", () => setOutputContent("")]
+        ["clear-input", () => setOutputContent("")],
+        ["history-item-click", (itemInfo: HistoryItemInfo) => {
+            if(itemInfo.type !== RecordType.GENERAL) return;
+            if(!inputRef.current) return;
+
+            inputRef.current.value = itemInfo.input +" "+ cursor;
+            setOutputContent("="+ itemInfo.output);
+        }]
     ]);
 
     useEaster(setOutputContent); // K U N
