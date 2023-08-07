@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 import HistoryItem from "./HistoryItem";
 import Emitter from "../../utils/Emitter";
@@ -11,6 +11,7 @@ interface HistoryItemInfo {
 
 const History: React.FC = () => {
     const [list, setList] = useState<HistoryItemInfo[]>([]);
+    const listElemRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         Utils.scrollToEnd("history-list", 1, 0);
@@ -26,13 +27,21 @@ const History: React.FC = () => {
         });
     }, []);
 
+    useEffect(() => {
+        if(!listElemRef.current) return;
+        
+        listElemRef.current.scroll({
+            top: listElemRef.current.scrollHeight
+        });
+    }, [list]);
+
     return (
         <div className="history">
             <div className="history-header">
                 <h1>历史记录</h1>
                 <span className="tip"><kbd>ctrl+d</kbd> 清空记录</span>
             </div>
-            <div className="history-main" id="history-list">
+            <div className="history-main" id="history-list" ref={listElemRef}>
                 {
                     list.map((item, index) => <HistoryItem {...item} key={index}/>)
                 }
