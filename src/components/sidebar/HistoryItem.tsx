@@ -16,7 +16,10 @@ const HistoryItem: React.FC<HistoryItemInfo> = (props) => {
                 <span><InlineMath>{props.input}</InlineMath></span>
             </div>
             <div className="item-output">
-                <span><InlineMath>{"= "+ props.output}</InlineMath></span>
+                <span>
+                    <InlineMath>{"= "+ props.output}</InlineMath>
+                    <div className={"item-number-sys sys-"+ props.numberSys}>{props.numberSys}</div>
+                </span>
             </div>
         </div>
     );

@@ -9,7 +9,7 @@ export interface HistoryItemInfo {
     input: string
     output: string
     type: RecordType
-    numberSys?: NumberSys
+    numberSys: NumberSys
 }
 
 const History: React.FC = () => {
@@ -19,7 +19,7 @@ const History: React.FC = () => {
     useEffect(() => {
         Utils.scrollToEnd("history-list", 1, 0);
 
-        Emitter.get().on("add-record", (input: string, output: string, type: RecordType, numberSys?: NumberSys) => {
+        Emitter.get().on("add-record", (input: string, output: string, type: RecordType, numberSys: NumberSys) => {
             setList((currentList) => {
                 return [...currentList, { input, output, type, numberSys }];
             });

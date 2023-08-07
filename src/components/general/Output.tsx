@@ -10,7 +10,7 @@ import Utils from "../../utils/Utils";
 import Compiler from "../../compiler";
 import Is from "../../compiler/Is";
 import Logger from "../../utils/Logger";
-import { RecordType } from "../../types";
+import { NumberSys, RecordType } from "../../types";
 
 import useEmitter from "../../hooks/useEmitter";
 import useEaster from "../../hooks/useEaster";
@@ -184,7 +184,7 @@ const Output: React.FC = () => {
         if(error) return;
 
         // Add the result to history list
-        Emitter.get().emit("add-record", rawText, result, RecordType.GENERAL);
+        Emitter.get().emit("add-record", rawText, result, RecordType.GENERAL, NumberSys.DEC);
     };
 
     useEmitter([
