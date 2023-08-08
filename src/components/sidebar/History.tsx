@@ -33,7 +33,7 @@ const History: React.FC = () => {
     }, []);
 
     useEffect(() => {
-        Utils.scrollToEnd("history-list", 1, 0);
+        Utils.scrollToEnd("history-body", 1, 0);
     }, [list]);
 
     return (

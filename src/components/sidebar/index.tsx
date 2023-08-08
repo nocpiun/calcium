@@ -8,12 +8,16 @@ import FunctionList from "./FunctionList";
 
 import { Mode } from "../../types";
 import Storage from "../../utils/Storage";
+import { Provider, keepAlive } from "../../utils/KeepAlive";
 
 import MainContext from "../../contexts/MainContext";
 
 import GeneralIcon from "../../icons/general_mode.svg";
 import GraphingIcon from "../../icons/graphing_mode.svg";
 import ProgrammingIcon from "../../icons/programming_mode.svg";
+
+const AliveHistory = keepAlive(History, "history");
+const AliveFunctionList = keepAlive(FunctionList, "functionList");
 
 const Sidebar: React.FC = () => {
     const { mode } = useContext(MainContext);
@@ -28,9 +32,9 @@ const Sidebar: React.FC = () => {
         switch(calcMode) {
             case Mode.GENERAL:
             case Mode.PROGRAMMING:
-                return <History />;
+                return <AliveHistory />;
             case Mode.GRAPHING:
-                return <FunctionList />;
+                return <AliveFunctionList />;
         }
     };
 
@@ -51,7 +55,9 @@ const Sidebar: React.FC = () => {
                 </div>
             </div>
             
-            {layoutSwitch(mode)}
+            <Provider>
+                {layoutSwitch(mode)}
+            </Provider>
         </aside>
     );
 }

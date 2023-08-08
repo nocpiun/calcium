@@ -1,10 +1,12 @@
 import React, { ReactElement } from "react";
 
+import { Status } from "./utils/KeepAlive";
+
 export type StateSetter<S> = React.Dispatch<React.SetStateAction<S>>;
 
-export interface ReducerAction<T> {
+export interface ReducerAction<T, P> {
     type: T
-    payload: number
+    payload: P
 }
 
 export enum Mode {
@@ -45,8 +47,22 @@ export interface IdReducerStateType {
     id: number
 }
 
-export interface IdReducerActionType extends ReducerAction<"refresh"> {
+export interface IdReducerActionType extends ReducerAction<"refresh", number> {
     
+}
+
+export interface KeepAliveObject {
+    id: string
+    element: ReactElement
+    nodes: ChildNode[] | null
+}
+
+export interface KeepAliveReducerStateType {
+    [id: string]: KeepAliveObject
+}
+
+export interface KeepAliveReducerActionType extends ReducerAction<Status, KeepAliveObject> {
+
 }
 
 export type WorkerResponse = {

@@ -33,12 +33,13 @@ function idReducer(state: IdReducerStateType, action: IdReducerActionType) {
 }
 
 const FunctionList: React.FC = () => {
-    const { functionList, setFunctionList } = useContext(MainContext);
+    const { mode, functionList, setFunctionList } = useContext(MainContext);
     const [unusedId, dispatchId] = useReducer(idReducer, { id: 0 });
     const inputRef = useRef<InputBox>(null);
 
     const handleAddFunction = async () => {
         if(!inputRef.current) return;
+        if(mode !== Mode.GRAPHING) return;
         const currentList = await Utils.getCurrentState(setFunctionList);
         var inputBox = inputRef.current;
 
@@ -54,6 +55,7 @@ const FunctionList: React.FC = () => {
 
     const handleInput = (symbol: string) => {
         if(!inputRef.current) return;
+        if(mode !== Mode.GRAPHING) return;
         const inputBox = inputRef.current;
         const currentContent = inputBox.state.displayContent;
 

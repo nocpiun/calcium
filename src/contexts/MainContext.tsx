@@ -9,12 +9,7 @@ interface MainContextType {
     setFunctionList: StateSetter<RenderedFunction[]>
 }
 
-const MainContext = React.createContext<MainContextType>({
-    mode: Mode.GENERAL,
-    setMode: (value) => {},
-    functionList: [],
-    setFunctionList: (value) => {}
-});
+const MainContext = React.createContext<MainContextType>(undefined!);
 MainContext.displayName = "MainContext";
 
 export default MainContext;
