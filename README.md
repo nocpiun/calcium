@@ -45,13 +45,13 @@ First, you need to make sure that your server (or computer) has installed Docker
 1. Pull docker repository
 
 ```bash
-docker pull noahhrreion/calcium
+docker pull noahhrreion/calcium:main
 ```
 
 2. Create container
 
 ```bash
-docker run -p 3000:3000 noahhrreion/calcium
+docker run -p 3000:3000 noahhrreion/calcium:main
 ```
 
 3. Enter `http://localhost:3000`, and you can start using Calcium.
