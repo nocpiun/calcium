@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 import { shortcuts } from "./global";
-import { Mode } from "./types";
+import { Mode, RenderedFunction } from "./types";
 
 // Layout
 import "katex/dist/katex.min.css"
@@ -17,6 +17,7 @@ import MainContext from "./contexts/MainContext";
 
 const App: React.FC = () => {
 	const [mode, setMode] = useState<Mode>(Mode.GENERAL);
+	const [functionList, setFunctionList] = useState<RenderedFunction[]>([]);
 
 	useEffect(() => {
 		document.body.addEventListener("keydown", (e: KeyboardEvent) => {
@@ -38,7 +39,7 @@ const App: React.FC = () => {
 	return (
 		<>
 			<main className="calcium">
-				<MainContext.Provider value={{ mode, setMode }}>
+				<MainContext.Provider value={{ mode, setMode, functionList, setFunctionList }}>
 					<div className="app">
 						<Sidebar/>
 						<Calculator/>

@@ -12,7 +12,7 @@ interface ListItemProps {
     index: number
 }
 
-const ListItem: React.FC<ListItemProps> = (props) => {
+const FunctionListItem: React.FC<ListItemProps> = (props) => {
     const handleRemove = () => {
         Emitter.get().emit("remove-function", props.id, props.index);
     };
@@ -32,4 +32,4 @@ const ListItem: React.FC<ListItemProps> = (props) => {
     );
 }
 
-export default ListItem;
+export default FunctionListItem;

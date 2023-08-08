@@ -1,140 +1,28 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { memo, useState, useRef, useReducer, useEffect } from "react";
-import { InlineMath } from "react-katex";
+import React, {
+    memo,
+    useState,
+    useEffect,
+    useRef,
+    useContext
+} from "react";
 import download from "downloadjs";
 
-import ListItem from "./ListItem";
-import InputBox, { specialSymbols, cursor } from "../InputBox";
+import MainContext from "../../contexts/MainContext";
 
 import useEmitter from "../../hooks/useEmitter";
 
 import Utils from "../../utils/Utils";
 import Emitter from "../../utils/Emitter";
 import Logger from "../../utils/Logger";
-import {
-    MouseDirection,
-    RenderedFunction,
-    IdReducerStateType,
-    IdReducerActionType
-} from "../../types";
+import { MouseDirection } from "../../types";
 
 import GraphingWorker from "../../workers/graphing.worker.ts";
 
-function idReducer(state: IdReducerStateType, action: IdReducerActionType) {
-    switch(action.type) {
-        case "refresh":
-            return { id: state.id + action.payload };
-        default:
-            return { id: state.id };
-    }
-}
-
 const Graphing: React.FC = memo(() => {
-    const [list, setList] = useState<RenderedFunction[]>([]);
+    const { setFunctionList } = useContext(MainContext);
     const [reloadTrigger, reloader] = useState(0);
-    const [unusedId, dispatchId] = useReducer(idReducer, { id: 0 });
-    const inputRef = useRef<InputBox>(null);
     const workerRef = useRef<GraphingWorker | null>(null);
-
-    const handleAddFunction = async () => {
-        if(!inputRef.current) return;
-        const currentList = await Utils.getCurrentState(setList);
-        var inputBox = inputRef.current;
-
-        var value = inputBox.value;
-        if(value === cursor) return;
-        setList([...currentList, { id: unusedId.id, value }]);
-        dispatchId({ type: "refresh", payload: 1 });
-        Emitter.get().emit("add-function", value);
-        Logger.info("Function rendered: "+ value.replaceAll(" ", ""));
-
-        inputBox.reset();
-    };
-
-    const handleInput = (symbol: string) => {
-        if(!inputRef.current) return;
-        const inputBox = inputRef.current;
-        const currentContent = inputBox.state.displayContent;
-
-        var contentArray = currentContent.split(" ");
-        var cursorIndex = inputBox.getCursorIndex();
-
-        switch(symbol) {
-            case "Backspace":
-                var target = cursorIndex;
-                if(contentArray[target] === cursor) {
-                    target--;
-                    if(target < 0) return;
-                }
-
-                contentArray = Utils.arrayRemove(contentArray, target);
-
-                return contentArray.join(" ");
-            case "ArrowLeft":
-                if(cursorIndex === 0) return;
-
-                return inputBox.moveCursorTo(cursorIndex - 1);
-            case "ArrowRight":
-                if(cursorIndex === contentArray.length - 1) return;
-
-                return inputBox.moveCursorTo(cursorIndex + 1);
-            case "Enter":
-                if(contentArray.length > 1) handleAddFunction();
-                return;
-            case "i": // Pi
-                if(contentArray[cursorIndex - 1] === "p") {
-                    contentArray[cursorIndex - 1] = "\\pi";
-                    return contentArray.join(" ");
-                } else {
-
-                    return currentContent.replace(cursor, symbol +" "+ cursor);
-                }
-            default:
-                /**
-                 * Function auto complete
-                 * 
-                 * For example,
-                 * input 'lg', then it will auto complete it as '\lg('
-                 * which can be correctly displayed by KaTeX
-                 */
-                for(let i = 0; i < specialSymbols.length; i++) {
-                    var specialSymbol = specialSymbols[i];
-                    if(symbol === specialSymbol[specialSymbol.length - 1]) {
-                        var splited = specialSymbol.split("");
-                        var passed = true;
-                        for(let j = splited.length - 2; j >= 0; j--) {
-                            if(contentArray[cursorIndex - (splited.length - j) + 1] !== splited[j]) {
-                                passed = false;
-                            }
-                        }
-                        if(passed) {
-                            if(specialSymbol === "sqrt") {
-                                specialSymbol = "√(";
-                            } else if(specialSymbol === "cbrt") {
-                                specialSymbol = "^3√(";
-                            } else {
-                                specialSymbol = "\\"+ specialSymbol +"(";
-                            }
-
-                            var begin = cursorIndex - splited.length + 1;
-                            contentArray[begin] = specialSymbol;
-                            for(let j = 0; j < splited.length - 2; j++) {
-                                contentArray = Utils.arrayRemove(contentArray, begin + 1);
-                            }
-                            contentArray.push(")"); // Add right bracket automatically
-
-                            return contentArray.join(" ");
-                        }
-                    }
-                }
-                
-                return currentContent.replace(cursor, symbol +" "+ cursor);
-        }
-    };
-
-    useEffect(() => {
-        Utils.scrollToEnd("function-list", 1, 0);
-    }, [list]);
 
     useEffect(() => {
         // Create worker
@@ -199,7 +87,7 @@ const Graphing: React.FC = memo(() => {
             if(!workerRef.current) return;
             workerRef.current.postMessage({ type: "reset" });
             workerRef.current.terminate();
-            setList([]);
+            setFunctionList([]);
 
             reloader(reloadTrigger + 1);
         });
@@ -217,12 +105,12 @@ const Graphing: React.FC = memo(() => {
             workerRef.current.postMessage({ type: "remove-function", index });
             
             // Remove the function from the list
-            const currentList = await Utils.getCurrentState(setList);
+            const currentList = await Utils.getCurrentState(setFunctionList);
             for(let i = 0; i < currentList.length; i++) {
                 if(currentList[i].id === id) {
                     // Clone the object of edited array by `Object.create`
                     // Otherwise, `setList` won't work.
-                    setList(Object.create(Utils.arrayRemove(currentList, i)));
+                    setFunctionList(Object.create(Utils.arrayRemove(currentList, i)));
                     break;
                 }
             }
@@ -236,7 +124,7 @@ const Graphing: React.FC = memo(() => {
         }],
         ["clear-function", () => {
             if(!workerRef.current) return;
-            setList([]);
+            setFunctionList([]);
             workerRef.current.postMessage({ type: "clear-function" });
         }],
         ["graphing-capture", () => {
@@ -302,33 +190,9 @@ const Graphing: React.FC = memo(() => {
     ]);
 
     return (
-        <>
-            <div className="function-input-container">
-                <div className="function-input-box">
-                    <div className="function-input-box-tag">
-                        <span><InlineMath>y =</InlineMath></span>
-                    </div>
-                    <InputBox
-                        ref={inputRef}
-                        ltr={true}
-                        onInput={(symbol) => handleInput(symbol)}/>
-                    <div className="add-button-container">
-                        <button className="add-button" onClick={() => handleAddFunction()}>
-                            <span>添加</span>
-                        </button>
-                    </div>
-                </div>
-                <div className="function-list" id="function-list">
-                    {
-                        list.map((item, index) => <ListItem {...item} index={index} key={index}/>)
-                    }
-                </div>
-            </div>
-            
-            <div className="graphing-container" id="display-frame">
-                <canvas className="graphing-canvas" id="graphing"/>
-            </div>
-        </>
+        <div className="graphing-container" id="display-frame">
+            <canvas className="graphing-canvas" id="graphing"/>
+        </div>
     );
 })
 

@@ -1,9 +1,10 @@
 import React, {
     useState,
     useRef,
-    useEffect,
     useContext
 } from "react";
+
+import useEmitter from "../../hooks/useEmitter";
 
 import BarItem from "./BarItem";
 import Dialog from "../Dialog";
@@ -24,11 +25,9 @@ const StatusBar: React.FC = () => {
     const shortcutDialogRef = useRef<Dialog>(null);
     const convertingDialogRef = useRef<Dialog>(null);
 
-    useEffect(() => {
-        Emitter.get().on("graphing-fps", (currentFPS: number) => {
-            setFPS(currentFPS);
-        });
-    }, []);
+    useEmitter([
+        ["graphing-fps", (currentFPS: number) => setFPS(currentFPS)]
+    ]);
 
     return (
         <>

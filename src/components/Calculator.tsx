@@ -1,7 +1,6 @@
-import React, { useEffect, useContext } from "react";
+import React, { useContext } from "react";
 
 import { Mode } from "../types";
-import Emitter from "../utils/Emitter";
 
 import Input from "./general/Input";
 import ProgrammingInput from "./programming/ProgrammingInput";
@@ -12,7 +11,7 @@ import Graphing from "./graphing";
 import MainContext from "../contexts/MainContext";
 
 const Calculator: React.FC = () => {
-    const { mode, setMode } = useContext(MainContext);
+    const { mode } = useContext(MainContext);
     
     const layoutSwitch = (calcMode: Mode) => {
         switch(calcMode) {
@@ -34,12 +33,6 @@ const Calculator: React.FC = () => {
                 );
         }
     };
-
-    useEffect(() => {
-        Emitter.get().on("switch-mode", (newMode: Mode) => {
-            setMode(newMode);
-        });
-    });
 
     return (
         <div className="calculator-container" data-mode={mode}>

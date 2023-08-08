@@ -1,22 +1,37 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect } from "react";
+import React, { useEffect, useContext } from "react";
 
 import ModeButton from "./ModeButton";
 import Toggle from "../Toggle";
 import History from "./History";
+import FunctionList from "./FunctionList";
+
 import { Mode } from "../../types";
 import Storage from "../../utils/Storage";
+
+import MainContext from "../../contexts/MainContext";
 
 import GeneralIcon from "../../icons/general_mode.svg";
 import GraphingIcon from "../../icons/graphing_mode.svg";
 import ProgrammingIcon from "../../icons/programming_mode.svg";
 
 const Sidebar: React.FC = () => {
+    const { mode } = useContext(MainContext);
     const themeValue = Storage.get().getItem("theme", "light");
 
     const handleToggle = (isActive: boolean) => {
         document.body.setAttribute("theme", isActive ? "light" : "dark");
         Storage.get().setItem("theme", isActive ? "light" : "dark");
+    };
+
+    const layoutSwitch = (calcMode: Mode) => {
+        switch(calcMode) {
+            case Mode.GENERAL:
+            case Mode.PROGRAMMING:
+                return <History />;
+            case Mode.GRAPHING:
+                return <FunctionList />;
+        }
     };
 
     useEffect(() => {
@@ -36,7 +51,7 @@ const Sidebar: React.FC = () => {
                 </div>
             </div>
             
-            <History />
+            {layoutSwitch(mode)}
         </aside>
     );
 }
