@@ -312,13 +312,12 @@ export default class Compiler {
                 tempNumber = "";
 
                 if(i + 1 < this.raw.length && this.raw[i + 1][0] === "^") {
-                    (root.children[root.children.length - 1] as NumberToken).value = Math.pow(value, parseInt(this.raw[i + 1][1]));
+                    (root.children[root.children.length - 1] as NumberToken).value = Utils.safePow(value, parseInt(this.raw[i + 1][1]));
                     i++;
                     continue;
                 }
             }
         }
-        console.log(root);
 
         return root;
     }

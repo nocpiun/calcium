@@ -68,7 +68,7 @@ export default class Formula {
                     
                     numbers.add({
                         type: "number",
-                        value: Math.pow(value, exponential),
+                        value: Utils.safePow(value, exponential),
                         float: Is.float(value),
                         numberSys: NumberSys.DEC
                     });
@@ -93,7 +93,7 @@ export default class Formula {
                     var value = func(...calculatedParam);
                     numbers.add({
                         type: "number",
-                        value: Math.pow(value, exponential),
+                        value: Utils.safePow(value, exponential),
                         float: Is.float(value),
                         numberSys: NumberSys.DEC
                     });

@@ -143,7 +143,7 @@ export default class Utils {
         var average = Utils.mean(...nums);
         var devPowList = [];
         for(let i = 0; i < nums.length; i++) {
-            devPowList.push(Math.pow(nums[i] - average, 2));
+            devPowList.push(Utils.safePow(nums[i] - average, 2));
         }
         
         var devPowSum = 0;
@@ -158,7 +158,7 @@ export default class Utils {
         var average = Utils.mean(...nums);
         var devPowList = [];
         for(let i = 0; i < nums.length; i++) {
-            devPowList.push(Math.pow(nums[i] - average, 2));
+            devPowList.push(Utils.safePow(nums[i] - average, 2));
         }
         
         var devPowSum = 0;
@@ -177,11 +177,16 @@ export default class Utils {
         return Utils.factorial(n) / (Utils.factorial(r) * Utils.factorial(n - r));
     }
 
-    public static tan(x: number): number {
+    public static safeTan(x: number): number {
         var result = Math.tan(x);
         if(result > 136059276645184) return NaN;
         if(result < -286411383293068) return NaN;
         return result;
+    }
+
+    public static safePow(x: number, y: number): number {
+        if(y === 0) return 1;
+        return y > 0 ? Math.pow(x, y) : (1 / Math.pow(x, -y));
     }
 
     public static strToNum(str: string, numberSys: NumberSys): number {
