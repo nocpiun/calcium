@@ -178,10 +178,10 @@ export default class Utils {
     }
 
     public static tan(x: number): number {
-        const t = x / parseFloat(Math.PI.toFixed(14)) - .5;
-        if(Math.floor(t) === t) return Infinity;
-
-        return Math.tan(x);
+        var result = Math.tan(x);
+        if(result > 136059276645184) return NaN;
+        if(result < -286411383293068) return NaN;
+        return result;
     }
 
     public static strToNum(str: string, numberSys: NumberSys): number {
