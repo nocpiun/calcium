@@ -138,7 +138,7 @@ export default class Compiler {
                         Is.number(this.raw[i - 1], this.isProgrammingMode) ||
                         Is.variable(this.raw[i - 1]) ||
                         Is.constant(this.raw[i - 1])
-                    ) { // Process the formula like `eπ`, `ee` or `2π` which means `e*π`, `e*e` and `2*π`
+                    ) { // Process something like `eπ`, `ee` or `2π` which means `e*π`, `e*e` and `2*π`
                         addNumber(
                             tempNumber !== ""
                             ? tempNumber
@@ -178,6 +178,16 @@ export default class Compiler {
 
                 tempNumber = "";
             } else if(Is.leftBracket(symbol)) { // left bracket
+                // Process something like `3(5-2)`
+                if(i !== 0 && !Is.operator(this.raw[i - 1])) {
+                    if(Is.number(this.raw[i - 1], this.isProgrammingMode)) addNumber(tempNumber);
+                    root.children.push({
+                        type: "operator",
+                        value: Operator.MUL,
+                        isFirst: false
+                    } as OperatorToken);
+                }
+                
                 this.layer++;
             } else if(Is.rightBracket(symbol)) { // right bracket
                 var secondaryCompiler = new Compiler(this.secondaryRaw, this.variables, this.isProgrammingMode, this.numberSys);
@@ -221,6 +231,24 @@ export default class Compiler {
                     i++;
                     continue;
                 }
+
+                // Process something like `(5-2)3`
+                if(
+                    i + 1 < this.raw.length &&
+                    !Is.operator(this.raw[i + 1]) &&
+
+                    // In the formula like `(5-2)(5-3)` or `sin(2)cos(2)`, the operator
+                    // between two items will be handled by the left bracket of `(5-3)`.
+                    // So here should do nothing.
+                    !Is.leftBracket(this.raw[i + 1]) &&
+                    !Is.mathFunction(this.raw[i + 1])
+                ) {
+                    root.children.push({
+                        type: "operator",
+                        value: Operator.MUL,
+                        isFirst: false
+                    } as OperatorToken);
+                }
             } else if(symbol === "|") { // absolute value
                 if(this.inAbs) {
                     var secondaryCompiler = new Compiler(this.secondaryRaw, this.variables, this.isProgrammingMode, this.numberSys);
@@ -241,6 +269,16 @@ export default class Compiler {
                     this.inAbs = true;
                 }
             } else if(Is.mathFunction(symbol)) { // function
+                // Process something like `2sin(pi/6)`
+                if(i !== 0 && !Is.operator(this.raw[i - 1])) {
+                    if(Is.number(this.raw[i - 1], this.isProgrammingMode)) addNumber(tempNumber);
+                    root.children.push({
+                        type: "operator",
+                        value: Operator.MUL,
+                        isFirst: false
+                    } as OperatorToken);
+                }
+
                 var functionName = symbol.replace("\\", "").replace("(", "");
                 if(!functions.has(functionName)) {
                     this.hasError = true;
@@ -280,6 +318,7 @@ export default class Compiler {
                 }
             }
         }
+        console.log(root);
 
         return root;
     }
