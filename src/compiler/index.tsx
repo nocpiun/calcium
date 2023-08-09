@@ -180,7 +180,10 @@ export default class Compiler {
             } else if(Is.leftBracket(symbol)) { // left bracket
                 // Process something like `3(5-2)`
                 if(i !== 0 && !Is.operator(this.raw[i - 1])) {
-                    if(Is.number(this.raw[i - 1], this.isProgrammingMode)) addNumber(tempNumber);
+                    if(Is.number(this.raw[i - 1], this.isProgrammingMode)) {
+                        addNumber(tempNumber);
+                        tempNumber = "";
+                    }
                     root.children.push({
                         type: "operator",
                         value: Operator.MUL,
@@ -271,7 +274,10 @@ export default class Compiler {
             } else if(Is.mathFunction(symbol)) { // function
                 // Process something like `2sin(pi/6)`
                 if(i !== 0 && !Is.operator(this.raw[i - 1])) {
-                    if(Is.number(this.raw[i - 1], this.isProgrammingMode)) addNumber(tempNumber);
+                    if(Is.number(this.raw[i - 1], this.isProgrammingMode)) {
+                        addNumber(tempNumber);
+                        tempNumber = "";
+                    }
                     root.children.push({
                         type: "operator",
                         value: Operator.MUL,
@@ -318,6 +324,8 @@ export default class Compiler {
                 }
             }
         }
+
+        console.log(root);
 
         return root;
     }
