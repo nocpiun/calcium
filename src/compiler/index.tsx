@@ -325,8 +325,6 @@ export default class Compiler {
             }
         }
 
-        console.log(root);
-
         return root;
     }
 

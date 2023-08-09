@@ -8,12 +8,12 @@ export default class Float {
         var m: number;
 
         try {
-            r1 = a.toString().split(".")[1].length;
+            r1 = Float.eTransfer(a).split(".")[1].length;
         } catch (e) {
             r1 = 0;
         }
         try {
-            r2 = b.toString().split(".")[1].length;
+            r2 = Float.eTransfer(b).split(".")[1].length;
         } catch (e) {
             r2 = 0;
         }
@@ -29,12 +29,12 @@ export default class Float {
         var n: number;
 
         try {
-            r1 = a.toString().split('.')[1].length;
+            r1 = Float.eTransfer(a).split('.')[1].length;
         } catch (e) {
             r1 = 0;
         }
         try {
-            r2 = b.toString().split('.')[1].length;
+            r2 = Float.eTransfer(b).split('.')[1].length;
         } catch (e) {
             r2 = 0;
         }
@@ -46,8 +46,8 @@ export default class Float {
 
     public static multiply(a: number, b: number): number {
         var m = 0;
-        var s1 = a.toString();
-        var s2 = b.toString();
+        var s1 = Float.eTransfer(a);
+        var s2 = Float.eTransfer(b);
 
         try {
             m += s1.split('.')[1].length;
@@ -82,10 +82,22 @@ export default class Float {
             //
         }
 
-        r1 = Number(a.toString().replace('.', ''));
-        r2 = Number(b.toString().replace('.', ''));
+        r1 = Number(Float.eTransfer(a).replace('.', ''));
+        r2 = Number(Float.eTransfer(b).replace('.', ''));
         var intDiv = r1 / r2;
         var pow = Utils.safePow(10, t2 - t1);
         return Float.multiply(intDiv, pow);
+    }
+
+    /** @see https://www.cnblogs.com/bien94/p/12728886.html */
+    public static eTransfer(n: number): string {
+        if(isNaN(n)) return n.toString();
+        
+        n = parseFloat(n +"");
+        var eformat = n.toExponential();
+        var tmpArray = eformat.match(/\d(?:\.(\d*))?e([+-]\d+)/);
+        if(!tmpArray) return NaN.toString();
+        var number = n.toFixed(Math.max(0, (tmpArray[1] || '').length - (tmpArray[2] as any)));
+        return number;
     }
 }
