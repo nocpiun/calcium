@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useContext } from "react";
+import KeepAlive from "react-activation";
 
 import ModeButton from "./ModeButton";
 import Toggle from "../Toggle";
@@ -8,16 +9,12 @@ import FunctionList from "./FunctionList";
 
 import { Mode } from "../../types";
 import Storage from "../../utils/Storage";
-import { Provider, keepAlive } from "../../utils/KeepAlive";
 
 import MainContext from "../../contexts/MainContext";
 
 import GeneralIcon from "../../icons/general_mode.svg";
 import GraphingIcon from "../../icons/graphing_mode.svg";
 import ProgrammingIcon from "../../icons/programming_mode.svg";
-
-const AliveHistory = keepAlive(History, "history");
-const AliveFunctionList = keepAlive(FunctionList, "functionList");
 
 const Sidebar: React.FC = () => {
     const { mode } = useContext(MainContext);
@@ -32,9 +29,17 @@ const Sidebar: React.FC = () => {
         switch(calcMode) {
             case Mode.GENERAL:
             case Mode.PROGRAMMING:
-                return <AliveHistory />;
+                return (
+                    <KeepAlive>
+                        <History />
+                    </KeepAlive>
+                );
             case Mode.GRAPHING:
-                return <AliveFunctionList />;
+                return (
+                    <KeepAlive>
+                        <FunctionList />
+                    </KeepAlive>
+                );
         }
     };
 
@@ -55,9 +60,7 @@ const Sidebar: React.FC = () => {
                 </div>
             </div>
             
-            <Provider>
-                {layoutSwitch(mode)}
-            </Provider>
+            {layoutSwitch(mode)}
         </aside>
     );
 }

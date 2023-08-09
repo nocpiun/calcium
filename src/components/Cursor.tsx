@@ -15,7 +15,7 @@ const Cursor: React.FC = () => {
         }, 550);
 
         return () => clearInterval(timer);
-    });
+    }, []);
 
     return <div className={"cursor "+ blinkClassName} ref={cursorRef}/>
 }

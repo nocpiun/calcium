@@ -177,6 +177,13 @@ export default class Utils {
         return Utils.factorial(n) / (Utils.factorial(r) * Utils.factorial(n - r));
     }
 
+    public static tan(x: number): number {
+        const t = x / parseFloat(Math.PI.toFixed(14)) - .5;
+        if(Math.floor(t) === t) return Infinity;
+
+        return Math.tan(x);
+    }
+
     public static strToNum(str: string, numberSys: NumberSys): number {
         if(numberSys === NumberSys.HEX) {
             return parseInt(Transformer.hexToDec(str));

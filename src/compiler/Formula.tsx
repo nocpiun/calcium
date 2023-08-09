@@ -237,6 +237,9 @@ export default class Formula {
             }
         }
 
-        return numbers.get(0)?.value ?? NaN;
+        var result = numbers.get(0)?.value ?? NaN;
+
+        if(isNaN(result)) return NaN;
+        return parseFloat(result.toFixed(14));
     }
 }

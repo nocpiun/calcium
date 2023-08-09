@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { AliveScope } from "react-activation";
 
 import { shortcuts } from "./global";
 import { Mode, RenderedFunction } from "./types";
@@ -40,11 +41,13 @@ const App: React.FC = () => {
 		<>
 			<main className="calcium">
 				<MainContext.Provider value={{ mode, setMode, functionList, setFunctionList }}>
-					<div className="app">
-						<Sidebar/>
-						<Calculator/>
-					</div>
-					<StatusBar />
+					<AliveScope>
+						<div className="app">
+							<Sidebar/>
+							<Calculator/>
+						</div>
+						<StatusBar />
+					</AliveScope>
 				</MainContext.Provider>
 			</main>
 			<p className="no-mobile">Please open the app in your computer!</p>
