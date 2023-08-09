@@ -155,8 +155,23 @@ export default class Formula {
         }
         
         // Multiply & Divide
+        var firstLoop = true;
         for(let i = 0; i < operators.length; i++) {
             var operator = operators.get(i).value;
+
+            if(firstLoop && operators.get(i).isFirst && operator === Operator.SUB) {
+                var origin = numbers.get(i);
+                numbers.set(i, {
+                    type: "number",
+                    value: -origin.value,
+                    float: origin.float,
+                    numberSys: origin.numberSys
+                });
+                operators.remove(i);
+                i--;
+                firstLoop = false;
+                continue;
+            }
             
             if(operator === Operator.MUL || operator === Operator.DIV) {
                 var a = numbers.get(i);

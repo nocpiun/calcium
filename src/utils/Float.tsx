@@ -67,6 +67,8 @@ export default class Float {
         var r1: number;
         var r2: number;
 
+        if(b === 0) return Infinity;
+
         try {
             t1 = a.toString().split('.')[1].length;
         } catch (e) {
