@@ -3,7 +3,7 @@ import React, { ReactElement } from "react";
 import type { KeepAliveReducerStateType } from "../types";
 
 interface KeepAliveContextType {
-    setKeepAliveState: (id: string, element: ReactElement) => void
+    createKeepAliveState: (id: string, element: ReactElement) => void
     keepAliveStates: KeepAliveReducerStateType
 }
 

@@ -6,7 +6,9 @@ import React, {
     useCallback,
     useContext
 } from "react";
+import { createPortal } from "react-dom";
 
+import Utils from "./Utils";
 import {
     PropsWithChildren,
     KeepAliveReducerStateType,
@@ -49,7 +51,7 @@ function keepAliveReducer(state: KeepAliveReducerStateType, action: KeepAliveRed
 export const Provider: React.FC<PropsWithChildren> = (props) => {
     const [keepAliveStates, dispatch] = useReducer(keepAliveReducer, {});
 
-    const setKeepAliveState = useCallback((id: string, element: ReactElement) => {
+    const createKeepAliveState = useCallback((id: string, element: ReactElement) => {
         if(!keepAliveStates[id]) {
             dispatch({
                 type: Status.CREATING,
@@ -63,25 +65,29 @@ export const Provider: React.FC<PropsWithChildren> = (props) => {
     }, [keepAliveStates]);
 
     return (
-        <KeepAliveContext.Provider value={{ setKeepAliveState, keepAliveStates }}>
+        <KeepAliveContext.Provider value={{ createKeepAliveState, keepAliveStates }}>
             {props.children}
             {
-                Object.values(keepAliveStates).map(({ id, element }, index) => {
-                    return (
-                        <div key={index} ref={(node) => {
-                            if(node && !keepAliveStates[id].nodes) {
-                                dispatch({
-                                    type: Status.CREATED,
-                                    payload: {
-                                        id,
-                                        element,
-                                        nodes: [...node.childNodes]
-                                    }
-                                });
-                            }
-                        }}>{element}</div>
-                    );
-                })
+                createPortal(
+                    // won't be displayed
+                    Object.values(keepAliveStates).map(({ id, element }, index) => {
+                        return (
+                            <div key={index} ref={(node) => {
+                                if(node && !keepAliveStates[id].nodes) {
+                                    dispatch({
+                                        type: Status.CREATED,
+                                        payload: {
+                                            id,
+                                            element,
+                                            nodes: [...node.childNodes]
+                                        }
+                                    });
+                                }
+                            }}>{element}</div>
+                        );
+                    }),
+                    Utils.getElem("keep-alive-element-renderer")
+                )
             }
         </KeepAliveContext.Provider>
     );
@@ -89,7 +95,7 @@ export const Provider: React.FC<PropsWithChildren> = (props) => {
 
 export function keepAlive<P extends JSX.IntrinsicAttributes>(component: React.FC<P>, id: string): React.FC<P> {
     return (props) => {
-        const { setKeepAliveState, keepAliveStates } = useContext(KeepAliveContext);
+        const { createKeepAliveState, keepAliveStates } = useContext(KeepAliveContext);
         const _ref = useRef<HTMLDivElement>(null);
         const Component = component;
 
@@ -99,9 +105,9 @@ export function keepAlive<P extends JSX.IntrinsicAttributes>(component: React.FC
             if(state && state.nodes) {
                 state.nodes.forEach((node) => _ref.current?.appendChild(node));
             } else {
-                setKeepAliveState(id, <Component {...props}/>);
+                createKeepAliveState(id, <Component {...props}/>);
             }
-        }, [setKeepAliveState, keepAliveStates, props, Component]);
+        }, [createKeepAliveState, keepAliveStates, props, Component]);
 
         return (
             <div className="keep-alive-fragment" ref={_ref}>{/* Real Contents */}</div>

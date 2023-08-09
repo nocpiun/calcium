@@ -1,23 +1,23 @@
-import React, { useEffect } from "react";
-
-import Utils from "../utils/Utils";
+import React, { useEffect, useRef } from "react";
 
 const blinkClassName = "cursor-blink";
 
 const Cursor: React.FC = () => {
-    useEffect(() => {
-        var cursorElem = Utils.getElem("cursor");
+    const cursorRef = useRef<HTMLDivElement>(null);
 
+    useEffect(() => {
         var timer = setInterval(() => {
-            cursorElem.classList.contains(blinkClassName)
-            ? cursorElem.classList.remove(blinkClassName)
-            : cursorElem.classList.add(blinkClassName);
+            if(!cursorRef.current) return;
+
+            cursorRef.current.classList.contains(blinkClassName)
+            ? cursorRef.current.classList.remove(blinkClassName)
+            : cursorRef.current.classList.add(blinkClassName);
         }, 550);
 
         return () => clearInterval(timer);
     });
 
-    return <div className={"cursor "+ blinkClassName} id="cursor"/>
+    return <div className={"cursor "+ blinkClassName} ref={cursorRef}/>
 }
 
 export default Cursor;
