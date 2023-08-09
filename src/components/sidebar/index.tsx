@@ -36,7 +36,7 @@ const Sidebar: React.FC = () => {
                 );
             case Mode.GRAPHING:
                 return (
-                    <KeepAlive>
+                    <KeepAlive when={false}>
                         <FunctionList />
                     </KeepAlive>
                 );

@@ -147,6 +147,9 @@
                     }
                 }
                 &#function-list {
+                    overflow-x: hidden;
+                    overflow-y: auto;
+                    .scrollbar-style();
                     @border-radius: 3px;
                     
                     .function-list-main {
@@ -163,6 +166,7 @@
                             }
                             .input-box {
                                 flex: 3.5;
+                                width: 0;
                                 .input-box-style();
                                 background-color: var(--ca-gray5);
                                 border: 1px solid var(--ca-gray4);
@@ -208,6 +212,7 @@
                                 &-tag {
                                     flex: 1;
                                     .function-tag();
+                                    padding-right: 3px;
                                 }
                                 &-value {
                                     flex: 5;

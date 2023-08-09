@@ -23,6 +23,8 @@ import {
 
 import MainContext from "../../contexts/MainContext";
 
+const maxFunctionAmount: number = 50;
+
 function idReducer(state: IdReducerStateType, action: IdReducerActionType) {
     switch(action.type) {
         case "refresh":
@@ -40,7 +42,10 @@ const FunctionList: React.FC = () => {
     const handleAddFunction = async () => {
         if(!inputRef.current) return;
         if(mode !== Mode.GRAPHING) return;
+        
         const currentList = await Utils.getCurrentState(setFunctionList);
+        if(currentList.length + 1 > maxFunctionAmount) return;
+        
         var inputBox = inputRef.current;
 
         var value = inputBox.value;
@@ -148,7 +153,7 @@ const FunctionList: React.FC = () => {
     ]);
 
     return (
-        <SidebarPage id="function-list" title="函数列表">
+        <SidebarPage id="function-list" title="函数列表" tip={<>最多添加{maxFunctionAmount}个函数</>}>
             <div className="function-list-main">
                 <div className="function-input-box">
                     <div className="function-input-box-tag">
