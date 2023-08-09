@@ -38,7 +38,7 @@ export default class InputBox extends Component<InputBoxProps, InputBoxState> {
     }
 
     public set value(newValue: string) {
-        this.setState({ displayContent: newValue });
+        this.setState({ displayContent: newValue }, () => Utils.scrollToEnd("display"));
     }
 
     public reset(): void {
