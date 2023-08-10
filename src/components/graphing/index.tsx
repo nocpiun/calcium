@@ -27,7 +27,7 @@ const Graphing: React.FC = memo(() => {
     useEffect(() => {
         // Create worker
         workerRef.current = new GraphingWorker();
-        if(!workerRef.current) return;
+        // if(!workerRef.current) return;
 
         // Get canvas object
         const canvas = Utils.getElem<HTMLCanvasElement>("graphing");
@@ -41,7 +41,7 @@ const Graphing: React.FC = memo(() => {
         // Init worker
         var offscreenCanvas = new OffscreenCanvas(canvas.width, canvas.height);
         workerRef.current.postMessage({ type: "init", canvas: offscreenCanvas, isDarkMode: Utils.isDarkMode() }, [offscreenCanvas]);
-        workerRef.current.onmessage = (e) => {
+        workerRef.current.onmessage = (e: {data: any}) => {
             switch(e.data.type) {
                 case "render":
                     ctx.transferFromImageBitmap(e.data.imageBitmap);

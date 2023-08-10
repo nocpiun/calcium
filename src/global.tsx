@@ -8,8 +8,8 @@ export const errorText = "\\text{Error}";
 export const functions: Map<string, MathFunction> = new Map([
     ["sin",          [(x) => Math.sin(x),            1]],
     ["cos",          [(x) => Math.cos(x),            1]],
-    ["tan",          [(x) => Utils.safeTan(x),            1]],
-    ["cot",          [(x) => 1 / Utils.safeTan(x),        1]],
+    ["tan",          [(x) => Utils.safeTan(x),       1]],
+    ["cot",          [(x) => 1 / Utils.safeTan(x),   1]],
     ["sec",          [(x) => 1 / Math.cos(x),        1]],
     ["csc",          [(x) => 1 / Math.sin(x),        1]],
     ["sin^{-1}",     [(x) => Math.asin(x),           1]],
@@ -35,7 +35,7 @@ export const functions: Map<string, MathFunction> = new Map([
     ["text{stdevp}", [(...n) => Utils.stdevp(...n), -1]],
     ["text{nPr}",    [(n, r) => Utils.nPr(n, r),     2]],
     ["text{nCr}",    [(n, r) => Utils.nCr(n, r),     2]],
-    ["text{xPx}",    [(x) => Utils.safePow(x, x),         1]],
+    ["text{xPx}",    [(x) => Utils.safePow(x, x),    1]],
 ]);
 
 export const constants: Map<string, number> = new Map([

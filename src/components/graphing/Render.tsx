@@ -13,6 +13,8 @@ const colors = {
     highlight: "#fff"
 };
 
+const delta: number = .001;
+
 // Inside of Service Worker
 
 export default class Render {
@@ -222,19 +224,19 @@ export default class Render {
             var rawText = this.functionList.get(i);
 
             if(direction === MouseDirection.LEFT) {
-                for(let x1 = beginX2; x1 <= endX2; x1 += .01) {
+                for(let x1 = beginX2; x1 <= endX2; x1 += .001) {
                     var y1 = parseFloat(new Compiler(rawText.split(" "), new Map([["x", x1.toString()]])).compile());
     
-                    var x2 = x1 + .01;
+                    var x2 = x1 + delta;
                     var y2 = parseFloat(new Compiler(rawText.split(" "), new Map([["x", x2.toString()]])).compile());
     
                     this.displayedPoints.push([new Point(x1, y1), new Point(x2, y2)]);
                 }
             } else {
-                for(let x1 = endX2; x1 >= beginX2; x1 -= .01) {
+                for(let x1 = endX2; x1 >= beginX2; x1 -= .001) {
                     var y1 = parseFloat(new Compiler(rawText.split(" "), new Map([["x", x1.toString()]])).compile());
     
-                    var x2 = x1 + .01;
+                    var x2 = x1 + delta;
                     var y2 = parseFloat(new Compiler(rawText.split(" "), new Map([["x", x2.toString()]])).compile());
     
                     this.displayedPoints.unshift([new Point(x1, y1), new Point(x2, y2)]);
@@ -266,18 +268,18 @@ export default class Render {
             for(let i = 0; i < this.functionList.length; i++) {
                 var rawText = this.functionList.get(i);
 
-                for(let x1 = oldBegin; x1 >= newBegin; x1 -= .01) {
+                for(let x1 = oldBegin; x1 >= newBegin; x1 -= delta) {
                     var y1 = parseFloat(new Compiler(rawText.split(" "), new Map([["x", x1.toString()]])).compile());
     
-                    var x2 = x1 + .01;
+                    var x2 = x1 + delta;
                     var y2 = parseFloat(new Compiler(rawText.split(" "), new Map([["x", x2.toString()]])).compile());
     
                     this.displayedPoints.unshift([new Point(x1, y1), new Point(x2, y2)]);
                 }
-                for(let x1 = oldEnd; x1 <= newEnd; x1 += .01) {
+                for(let x1 = oldEnd; x1 <= newEnd; x1 += delta) {
                     var y1 = parseFloat(new Compiler(rawText.split(" "), new Map([["x", x1.toString()]])).compile());
     
-                    var x2 = x1 + .01;
+                    var x2 = x1 + delta;
                     var y2 = parseFloat(new Compiler(rawText.split(" "), new Map([["x", x2.toString()]])).compile());
     
                     this.displayedPoints.push([new Point(x1, y1), new Point(x2, y2)]);
@@ -322,10 +324,10 @@ export default class Render {
         var beginX = -this.center.x / unitPx;
         var endX = (this.canvas.width - this.center.x) / unitPx;
 
-        for(let x1 = beginX; x1 <= endX; x1 += .01) {
+        for(let x1 = beginX; x1 <= endX; x1 += delta) {
             var y1 = parseFloat(new Compiler(rawText.split(" "), new Map([["x", x1.toString()]])).compile());
 
-            var x2 = x1 + .01;
+            var x2 = x1 + delta;
             var y2 = parseFloat(new Compiler(rawText.split(" "), new Map([["x", x2.toString()]])).compile());
 
             this.displayedPoints.push([new Point(x1, y1), new Point(x2, y2)]);
@@ -341,10 +343,10 @@ export default class Render {
         var endX = (this.canvas.width - this.center.x) / unitPx;
 
         this.functionList.forEach((rawText: string) => {
-            for(let x1 = beginX; x1 <= endX; x1 += .01) {
+            for(let x1 = beginX; x1 <= endX; x1 += delta) {
                 var y1 = parseFloat(new Compiler(rawText.split(" "), new Map([["x", x1.toString()]])).compile());
     
-                var x2 = x1 + .01;
+                var x2 = x1 + delta;
                 var y2 = parseFloat(new Compiler(rawText.split(" "), new Map([["x", x2.toString()]])).compile());
     
                 this.displayedPoints.push([new Point(x1, y1), new Point(x2, y2)]);
