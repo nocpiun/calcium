@@ -73,8 +73,8 @@ describe("Compiler tests", () => {
     });
 
     test("Integrated Calculations", () => {
-        // const f1 = "1 1 4 + 5 1 4 × ( 1 5 7 + 2 4 6 - 3 / ( 2 9 - 2 8 + 1 3 \\sin( \\pi / 6 ) ^2 - \\mean( 1 , 2 , 3 , ( 2 3 - 1 2 ) + | - 1 5 | ^2 - 3 ! ^2 + 4 ! ) ) ) + \\ln( \\e )";
-        // expect(calculate(f1)).toBe("207285.95774647887");
+        const f1 = "1 1 4 + 5 1 4 × ( 1 5 7 + 2 4 6 - 3 / ( 2 9 - 2 8 + 1 3 \\sin( \\pi / 6 ) ^2 - \\text{mean}( 1 , 2 , 3 , ( 2 3 - 1 2 ) + | - 1 5 | ^2 - 3 ! ^2 + 4 ! ) ) ) + \\ln( e )";
+        expect(calculate(f1)).toBe("207285.9577464789");
     });
 
 });

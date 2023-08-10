@@ -273,7 +273,6 @@ export default class Compiler {
                     if(i + di < this.raw.length && this.raw[i + di][0] === "^") {
                         (root.children[root.children.length - di] as PowerableToken).exponential = parseInt(this.raw[i + di][1]);
                         i++;
-                        continue;
                     }
                     
                     this.secondaryRaw = [];
