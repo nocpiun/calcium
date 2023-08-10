@@ -1,0 +1,80 @@
+import Compiler from "../compiler";
+
+function calculate(formula: string): string {
+    const emptyVariableList = new Map<string, string>();
+    return new Compiler(formula.split(" "), emptyVariableList).compile();
+}
+
+describe("Compiler tests", () => {
+
+    test("Basic Calculations", () => {
+        const f1 = "1 9 2 + 1 7 7 - 8 5 - ( 2 2 6 - 1 3 )";
+        expect(calculate(f1)).toBe("71");
+
+        const f2 = "- 5 3 - 6 7 - ( 2 2 9 + 8 4 ) + 1 3";
+        expect(calculate(f2)).toBe("-420");
+
+        const f3 = "1 8 8 × 3 5 - 2 4 4 / 1 6 - 3 × 8 / 9 × ( 2 3 + 1 ) × 3 × 5 - 1 0 0";
+        expect(calculate(f3)).toBe("5504.75");
+
+        const f4 = "2 5 6 4 × 9 2 - 8 8 8 8 / 6 4 + ( 2 5 5 0 - 1 1 3 ) - ( - 3 2 )";
+        expect(calculate(f4)).toBe("238218.125");
+
+        const f5 = "6 1 × ( 3 9 - ( 2 8 × 9 1 × ( 5 0 0 - 3 4 2 ) ) + 2 9 × 8 ) - 2";
+        expect(calculate(f5)).toBe("-24541095");
+    });
+
+    test("Power Calculations", () => {
+        const f1 = "3 ^2 + 5";
+        expect(calculate(f1)).toBe("14");
+
+        const f2 = "2 × 5 ^3 - 9 ^5 / 9 - ( 4 ^2 - 3 ^2 )";
+        expect(calculate(f2)).toBe("-6318");
+
+        const f3 = "( 3 3 + 4 8 ) ^2 - ( 9 9 5 - 8 0 3 ) ^3 + 5 ^4 - 1 0 0 ^2";
+        expect(calculate(f3)).toBe("-7080702");
+
+        const f4 = "\\sin( 5 ) ^3";
+        expect(calculate(f4)).toBe("-0.88176516603663");
+
+        const f5 = "- | - 2 ^3 | ^2";
+        expect(calculate(f5)).toBe("-64");
+
+        const f6 = "( 3 ^2 ) ! ^3";
+        expect(calculate(f6)).toBe("47784725839872000");
+    });
+
+    test("Function Calculations", () => {
+        const f1 = "2 \\sin( \\pi / 6 )";
+        expect(calculate(f1)).toBe("1");
+
+        const f2 = "\\tan( \\pi / 4 )";
+        expect(calculate(f2)).toBe("1");
+
+        const f3 = "\\tan( 3 \\pi / 2 )";
+        expect(calculate(f3)).toBe("NaN");
+
+        const f4 = "\\cos( \\pi / 3 ) 2";
+        expect(calculate(f4)).toBe("1");
+
+        const f5 = "\\text{mean}( 1 , 7 , 8 , ( 3 + 9 7 ) , ( 1 1 4 5 1 5 - 1 ) )";
+        expect(calculate(f5)).toBe("22926");
+
+        const f6 = "\\text{nPr}( 1 , 2 )";
+        expect(calculate(f6)).toBe("-1");
+    });
+
+    test("Absolute Value Calculations", () => {
+        const f1 = "| - 1 9 1 9 8 1 0 |";
+        expect(calculate(f1)).toBe("1919810");
+
+        const f2 = "| 5 3 - ( 1 0 0 + 2 2 ) |";
+        expect(calculate(f2)).toBe("69");
+    });
+
+    test("Integrated Calculations", () => {
+        // const f1 = "1 1 4 + 5 1 4 × ( 1 5 7 + 2 4 6 - 3 / ( 2 9 - 2 8 + 1 3 \\sin( \\pi / 6 ) ^2 - \\mean( 1 , 2 , 3 , ( 2 3 - 1 2 ) + | - 1 5 | ^2 - 3 ! ^2 + 4 ! ) ) ) + \\ln( \\e )";
+        // expect(calculate(f1)).toBe("207285.95774647887");
+    });
+
+});
