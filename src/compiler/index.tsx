@@ -151,8 +151,17 @@ export default class Compiler {
                             isFirst: false
                         } as OperatorToken);
 
-                        symbol = this.variables.get(symbol) ?? (constants.get(symbol) ?? "NaN").toString();
-                        addNumber(symbol);
+                        // Avoid something like `2ab` (a=1,b=2) being processed into `2 * 1 1 * 2`
+                        if(
+                            !(
+                                Is.number(this.raw[i + 1], this.isProgrammingMode) ||
+                                Is.variable(this.raw[i + 1]) ||
+                                Is.constant(this.raw[i + 1])
+                            )
+                        ) {
+                            symbol = this.variables.get(symbol) ?? (constants.get(symbol) ?? "NaN").toString();
+                            addNumber(symbol);
+                        }
                         // pow
                         const di = this.raw[i + 1] === "!" ? 2 : 1;
                         if(i + di < this.raw.length && this.raw[i + di][0] === "^") {

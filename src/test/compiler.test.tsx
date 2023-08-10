@@ -1,8 +1,9 @@
 import Compiler from "../compiler";
 
-function calculate(formula: string): string {
-    const emptyVariableList = new Map<string, string>();
-    return new Compiler(formula.split(" "), emptyVariableList).compile();
+type VariableList = Map<string, string>;
+
+function calculate(formula: string, variables: VariableList = new Map()): string {
+    return new Compiler(formula.split(" "), variables).compile();
 }
 
 describe("Compiler tests", () => {
@@ -70,6 +71,22 @@ describe("Compiler tests", () => {
 
         const f2 = "| 5 3 - ( 1 0 0 + 2 2 ) |";
         expect(calculate(f2)).toBe("69");
+    });
+
+    test("Calculations with Variables", () => {
+        const variables = new Map([
+            ["a", "5"],
+            ["b", "13"],
+            ["c", "134"],
+            ["d", "-98"],
+            ["x", Math.E.toString()]
+        ]);
+
+        const f1 = "√( b ^2 - a ^2 )";
+        expect(calculate(f1, variables)).toBe("12");
+
+        const f2 = "\\ln( x ) - d + 3 c - 2 a b + 2 ( a + b )";
+        expect(calculate(f2, variables)).toBe("407");
     });
 
     test("Integrated Calculations", () => {
