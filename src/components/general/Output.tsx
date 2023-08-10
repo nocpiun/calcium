@@ -87,6 +87,16 @@ const Output: React.FC = () => {
                     setOutputContent("");
                     return currentContent.replace(cursor, symbol +" "+ cursor);
                 }
+            case "^":
+                if(contentArray[contentArray.length - 2].indexOf("^") > -1) {
+                    const currentExponentialStr = contentArray[contentArray.length - 2].replace("^", "");
+                    const newExponential = parseInt(currentExponentialStr) + 1;
+                    if(newExponential > 9) return;
+
+                    return currentContent.substring(0, currentContent.length - 4) +"^"+ newExponential +" "+ cursor;
+                }
+
+                return currentContent.replace(cursor, "^2 "+ cursor);
             default:
                 // Function auto complete
                 for(let i = 0; i < specialSymbols.length; i++) {
