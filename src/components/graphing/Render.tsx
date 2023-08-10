@@ -13,7 +13,7 @@ const colors = {
     highlight: "#fff"
 };
 
-const delta: number = .001;
+const delta: number = .005;
 
 // Inside of Service Worker
 
@@ -224,7 +224,7 @@ export default class Render {
             var rawText = this.functionList.get(i);
 
             if(direction === MouseDirection.LEFT) {
-                for(let x1 = beginX2; x1 <= endX2; x1 += .001) {
+                for(let x1 = beginX2; x1 <= endX2; x1 += delta) {
                     var y1 = parseFloat(new Compiler(rawText.split(" "), new Map([["x", x1.toString()]])).compile());
     
                     var x2 = x1 + delta;
@@ -233,7 +233,7 @@ export default class Render {
                     this.displayedPoints.push([new Point(x1, y1), new Point(x2, y2)]);
                 }
             } else {
-                for(let x1 = endX2; x1 >= beginX2; x1 -= .001) {
+                for(let x1 = endX2; x1 >= beginX2; x1 -= delta) {
                     var y1 = parseFloat(new Compiler(rawText.split(" "), new Map([["x", x1.toString()]])).compile());
     
                     var x2 = x1 + delta;

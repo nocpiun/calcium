@@ -29,6 +29,7 @@ export default class Formula {
 
         for(let i = 0; i < root.children.length; i++) {
             var token = root.children[i];
+            var exponential = (token as PowerableToken).exponential ?? 1;
 
             switch(token.type) {
                 case "number":
@@ -52,7 +53,7 @@ export default class Formula {
 
                     numbers.add({
                         type: "number",
-                        value: transformedValue,
+                        value: Utils.safePow(transformedValue, exponential),
                         float: Is.float(transformedValue),
                         numberSys: NumberSys.DEC
                     });
@@ -64,7 +65,6 @@ export default class Formula {
                     var value = (token as BracketToken).factorial
                     ? Utils.factorial(new Formula(token as ChildrenToken).evaluate())
                     : new Formula(token as ChildrenToken).evaluate();
-                    var exponential = (token as PowerableToken).exponential ?? 1;
                     
                     numbers.add({
                         type: "number",
@@ -77,7 +77,7 @@ export default class Formula {
                     var value = Math.abs(new Formula(token as ChildrenToken).evaluate());
                     numbers.add({
                         type: "number",
-                        value,
+                        value: Utils.safePow(value, exponential),
                         float: Is.float(value),
                         numberSys: NumberSys.DEC
                     });
@@ -89,7 +89,6 @@ export default class Formula {
                         calculatedParam.push(new Formula(param[i] as ChildrenToken).evaluate());
                     }
 
-                    var exponential = (token as PowerableToken).exponential ?? 1;
                     var value = func(...calculatedParam);
                     numbers.add({
                         type: "number",

@@ -153,6 +153,12 @@ export default class Compiler {
 
                         symbol = this.variables.get(symbol) ?? (constants.get(symbol) ?? "NaN").toString();
                         addNumber(symbol);
+                        // pow
+                        const di = this.raw[i + 1] === "!" ? 2 : 1;
+                        if(i + di < this.raw.length && this.raw[i + di][0] === "^") {
+                            (root.children[root.children.length - di] as PowerableToken).exponential = parseInt(this.raw[i + di][1]);
+                            i++;
+                        }
     
                         tempNumber = "";
                         continue;
@@ -165,10 +171,6 @@ export default class Compiler {
 
                 if(i === this.raw.length - 1) addNumber(tempNumber);
             } else if(Is.operator(symbol)) { // operator
-                // if(symbol === "-" && i === 0) {
-                //     tempNumber += "-";
-                //     continue;
-                // }
                 if(i !== 0 && tempNumber !== "") addNumber(tempNumber);
                 root.children.push({
                     type: "operator",
@@ -265,6 +267,14 @@ export default class Compiler {
                         type: "abs",
                         children: absContent.children
                     } as ChildrenToken);
+
+                    // pow
+                    const di = this.raw[i + 1] === "!" ? 2 : 1;
+                    if(i + di < this.raw.length && this.raw[i + di][0] === "^") {
+                        (root.children[root.children.length - di] as PowerableToken).exponential = parseInt(this.raw[i + di][1]);
+                        i++;
+                        continue;
+                    }
                     
                     this.secondaryRaw = [];
                     this.inAbs = false;
@@ -294,17 +304,9 @@ export default class Compiler {
                 this.currentFunction = functions.get(functionName) ?? [((x) => x), 1];
                 this.layer++;
             } else if(symbol[0] === "^") { // pow
-                var targetNumberToken = addNumber(tempNumber);
+                var exponential = parseInt(symbol[1]);
 
-                for(let j = 0; j < parseInt(symbol[1]) - 1; j++) {
-                    root.children.push({
-                        type: "operator",
-                        value: Operator.MUL,
-                        isFirst: false
-                    } as OperatorToken);
-                    root.children.push(targetNumberToken);
-                }
-
+                addNumber(Utils.safePow(parseFloat(tempNumber), exponential).toString());
                 tempNumber = "";
             } else if(symbol[0] === "!") { // factorial
                 var value = Utils.factorial(parseInt(tempNumber));
@@ -317,6 +319,7 @@ export default class Compiler {
                 
                 tempNumber = "";
 
+                // pow
                 if(i + 1 < this.raw.length && this.raw[i + 1][0] === "^") {
                     (root.children[root.children.length - 1] as NumberToken).value = Utils.safePow(value, parseInt(this.raw[i + 1][1]));
                     i++;
@@ -324,6 +327,7 @@ export default class Compiler {
                 }
             }
         }
+        console.log(root);
 
         return root;
     }
