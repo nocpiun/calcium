@@ -98,12 +98,13 @@ const FunctionList: React.FC = () => {
                     return currentContent.replace(cursor, symbol +" "+ cursor);
                 }
             case "^":
-                if(contentArray[contentArray.length - 2].indexOf("^") > -1) {
-                    const currentExponentialStr = contentArray[contentArray.length - 2].replace("^", "");
+                if(contentArray[cursorIndex - 1].indexOf("^") > -1) {
+                    const currentExponentialStr = contentArray[cursorIndex - 1].replace("^", "");
                     const newExponential = parseInt(currentExponentialStr) + 1;
                     if(newExponential > 9) return;
 
-                    return currentContent.substring(0, currentContent.length - 4) +"^"+ newExponential +" "+ cursor;
+                    contentArray[cursorIndex - 1] = "^"+ newExponential;
+                    return contentArray.join(" ");
                 }
 
                 return currentContent.replace(cursor, "^2 "+ cursor);
