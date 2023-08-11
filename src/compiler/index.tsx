@@ -344,7 +344,13 @@ export default class Compiler {
             }
         }
 
-        if(process.env.NODE_ENV === "test") console.log(root);
+        if(process.env.NODE_ENV === "test") {
+            console.log(
+                this.raw.join(""),
+                "\n",
+                root
+            );
+        }
 
         return root;
     }

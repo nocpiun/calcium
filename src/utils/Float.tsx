@@ -100,4 +100,16 @@ export default class Float {
         var number = n.toFixed(Math.max(0, (tmpArray[1] || '').length - (tmpArray[2] as any)));
         return number;
     }
+
+    public static calibrate(n: number): number {
+        // n is in [a,b]
+        const a = Math.floor(n);
+        const b = a + 1;
+        const calibratingNum = 1e-14;
+
+        if(Float.sub(n, a) <= calibratingNum) return a;
+        if(Float.sub(b, n) <= calibratingNum) return b;
+
+        return n;
+    }
 }

@@ -89,7 +89,7 @@ export default class Formula {
                         calculatedParam.push(new Formula(param[i] as ChildrenToken).evaluate());
                     }
 
-                    var value = func(...calculatedParam);
+                    var value = Float.calibrate(parseFloat(func(...calculatedParam).toFixed(14)));
                     numbers.add({
                         type: "number",
                         value: Utils.safePow(value, exponential),
@@ -254,6 +254,6 @@ export default class Formula {
         var result = numbers.get(0)?.value ?? NaN;
 
         if(isNaN(result)) return NaN;
-        return parseFloat(result.toFixed(14));
+        return Float.calibrate(parseFloat(result.toFixed(14)));
     }
 }

@@ -36,7 +36,7 @@ describe("Compiler tests", () => {
         expect(calculate(f3)).toBe("-7080702");
 
         const f4 = "\\sin( 5 ) ^3";
-        expect(calculate(f4)).toBe("-0.88176516603663");
+        expect(calculate(f4)).toBe("-0.88176516603664");
 
         const f5 = "- | - 2 ^3 | ^2";
         expect(calculate(f5)).toBe("-64");
@@ -115,7 +115,7 @@ describe("Compiler tests", () => {
 
     test("Integrated Calculations", () => {
         const f1 = "1 1 4 + 5 1 4 × ( 1 5 7 + 2 4 6 - 3 / ( 2 9 - 2 8 + 1 3 \\sin( \\pi / 6 ) ^2 - \\text{mean}( 1 , 2 , 3 , ( 2 3 - 1 2 ) + | - 1 5 | ^2 - 3 ! ^2 + 4 ! ) ) ) + \\ln( e )";
-        expect(calculate(f1)).toBe("207285.9577464789");
+        expect(calculate(f1)).toBe("207285.95774647893");
     });
 
 });
