@@ -300,7 +300,7 @@ export default class Compiler {
             } else if(Is.mathFunction(symbol)) { // function
                 // Process something like `2sin(pi/6)`
                 if(i !== 0 && !Is.operator(this.raw[i - 1])) {
-                    if(Is.number(this.raw[i - 1], this.isProgrammingMode)) {
+                    if(tempNumber !== "") {
                         addNumber(tempNumber);
                         tempNumber = "";
                     }

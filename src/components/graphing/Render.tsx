@@ -7,17 +7,17 @@ import List from "../../utils/List";
 import Utils from "../../utils/Utils";
 import { MouseDirection, ZoomDirection } from "../../types";
 
-const colors = {
-    primary: "#cbd0df",
-    secondary: "#8c949e",
-    highlight: "#fff"
-};
-
 const delta: number = .005;
 
 // Inside of Service Worker
 
 export default class Render {
+    public static colors = {
+        primary: "#cbd0df",
+        secondary: "#8c949e",
+        highlight: "#fff"
+    };
+
     public canvas: OffscreenCanvas;
     private ctx: OffscreenCanvasRenderingContext2D;
     private workerCtx: Worker;
@@ -48,10 +48,17 @@ export default class Render {
 
         this.fpsUpdater = setInterval(() => this.workerCtx.postMessage({ type: "fps", fps: this.currentFPS }), 1000);
 
-        if(!isDarkMode) {
-            colors.primary = "#404041";
-            colors.highlight = "#222";
-        }
+        if(!isDarkMode) Render.changeToDark();
+    }
+
+    public static changeToDark(): void {
+        Render.colors.primary = "#404041";
+        Render.colors.highlight = "#222";
+    }
+
+    public static changeToLight(): void {
+        Render.colors.primary = "#cbd0df";
+        Render.colors.highlight = "#fff";
     }
 
     public reset(): void {
@@ -112,7 +119,7 @@ export default class Render {
          * X Direction
          */
         // X Axis
-        this.drawStraightLine(this.center.y, colors.primary, 2);
+        this.drawStraightLine(this.center.y, Render.colors.primary, 2);
         // thicker line
         for(
             let i = 1;
@@ -124,12 +131,12 @@ export default class Render {
         ) {
             var y1 = this.center.y - i * unitPx;
             var y2 = this.center.y + i * unitPx;
-            this.drawStraightLine(y1, colors.secondary);
-            this.drawStraightLine(y2, colors.secondary);
+            this.drawStraightLine(y1, Render.colors.secondary);
+            this.drawStraightLine(y2, Render.colors.secondary);
 
             // number of the line
-            this.drawText((i * this.spacing).toString(), this.center.x + 5, y1 + 5, colors.primary, 15);
-            this.drawText((-i * this.spacing).toString(), this.center.x + 5, y2 + 5, colors.primary, 15);
+            this.drawText((i * this.spacing).toString(), this.center.x + 5, y1 + 5, Render.colors.primary, 15);
+            this.drawText((-i * this.spacing).toString(), this.center.x + 5, y2 + 5, Render.colors.primary, 15);
         }
         // thinner line
         for(
@@ -142,15 +149,15 @@ export default class Render {
         ) {
             var y1 = this.center.y - i * secondaryUnitPx;
             var y2 = this.center.y + i * secondaryUnitPx;
-            this.drawStraightLine(y1, colors.secondary, .3);
-            this.drawStraightLine(y2, colors.secondary, .3);
+            this.drawStraightLine(y1, Render.colors.secondary, .3);
+            this.drawStraightLine(y2, Render.colors.secondary, .3);
         }
 
         /**
          * Y Direction
          */
         // Y Axis
-        this.drawVerticalLine(this.center.x, colors.primary, 2);
+        this.drawVerticalLine(this.center.x, Render.colors.primary, 2);
         // thicker line
         for(
             let k = 1;
@@ -162,12 +169,12 @@ export default class Render {
         ) {
             var x1 = this.center.x - k * unitPx;
             var x2 = this.center.x + k * unitPx;
-            this.drawVerticalLine(x1, colors.secondary);
-            this.drawVerticalLine(x2, colors.secondary);
+            this.drawVerticalLine(x1, Render.colors.secondary);
+            this.drawVerticalLine(x2, Render.colors.secondary);
 
             // number of the line
-            this.drawText((-k * this.spacing).toString(), x1 - 5, this.center.y + 15, colors.primary, 15);
-            this.drawText((k * this.spacing).toString(), x2 - 5, this.center.y + 15, colors.primary, 15);
+            this.drawText((-k * this.spacing).toString(), x1 - 5, this.center.y + 15, Render.colors.primary, 15);
+            this.drawText((k * this.spacing).toString(), x2 - 5, this.center.y + 15, Render.colors.primary, 15);
         }
         // thinner line
         for(
@@ -180,8 +187,8 @@ export default class Render {
         ) {
             var x1 = this.center.x - l * secondaryUnitPx;
             var x2 = this.center.x + l * secondaryUnitPx;
-            this.drawVerticalLine(x1, colors.secondary, .3);
-            this.drawVerticalLine(x2, colors.secondary, .3);
+            this.drawVerticalLine(x1, Render.colors.secondary, .3);
+            this.drawVerticalLine(x2, Render.colors.secondary, .3);
         }
     }
 
@@ -386,18 +393,18 @@ export default class Render {
         this.refreshAxisLine();
 
         // O point
-        this.drawText("O", this.center.x - 20, this.center.y + 20, colors.primary, 17);
+        this.drawText("O", this.center.x - 20, this.center.y + 20, Render.colors.primary, 17);
 
         // Mouse point
         var mouseCoordinatesPoint = this.screenToCoordinates(this.mousePoint);
-        this.drawText("("+ mouseCoordinatesPoint.x.toFixed(2) +", "+ mouseCoordinatesPoint.y.toFixed(2) +")", 30, 30, colors.primary, 15);
+        this.drawText("("+ mouseCoordinatesPoint.x.toFixed(2) +", "+ mouseCoordinatesPoint.y.toFixed(2) +")", 30, 30, Render.colors.primary, 15);
         
         // Is mouse down
-        this.drawText(this.mouseDown ? "Moving" : "", this.canvas.width - 80, 30, colors.primary, 15);
+        this.drawText(this.mouseDown ? "Moving" : "", this.canvas.width - 80, 30, Render.colors.primary, 15);
 
         // Draw function images
         for(let i = 0; i < this.displayedPoints.length; i++) {
-            this.drawLine(this.coordinatesToScreen(this.displayedPoints[i][0]), this.coordinatesToScreen(this.displayedPoints[i][1]), colors.highlight);
+            this.drawLine(this.coordinatesToScreen(this.displayedPoints[i][0]), this.coordinatesToScreen(this.displayedPoints[i][1]), Render.colors.highlight);
         }
 
         var imageBitmap = this.canvas.transferToImageBitmap();

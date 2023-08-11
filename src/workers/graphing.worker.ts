@@ -44,6 +44,11 @@ ctx.addEventListener("message", (e) => {
         case "wheel":
             renderer.handleWheel(req.dy);
             break;
+        case "theme-change":
+            req.isDarkMode
+            ? Render.changeToDark()
+            : Render.changeToLight()
+            break;
     }
 });
 

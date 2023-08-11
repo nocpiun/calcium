@@ -92,6 +92,16 @@ const Graphing: React.FC = memo(() => {
             reloader(reloadTrigger + 1);
         });
 
+        // Listen to the change of theme, then change the colors inside canvas
+        new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if(!workerRef.current) return;
+                if(mutation.type === "attributes") {
+                    workerRef.current.postMessage({ type: "theme-change", isDarkMode: !Utils.isDarkMode() });
+                }
+            });
+        }).observe(document.body, { attributes: true });
+
         return () => { // Unregister renderer and worker
             if(!workerRef.current) return;
             workerRef.current.postMessage({ type: "reset" });
