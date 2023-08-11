@@ -183,7 +183,7 @@ const Output: React.FC = () => {
         if(result.indexOf("NaN") > -1 || result === "") error = true;
 
         // Display the result
-        if(result.indexOf("Infinity") > -1) result = "\\infty";
+        if(result.indexOf("Infinity") > -1) result = result.replace("Infinity", "\\infty");
         if(!error) {
             setOutputContent("="+ result);
             Logger.info("Calculated: "+ rawText.replaceAll(" ", "") +"="+ result);
