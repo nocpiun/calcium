@@ -142,7 +142,7 @@ export default class Compiler {
                         addNumber(
                             tempNumber !== ""
                             ? tempNumber
-                            : this.variables.get(this.raw[i - 1]) ?? (constants.get(symbol) ?? "NaN").toString()
+                            : this.variables.get(this.raw[i - 1]) ?? (constants.get(this.raw[i - 1]) ?? "NaN").toString()
                         );
                         
                         root.children.push({
@@ -171,6 +171,14 @@ export default class Compiler {
     
                         tempNumber = "";
                         continue;
+                    } else if(root.children.length > 0 && root.children[root.children.length - 1].type === "number") { // Process something like `2^2*a`
+                        root.children.push({
+                            type: "operator",
+                            value: Operator.MUL,
+                            isFirst: false
+                        } as OperatorToken);
+
+                        symbol = this.variables.get(symbol) ?? (constants.get(symbol) ?? "NaN").toString();
                     } else {
                         symbol = this.variables.get(symbol) ?? (constants.get(symbol) ?? "NaN").toString();
                     }
@@ -191,7 +199,7 @@ export default class Compiler {
             } else if(Is.leftBracket(symbol)) { // left bracket
                 // Process something like `3(5-2)`
                 if(i !== 0 && !Is.operator(this.raw[i - 1])) {
-                    if(Is.number(this.raw[i - 1], this.isProgrammingMode)) {
+                    if(tempNumber !== "") {
                         addNumber(tempNumber);
                         tempNumber = "";
                     }
@@ -335,6 +343,8 @@ export default class Compiler {
                 }
             }
         }
+
+        if(process.env.NODE_ENV === "test") console.log(root);
 
         return root;
     }

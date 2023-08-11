@@ -87,6 +87,30 @@ describe("Compiler tests", () => {
 
         const f2 = "\\ln( x ) - d + 3 c - 2 a b + 2 ( a + b )";
         expect(calculate(f2, variables)).toBe("407");
+
+        const f3 = "2 ( a b )";
+        expect(calculate(f3, variables)).toBe("130");
+
+        const f4 = "( 2 a ) b";
+        expect(calculate(f4, variables)).toBe("130");
+
+        const f5 = "( a b ) 2";
+        expect(calculate(f5, variables)).toBe("130");
+
+        const f6 = "2 e \\pi";
+        expect(calculate(f6)).toBe("17.07946844534713");
+
+        const f7 = "2 ( e \\pi )";
+        expect(calculate(f7)).toBe("17.07946844534714");
+
+        const f8 = "( 2 e ) \\pi";
+        expect(calculate(f8)).toBe("17.07946844534713");
+
+        const f9 = "( e \\pi ) 2";
+        expect(calculate(f9)).toBe("17.07946844534714");
+
+        const f10 = "2 ^2 e";
+        expect(calculate(f10)).toBe("10.87312731383618");
     });
 
     test("Integrated Calculations", () => {
