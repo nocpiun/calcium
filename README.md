@@ -5,7 +5,7 @@
 # Calcium Calculator
 
 [![Author](https://img.shields.io/badge/Author-NriotHrreion-red.svg "Author")](https://github.com/NriotHrreion)
-[![LICENSE](https://img.shields.io/badge/license-MIT-green.svg "LICENSE")](./LICENSE)
+[![LICENSE](https://img.shields.io/badge/License-MIT-green.svg "LICENSE")](./LICENSE)
 [![Stars](https://img.shields.io/github/stars/nocpiun/calcium.svg?label=Stars)](https://github.com/nocpiun/calcium/stargazers)
 [![Netlify Status](https://api.netlify.com/api/v1/badges/41b2bd01-9404-4d8b-99c4-7dea623f720a/deploy-status)](https://app.netlify.com/sites/courageous-bublanina-6857c1/deploys)
 
@@ -29,7 +29,7 @@ _[Here is the Wiki](https://github.com/nocpiun/calcium/wiki)_
 Calculator -> calc -> Ca (Chemical Element) -> Calcium
 ```
 
-#### What functions does it include?
+#### What features does it include?
 
 - Basic calculating
 - Variable creating and storing
