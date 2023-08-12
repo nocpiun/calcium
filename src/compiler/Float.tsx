@@ -1,4 +1,4 @@
-import Utils from "./Utils";
+import Compute from "./Compute";
 
 /** @see https://www.bbsmax.com/A/qVde1Y9AdP/ */
 export default class Float {
@@ -18,7 +18,7 @@ export default class Float {
             r2 = 0;
         }
 
-        m = Utils.safePow(10, Math.max(r1, r2));
+        m = Compute.safePow(10, Math.max(r1, r2));
         return (a * m + b * m) / m;
     }
 
@@ -39,7 +39,7 @@ export default class Float {
             r2 = 0;
         }
 
-        m = Utils.safePow(10, Math.max(r1, r2));
+        m = Compute.safePow(10, Math.max(r1, r2));
         n = (r1 >= r2) ? r1 : r2;
         return parseFloat(((a * m - b * m) / m).toFixed(n));
     }
@@ -60,7 +60,7 @@ export default class Float {
             //
         }
 
-        return Number(s1.replace('.', '')) * Number(s2.replace('.', '')) / Utils.safePow(10, m);
+        return Number(s1.replace('.', '')) * Number(s2.replace('.', '')) / Compute.safePow(10, m);
     }
 
     public static divide(a: number, b: number): number {
@@ -85,7 +85,7 @@ export default class Float {
         r1 = Number(Float.eTransfer(a).replace('.', ''));
         r2 = Number(Float.eTransfer(b).replace('.', ''));
         var intDiv = r1 / r2;
-        var pow = Utils.safePow(10, t2 - t1);
+        var pow = Compute.safePow(10, t2 - t1);
         return Float.multiply(intDiv, pow);
     }
 

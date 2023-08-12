@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-redeclare */
 import List from "../utils/List";
-import Float from "../utils/Float";
+import Float from "./Float";
 import Is from "./Is";
 import Transformer from "./Transformer";
+import Compute from "./Compute";
 
 import { NumberSys, Operator } from "../types";
 import type {
@@ -13,7 +14,6 @@ import type {
     FunctionToken,
     PowerableToken
 } from "../types";
-import Utils from "../utils/Utils";
 
 export default class Formula {
     public token: ChildrenToken;
@@ -53,7 +53,7 @@ export default class Formula {
 
                     numbers.add({
                         type: "number",
-                        value: Utils.safePow(transformedValue, exponential),
+                        value: Compute.safePow(transformedValue, exponential),
                         float: Is.float(transformedValue),
                         numberSys: NumberSys.DEC
                     });
@@ -63,12 +63,12 @@ export default class Formula {
                     break;
                 case "bracket":
                     var value = (token as BracketToken).factorial
-                    ? Utils.factorial(new Formula(token as ChildrenToken).evaluate())
+                    ? Compute.factorial(new Formula(token as ChildrenToken).evaluate())
                     : new Formula(token as ChildrenToken).evaluate();
                     
                     numbers.add({
                         type: "number",
-                        value: Utils.safePow(value, exponential),
+                        value: Compute.safePow(value, exponential),
                         float: Is.float(value),
                         numberSys: NumberSys.DEC
                     });
@@ -77,7 +77,7 @@ export default class Formula {
                     var value = Math.abs(new Formula(token as ChildrenToken).evaluate());
                     numbers.add({
                         type: "number",
-                        value: Utils.safePow(value, exponential),
+                        value: Compute.safePow(value, exponential),
                         float: Is.float(value),
                         numberSys: NumberSys.DEC
                     });
@@ -92,7 +92,7 @@ export default class Formula {
                     var value = Float.calibrate(parseFloat(func(...calculatedParam).toFixed(14)));
                     numbers.add({
                         type: "number",
-                        value: Utils.safePow(value, exponential),
+                        value: Compute.safePow(value, exponential),
                         float: Is.float(value),
                         numberSys: NumberSys.DEC
                     });

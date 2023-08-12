@@ -1,8 +1,9 @@
 import React, { useRef } from "react";
 
+import Float from "../../compiler/Float";
+
 import type { UnitType, UnitInfo } from "../../types";
 import Emitter from "../../utils/Emitter";
-import Float from "../../utils/Float";
 
 import useEmitter from "../../hooks/useEmitter";
 

@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-redeclare */
 import Formula from "./Formula";
 import Is from "./Is";
+import Compute from "./Compute";
 
 import { functions, constants } from "../global";
 import { Operator, NumberSys } from "../types";
@@ -322,10 +323,10 @@ export default class Compiler {
             } else if(symbol[0] === "^") { // pow
                 var exponential = parseInt(symbol[1]);
 
-                addNumber(Utils.safePow(parseFloat(tempNumber), exponential).toString());
+                addNumber(Compute.safePow(parseFloat(tempNumber), exponential).toString());
                 tempNumber = "";
             } else if(symbol[0] === "!") { // factorial
-                var value = Utils.factorial(parseFloat(tempNumber));
+                var value = Compute.factorial(parseFloat(tempNumber));
                 root.children.push({
                     type: "number",
                     value,
@@ -337,13 +338,12 @@ export default class Compiler {
 
                 // pow
                 if(i + 1 < this.raw.length && this.raw[i + 1][0] === "^") {
-                    (root.children[root.children.length - 1] as NumberToken).value = Utils.safePow(value, parseInt(this.raw[i + 1][1]));
+                    (root.children[root.children.length - 1] as NumberToken).value = Compute.safePow(value, parseInt(this.raw[i + 1][1]));
                     i++;
                     continue;
                 }
             }
         }
-        console.log(root);
 
         if(process.env.NODE_ENV === "test") {
             console.log(

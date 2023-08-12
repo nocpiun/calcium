@@ -1,4 +1,5 @@
-import Utils from "./utils/Utils";
+import Compute from "./compiler/Compute";
+
 import Emitter from "./utils/Emitter";
 import { MathFunction, Shortcut } from "./types";
 
@@ -8,8 +9,8 @@ export const errorText = "\\text{Error}";
 export const functions: Map<string, MathFunction> = new Map([
     ["sin",          [(x) => Math.sin(x),            1]],
     ["cos",          [(x) => Math.cos(x),            1]],
-    ["tan",          [(x) => Utils.safeTan(x),       1]],
-    ["cot",          [(x) => 1 / Utils.safeTan(x),   1]],
+    ["tan",          [(x) => Compute.safeTan(x),       1]],
+    ["cot",          [(x) => 1 / Compute.safeTan(x),   1]],
     ["sec",          [(x) => 1 / Math.cos(x),        1]],
     ["csc",          [(x) => 1 / Math.sin(x),        1]],
     ["sin^{-1}",     [(x) => Math.asin(x),           1]],
@@ -30,12 +31,12 @@ export const functions: Map<string, MathFunction> = new Map([
     ["^3√",          [(x) => Math.cbrt(x),           1]],
     ["%",            [(x) => x / 100,                1]],
     ["text{not}",    [(x) => ~x,                     1]],
-    ["text{mean}",   [(...n) => Utils.mean(...n),   -1]],
-    ["text{stdev}",  [(...n) => Utils.stdev(...n),  -1]],
-    ["text{stdevp}", [(...n) => Utils.stdevp(...n), -1]],
-    ["text{nPr}",    [(n, r) => Utils.nPr(n, r),     2]],
-    ["text{nCr}",    [(n, r) => Utils.nCr(n, r),     2]],
-    ["text{xPx}",    [(x) => Utils.safePow(x, x),    1]],
+    ["text{mean}",   [(...n) => Compute.mean(...n),   -1]],
+    ["text{stdev}",  [(...n) => Compute.stdev(...n),  -1]],
+    ["text{stdevp}", [(...n) => Compute.stdevp(...n), -1]],
+    ["text{nPr}",    [(n, r) => Compute.nPr(n, r),     2]],
+    ["text{nCr}",    [(n, r) => Compute.nCr(n, r),     2]],
+    ["text{xPx}",    [(x) => Compute.safePow(x, x),    1]],
 ]);
 
 export const constants: Map<string, number> = new Map([
