@@ -73,6 +73,29 @@ describe("Compiler tests", () => {
         expect(calculate(f2)).toBe("69");
     });
 
+    test("Factorial Calculations", () => {
+        const f1 = "5 !";
+        expect(calculate(f1)).toBe("120");
+
+        const f2 = "3 ! !";
+        expect(calculate(f2)).toBe("720");
+
+        const f3 = "3 ^2 !";
+        expect(calculate(f3)).toBe("362880");
+
+        const f4 = "3 ! ^2";
+        expect(calculate(f4)).toBe("36");
+
+        const f5 = "0 . 5 !";
+        expect(calculate(f5)).toBe("0.88622692545276");
+
+        const f6 = "( - 1 ) !";
+        expect(calculate(f6)).toBe("NaN");
+
+        const f7 = "0 !";
+        expect(calculate(f7)).toBe("1");
+    });
+
     test("Calculations with Variables", () => {
         const variables = new Map([
             ["a", "5"],
