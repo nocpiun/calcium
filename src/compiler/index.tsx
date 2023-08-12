@@ -325,7 +325,7 @@ export default class Compiler {
                 addNumber(Utils.safePow(parseFloat(tempNumber), exponential).toString());
                 tempNumber = "";
             } else if(symbol[0] === "!") { // factorial
-                var value = Utils.factorial(parseInt(tempNumber));
+                var value = Utils.factorial(parseFloat(tempNumber));
                 root.children.push({
                     type: "number",
                     value,
@@ -343,6 +343,7 @@ export default class Compiler {
                 }
             }
         }
+        console.log(root);
 
         if(process.env.NODE_ENV === "test") {
             console.log(

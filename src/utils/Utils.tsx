@@ -106,15 +106,40 @@ export default class Utils {
     /** @see https://www.cnblogs.com/jialuchun/p/6559422.html */
     public static factorial(x: number): number {
         if(x < 0) {
-            return -1;
+            return NaN;
         } else if(x === 0 || x === 1) {
             return 1;
-        } else {
+        } else if(Math.floor(x) === x) {
             for(let i = x - 1; i >= 1; i--) {
                 x *= i;
             }
+            return x;
         }
-        return x;
+
+        return Utils.gamma(x + 1);
+    }
+
+    /** @see https://rosettacode.org/wiki/Gamma_function#JavaScript */
+    public static gamma(x: number): number {
+        const p = [
+            0.99999999999980993, 676.5203681218851, -1259.1392167224028,
+            771.32342877765313, -176.61502916214059, 12.507343278686905,
+            -0.13857109526572012, 9.9843695780195716e-6, 1.5056327351493116e-7
+        ];
+    
+        const g = 7;
+        if(x < 0.5) {
+            return Math.PI / (Math.sin(Math.PI * x) * Utils.gamma(1 - x));
+        }
+    
+        x -= 1;
+        var a = p[0];
+        const t = x + g + 0.5;
+        for(var i = 1; i < p.length; i++) {
+            a += p[i] / (x + i);
+        }
+    
+        return Math.sqrt(2 * Math.PI) * Math.pow(t, x + 0.5) * Math.exp(-t) * a;
     }
 
     public static scrollToEnd(id: string, top: number = 1, left: number = 1): void {
