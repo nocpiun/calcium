@@ -326,15 +326,23 @@ export default class Compiler {
                 addNumber(Compute.safePow(parseFloat(tempNumber), exponential).toString());
                 tempNumber = "";
             } else if(symbol[0] === "!") { // factorial
-                var value = Compute.factorial(parseFloat(tempNumber));
-                root.children.push({
-                    type: "number",
-                    value,
-                    float: false,
-                    numberSys: NumberSys.DEC
-                } as NumberToken);
-                
-                tempNumber = "";
+                var value;
+
+                if(root.children.length > 0 && root.children[root.children.length - 1].type === "number") { // multi-factorial
+                    value = Compute.factorial((root.children[root.children.length - 1] as NumberToken).value);
+                    // rewrite the single-factorial value token, make it to the multi-factorial one
+                    (root.children[root.children.length - 1] as NumberToken).value = value;
+                } else { // single-factorial
+                    value = Compute.factorial(parseFloat(tempNumber));
+                    root.children.push({
+                        type: "number",
+                        value,
+                        float: false,
+                        numberSys: NumberSys.DEC
+                    } as NumberToken);
+                    
+                    tempNumber = "";
+                }
 
                 // pow
                 if(i + 1 < this.raw.length && this.raw[i + 1][0] === "^") {
