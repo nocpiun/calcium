@@ -128,7 +128,7 @@ const ProgrammingInput: React.FC = () => {
                     <InputButton symbol="\rightarrow" grow={1} title="Move Cursor Backward"/>
                     <InputButton symbol="\text{Clear}" grow={1} title="Clear Input"/>
                     <InputButton symbol="\text{Del}" grow={1} title="Delete a Symbol"/>
-                    <InputButton symbol="\text{CH}" grow={1} disabled title="Clear History Records"/>
+                    <InputButton symbol="\text{CH}" grow={1} title="Clear History Records"/>
                 </div>
                 <div className="keypad-row">
                     <div style={{ flexGrow: 2 }}/>

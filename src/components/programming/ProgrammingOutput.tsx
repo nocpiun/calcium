@@ -57,8 +57,7 @@ const ProgrammingOutput: React.FC = () => {
                 setOutputContent("");
                 return contentArray.join(" ");
             case "\\text{CH}":
-                /** @todo */
-                // Emitter.get().emit("add-record", undefined, undefined);
+                Emitter.get().emit("clear-record");
                 break;
             case "ArrowLeft":
             case "\\leftarrow":
