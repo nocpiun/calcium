@@ -187,7 +187,7 @@ const Input: React.FC = () => {
                     <InputButton symbol="\rightarrow" grow={1} title="向后移动光标"/>
                     <InputButton symbol="\text{Clear}" grow={1} title="清空输入框"/>
                     <InputButton symbol="\text{Del}" grow={1} title="退格"/>
-                    <InputButton symbol="\text{CH}" grow={1} disabled title="清空历史记录"/>
+                    <InputButton symbol="\text{CH}" grow={1} title="清空历史记录"/>
                 </div>
                 <div className="keypad-row">
                     <div style={{ flexGrow: 5 }}/>
