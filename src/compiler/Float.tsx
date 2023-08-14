@@ -72,12 +72,12 @@ export default class Float {
         if(b === 0) return Infinity;
 
         try {
-            t1 = a.toString().split('.')[1].length;
+            t1 = Float.eTransfer(a).split('.')[1].length;
         } catch (e) {
             //
         }
         try {
-            t2 = b.toString().split('.')[1].length;
+            t2 = Float.eTransfer(b).split('.')[1].length;
         } catch (e) {
             //
         }

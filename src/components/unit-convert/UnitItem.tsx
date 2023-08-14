@@ -55,7 +55,7 @@ const UnitItem: React.FC<UnitItemType> = (props) => {
              * `0.01` is the transform rate of cm.
              * `0.1` is the transform rate of dm.
              */
-            inputRef.current.value = Float.divide(Float.multiply(value, originRate), targetRate).toString();
+            inputRef.current.value = Float.eTransfer(Float.divide(Float.multiply(value, originRate), targetRate));
         }]
     ]);
 
