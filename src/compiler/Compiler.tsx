@@ -128,7 +128,8 @@ export default class Compiler {
                     if(
                         Is.number(this.raw[i - 1], this.isProgrammingMode) ||
                         Is.variable(this.raw[i - 1]) ||
-                        Is.constant(this.raw[i - 1])
+                        Is.constant(this.raw[i - 1]) ||
+                        (root.getLength() > 0 && root.getLastChild().type === TokenType.NUMBER) // Process something like `2^2*a`
                     ) { 
                         root.add(new OperatorToken(Operator.MUL, false));
 
@@ -143,10 +144,6 @@ export default class Compiler {
                         }
 
                         continue;
-                    } else if(root.getLength() > 0 && root.getChild(root.getLength() - 1).type === TokenType.NUMBER) { // Process something like `2^2*a`
-                        root.add(new OperatorToken(Operator.MUL, false));
-
-                        symbol = this.variables.get(symbol) ?? (constants.get(symbol) ?? "NaN").toString();
                     } else {
                         symbol = this.variables.get(symbol) ?? (constants.get(symbol) ?? "NaN").toString();
                     }
