@@ -1,3 +1,5 @@
+import Is from "./Is";
+
 export default class Compute {
     /** @see https://www.cnblogs.com/jialuchun/p/6559422.html */
     public static factorial(x: number): number {
@@ -5,7 +7,7 @@ export default class Compute {
             return NaN;
         } else if(x === 0 || x === 1) {
             return 1;
-        } else if(Math.floor(x) === x) {
+        } else if(!Is.float(x)) {
             for(let i = x - 1; i >= 1; i--) {
                 x *= i;
             }

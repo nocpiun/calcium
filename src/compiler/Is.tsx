@@ -49,6 +49,6 @@ export default class Is {
     }
 
     public static float(number: number): boolean {
-        return number.toString().indexOf(".") > -1;
+        return Math.floor(number) !== number;
     }
 }

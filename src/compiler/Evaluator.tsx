@@ -55,7 +55,6 @@ export default class Evaluator {
 
                     numbers.add(new NumberToken(
                         Compute.safePow(transformedValue, exponential),
-                        Is.float(transformedValue),
                         NumberSys.DEC
                     ));
                     break;
@@ -70,7 +69,6 @@ export default class Evaluator {
                     
                     numbers.add(new NumberToken(
                         Compute.safePow(value, exponential),
-                        Is.float(value),
                         NumberSys.DEC
                     ));
                     break;
@@ -82,7 +80,6 @@ export default class Evaluator {
 
                     numbers.add(new NumberToken(
                         Compute.safePow(value, exponential),
-                        Is.float(value),
                         NumberSys.DEC
                     ));
                     break;
@@ -96,7 +93,6 @@ export default class Evaluator {
                     var value = Float.calibrate(parseFloat(func(...calculatedParam).toFixed(14)));
                     numbers.add(new NumberToken(
                         Compute.safePow(value, exponential),
-                        Is.float(value),
                         NumberSys.DEC
                     ));
                     break;
@@ -144,8 +140,7 @@ export default class Evaluator {
                         break;
                 }
 
-                numbers.get(i).value = result;
-                numbers.get(i).float = Is.float(result);
+                numbers.get(i).setValue(result);
                 numbers.get(i).numberSys = NumberSys.DEC;
                 numbers.remove(i + 1);
                 operators.remove(i);
@@ -159,7 +154,7 @@ export default class Evaluator {
             var operator = operators.get(i).value;
 
             if(firstLoop && operators.get(i).isFirst && operator === Operator.SUB) {
-                numbers.get(i).value = -numbers.get(i).value;
+                numbers.get(i).setValue(-numbers.get(i).value);
                 operators.remove(i);
                 i--;
                 firstLoop = false;
@@ -184,8 +179,7 @@ export default class Evaluator {
                         break;
                 }
 
-                numbers.get(i).value = result;
-                numbers.get(i).float = Is.float(result);
+                numbers.get(i).setValue(result);
                 numbers.get(i).numberSys = NumberSys.DEC;
                 numbers.remove(i + 1);
                 operators.remove(i);
@@ -200,7 +194,7 @@ export default class Evaluator {
 
             if(operator === Operator.ADD || operator === Operator.SUB) {
                 if(firstLoop && operators.get(i).isFirst) {
-                    numbers.get(i).value = -numbers.get(i).value;
+                    numbers.get(i).setValue(-numbers.get(i).value);
                     operators.remove(i);
                     i--;
                     firstLoop = false;
@@ -224,8 +218,7 @@ export default class Evaluator {
                         break;
                 }
 
-                numbers.get(i).value = result;
-                numbers.get(i).float = Is.float(result);
+                numbers.get(i).setValue(result);
                 numbers.get(i).numberSys = NumberSys.DEC;
                 numbers.remove(i + 1);
                 operators.remove(i);

@@ -53,7 +53,7 @@ export default class Compiler {
 
         const addNumber = (numberStr: string): NumberToken => {
             var value = Utils.strToNum(numberStr, this.numberSys);
-            var token = new NumberToken(value, Is.float(value), this.numberSys === NumberSys.HEX ? NumberSys.DEC : this.numberSys);
+            var token = new NumberToken(value, this.numberSys === NumberSys.HEX ? NumberSys.DEC : this.numberSys);
             root.value.push(token);
             
             return token;
@@ -285,17 +285,17 @@ export default class Compiler {
                 if(root.getLength() > 0 && root.getChild(root.getLength() - 1).type === TokenType.NUMBER) { // multi-factorial
                     value = Compute.factorial((root.getChild(root.getLength() - 1) as NumberToken).value);
                     // rewrite the single-factorial value token, make it to the multi-factorial one
-                    (root.getChild(root.getLength() - 1) as NumberToken).value = value;
+                    (root.getChild(root.getLength() - 1) as NumberToken).setValue(value);
                 } else { // single-factorial
                     value = Compute.factorial(parseFloat(tempNumber));
-                    root.add(new NumberToken(value, false, NumberSys.DEC));
+                    root.add(new NumberToken(value, NumberSys.DEC));
                     
                     tempNumber = "";
                 }
 
                 // pow
                 if(i + 1 < this.raw.length && this.raw[i + 1][0] === "^") {
-                    (root.getChild(root.getLength() - 1) as NumberToken).value = Compute.safePow(value, parseInt(this.raw[i + 1][1]));
+                    (root.getChild(root.getLength() - 1) as NumberToken).setValue(Compute.safePow(value, parseInt(this.raw[i + 1][1])));
                     i++;
                     continue;
                 }
