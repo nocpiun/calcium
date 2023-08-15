@@ -47,7 +47,6 @@ export default class Compiler {
     public tokenize(): RootToken | void {
         var root: RootToken = new RootToken([]);
 
-        var tempNumber: NumberSymbol = "";
         var tempParamRaw: NumberSymbol[] = [];
         var tempParamList: Token[] = [];
 
@@ -130,34 +129,19 @@ export default class Compiler {
                         Is.number(this.raw[i - 1], this.isProgrammingMode) ||
                         Is.variable(this.raw[i - 1]) ||
                         Is.constant(this.raw[i - 1])
-                    ) { // Process something like `eπ`, `ee` or `2π` which means `e*π`, `e*e` and `2*π`
-                        addNumber(
-                            tempNumber !== ""
-                            ? tempNumber
-                            : this.variables.get(this.raw[i - 1]) ?? (constants.get(this.raw[i - 1]) ?? "NaN").toString()
-                        );
-                        
+                    ) { 
                         root.add(new OperatorToken(Operator.MUL, false));
 
-                        // Avoid something like `2ab` (a=1,b=2) being processed into `2 * 1 1 * 2`
-                        if(
-                            !(
-                                Is.number(this.raw[i + 1], this.isProgrammingMode) ||
-                                Is.variable(this.raw[i + 1]) ||
-                                Is.constant(this.raw[i + 1])
-                            )
-                        ) {
-                            symbol = this.variables.get(symbol) ?? (constants.get(symbol) ?? "NaN").toString();
-                            addNumber(symbol);
-                        }
+                        symbol = this.variables.get(symbol) ?? (constants.get(symbol) ?? "NaN").toString();
+                        addNumber(symbol);
+
                         // pow
                         const di = this.raw[i + 1] === "!" ? 2 : 1;
                         if(i + di < this.raw.length && this.raw[i + di][0] === "^") {
-                            (root.getChild(root.getLength() - di) as PowerableToken).exponential = parseInt(this.raw[i + di][1]);
+                            root.getChild<PowerableToken>(root.getLength() - di).exponential = parseInt(this.raw[i + di][1]);
                             i++;
                         }
-    
-                        tempNumber = "";
+
                         continue;
                     } else if(root.getLength() > 0 && root.getChild(root.getLength() - 1).type === TokenType.NUMBER) { // Process something like `2^2*a`
                         root.add(new OperatorToken(Operator.MUL, false));
@@ -168,21 +152,17 @@ export default class Compiler {
                     }
                 }
 
-                tempNumber += symbol;
-
-                if(i === this.raw.length - 1) addNumber(tempNumber);
+                var tempNumber: NumberSymbol = symbol;
+                while(Is.number(this.raw[i + 1], this.isProgrammingMode) && !Is.constant(this.raw[i + 1])) {
+                    tempNumber += this.raw[i + 1];
+                    i++;
+                }
+                addNumber(tempNumber);
             } else if(Is.operator(symbol)) { // operator
-                if(i !== 0 && tempNumber !== "") addNumber(tempNumber);
                 root.add(new OperatorToken(symbol as Operator, i === 0));
-
-                tempNumber = "";
             } else if(Is.leftBracket(symbol)) { // left bracket
                 // Process something like `3(5-2)`
                 if(i !== 0 && !Is.operator(this.raw[i - 1])) {
-                    if(tempNumber !== "") {
-                        addNumber(tempNumber);
-                        tempNumber = "";
-                    }
                     root.add(new OperatorToken(Operator.MUL, false));
                 }
                 
@@ -213,7 +193,7 @@ export default class Compiler {
                 // (i + di) is where the "^x" sign is
                 const di = this.raw[i + 1] === "!" ? 2 : 1;
                 if(i + di < this.raw.length && this.raw[i + di][0] === "^") {
-                    (root.getChild(root.getLength() - di) as PowerableToken).exponential = parseInt(this.raw[i + di][1]);
+                    root.getChild<PowerableToken>(root.getLength() - di).exponential = parseInt(this.raw[i + di][1]);
                     i++;
                     continue;
                 }
@@ -241,13 +221,13 @@ export default class Compiler {
                     }
 
                     this.raw[i + 1] === "!"
-                    ? root.add(new AbsToken(absContent.value, true))
+                    ? root.add(new AbsToken(absContent.value, true)) // The factorial will be processed by the Evaluator
                     : root.add(new AbsToken(absContent.value, false));
 
                     // pow
                     const di = this.raw[i + 1] === "!" ? 2 : 1;
                     if(i + di < this.raw.length && this.raw[i + di][0] === "^") {
-                        (root.getChild(root.getLength() - di) as PowerableToken).exponential = parseInt(this.raw[i + di][1]);
+                        root.getChild<PowerableToken>(root.getLength() - di).exponential = parseInt(this.raw[i + di][1]);
                         i++;
                     }
                     
@@ -259,10 +239,6 @@ export default class Compiler {
             } else if(Is.mathFunction(symbol)) { // function
                 // Process something like `2sin(pi/6)`
                 if(i !== 0 && !Is.operator(this.raw[i - 1])) {
-                    if(tempNumber !== "") {
-                        addNumber(tempNumber);
-                        tempNumber = "";
-                    }
                     root.add(new OperatorToken(Operator.MUL, false));
                 }
 
@@ -277,25 +253,17 @@ export default class Compiler {
             } else if(symbol[0] === "^") { // pow
                 var exponential = parseInt(symbol[1]);
 
-                addNumber(Compute.safePow(parseFloat(tempNumber), exponential).toString());
-                tempNumber = "";
+                root.getLastChild<NumberToken>().setValue(Compute.safePow(root.getLastChild().value, exponential));
             } else if(symbol[0] === "!") { // factorial
-                var value;
+                var lastToken = root.getLastChild();
+                if(!(lastToken instanceof NumberToken)) continue;
 
-                if(root.getLength() > 0 && root.getChild(root.getLength() - 1).type === TokenType.NUMBER) { // multi-factorial
-                    value = Compute.factorial((root.getChild(root.getLength() - 1) as NumberToken).value);
-                    // rewrite the single-factorial value token, make it to the multi-factorial one
-                    (root.getChild(root.getLength() - 1) as NumberToken).setValue(value);
-                } else { // single-factorial
-                    value = Compute.factorial(parseFloat(tempNumber));
-                    root.add(new NumberToken(value, NumberSys.DEC));
-                    
-                    tempNumber = "";
-                }
+                var value = Compute.factorial(lastToken.value);
+                lastToken.setValue(value);
 
                 // pow
                 if(i + 1 < this.raw.length && this.raw[i + 1][0] === "^") {
-                    (root.getChild(root.getLength() - 1) as NumberToken).setValue(Compute.safePow(value, parseInt(this.raw[i + 1][1])));
+                    root.getLastChild<NumberToken>().setValue(Compute.safePow(value, parseInt(this.raw[i + 1][1])));
                     i++;
                     continue;
                 }

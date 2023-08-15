@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-redeclare */
 import List from "../utils/List";
 import Float from "./Float";
-import Is from "./Is";
 import Transformer from "./Transformer";
 import Compute from "./Compute";
 
@@ -25,79 +24,8 @@ export default class Evaluator {
     }
 
     public evaluate(): number {
-        const root = this.token;
-        var numbers: List<NumberToken> = new List();
-        var operators: List<OperatorToken> = new List();
-
-        for(let i = 0; i < root.getLength(); i++) {
-            var token = root.getChild(i);
-            var exponential = (token as PowerableToken).exponential ?? 1;
-
-            switch(token.type) {
-                case TokenType.NUMBER:
-                    var numToken = token as NumberToken;
-                    var transformedValue: number;
-                    
-                    switch(numToken.numberSys) {
-                        case NumberSys.HEX:
-                            transformedValue = parseFloat(Transformer.hexToDec(numToken.value.toString()));
-                            break;
-                        case NumberSys.DEC:
-                            transformedValue = numToken.value;
-                            break;
-                        case NumberSys.OCT:
-                            transformedValue = parseFloat(Transformer.octToDec(numToken.value.toString()));
-                            break;
-                        case NumberSys.BIN:
-                            transformedValue = parseFloat(Transformer.binToDec(numToken.value.toString()));
-                            break;
-                    }
-
-                    numbers.add(new NumberToken(
-                        Compute.safePow(transformedValue, exponential),
-                        NumberSys.DEC
-                    ));
-                    break;
-                case TokenType.OPERATOR:
-                    operators.add(token as OperatorToken);
-                    break;
-                case TokenType.BRACKET:
-                    var rawValue = new Evaluator(token as ChildrenToken).evaluate();
-                    var value = (token as BracketToken).factorial
-                    ? Compute.factorial(rawValue)
-                    : rawValue;
-                    
-                    numbers.add(new NumberToken(
-                        Compute.safePow(value, exponential),
-                        NumberSys.DEC
-                    ));
-                    break;
-                case TokenType.ABS:
-                    var rawValue = Math.abs(new Evaluator(token as ChildrenToken).evaluate());
-                    var value = (token as AbsToken).factorial
-                    ? Compute.factorial(rawValue)
-                    : rawValue;
-
-                    numbers.add(new NumberToken(
-                        Compute.safePow(value, exponential),
-                        NumberSys.DEC
-                    ));
-                    break;
-                case TokenType.FUNCTION:
-                    var { func, param } = token as FunctionToken;
-                    var calculatedParam = [];
-                    for(let i = 0; i < param.length; i++) {
-                        calculatedParam.push(new Evaluator(param[i] as ChildrenToken).evaluate());
-                    }
-
-                    var value = Float.calibrate(parseFloat(func(...calculatedParam).toFixed(14)));
-                    numbers.add(new NumberToken(
-                        Compute.safePow(value, exponential),
-                        NumberSys.DEC
-                    ));
-                    break;
-            }
-        }
+        // Read token to make number list & operator list
+        var [numbers, operators] = this.readToken();
 
         // Logical Operator
         for(let i = 0; i < operators.length; i++) {
@@ -230,5 +158,84 @@ export default class Evaluator {
 
         if(isNaN(result)) return NaN;
         return Float.calibrate(parseFloat(result.toFixed(14)));
+    }
+
+    private readToken(): [List<NumberToken>, List<OperatorToken>] {
+        const root = this.token;
+
+        var numbers: List<NumberToken> = new List();
+        var operators: List<OperatorToken> = new List();
+
+        for(let i = 0; i < root.getLength(); i++) {
+            var token = root.getChild(i);
+            var exponential = (token as PowerableToken).exponential ?? 1;
+
+            switch(token.type) {
+                case TokenType.NUMBER:
+                    var numToken = token as NumberToken;
+                    var transformedValue: number;
+                    
+                    switch(numToken.numberSys) {
+                        case NumberSys.HEX:
+                            transformedValue = parseFloat(Transformer.hexToDec(numToken.value.toString()));
+                            break;
+                        case NumberSys.DEC:
+                            transformedValue = numToken.value;
+                            break;
+                        case NumberSys.OCT:
+                            transformedValue = parseFloat(Transformer.octToDec(numToken.value.toString()));
+                            break;
+                        case NumberSys.BIN:
+                            transformedValue = parseFloat(Transformer.binToDec(numToken.value.toString()));
+                            break;
+                    }
+
+                    numbers.add(new NumberToken(
+                        Compute.safePow(transformedValue, exponential),
+                        NumberSys.DEC
+                    ));
+                    break;
+                case TokenType.OPERATOR:
+                    operators.add(token as OperatorToken);
+                    break;
+                case TokenType.BRACKET:
+                    var rawValue = new Evaluator(token as ChildrenToken).evaluate();
+                    var value = (token as BracketToken).factorial
+                    ? Compute.factorial(rawValue)
+                    : rawValue;
+                    
+                    numbers.add(new NumberToken(
+                        Compute.safePow(value, exponential),
+                        NumberSys.DEC
+                    ));
+                    break;
+                case TokenType.ABS:
+                    var rawValue = Math.abs(new Evaluator(token as ChildrenToken).evaluate());
+                    var value = (token as AbsToken).factorial
+                    ? Compute.factorial(rawValue)
+                    : rawValue;
+
+                    numbers.add(new NumberToken(
+                        Compute.safePow(value, exponential),
+                        NumberSys.DEC
+                    ));
+                    break;
+                case TokenType.FUNCTION:
+                    var { func, param } = token as FunctionToken;
+                    var calculatedParam = [];
+                    for(let i = 0; i < param.length; i++) {
+                        calculatedParam.push(new Evaluator(param[i] as ChildrenToken).evaluate());
+                    }
+
+                    var value = Float.calibrate(parseFloat(func(...calculatedParam).toFixed(14)));
+                    numbers.add(new NumberToken(
+                        Compute.safePow(value, exponential),
+                        NumberSys.DEC
+                    ));
+                    break;
+            }
+        }
+
+        return [numbers, operators];
     }
 }

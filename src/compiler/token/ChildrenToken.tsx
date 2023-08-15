@@ -2,8 +2,12 @@ import PowerableToken from "./PowerableToken";
 import Token from "./Token";
 
 export default abstract class ChildrenToken extends PowerableToken<Token[]> {
-    public getChild(index: number): Token {
-        return this.value[index];
+    public getChild<T extends Token = Token>(index: number): T {
+        return this.value[index] as T;
+    }
+
+    public getLastChild<T extends Token = Token>(): T {
+        return this.getChild(this.getLength() - 1) as T;
     }
 
     public getLength(): number {
