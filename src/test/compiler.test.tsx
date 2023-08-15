@@ -71,6 +71,9 @@ describe("Compiler tests", () => {
 
         const f2 = "| 5 3 - ( 1 0 0 + 2 2 ) |";
         expect(calculate(f2)).toBe("69");
+
+        const f3 = "| - 2 | ^3";
+        expect(calculate(f3)).toBe("8");
     });
 
     test("Factorial Calculations", () => {

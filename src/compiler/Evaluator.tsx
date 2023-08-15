@@ -199,7 +199,7 @@ export default class Evaluator {
                     operators.add(token as OperatorToken);
                     break;
                 case TokenType.BRACKET:
-                    var rawValue = new Evaluator(token as ChildrenToken).evaluate();
+                    var rawValue = new Evaluator(token as BracketToken).evaluate();
                     var value = (token as BracketToken).factorial
                     ? Compute.factorial(rawValue)
                     : rawValue;
@@ -210,7 +210,7 @@ export default class Evaluator {
                     ));
                     break;
                 case TokenType.ABS:
-                    var rawValue = Math.abs(new Evaluator(token as ChildrenToken).evaluate());
+                    var rawValue = Math.abs(new Evaluator(token as AbsToken).evaluate());
                     var value = (token as AbsToken).factorial
                     ? Compute.factorial(rawValue)
                     : rawValue;

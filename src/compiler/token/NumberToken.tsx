@@ -1,4 +1,5 @@
-import type { NumberSys } from "../../types";
+import Utils from "../../utils/Utils";
+import { NumberSys } from "../../types";
 import PowerableToken from "./PowerableToken";
 import { TokenType } from "./Token";
 
@@ -25,5 +26,12 @@ export default class NumberToken extends PowerableToken<number> {
     public setValue(value: number): void {
         this.value = value;
         this.float = Is.float(value);
+    }
+
+    public static create(numberStr: string, numberSys: NumberSys): NumberToken {
+        var value = Utils.strToNum(numberStr, numberSys);
+        var token = new NumberToken(value, numberSys === NumberSys.HEX ? NumberSys.DEC : numberSys);
+        
+        return token;
     }
 }

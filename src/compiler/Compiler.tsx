@@ -15,7 +15,6 @@ import FunctionToken from "./token/FunctionToken";
 import { functions, constants } from "../global";
 import { Operator, NumberSys } from "../types";
 import type { MathFunction } from "../types";
-import Utils from "../utils/Utils";
 
 export type NumberSymbol = string;
 
@@ -31,6 +30,9 @@ export default class Compiler {
     private currentFunction: MathFunction | null = null;
     private secondaryRaw: string[] = [];
     private hasError: boolean = false;
+
+    private tempParamRaw: NumberSymbol[] = [];
+    private tempParamList: Token[] = [];
     
     public constructor(
         raw: string[],
@@ -44,19 +46,8 @@ export default class Compiler {
         this.numberSys = numberSys;
     }
 
-    public tokenize(): RootToken | void {
-        var root: RootToken = new RootToken([]);
-
-        var tempParamRaw: NumberSymbol[] = [];
-        var tempParamList: Token[] = [];
-
-        const addNumber = (numberStr: string): NumberToken => {
-            var value = Utils.strToNum(numberStr, this.numberSys);
-            var token = new NumberToken(value, this.numberSys === NumberSys.HEX ? NumberSys.DEC : this.numberSys);
-            root.value.push(token);
-            
-            return token;
-        };
+    private tokenize(): RootToken | void {
+        var root = new RootToken([]);
 
         /**
          * Resolve raw input content
@@ -93,16 +84,16 @@ export default class Compiler {
                         (symbol === "," && this.layer === 1) ||
                         (Is.rightBracket(symbol) && this.layer === 0)
                     ) {
-                        var tokenized = new Compiler(tempParamRaw, this.variables, this.isProgrammingMode, this.numberSys).tokenize();
+                        var tokenized = new Compiler(this.tempParamRaw, this.variables, this.isProgrammingMode, this.numberSys).tokenize();
                         if(!tokenized) {
                             this.hasError = true;
                             return;
                         }
 
-                        tempParamList.push(tokenized);
-                        tempParamRaw = [];
+                        this.tempParamList.push(tokenized);
+                        this.tempParamRaw = [];
                     } else {
-                        tempParamRaw.push(symbol);
+                        this.tempParamRaw.push(symbol);
                     }
                     if(!(Is.rightBracket(symbol) && this.layer === 0)) continue;
                 }
@@ -123,6 +114,7 @@ export default class Compiler {
              */
 
             if(Is.number(symbol, this.isProgrammingMode) || (Is.variable(symbol) && this.raw[1] !== "=")) { // number
+
                 // Variable and Constant
                 if((Is.variable(symbol) || Is.constant(symbol)) && !this.isProgrammingMode) {
                     if(
@@ -134,7 +126,7 @@ export default class Compiler {
                         root.add(new OperatorToken(Operator.MUL, false));
 
                         symbol = this.variables.get(symbol) ?? (constants.get(symbol) ?? "NaN").toString();
-                        addNumber(symbol);
+                        root.add(NumberToken.create(symbol, this.numberSys));
 
                         // pow
                         const di = this.raw[i + 1] === "!" ? 2 : 1;
@@ -154,17 +146,23 @@ export default class Compiler {
                     tempNumber += this.raw[i + 1];
                     i++;
                 }
-                addNumber(tempNumber);
+                root.add(NumberToken.create(tempNumber, this.numberSys));
+
             } else if(Is.operator(symbol)) { // operator
+
                 root.add(new OperatorToken(symbol as Operator, i === 0));
+
             } else if(Is.leftBracket(symbol)) { // left bracket
+
                 // Process something like `3(5-2)`
                 if(i !== 0 && !Is.operator(this.raw[i - 1])) {
                     root.add(new OperatorToken(Operator.MUL, false));
                 }
                 
                 this.layer++;
+
             } else if(Is.rightBracket(symbol)) { // right bracket
+
                 var secondaryCompiler = new Compiler(this.secondaryRaw, this.variables, this.isProgrammingMode, this.numberSys);
                 var bracketContent = secondaryCompiler.tokenize();
                 if(!bracketContent) {
@@ -173,9 +171,9 @@ export default class Compiler {
                 }
 
                 if(this.currentFunction) {
-                    root.add(new FunctionToken(this.currentFunction[0], tempParamList));
-                    tempParamRaw = [];
-                    tempParamList = [];
+                    root.add(new FunctionToken(this.currentFunction[0], this.tempParamList));
+                    this.tempParamRaw = [];
+                    this.tempParamList = [];
                     this.currentFunction = null;
                 } else if(this.raw[i + 1] === "!") {
                     root.add(new BracketToken(bracketContent.value, true));
@@ -208,7 +206,9 @@ export default class Compiler {
                 ) {
                     root.add(new OperatorToken(Operator.MUL, false));
                 }
+
             } else if(symbol === "|") { // absolute value
+
                 if(this.inAbs) {
                     var secondaryCompiler = new Compiler(this.secondaryRaw, this.variables, this.isProgrammingMode, this.numberSys);
                     var absContent = secondaryCompiler.tokenize();
@@ -233,7 +233,9 @@ export default class Compiler {
                 } else {
                     this.inAbs = true;
                 }
+
             } else if(Is.mathFunction(symbol)) { // function
+
                 // Process something like `2sin(pi/6)`
                 if(i !== 0 && !Is.operator(this.raw[i - 1])) {
                     root.add(new OperatorToken(Operator.MUL, false));
@@ -247,11 +249,14 @@ export default class Compiler {
 
                 this.currentFunction = functions.get(functionName) ?? [((x) => x), 1];
                 this.layer++;
-            } else if(symbol[0] === "^") { // pow
-                var exponential = parseInt(symbol[1]);
 
+            } else if(symbol[0] === "^") { // pow
+
+                var exponential = parseInt(symbol[1]);
                 root.getLastChild<NumberToken>().setValue(Compute.safePow(root.getLastChild().value, exponential));
+
             } else if(symbol[0] === "!") { // factorial
+
                 var lastToken = root.getLastChild();
                 if(!(lastToken instanceof NumberToken)) continue;
 
@@ -264,6 +269,7 @@ export default class Compiler {
                     i++;
                     continue;
                 }
+
             }
         }
 
