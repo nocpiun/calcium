@@ -7,7 +7,7 @@ import { HistoryItemInfo } from "../sidebar/History";
 import { errorText } from "../../global";
 import Emitter from "../../utils/Emitter";
 import Utils from "../../utils/Utils";
-import Compiler from "../../compiler";
+import Compiler from "../../compiler/Compiler";
 import Is from "../../compiler/Is";
 import Logger from "../../utils/Logger";
 import { NumberSys, RecordType } from "../../types";

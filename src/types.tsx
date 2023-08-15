@@ -70,52 +70,6 @@ export interface PropsWithChildren {
     children?: ReactElement | ReactElement[] | undefined
 }
 
-type TokenType = "root" | "void" | "number" | "operator" | "bracket" | "abs" | "function";
-
-export interface Token {
-    type: TokenType
-}
-
-export interface PowerableToken extends Token {
-    exponential?: number
-}
-
-export interface ValueToken<V> extends Token {
-    value: V
-}
-
-export interface ChildrenToken extends Token {
-    children: Token[]
-}
-
-export interface RootToken extends ChildrenToken {
-    type: "root"
-}
-
-export const VoidToken: Token = {
-    type: "void"
-};
-
-export interface NumberToken extends ValueToken<number> {
-    type: "number"
-    float: boolean
-    numberSys: NumberSys
-}
-
-export interface OperatorToken extends ValueToken<Operator> {
-    isFirst: boolean
-}
-
-export interface BracketToken extends ChildrenToken {
-    factorial: boolean
-}
-
-export interface FunctionToken extends Token {
-    type: "function"
-    func: MathFunction[0]
-    param: Token[]
-}
-
 export interface Shortcut {
     description: string
     action: () => void

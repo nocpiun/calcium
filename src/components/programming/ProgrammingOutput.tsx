@@ -8,7 +8,7 @@ import { errorText } from "../../global";
 import { NumberSys } from "../../types";
 import Emitter from "../../utils/Emitter";
 import Utils from "../../utils/Utils";
-import Compiler from "../../compiler";
+import Compiler from "../../compiler/Compiler";
 import Is from "../../compiler/Is";
 import Transformer from "../../compiler/Transformer";
 import Logger from "../../utils/Logger";

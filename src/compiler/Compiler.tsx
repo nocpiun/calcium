@@ -1,21 +1,20 @@
 /* eslint-disable @typescript-eslint/no-redeclare */
-import Formula from "./Formula";
+import Evaluator from "./Evaluator";
 import Is from "./Is";
 import Compute from "./Compute";
 
+import Token, { TokenType } from "./token/Token";
+import PowerableToken from "./token/PowerableToken";
+import RootToken from "./token/RootToken";
+import NumberToken from "./token/NumberToken";
+import OperatorToken from "./token/OperatorToken";
+import BracketToken from "./token/BracketToken";
+import AbsToken from "./token/AbsToken";
+import FunctionToken from "./token/FunctionToken";
+
 import { functions, constants } from "../global";
 import { Operator, NumberSys } from "../types";
-import type {
-    MathFunction,
-    Token,
-    ChildrenToken,
-    RootToken,
-    NumberToken,
-    OperatorToken,
-    BracketToken,
-    FunctionToken,
-    PowerableToken
-} from "../types";
+import type { MathFunction } from "../types";
 import Utils from "../utils/Utils";
 
 export type NumberSymbol = string;
@@ -46,10 +45,7 @@ export default class Compiler {
     }
 
     public tokenize(): RootToken | void {
-        var root: RootToken = {
-            type: "root",
-            children: []
-        };
+        var root: RootToken = new RootToken([]);
 
         var tempNumber: NumberSymbol = "";
         var tempParamRaw: NumberSymbol[] = [];
@@ -57,13 +53,8 @@ export default class Compiler {
 
         const addNumber = (numberStr: string): NumberToken => {
             var value = Utils.strToNum(numberStr, this.numberSys);
-            var token: NumberToken = {
-                type: "number",
-                value,
-                float: Is.float(value),
-                numberSys: this.numberSys === NumberSys.HEX ? NumberSys.DEC : this.numberSys
-            };
-            root.children.push(token);
+            var token = new NumberToken(value, Is.float(value), this.numberSys === NumberSys.HEX ? NumberSys.DEC : this.numberSys);
+            root.value.push(token);
             
             return token;
         };
@@ -146,11 +137,7 @@ export default class Compiler {
                             : this.variables.get(this.raw[i - 1]) ?? (constants.get(this.raw[i - 1]) ?? "NaN").toString()
                         );
                         
-                        root.children.push({
-                            type: "operator",
-                            value: Operator.MUL,
-                            isFirst: false
-                        } as OperatorToken);
+                        root.add(new OperatorToken(Operator.MUL, false));
 
                         // Avoid something like `2ab` (a=1,b=2) being processed into `2 * 1 1 * 2`
                         if(
@@ -166,18 +153,14 @@ export default class Compiler {
                         // pow
                         const di = this.raw[i + 1] === "!" ? 2 : 1;
                         if(i + di < this.raw.length && this.raw[i + di][0] === "^") {
-                            (root.children[root.children.length - di] as PowerableToken).exponential = parseInt(this.raw[i + di][1]);
+                            (root.getChild(root.getLength() - di) as PowerableToken).exponential = parseInt(this.raw[i + di][1]);
                             i++;
                         }
     
                         tempNumber = "";
                         continue;
-                    } else if(root.children.length > 0 && root.children[root.children.length - 1].type === "number") { // Process something like `2^2*a`
-                        root.children.push({
-                            type: "operator",
-                            value: Operator.MUL,
-                            isFirst: false
-                        } as OperatorToken);
+                    } else if(root.getLength() > 0 && root.getChild(root.getLength() - 1).type === TokenType.NUMBER) { // Process something like `2^2*a`
+                        root.add(new OperatorToken(Operator.MUL, false));
 
                         symbol = this.variables.get(symbol) ?? (constants.get(symbol) ?? "NaN").toString();
                     } else {
@@ -190,11 +173,7 @@ export default class Compiler {
                 if(i === this.raw.length - 1) addNumber(tempNumber);
             } else if(Is.operator(symbol)) { // operator
                 if(i !== 0 && tempNumber !== "") addNumber(tempNumber);
-                root.children.push({
-                    type: "operator",
-                    value: symbol as Operator,
-                    isFirst: i === 0
-                } as OperatorToken);
+                root.add(new OperatorToken(symbol as Operator, i === 0));
 
                 tempNumber = "";
             } else if(Is.leftBracket(symbol)) { // left bracket
@@ -204,11 +183,7 @@ export default class Compiler {
                         addNumber(tempNumber);
                         tempNumber = "";
                     }
-                    root.children.push({
-                        type: "operator",
-                        value: Operator.MUL,
-                        isFirst: false
-                    } as OperatorToken);
+                    root.add(new OperatorToken(Operator.MUL, false));
                 }
                 
                 this.layer++;
@@ -221,27 +196,15 @@ export default class Compiler {
                 }
 
                 if(this.currentFunction) {
-                    root.children.push({
-                        type: "function",
-                        func: this.currentFunction[0],
-                        param: tempParamList
-                    } as FunctionToken);
+                    root.add(new FunctionToken(this.currentFunction[0], tempParamList));
                     tempParamRaw = [];
                     tempParamList = [];
                     this.currentFunction = null;
                 } else if(this.raw[i + 1] === "!") {
-                    root.children.push({
-                        type: "bracket",
-                        children: bracketContent.children,
-                        factorial: true
-                    } as BracketToken);
+                    root.add(new BracketToken(bracketContent.value, true));
                     i++;
                 } else {
-                    root.children.push({
-                        type: "bracket",
-                        children: bracketContent.children,
-                        factorial: false
-                    } as BracketToken);
+                    root.add(new BracketToken(bracketContent.value, false));
                 }
 
                 this.secondaryRaw = [];
@@ -250,7 +213,7 @@ export default class Compiler {
                 // (i + di) is where the "^x" sign is
                 const di = this.raw[i + 1] === "!" ? 2 : 1;
                 if(i + di < this.raw.length && this.raw[i + di][0] === "^") {
-                    (root.children[root.children.length - di] as PowerableToken).exponential = parseInt(this.raw[i + di][1]);
+                    (root.getChild(root.getLength() - di) as PowerableToken).exponential = parseInt(this.raw[i + di][1]);
                     i++;
                     continue;
                 }
@@ -266,11 +229,7 @@ export default class Compiler {
                     !Is.leftBracket(this.raw[i + 1]) &&
                     !Is.mathFunction(this.raw[i + 1])
                 ) {
-                    root.children.push({
-                        type: "operator",
-                        value: Operator.MUL,
-                        isFirst: false
-                    } as OperatorToken);
+                    root.add(new OperatorToken(Operator.MUL, false));
                 }
             } else if(symbol === "|") { // absolute value
                 if(this.inAbs) {
@@ -281,15 +240,14 @@ export default class Compiler {
                         return;
                     }
 
-                    root.children.push({
-                        type: "abs",
-                        children: absContent.children
-                    } as ChildrenToken);
+                    this.raw[i + 1] === "!"
+                    ? root.add(new AbsToken(absContent.value, true))
+                    : root.add(new AbsToken(absContent.value, false));
 
                     // pow
                     const di = this.raw[i + 1] === "!" ? 2 : 1;
                     if(i + di < this.raw.length && this.raw[i + di][0] === "^") {
-                        (root.children[root.children.length - di] as PowerableToken).exponential = parseInt(this.raw[i + di][1]);
+                        (root.getChild(root.getLength() - di) as PowerableToken).exponential = parseInt(this.raw[i + di][1]);
                         i++;
                     }
                     
@@ -305,11 +263,7 @@ export default class Compiler {
                         addNumber(tempNumber);
                         tempNumber = "";
                     }
-                    root.children.push({
-                        type: "operator",
-                        value: Operator.MUL,
-                        isFirst: false
-                    } as OperatorToken);
+                    root.add(new OperatorToken(Operator.MUL, false));
                 }
 
                 var functionName = symbol.replace("\\", "").replace("(", "");
@@ -328,25 +282,20 @@ export default class Compiler {
             } else if(symbol[0] === "!") { // factorial
                 var value;
 
-                if(root.children.length > 0 && root.children[root.children.length - 1].type === "number") { // multi-factorial
-                    value = Compute.factorial((root.children[root.children.length - 1] as NumberToken).value);
+                if(root.getLength() > 0 && root.getChild(root.getLength() - 1).type === TokenType.NUMBER) { // multi-factorial
+                    value = Compute.factorial((root.getChild(root.getLength() - 1) as NumberToken).value);
                     // rewrite the single-factorial value token, make it to the multi-factorial one
-                    (root.children[root.children.length - 1] as NumberToken).value = value;
+                    (root.getChild(root.getLength() - 1) as NumberToken).value = value;
                 } else { // single-factorial
                     value = Compute.factorial(parseFloat(tempNumber));
-                    root.children.push({
-                        type: "number",
-                        value,
-                        float: false,
-                        numberSys: NumberSys.DEC
-                    } as NumberToken);
+                    root.add(new NumberToken(value, false, NumberSys.DEC));
                     
                     tempNumber = "";
                 }
 
                 // pow
                 if(i + 1 < this.raw.length && this.raw[i + 1][0] === "^") {
-                    (root.children[root.children.length - 1] as NumberToken).value = Compute.safePow(value, parseInt(this.raw[i + 1][1]));
+                    (root.getChild(root.getLength() - 1) as NumberToken).value = Compute.safePow(value, parseInt(this.raw[i + 1][1]));
                     i++;
                     continue;
                 }
@@ -367,7 +316,7 @@ export default class Compiler {
     public compile(): NumberSymbol {
         var tokenized = this.tokenize();
         
-        if(tokenized && !this.hasError) return new Formula(tokenized).evaluate().toString();
+        if(tokenized && !this.hasError) return new Evaluator(tokenized).evaluate().toString();
         return "NaN";
     }
 

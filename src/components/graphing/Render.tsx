@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-redeclare */
 /* eslint-disable no-self-assign */
 import Point from "./Point";
-import Compiler from "../../compiler";
+import Compiler from "../../compiler/Compiler";
 
 import List from "../../utils/List";
 import Utils from "../../utils/Utils";

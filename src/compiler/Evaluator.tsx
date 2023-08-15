@@ -5,20 +5,22 @@ import Is from "./Is";
 import Transformer from "./Transformer";
 import Compute from "./Compute";
 
+import { TokenType } from "./token/Token";
+import PowerableToken from "./token/PowerableToken";
+import ChildrenToken from "./token/ChildrenToken";
+import RootToken from "./token/RootToken";
+import NumberToken from "./token/NumberToken";
+import OperatorToken from "./token/OperatorToken";
+import BracketToken from "./token/BracketToken";
+import AbsToken from "./token/AbsToken";
+import FunctionToken from "./token/FunctionToken";
+
 import { NumberSys, Operator } from "../types";
-import type {
-    ChildrenToken,
-    NumberToken,
-    OperatorToken,
-    BracketToken,
-    FunctionToken,
-    PowerableToken
-} from "../types";
 
-export default class Formula {
-    public token: ChildrenToken;
+export default class Evaluator {
+    public token: RootToken;
 
-    public constructor(token: ChildrenToken) {
+    public constructor(token: RootToken) {
         this.token = token;
     }
 
@@ -27,12 +29,12 @@ export default class Formula {
         var numbers: List<NumberToken> = new List();
         var operators: List<OperatorToken> = new List();
 
-        for(let i = 0; i < root.children.length; i++) {
-            var token = root.children[i];
+        for(let i = 0; i < root.getLength(); i++) {
+            var token = root.getChild(i);
             var exponential = (token as PowerableToken).exponential ?? 1;
 
             switch(token.type) {
-                case "number":
+                case TokenType.NUMBER:
                     var numToken = token as NumberToken;
                     var transformedValue: number;
                     
@@ -51,51 +53,52 @@ export default class Formula {
                             break;
                     }
 
-                    numbers.add({
-                        type: "number",
-                        value: Compute.safePow(transformedValue, exponential),
-                        float: Is.float(transformedValue),
-                        numberSys: NumberSys.DEC
-                    });
+                    numbers.add(new NumberToken(
+                        Compute.safePow(transformedValue, exponential),
+                        Is.float(transformedValue),
+                        NumberSys.DEC
+                    ));
                     break;
-                case "operator":
+                case TokenType.OPERATOR:
                     operators.add(token as OperatorToken);
                     break;
-                case "bracket":
+                case TokenType.BRACKET:
+                    var rawValue = new Evaluator(token as ChildrenToken).evaluate();
                     var value = (token as BracketToken).factorial
-                    ? Compute.factorial(new Formula(token as ChildrenToken).evaluate())
-                    : new Formula(token as ChildrenToken).evaluate();
+                    ? Compute.factorial(rawValue)
+                    : rawValue;
                     
-                    numbers.add({
-                        type: "number",
-                        value: Compute.safePow(value, exponential),
-                        float: Is.float(value),
-                        numberSys: NumberSys.DEC
-                    });
+                    numbers.add(new NumberToken(
+                        Compute.safePow(value, exponential),
+                        Is.float(value),
+                        NumberSys.DEC
+                    ));
                     break;
-                case "abs":
-                    var value = Math.abs(new Formula(token as ChildrenToken).evaluate());
-                    numbers.add({
-                        type: "number",
-                        value: Compute.safePow(value, exponential),
-                        float: Is.float(value),
-                        numberSys: NumberSys.DEC
-                    });
+                case TokenType.ABS:
+                    var rawValue = Math.abs(new Evaluator(token as ChildrenToken).evaluate());
+                    var value = (token as AbsToken).factorial
+                    ? Compute.factorial(rawValue)
+                    : rawValue;
+
+                    numbers.add(new NumberToken(
+                        Compute.safePow(value, exponential),
+                        Is.float(value),
+                        NumberSys.DEC
+                    ));
                     break;
-                case "function":
+                case TokenType.FUNCTION:
                     var { func, param } = token as FunctionToken;
                     var calculatedParam = [];
                     for(let i = 0; i < param.length; i++) {
-                        calculatedParam.push(new Formula(param[i] as ChildrenToken).evaluate());
+                        calculatedParam.push(new Evaluator(param[i] as ChildrenToken).evaluate());
                     }
 
                     var value = Float.calibrate(parseFloat(func(...calculatedParam).toFixed(14)));
-                    numbers.add({
-                        type: "number",
-                        value: Compute.safePow(value, exponential),
-                        float: Is.float(value),
-                        numberSys: NumberSys.DEC
-                    });
+                    numbers.add(new NumberToken(
+                        Compute.safePow(value, exponential),
+                        Is.float(value),
+                        NumberSys.DEC
+                    ));
                     break;
             }
         }
@@ -141,12 +144,9 @@ export default class Formula {
                         break;
                 }
 
-                numbers.set(i, {
-                    type: "number",
-                    value: result,
-                    float: Is.float(result),
-                    numberSys: NumberSys.DEC
-                } as NumberToken);
+                numbers.get(i).value = result;
+                numbers.get(i).float = Is.float(result);
+                numbers.get(i).numberSys = NumberSys.DEC;
                 numbers.remove(i + 1);
                 operators.remove(i);
                 i--;
@@ -159,13 +159,7 @@ export default class Formula {
             var operator = operators.get(i).value;
 
             if(firstLoop && operators.get(i).isFirst && operator === Operator.SUB) {
-                var origin = numbers.get(i);
-                numbers.set(i, {
-                    type: "number",
-                    value: -origin.value,
-                    float: origin.float,
-                    numberSys: origin.numberSys
-                });
+                numbers.get(i).value = -numbers.get(i).value;
                 operators.remove(i);
                 i--;
                 firstLoop = false;
@@ -190,12 +184,9 @@ export default class Formula {
                         break;
                 }
 
-                numbers.set(i, {
-                    type: "number",
-                    value: result,
-                    float: Is.float(result),
-                    numberSys: NumberSys.DEC
-                } as NumberToken);
+                numbers.get(i).value = result;
+                numbers.get(i).float = Is.float(result);
+                numbers.get(i).numberSys = NumberSys.DEC;
                 numbers.remove(i + 1);
                 operators.remove(i);
                 i--;
@@ -209,13 +200,7 @@ export default class Formula {
 
             if(operator === Operator.ADD || operator === Operator.SUB) {
                 if(firstLoop && operators.get(i).isFirst) {
-                    var origin = numbers.get(i);
-                    numbers.set(i, {
-                        type: "number",
-                        value: -origin.value,
-                        float: origin.float,
-                        numberSys: origin.numberSys
-                    });
+                    numbers.get(i).value = -numbers.get(i).value;
                     operators.remove(i);
                     i--;
                     firstLoop = false;
@@ -239,12 +224,9 @@ export default class Formula {
                         break;
                 }
 
-                numbers.set(i, {
-                    type: "number",
-                    value: result,
-                    float: Is.float(result),
-                    numberSys: NumberSys.DEC
-                } as NumberToken);
+                numbers.get(i).value = result;
+                numbers.get(i).float = Is.float(result);
+                numbers.get(i).numberSys = NumberSys.DEC;
                 numbers.remove(i + 1);
                 operators.remove(i);
                 i--;

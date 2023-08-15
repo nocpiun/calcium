@@ -1,4 +1,4 @@
-import type { NumberSymbol } from ".";
+import type { NumberSymbol } from "./Compiler";
 
 export default class Transformer {
     public static hexToDec(hex: NumberSymbol): NumberSymbol {
