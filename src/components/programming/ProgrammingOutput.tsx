@@ -1,5 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { BlockMath } from "react-katex";
 
 import { HistoryItemInfo } from "../sidebar/History";
@@ -32,7 +31,55 @@ const ProgrammingOutput: React.FC = () => {
     const inputRef = useRef<InputBox>(null);
     const funcsDialogRef = useRef<Dialog>(null);
 
-    const handleInput = (symbol: string) => {
+    const handleResult = useCallback((currentContent: string) => {
+        if(currentContent.split(" ").length <= 1) return;
+
+        // Remove cursor from raw text
+        var rawText = InputBox.removeCursor(currentContent);
+        var raw = rawText.split(" ");
+
+        var compiler = new Compiler(raw, new Map(), true, numberSys);
+        var result = compiler.compile();
+        var error = false;
+
+        if(result.indexOf("NaN") > -1 || result === "") error = true;
+
+        // Display the result
+        var displayValue: string = result;
+        switch(numberSys) {
+            case NumberSys.HEX:
+                displayValue = Transformer.decToHex(result);
+                break;
+            case NumberSys.DEC:
+                /* Do nothing */
+                break;
+            case NumberSys.OCT:
+                displayValue = Transformer.decToOct(result);
+                break;
+            case NumberSys.BIN:
+                displayValue = Transformer.decToBin(result);
+                break;
+        }
+        if(!error) {
+            setOutputContent("=\\text{"+ displayValue +"}");
+            Logger.info(rawText.replaceAll(" ", "") +"="+ result);
+        } else {
+            setOutputContent("=\\text{"+ errorText +"}");
+            Logger.error("Error");
+        }
+
+        if(error) return;
+
+        // Add the result to history list
+        Emitter.get().emit("add-record", rawText, "\\text{"+ displayValue +"}", RecordType.PROGRAMMING, numberSys);
+
+        setHex(Transformer.decToHex(result));
+        setDec(result);
+        setOct(Transformer.decToOct(result));
+        setBin(Transformer.decToBin(result));
+    }, [numberSys]);
+
+    const handleInput = useCallback((symbol: string) => {
         if(!inputRef.current) return;
         const inputBox = inputRef.current;
         const currentContent = inputBox.state.displayContent;
@@ -99,55 +146,7 @@ const ProgrammingOutput: React.FC = () => {
                 }
                 return currentContent.replace(cursor, transformed +" "+ cursor);
         }
-    };
-
-    const handleResult = (currentContent: string) => {
-        if(currentContent.split(" ").length <= 1) return;
-
-        // Remove cursor from raw text
-        var rawText = InputBox.removeCursor(currentContent);
-        var raw = rawText.split(" ");
-
-        var compiler = new Compiler(raw, new Map(), true, numberSys);
-        var result = compiler.compile();
-        var error = false;
-
-        if(result.indexOf("NaN") > -1 || result === "") error = true;
-
-        // Display the result
-        var displayValue: string = result;
-        switch(numberSys) {
-            case NumberSys.HEX:
-                displayValue = Transformer.decToHex(result);
-                break;
-            case NumberSys.DEC:
-                /* Do nothing */
-                break;
-            case NumberSys.OCT:
-                displayValue = Transformer.decToOct(result);
-                break;
-            case NumberSys.BIN:
-                displayValue = Transformer.decToBin(result);
-                break;
-        }
-        if(!error) {
-            setOutputContent("=\\text{"+ displayValue +"}");
-            Logger.info(rawText.replaceAll(" ", "") +"="+ result);
-        } else {
-            setOutputContent("=\\text{"+ errorText +"}");
-            Logger.error("Error");
-        }
-
-        if(error) return;
-
-        // Add the result to history list
-        Emitter.get().emit("add-record", rawText, "\\text{"+ displayValue +"}", RecordType.PROGRAMMING, numberSys);
-
-        setHex(Transformer.decToHex(result));
-        setDec(result);
-        setOct(Transformer.decToOct(result));
-        setBin(Transformer.decToBin(result));
-    };
+    }, [inputRef, handleResult]);
 
     useEffect(() => {
         if(outputContent !== "") return;

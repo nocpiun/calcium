@@ -1,8 +1,8 @@
-import React from "react";
+import React, { memo } from "react";
 
 import InputButton from "../InputButton";
 
-const Input: React.FC = () => {
+const Input: React.FC = memo(() => {
     return (
         <div className="input-container">
             <div className="keypad">
@@ -208,6 +208,6 @@ const Input: React.FC = () => {
             </div>
         </div>
     );
-}
+})
 
 export default Input;

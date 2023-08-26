@@ -1,5 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useCallback } from "react";
 import { BlockMath } from "react-katex";
 
 import { HistoryItemInfo } from "../sidebar/History";
@@ -27,7 +26,64 @@ const Output: React.FC = () => {
     const varsDialogRef = useRef<Dialog>(null);
     const funcsDialogRef = useRef<Dialog>(null);
 
-    const handleInput = (symbol: string) => {
+    const handleResult = useCallback((currentContent: string) => {
+        if(currentContent.split(" ").length <= 1) return;
+
+        // Remove cursor from raw text
+        var rawText = InputBox.removeCursor(currentContent);
+        var raw = rawText.split(" ");
+
+        if(rawText === "2 . 5") {
+            setOutputContent("2.5c^{trl}"); // Chicken is beautiful
+            return;
+        }
+
+        if(Is.variable(raw[0]) && raw[1] === "=") { // variable declaring or setting
+            const varName = raw[0];
+
+            // Remove variableName and `=`
+            raw = Utils.arrayRemove(raw, 0);
+            raw = Utils.arrayRemove(raw, 0);
+
+            var variableCompiler = new Compiler(raw, variableRef.current);
+            var variableValue = variableCompiler.compile();
+            var variableError = false;
+
+            if(variableValue.indexOf("NaN") > -1 || variableValue === "") variableError = true;
+
+            if(!variableError) {
+                variableRef.current.set(varName, variableValue);
+                setOutputContent(varName +"="+ variableRef.current.get(varName));
+            } else {
+                setOutputContent(varName +"=\\text{"+ errorText +"}");
+            }
+
+            return;
+        }
+
+        var compiler = new Compiler(raw, variableRef.current);
+        var result = compiler.compile();
+        var error = false;
+
+        if(result.indexOf("NaN") > -1 || result === "") error = true;
+
+        // Display the result
+        if(result.indexOf("Infinity") > -1) result = result.replace("Infinity", "\\infty");
+        if(!error) {
+            setOutputContent("="+ result);
+            Logger.info("Calculated: "+ rawText.replaceAll(" ", "") +"="+ result);
+        } else {
+            setOutputContent("=\\text{"+ errorText +"}");
+            Logger.error("Error");
+        }
+
+        if(error) return;
+
+        // Add the result to history list
+        Emitter.get().emit("add-record", rawText, result, RecordType.GENERAL, NumberSys.DEC);
+    }, []);
+
+    const handleInput = useCallback((symbol: string) => {
         if(!inputRef.current) return;
         const inputBox = inputRef.current;
         const currentContent = inputBox.state.displayContent;
@@ -138,64 +194,7 @@ const Output: React.FC = () => {
                 setOutputContent("");
                 return currentContent.replace(cursor, symbol +" "+ cursor);
         }
-    };
-
-    const handleResult = (currentContent: string) => {
-        if(currentContent.split(" ").length <= 1) return;
-
-        // Remove cursor from raw text
-        var rawText = InputBox.removeCursor(currentContent);
-        var raw = rawText.split(" ");
-
-        if(rawText === "2 . 5") {
-            setOutputContent("2.5c^{trl}"); // Chicken is beautiful
-            return;
-        }
-
-        if(Is.variable(raw[0]) && raw[1] === "=") { // variable declaring or setting
-            const varName = raw[0];
-
-            // Remove variableName and `=`
-            raw = Utils.arrayRemove(raw, 0);
-            raw = Utils.arrayRemove(raw, 0);
-
-            var variableCompiler = new Compiler(raw, variableRef.current);
-            var variableValue = variableCompiler.compile();
-            var variableError = false;
-
-            if(variableValue.indexOf("NaN") > -1 || variableValue === "") variableError = true;
-
-            if(!variableError) {
-                variableRef.current.set(varName, variableValue);
-                setOutputContent(varName +"="+ variableRef.current.get(varName));
-            } else {
-                setOutputContent(varName +"=\\text{"+ errorText +"}");
-            }
-
-            return;
-        }
-
-        var compiler = new Compiler(raw, variableRef.current);
-        var result = compiler.compile();
-        var error = false;
-
-        if(result.indexOf("NaN") > -1 || result === "") error = true;
-
-        // Display the result
-        if(result.indexOf("Infinity") > -1) result = result.replace("Infinity", "\\infty");
-        if(!error) {
-            setOutputContent("="+ result);
-            Logger.info("Calculated: "+ rawText.replaceAll(" ", "") +"="+ result);
-        } else {
-            setOutputContent("=\\text{"+ errorText +"}");
-            Logger.error("Error");
-        }
-
-        if(error) return;
-
-        // Add the result to history list
-        Emitter.get().emit("add-record", rawText, result, RecordType.GENERAL, NumberSys.DEC);
-    };
+    }, [inputRef, handleResult]);
 
     useEmitter([
         ["clear-input", () => setOutputContent("")],

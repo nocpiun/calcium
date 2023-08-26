@@ -14,6 +14,7 @@ interface InputBoxProps {
 
 interface InputBoxState {
     displayContent: string
+    onInput?: (symbol: string) => string | void
 }
 
 export const specialSymbols: string[] = [
@@ -29,7 +30,8 @@ export default class InputBox extends Component<InputBoxProps, InputBoxState> {
         super(props);
 
         this.state = {
-            displayContent: cursor
+            displayContent: cursor,
+            onInput: props.onInput
         };
     }
 
@@ -66,7 +68,7 @@ export default class InputBox extends Component<InputBoxProps, InputBoxState> {
     }
 
     private handleInput(symbol: string): void {
-        if(this.props.onInput) this.value = this.props.onInput(symbol) ?? this.state.displayContent;
+        if(this.state.onInput) this.value = this.state.onInput(symbol) ?? this.state.displayContent;
     }
 
     private handleSymbolClick(e: React.MouseEvent, index: number): void {
@@ -134,6 +136,14 @@ export default class InputBox extends Component<InputBoxProps, InputBoxState> {
 
             this.handleInput(inputValue);
         });
+    }
+
+    public componentDidUpdate(prevProps: Readonly<InputBoxProps>): void {
+        if(prevProps.onInput !== this.props.onInput) {
+            this.setState({
+                onInput: this.props.onInput
+            });
+        }
     }
 
     public static removeCursor(content: string): string {

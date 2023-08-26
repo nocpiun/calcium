@@ -2,7 +2,8 @@ import React, {
     useEffect,
     useRef,
     useContext,
-    useReducer
+    useReducer,
+    useCallback
 } from "react";
 import { InlineMath } from "react-katex";
 
@@ -39,7 +40,7 @@ const FunctionList: React.FC = () => {
     const [unusedId, dispatchId] = useReducer(idReducer, { id: 0 });
     const inputRef = useRef<InputBox>(null);
 
-    const handleAddFunction = async () => {
+    const handleAddFunction = useCallback(async () => {
         if(!inputRef.current) return;
         if(mode !== Mode.GRAPHING) return;
         
@@ -56,9 +57,9 @@ const FunctionList: React.FC = () => {
         Logger.info("Function rendered: "+ value.replaceAll(" ", ""));
 
         inputBox.reset();
-    };
+    }, [inputRef, mode, setFunctionList, unusedId.id]);
 
-    const handleInput = (symbol: string) => {
+    const handleInput = useCallback((symbol: string) => {
         if(!inputRef.current) return;
         if(mode !== Mode.GRAPHING) return;
         const inputBox = inputRef.current;
@@ -149,7 +150,7 @@ const FunctionList: React.FC = () => {
                 
                 return currentContent.replace(cursor, symbol +" "+ cursor);
         }
-    };
+    }, [inputRef, mode, handleAddFunction]);
 
     useEffect(() => {
         Utils.scrollToEnd("function-list", 1, 0);
