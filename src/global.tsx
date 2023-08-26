@@ -3,7 +3,7 @@ import Compute from "./compiler/Compute";
 import Emitter from "./utils/Emitter";
 import { MathFunction, Shortcut } from "./types";
 
-export const version = "1.2.3";
+export const version = "1.2.4";
 export const errorText = "\\text{Error}";
 
 export const functions: Map<string, MathFunction> = new Map([
