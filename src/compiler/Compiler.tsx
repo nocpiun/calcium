@@ -142,8 +142,12 @@ export default class Compiler {
                 }
 
                 var tempNumber: NumberSymbol = symbol;
-                while(Is.number(this.raw[i + 1], this.isProgrammingMode) && !Is.constant(this.raw[i + 1])) {
-                    tempNumber += this.raw[i + 1];
+                while(
+                    i + 1 < this.raw.length &&
+                    Is.number(Compiler.purifyNumber(this.raw[i + 1]), this.isProgrammingMode) &&
+                    !Is.constant(this.raw[i + 1])
+                ) {
+                    tempNumber += Compiler.purifyNumber(this.raw[i + 1]);
                     i++;
                 }
                 root.add(NumberToken.create(tempNumber, this.numberSys));
