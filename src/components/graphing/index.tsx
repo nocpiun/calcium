@@ -6,6 +6,7 @@ import React, {
     useRef,
     useContext
 } from "react";
+import { useContextMenu, ContextMenuItem } from "use-context-menu";
 import download from "downloadjs";
 
 import MainContext from "../../contexts/MainContext";
@@ -199,10 +200,24 @@ const Graphing: React.FC = memo(() => {
         }]
     ]);
 
+    const { contextMenu, onContextMenu, onKeyDown } = useContextMenu(
+        <>
+            <ContextMenuItem onSelect={() => Emitter.get().emit("graphing-capture")}>捕捉图像</ContextMenuItem>
+            <ContextMenuItem onSelect={() => Emitter.get().emit("graphing-reload")}>重载</ContextMenuItem>
+        </>
+    );
+
     return (
-        <div className="graphing-container" id="display-frame">
-            <canvas className="graphing-canvas" id="graphing"/>
-        </div>
+        <>
+            <div
+            className="graphing-container"
+            id="display-frame"
+            onContextMenu={onContextMenu}
+            onKeyDown={onKeyDown}>
+                <canvas className="graphing-canvas" id="graphing"/>
+            </div>
+            {contextMenu}
+        </>
     );
 })
 

@@ -5,7 +5,8 @@ import { shortcuts } from "./global";
 import { Mode, RenderedFunction } from "./types";
 
 // Layout
-import "katex/dist/katex.min.css"
+import "katex/dist/katex.min.css";
+import "use-context-menu/styles.css";
 import "./style/layout.less";
 
 // Components
