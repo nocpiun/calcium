@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import { BlockMath } from "react-katex";
+import { useContextMenu, ContextMenuItem } from "use-context-menu";
 
 import { HistoryItemInfo } from "../sidebar/History";
 
@@ -167,35 +168,47 @@ const ProgrammingOutput: React.FC = () => {
             setOutputContent("="+ itemInfo.output);
             Emitter.get().emit("number-sys-chose", itemInfo.numberSys);
         }],
-        ["open-funcs-dialog", () => funcsDialogRef.current?.open()]
+        ["open-funcs-dialog", () => funcsDialogRef.current?.open()],
+        ["do-input", (symbol: string) => handleInput(symbol)]
     ]);
 
     useEaster(setOutputContent); // Sing, Dance, Rap, Basketball
 
+    const { contextMenu, onContextMenu, onKeyDown } = useContextMenu(
+        <>
+            <ContextMenuItem onSelect={() => Emitter.get().emit("clear-input")}>清空</ContextMenuItem>
+        </>
+    );
+
     return (
-        <div className="output-container">
-            <span className="output-tag">Output</span>
+        <>
+            <div className="output-container">
+                <span className="output-tag">Output</span>
 
-            <ul className="number-box-list">
-                <NumberBox name="Hex" value={hexValue} type={NumberSys.HEX}/>
-                <NumberBox name="Dec" value={decValue} type={NumberSys.DEC}/>
-                <NumberBox name="Oct" value={octValue} type={NumberSys.OCT}/>
-                <NumberBox name="Bin" value={binValue} type={NumberSys.BIN}/>
-            </ul>
+                <ul className="number-box-list">
+                    <NumberBox name="Hex" value={hexValue} type={NumberSys.HEX}/>
+                    <NumberBox name="Dec" value={decValue} type={NumberSys.DEC}/>
+                    <NumberBox name="Oct" value={octValue} type={NumberSys.OCT}/>
+                    <NumberBox name="Bin" value={binValue} type={NumberSys.BIN}/>
+                </ul>
 
-            <InputBox
-                ref={inputRef}
-                ltr={true}
-                onInput={(symbol) => handleInput(symbol)}/>
-            <div className="output-box">
-                <span className="display">
-                    {outputContent.split(" ").map((symbol, index) => <BlockMath key={index}>{symbol}</BlockMath>)}
-                </span>
+                <InputBox
+                    ref={inputRef}
+                    ltr={true}
+                    onInputSymbol={(symbol) => handleInput(symbol)}
+                    onContextMenu={onContextMenu}
+                    onKeyDown={onKeyDown}/>
+                <div className="output-box">
+                    <span className="display">
+                        {outputContent.split(" ").map((symbol, index) => <BlockMath key={index}>{symbol}</BlockMath>)}
+                    </span>
+                </div>
+
+                {/* Dialogs */}
+                <FunctionDialog ref={funcsDialogRef}/>
             </div>
-
-            {/* Dialogs */}
-            <FunctionDialog ref={funcsDialogRef}/>
-        </div>
+            {contextMenu}
+        </>
     );
 }
 

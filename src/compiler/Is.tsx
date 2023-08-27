@@ -3,6 +3,8 @@ import { constants } from "../global";
 export default class Is {
     public static number(symbol: string, isProgrammingMode: boolean): boolean {
         const number = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "e", "\\pi", "."];
+        if(!symbol) return false;
+        
         if(isProgrammingMode) {
             return (number.indexOf(symbol) > -1 || (symbol.charCodeAt(0) >= 97 && symbol.charCodeAt(0) <= 122) /* a~z */) && symbol.length === 1;
         } else {

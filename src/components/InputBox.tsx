@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import React, { Component, ReactElement } from "react";
+import React, { Component, ReactElement, DOMAttributes } from "react";
 import { BlockMath } from "react-katex";
 
 import Cursor from "./Cursor";
@@ -9,12 +9,12 @@ import Emitter from "../utils/Emitter";
 
 interface InputBoxProps {
     ltr: boolean
-    onInput?: (symbol: string) => string | void
+    onInputSymbol?: (symbol: string) => string | void
 }
 
 interface InputBoxState {
     displayContent: string
-    onInput?: (symbol: string) => string | void
+    onInputSymbol?: (symbol: string) => string | void
 }
 
 export const specialSymbols: string[] = [
@@ -25,13 +25,15 @@ export const specialSymbols: string[] = [
 
 export const cursor = "$";
 
-export default class InputBox extends Component<InputBoxProps, InputBoxState> {
-    public constructor(props: InputBoxProps) {
+type _Props = InputBoxProps & DOMAttributes<HTMLDivElement>;
+
+export default class InputBox extends Component<_Props, InputBoxState> {
+    public constructor(props: _Props) {
         super(props);
 
         this.state = {
             displayContent: cursor,
-            onInput: props.onInput
+            onInputSymbol: props.onInputSymbol
         };
     }
 
@@ -68,7 +70,7 @@ export default class InputBox extends Component<InputBoxProps, InputBoxState> {
     }
 
     private handleInput(symbol: string): void {
-        if(this.state.onInput) this.value = this.state.onInput(symbol) ?? this.state.displayContent;
+        if(this.state.onInputSymbol) this.value = this.state.onInputSymbol(symbol) ?? this.state.displayContent;
     }
 
     private handleSymbolClick(e: React.MouseEvent, index: number): void {
@@ -90,8 +92,10 @@ export default class InputBox extends Component<InputBoxProps, InputBoxState> {
     }
 
     public render(): ReactElement {
+        const { ltr, onInputSymbol, ...attrProps } = this.props;
+
         return (
-            <div className="input-box">
+            <div className="input-box" {...attrProps}>
                 <span className="display" id="display" onClick={(e) => this.handleBlankClick(e)}>
                     {
                         this.state.displayContent.split(" ").map((symbol, index) => {
@@ -139,9 +143,9 @@ export default class InputBox extends Component<InputBoxProps, InputBoxState> {
     }
 
     public componentDidUpdate(prevProps: Readonly<InputBoxProps>): void {
-        if(prevProps.onInput !== this.props.onInput) {
+        if(prevProps.onInputSymbol !== this.props.onInputSymbol) {
             this.setState({
-                onInput: this.props.onInput
+                onInputSymbol: this.props.onInputSymbol
             });
         }
     }

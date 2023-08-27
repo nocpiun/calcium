@@ -1,5 +1,6 @@
 import React, { useState, useRef, useCallback } from "react";
 import { BlockMath } from "react-katex";
+import { useContextMenu, ContextMenuItem } from "use-context-menu";
 
 import { HistoryItemInfo } from "../sidebar/History";
 
@@ -200,28 +201,40 @@ const Output: React.FC = () => {
             setOutputContent("="+ itemInfo.output);
         }],
         ["open-vars-dialog", () => varsDialogRef.current?.open()],
-        ["open-funcs-dialog", () => funcsDialogRef.current?.open()]
+        ["open-funcs-dialog", () => funcsDialogRef.current?.open()],
+        ["do-input", (symbol: string) => handleInput(symbol)]
     ]);
 
     useEaster(setOutputContent); // K U N
 
-    return (
-        <div className="output-container">
-            <span className="output-tag">Output</span>
-            <InputBox
-                ref={inputRef}
-                ltr={true}
-                onInput={(symbol) => handleInput(symbol)}/>
-            <div className="output-box">
-                <span className="display">
-                    {outputContent.split(" ").map((symbol, index) => <BlockMath key={index}>{symbol}</BlockMath>)}
-                </span>
-            </div>
+    const { contextMenu, onContextMenu, onKeyDown } = useContextMenu(
+        <>
+            <ContextMenuItem onSelect={() => Emitter.get().emit("clear-input")}>清空</ContextMenuItem>
+        </>
+    );
 
-            {/* Dialogs */}
-            <VariableDialog variableList={variableRef.current} ref={varsDialogRef}/>
-            <FunctionDialog ref={funcsDialogRef}/>
-        </div>
+    return (
+        <>
+            <div className="output-container">
+                <span className="output-tag">Output</span>
+                <InputBox
+                    ref={inputRef}
+                    ltr={true}
+                    onInputSymbol={(symbol) => handleInput(symbol)}
+                    onContextMenu={onContextMenu}
+                    onKeyDown={onKeyDown}/>
+                <div className="output-box">
+                    <span className="display">
+                        {outputContent.split(" ").map((symbol, index) => <BlockMath key={index}>{symbol}</BlockMath>)}
+                    </span>
+                </div>
+
+                {/* Dialogs */}
+                <VariableDialog variableList={variableRef.current} ref={varsDialogRef}/>
+                <FunctionDialog ref={funcsDialogRef}/>
+            </div>
+            {contextMenu}
+        </>
     );
 }
 
