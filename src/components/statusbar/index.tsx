@@ -35,6 +35,10 @@ const StatusBar: React.FC = () => {
                 <div className="split">
                     <BarItem title="Star" to="https://github.com/nocpiun/calcium" className="primary" tooltip="为本项目加星"/>
                     <BarItem title="反馈" to="https://github.com/nocpiun/calcium/issues" tooltip="Issues"/>
+                    {
+                        mode === Mode.GRAPHING &&
+                        <BarItem title={"FPS: "+ fps.toFixed(0)} disabled/>
+                    }
                 </div>
                 <div className="split">
                     {
@@ -44,10 +48,6 @@ const StatusBar: React.FC = () => {
                     {
                         (mode === Mode.GENERAL || mode === Mode.PROGRAMMING) &&
                         <BarItem title="函数" onClick={() => Emitter.get().emit("open-funcs-dialog")} tooltip="查看函数列表"/>
-                    }
-                    {
-                        mode === Mode.GRAPHING &&
-                        <BarItem title={"FPS: "+ fps.toFixed(0)} disabled/>
                     }
                     {
                         mode === Mode.GRAPHING &&

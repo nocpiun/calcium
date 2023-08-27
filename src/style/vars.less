@@ -1,23 +1,25 @@
 :root {
     // Dark Mode
-    --ca-gray-light: #cbd0df;
-    --ca-gray1: #8c949e;
-    --ca-gray2: #4a4e53;
-    --ca-gray3: #232629;
-    --ca-gray4: #383d42;
-    --ca-gray5: #1a1c1f;
-    --ca-gray6: #acb0bd;
-    --ca-gray7: #83848d;
-    --ca-gray8: #3d4247;
-    --ca-gray9: #363636;
-    --ca-light1: #0e1117;
-    --ca-light2: #010409;
-    --ca-green1: #62b669;
-    --ca-green2: #238636;
-    --ca-green3: #2ea043;
-    --ca-blue1: #3b71e5;
-    --ca-blue2: #3566cf;
-    --ca-blue3: #3e62af;
+    body[theme=dark] {
+        --ca-gray-light: #cbd0df;
+        --ca-gray1: #8c949e;
+        --ca-gray2: #2a2f36;
+        --ca-gray3: #232629;
+        --ca-gray4: #383d42;
+        --ca-gray5: #1a1c1f;
+        --ca-gray6: #acb0bd;
+        --ca-gray7: #83848d;
+        --ca-gray8: #3d4247;
+        --ca-gray9: #2a3039;
+        --ca-light1: #0e1117; // #0e1117
+        --ca-light2: #010409;
+        --ca-green1: #62b669;
+        --ca-green2: #238636;
+        --ca-green3: #2ea043;
+        --ca-blue1: #3b71e5;
+        --ca-blue2: #3566cf;
+        --ca-blue3: #3e62af;
+    }
 
     // Light Mode
     body[theme=light] {
@@ -62,7 +64,7 @@
         height: @size;
     }
     &::-webkit-scrollbar-thumb {
-        background-color: var(--ca-gray2);
+        background-color: var(--ca-gray8);
         &:hover {
             background-color: var(--ca-gray7);
         }

@@ -126,9 +126,6 @@ const ProgrammingOutput: React.FC = () => {
             case "\\text{Result}":
                 if(contentArray.length > 1) handleResult(currentContent);
                 return;
-            // case "\\text{Funcs}":
-            //     funcsDialogRef.current?.open();
-            //     break;
             default:
                 setOutputContent("");
 
