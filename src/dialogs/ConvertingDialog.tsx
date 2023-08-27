@@ -24,7 +24,7 @@ const ConvertingDialog: React.FC<ConvertingDialogProps> = forwardRef<Dialog, Con
         ]);
 
         return (
-            <Dialog title="单位换算 (Beta)" className="converting-dialog" id={"converting-dialog--"+ useId()} ref={ref}>
+            <Dialog title="单位换算" className="converting-dialog" id={"converting-dialog--"+ useId()} ref={ref}>
                 <div className="dialog-sidebar">
                     {
                         unitsData.map((value: UnitType, index: number) => {

@@ -185,9 +185,7 @@ const Input: React.FC = memo(() => {
                     <div className="keypad-placeholder"/>
                     <InputButton symbol="\leftarrow" grow={1} title="向前移动光标"/>
                     <InputButton symbol="\rightarrow" grow={1} title="向后移动光标"/>
-                    <InputButton symbol="\text{Clear}" grow={1} title="清空输入框"/>
-                    <InputButton symbol="\text{Del}" grow={1} title="退格"/>
-                    <InputButton symbol="\text{CH}" grow={1} title="清空历史记录"/>
+                    <div style={{ flexGrow: 3 }}/>
                 </div>
                 <div className="keypad-row">
                     <div style={{ flexGrow: 5 }}/>
@@ -200,10 +198,10 @@ const Input: React.FC = memo(() => {
                     <InputButton symbol="," grow={1}/>
                     <div style={{ flexGrow: 3 }}/>
                     <div className="keypad-placeholder"/>
-                    <InputButton symbol="\text{Result}" grow={1}/>
-                    <InputButton symbol="\text{Vars}" grow={1} title="查看变量列表"/>
-                    <InputButton symbol="\text{Funcs}" grow={1} title="查看函数列表"/>
-                    <div style={{ flexGrow: 2 }}/>
+                    <InputButton symbol="\text{Result}" grow={2}/>
+                    <InputButton symbol="\text{Clear}" grow={1} title="清空输入框"/>
+                    <InputButton symbol="\text{Del}" grow={1} title="退格"/>
+                    <InputButton symbol="\text{CH}" grow={1} title="清空历史记录"/>
                 </div>
             </div>
         </div>

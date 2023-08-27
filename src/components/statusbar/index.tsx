@@ -38,21 +38,26 @@ const StatusBar: React.FC = () => {
                 </div>
                 <div className="split">
                     {
-                        mode === Mode.GRAPHING
-                        ? <BarItem title={"FPS: "+ fps.toFixed(0)} disabled/>
-                        : <></>
+                        mode === Mode.GENERAL &&
+                        <BarItem title="变量" onClick={() => Emitter.get().emit("open-vars-dialog")} tooltip="查看变量列表"/>
                     }
                     {
-                        mode === Mode.GRAPHING
-                        ? <BarItem title="捕捉图像" onClick={() => Emitter.get().emit("graphing-capture")} tooltip="捕捉并下载函数图像"/>
-                        : <></>
+                        (mode === Mode.GENERAL || mode === Mode.PROGRAMMING) &&
+                        <BarItem title="函数" onClick={() => Emitter.get().emit("open-funcs-dialog")} tooltip="查看函数列表"/>
                     }
                     {
-                        mode === Mode.GRAPHING
-                        ? <BarItem title="重载" onClick={() => Emitter.get().emit("graphing-reload")} tooltip="函数图像渲染重载"/>
-                        : <></>
+                        mode === Mode.GRAPHING &&
+                        <BarItem title={"FPS: "+ fps.toFixed(0)} disabled/>
                     }
-                    <BarItem title="换算 (Beta)" onClick={() => convertingDialogRef.current?.open()}/>
+                    {
+                        mode === Mode.GRAPHING &&
+                        <BarItem title="捕捉图像" onClick={() => Emitter.get().emit("graphing-capture")} tooltip="捕捉并下载函数图像"/>
+                    }
+                    {
+                        mode === Mode.GRAPHING &&
+                        <BarItem title="重载" onClick={() => Emitter.get().emit("graphing-reload")} tooltip="函数图像渲染重载"/>
+                    }
+                    <BarItem title="单位换算" onClick={() => convertingDialogRef.current?.open()}/>
                     <BarItem title="快捷键" onClick={() => shortcutDialogRef.current?.open()}/>
                     <BarItem title={"Calcium "+ version} onClick={() => aboutDialogRef.current?.open()}/>
                 </div>

@@ -126,9 +126,9 @@ const ProgrammingOutput: React.FC = () => {
             case "\\text{Result}":
                 if(contentArray.length > 1) handleResult(currentContent);
                 return;
-            case "\\text{Funcs}":
-                funcsDialogRef.current?.open();
-                break;
+            // case "\\text{Funcs}":
+            //     funcsDialogRef.current?.open();
+            //     break;
             default:
                 setOutputContent("");
 
@@ -169,7 +169,8 @@ const ProgrammingOutput: React.FC = () => {
             inputRef.current.value = itemInfo.input +" "+ cursor;
             setOutputContent("="+ itemInfo.output);
             Emitter.get().emit("number-sys-chose", itemInfo.numberSys);
-        }]
+        }],
+        ["open-funcs-dialog", () => funcsDialogRef.current?.open()]
     ]);
 
     useEaster(setOutputContent); // Sing, Dance, Rap, Basketball

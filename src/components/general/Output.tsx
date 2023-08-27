@@ -124,12 +124,6 @@ const Output: React.FC = () => {
             case "\\text{Result}":
                 if(contentArray.length > 1) handleResult(currentContent);
                 return;
-            case "\\text{Vars}":
-                varsDialogRef.current?.open();
-                break;
-            case "\\text{Funcs}":
-                funcsDialogRef.current?.open();
-                break;
             case "i": // Pi or Phi
                 if(contentArray[cursorIndex - 1] === "p") { // Pi
                     contentArray[cursorIndex - 1] = "\\pi";
@@ -204,7 +198,9 @@ const Output: React.FC = () => {
 
             inputRef.current.value = itemInfo.input +" "+ cursor;
             setOutputContent("="+ itemInfo.output);
-        }]
+        }],
+        ["open-vars-dialog", () => varsDialogRef.current?.open()],
+        ["open-funcs-dialog", () => funcsDialogRef.current?.open()]
     ]);
 
     useEaster(setOutputContent); // K U N
