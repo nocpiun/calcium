@@ -2,3 +2,11 @@
     from = "/*"
     to = "/"
     status = 200
+
+[[redirects]]
+    from = "http://calc.nin.red"
+    to = "https://calcium.js.org"
+
+[[redirects]]
+    from = "https://calc.nin.red"
+    to = "https://calcium.js.org"
