@@ -9,6 +9,7 @@ import Emitter from "../utils/Emitter";
 
 interface InputBoxProps {
     ltr: boolean
+    isProgrammingMode?: boolean
     onInputSymbol?: (symbol: string) => string | void
 }
 
@@ -92,7 +93,7 @@ export default class InputBox extends Component<_Props, InputBoxState> {
     }
 
     public render(): ReactElement {
-        const { ltr, onInputSymbol, ...attrProps } = this.props;
+        const { ltr, isProgrammingMode, onInputSymbol, ...attrProps } = this.props;
 
         return (
             <div className="input-box" {...attrProps}>
@@ -127,8 +128,12 @@ export default class InputBox extends Component<_Props, InputBoxState> {
         document.body.addEventListener("keydown", (e: KeyboardEvent) => {
             if(e.key === cursor) return;
             if(e.ctrlKey) return;
-            if(!Utils.isAllowedSymbol(e.key)) return;
-            if(e.key === "Enter") e.preventDefault();
+            if(!this.props.isProgrammingMode && !Utils.isAllowedSymbol(e.key)) return;
+            if(this.props.isProgrammingMode && !Utils.isAllowedProgrammingSymbol(e.key)) return;
+            if(e.key === "Enter") {
+                e.preventDefault();
+                document.body.focus();
+            }
             if(e.key === " ") {
                 e.preventDefault();
                 return;

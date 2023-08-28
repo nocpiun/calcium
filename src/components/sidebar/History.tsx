@@ -73,7 +73,7 @@ const History: React.FC = () => {
         Utils.scrollToEnd("history-body", 1, 0);
     }, [list]);
 
-    const { contextMenu, onContextMenu, onKeyDown } = useContextMenu(
+    const { contextMenu, onContextMenu } = useContextMenu(
         <>
             <ContextMenuItem onSelect={() => Emitter.get().emit("clear-record")}>清空历史</ContextMenuItem>
         </>
@@ -85,8 +85,7 @@ const History: React.FC = () => {
                 id="history"
                 title="历史记录"
                 tip={<><kbd>ctrl+d</kbd> 清空记录</>}
-                onContextMenu={onContextMenu}
-                onKeyDown={onKeyDown}>
+                onContextMenu={onContextMenu}>
                 <div className="history-main" id="history-list" ref={listElemRef}>
                     {
                         list.map((item, index) => <HistoryItem {...item} key={index}/>)

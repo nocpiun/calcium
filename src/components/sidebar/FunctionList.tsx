@@ -159,7 +159,7 @@ const FunctionList: React.FC = () => {
         }]
     ]);
 
-    const { contextMenu, onContextMenu, onKeyDown } = useContextMenu(
+    const { contextMenu, onContextMenu } = useContextMenu(
         <>
             <ContextMenuItem onSelect={() => Emitter.get().emit("clear-function")}>清空列表</ContextMenuItem>
             <ContextMenuDivider />
@@ -174,8 +174,7 @@ const FunctionList: React.FC = () => {
                 id="function-list"
                 title="函数列表"
                 tip={<>最多添加{maxFunctionAmount}个函数</>} 
-                onContextMenu={onContextMenu}
-                onKeyDown={onKeyDown}>
+                onContextMenu={onContextMenu}>
                 <div className="function-list-main">
                     <div className="function-input-box">
                         <div className="function-input-box-tag">

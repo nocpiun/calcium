@@ -11,7 +11,7 @@ const HistoryItem: React.FC<HistoryItemInfo> = (props) => {
         Emitter.get().emit("history-item-click", props);
     };
 
-    const { contextMenu, onContextMenu, onKeyDown } = useContextMenu(
+    const { contextMenu, onContextMenu } = useContextMenu(
         <>
             <ContextMenuItem onSelect={() => Emitter.get().emit("remove-record", props.id)}>删除</ContextMenuItem>
             <ContextMenuItem onSelect={() => handleClick()}>打开</ContextMenuItem>
@@ -26,8 +26,7 @@ const HistoryItem: React.FC<HistoryItemInfo> = (props) => {
                 className="history-item"
                 id={"history-item--"+ props.id}
                 onClick={() => handleClick()}
-                onContextMenu={onContextMenu}
-                onKeyDown={onKeyDown}>
+                onContextMenu={onContextMenu}>
                 <div className="item-input">
                     <span><InlineMath>{props.input}</InlineMath></span>
                 </div>

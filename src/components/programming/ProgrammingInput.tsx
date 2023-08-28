@@ -6,7 +6,7 @@ import InputButton from "../InputButton";
 import Emitter from "../../utils/Emitter";
 
 const ProgrammingInput: React.FC = memo(() => {
-    const { contextMenu, onContextMenu, onKeyDown } = useContextMenu(
+    const { contextMenu, onContextMenu } = useContextMenu(
         <>
             <ContextMenuItem onSelect={() => Emitter.get().emit("do-input", "\\text{Result}")}>计算结果...</ContextMenuItem>
             <ContextMenuItem onSelect={() => Emitter.get().emit("clear-input")}>清空</ContextMenuItem>
@@ -20,8 +20,7 @@ const ProgrammingInput: React.FC = memo(() => {
         <>
             <div
                 className="input-container"
-                onContextMenu={onContextMenu}
-                onKeyDown={onKeyDown}>
+                onContextMenu={onContextMenu}>
                 <div className="keypad">
                     <div className="keypad-row">
                         <div style={{ flexGrow: 5 }}/>

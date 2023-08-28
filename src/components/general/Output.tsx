@@ -212,7 +212,7 @@ const Output: React.FC = () => {
 
     useEaster(setOutputContent); // K U N
 
-    const { contextMenu, onContextMenu, onKeyDown } = useContextMenu(
+    const { contextMenu, onContextMenu } = useContextMenu(
         <>
             <ContextMenuItem onSelect={() => Emitter.get().emit("clear-input")}>清空</ContextMenuItem>
             <ContextMenuItem onSelect={() => Utils.writeClipboard(outputContent.substring(1))}>复制结果</ContextMenuItem>
@@ -223,8 +223,7 @@ const Output: React.FC = () => {
         <>
             <div
                 className="output-container"
-                onContextMenu={onContextMenu}
-                onKeyDown={onKeyDown}>
+                onContextMenu={onContextMenu}>
                 <span className="output-tag">Output</span>
                 <InputBox
                     ref={inputRef}

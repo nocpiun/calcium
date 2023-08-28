@@ -174,7 +174,7 @@ const ProgrammingOutput: React.FC = () => {
 
     useEaster(setOutputContent); // Sing, Dance, Rap, Basketball
 
-    const { contextMenu, onContextMenu, onKeyDown } = useContextMenu(
+    const { contextMenu, onContextMenu } = useContextMenu(
         <>
             <ContextMenuItem onSelect={() => Emitter.get().emit("clear-input")}>清空</ContextMenuItem>
             <ContextMenuItem onSelect={() => {
@@ -189,8 +189,7 @@ const ProgrammingOutput: React.FC = () => {
         <>
             <div
                 className="output-container"
-                onContextMenu={onContextMenu}
-                onKeyDown={onKeyDown}>
+                onContextMenu={onContextMenu}>
                 <span className="output-tag">Output</span>
 
                 <ul className="number-box-list">
@@ -203,6 +202,7 @@ const ProgrammingOutput: React.FC = () => {
                 <InputBox
                     ref={inputRef}
                     ltr={true}
+                    isProgrammingMode={true}
                     onInputSymbol={(symbol) => handleInput(symbol)}/>
                 <div className="output-box">
                     <span className="display">

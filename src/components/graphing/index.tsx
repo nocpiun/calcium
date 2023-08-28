@@ -200,7 +200,7 @@ const Graphing: React.FC = memo(() => {
         }]
     ]);
 
-    const { contextMenu, onContextMenu, onKeyDown } = useContextMenu(
+    const { contextMenu, onContextMenu } = useContextMenu(
         <>
             <ContextMenuItem onSelect={() => Emitter.get().emit("graphing-capture")}>捕捉图像</ContextMenuItem>
             <ContextMenuItem onSelect={() => Emitter.get().emit("graphing-reload")}>重载</ContextMenuItem>
@@ -212,8 +212,7 @@ const Graphing: React.FC = memo(() => {
             <div
             className="graphing-container"
             id="display-frame"
-            onContextMenu={onContextMenu}
-            onKeyDown={onKeyDown}>
+            onContextMenu={onContextMenu}>
                 <canvas className="graphing-canvas" id="graphing"/>
             </div>
             {contextMenu}

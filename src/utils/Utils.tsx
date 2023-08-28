@@ -45,7 +45,8 @@ export default class Utils {
         const blocked = [
             "Tab", "CapsLock", "NumLock", "ScrollLock", "Shift", "Control", "Alt", "Meta", "ContextMenu",
             "Insert", "Home", "PageUp", "PageDown", "End", "Delete", "ArrowUp", "ArrowDown", "Pause", "Escape",
-            "\\", "`", "@", "#", "$", "&", ";", ":", "\"",
+            "\\", "`", "@", "#", "$", "&", "?", "_", ";", ":",
+            "\"", "'", "{", "}", "<", ">",
             "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12"
         ];
 
@@ -57,7 +58,7 @@ export default class Utils {
             "1", "2", "3", "4", "5", "6", "7", "8", "9", "0",
             "A", "B", "C", "D", "E", "F",
             "+", "-", "*", "/", "<", ">", "%",
-            "Backspace", "ArrowLeft", "ArrowRight"
+            "Enter", "Backspace", "ArrowLeft", "ArrowRight"
         ];
 
         return allowed.indexOf(symbol) > -1;
