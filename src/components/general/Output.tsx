@@ -152,33 +152,38 @@ const Output: React.FC = () => {
                 // Function auto complete
                 for(let i = 0; i < specialSymbols.length; i++) {
                     var specialSymbol = specialSymbols[i];
-                    if(symbol === specialSymbol[specialSymbol.length - 1]) {
-                        var splited = specialSymbol.split("");
-                        var passed = true;
-                        for(let j = splited.length - 2; j >= 0; j--) {
-                            if(contentArray[cursorIndex - (splited.length - j) + 1] !== splited[j]) {
-                                passed = false;
-                            }
-                        }
-                        if(passed) {
-                            if(specialSymbol === "sqrt") {
-                                specialSymbol = "√(";
-                            } else if(specialSymbol === "cbrt") {
-                                specialSymbol = "^3√(";
-                            } else {
-                                specialSymbol = "\\"+ specialSymbol +"(";
-                            }
+                    if(symbol !== specialSymbol[specialSymbol.length - 1]) continue;
 
-                            var begin = cursorIndex - splited.length + 1;
-                            contentArray[begin] = specialSymbol;
-                            for(let j = 0; j < splited.length - 2; j++) {
-                                contentArray = Utils.arrayRemove(contentArray, begin + 1);
-                            }
-                            contentArray.push(")"); // Add right bracket automatically
-
-                            return contentArray.join(" ");
+                    var splited = specialSymbol.split("");
+                    var passed = true;
+                    for(let j = splited.length - 2; j >= 0; j--) {
+                        if(contentArray[cursorIndex - (splited.length - j) + 1] !== splited[j]) {
+                            passed = false;
                         }
                     }
+
+                    if(!passed) continue;
+
+                    switch(specialSymbol) {
+                        case "sqrt":
+                            specialSymbol = "√(";
+                            break;
+                        case "cbrt":
+                            specialSymbol = "^3√(";
+                            break;
+                        default:
+                            specialSymbol = "\\"+ specialSymbol +"(";
+                            break;
+                    }
+
+                    var begin = cursorIndex - splited.length + 1;
+                    contentArray[begin] = specialSymbol;
+                    for(let j = 0; j < splited.length - 2; j++) {
+                        contentArray = Utils.arrayRemove(contentArray, begin + 1);
+                    }
+                    contentArray.push(")"); // Add right bracket automatically
+
+                    return contentArray.join(" ");
                 }
 
                 if(Is.mathFunction(symbol) || symbol === "(") { // Add right bracket automatically
