@@ -17,28 +17,17 @@ import FunctionListItem from "./FunctionListItem";
 import Emitter from "../../utils/Emitter";
 import Logger from "../../utils/Logger";
 import Utils from "../../utils/Utils";
-import {
-    IdReducerStateType,
-    IdReducerActionType,
-    Mode
-} from "../../types";
+import { Mode } from "../../types";
 
 import MainContext from "../../contexts/MainContext";
 
-const maxFunctionAmount: number = 50;
+import IdReducer from "../../reducers/IdReducer";
 
-function idReducer(state: IdReducerStateType, action: IdReducerActionType) {
-    switch(action.type) {
-        case "refresh":
-            return { id: state.id + action.payload };
-        default:
-            return { id: state.id };
-    }
-}
+const maxFunctionAmount: number = 50;
 
 const FunctionList: React.FC = () => {
     const { mode, functionList, setFunctionList } = useContext(MainContext);
-    const [unusedId, dispatchId] = useReducer(idReducer, { id: 0 });
+    const [unusedId, dispatchId] = useReducer(IdReducer, { id: 0 });
     const inputRef = useRef<InputBox>(null);
 
     const handleAddFunction = useCallback(async () => {
