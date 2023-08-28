@@ -5,12 +5,12 @@
 
 [[redirects]]
     from = "http://calc.nin.red/*"
-    to = "https://calcium.js.org"
+    to = "https://calcium.js.org/:splat"
     status = 301
     force = true
 
 [[redirects]]
     from = "https://calc.nin.red/*"
-    to = "https://calcium.js.org"
+    to = "https://calcium.js.org/:splat"
     status = 301
     force = true
