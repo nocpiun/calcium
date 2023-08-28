@@ -177,12 +177,20 @@ const ProgrammingOutput: React.FC = () => {
     const { contextMenu, onContextMenu, onKeyDown } = useContextMenu(
         <>
             <ContextMenuItem onSelect={() => Emitter.get().emit("clear-input")}>清空</ContextMenuItem>
+            <ContextMenuItem onSelect={() => {
+                Utils.writeClipboard(
+                    Compiler.purifyNumber(outputContent.substring(1)).toUpperCase()
+                )
+            }}>复制结果</ContextMenuItem>
         </>
     );
 
     return (
         <>
-            <div className="output-container">
+            <div
+                className="output-container"
+                onContextMenu={onContextMenu}
+                onKeyDown={onKeyDown}>
                 <span className="output-tag">Output</span>
 
                 <ul className="number-box-list">
@@ -195,9 +203,7 @@ const ProgrammingOutput: React.FC = () => {
                 <InputBox
                     ref={inputRef}
                     ltr={true}
-                    onInputSymbol={(symbol) => handleInput(symbol)}
-                    onContextMenu={onContextMenu}
-                    onKeyDown={onKeyDown}/>
+                    onInputSymbol={(symbol) => handleInput(symbol)}/>
                 <div className="output-box">
                     <span className="display">
                         {outputContent.split(" ").map((symbol, index) => <BlockMath key={index}>{symbol}</BlockMath>)}

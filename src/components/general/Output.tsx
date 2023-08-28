@@ -210,19 +210,21 @@ const Output: React.FC = () => {
     const { contextMenu, onContextMenu, onKeyDown } = useContextMenu(
         <>
             <ContextMenuItem onSelect={() => Emitter.get().emit("clear-input")}>清空</ContextMenuItem>
+            <ContextMenuItem onSelect={() => Utils.writeClipboard(outputContent.substring(1))}>复制结果</ContextMenuItem>
         </>
     );
 
     return (
         <>
-            <div className="output-container">
+            <div
+                className="output-container"
+                onContextMenu={onContextMenu}
+                onKeyDown={onKeyDown}>
                 <span className="output-tag">Output</span>
                 <InputBox
                     ref={inputRef}
                     ltr={true}
-                    onInputSymbol={(symbol) => handleInput(symbol)}
-                    onContextMenu={onContextMenu}
-                    onKeyDown={onKeyDown}/>
+                    onInputSymbol={(symbol) => handleInput(symbol)}/>
                 <div className="output-box">
                     <span className="display">
                         {outputContent.split(" ").map((symbol, index) => <BlockMath key={index}>{symbol}</BlockMath>)}

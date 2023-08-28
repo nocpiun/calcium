@@ -136,4 +136,12 @@ export default class Utils {
         }
         return false;
     }
+
+    public static async writeClipboard(text: string): Promise<void> {
+        try {
+            await window.navigator.clipboard.writeText(text);
+        } catch (e) {
+            throw e;
+        }
+    }
 }

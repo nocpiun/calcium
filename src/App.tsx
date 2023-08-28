@@ -36,6 +36,10 @@ const App: React.FC = () => {
 				}
 			});
 		});
+
+		document.body.addEventListener("contextmenu", (e: MouseEvent) => {
+			e.preventDefault();
+		});
 	}, []);
 
 	return (
