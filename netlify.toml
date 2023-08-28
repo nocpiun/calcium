@@ -4,9 +4,11 @@
     status = 200
 
 [[redirects]]
-    from = "http://calc.nin.red"
+    from = "http://calc.nin.red/*"
     to = "https://calcium.js.org"
+    status = 302
 
 [[redirects]]
-    from = "https://calc.nin.red"
+    from = "https://calc.nin.red/*"
     to = "https://calcium.js.org"
+    status = 302
