@@ -33,7 +33,7 @@ const StatusBar: React.FC = () => {
         <>
             <footer className="status-bar">
                 <div className="split">
-                    <BarItem title="Star" to="https://github.com/nocpiun/calcium" className="primary" tooltip="为本项目加星"/>
+                    <BarItem title="Repo" to="https://github.com/nocpiun/calcium" className="primary" tooltip="查看GitHub源代码仓库"/>
                     <BarItem title="反馈" to="https://github.com/nocpiun/calcium/issues" tooltip="Issues"/>
                     <BarItem title="支持我" to="https://nin.red/#/donate"/>
                     {
