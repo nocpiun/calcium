@@ -45,6 +45,55 @@ export const constants: Map<string, number> = new Map([
     ["\\phi", (Math.sqrt(5) - 1) / 2],
 ]);
 
+/**
+ * Auto Complete symbols Table (AC Table)
+ */
+export const acTable: Map<string, string> = new Map([
+    ["alpha",  "\\alpha"],
+    ["beta",   "\\beta"],
+    ["gamma",  "\\gamma"],
+    ["delta",  "\\delta"],
+    ["epsi",   "\\epsilon"],
+    ["zeta",   "\\zeta"],
+    ["theta",  "\\theta"],
+    ["iota",   "\\iota"],
+    ["kappa",  "\\kappa"],
+    ["lambda", "\\lambda"],
+    ["mu",     "\\mu"],
+    ["nu",     "\\nu"],
+    ["xi",     "\\xi"],
+    ["omic",   "\\omic"],
+    ["pi",     "\\pi"],
+    ["rho",    "\\rho"],
+    ["sigma",  "\\sigma"],
+    ["tau",    "\\tau"],
+    ["upsi",   "\\upsilon"],
+    ["phi",    "\\phi"],
+    ["chi",    "\\chi"],
+    ["omega",  "\\omega"],
+    ["psi",    "\\psi"],
+    ["eta",    "\\eta"],
+
+    ["sin",    "\\sin("],
+    ["cos",    "\\cos("],
+    ["tan",    "\\tan("],
+    ["cot",    "\\cot("],
+    ["sec",    "\\sec("],
+    ["csc",    "\\csc("],
+    ["ln",     "\\ln("],
+    ["lg",     "\\lg("],
+    ["log2",   "\\log_2("],
+    ["deg",    "\\deg("],
+    ["rad",    "\\text{rad}("],
+    ["sqrt",   "√("],
+    ["cbrt",   "^3√("],
+    ["mean",   "\\text{mean}("],
+    ["stdev",  "\\text{stdev}("],
+    ["npr",    "\\text{nPr}("],
+    ["ncr",    "\\text{nCr}("],
+    ["xpx",    "\\text{xPx}("],
+]);
+
 export const shortcuts: Map<string[], Shortcut> = new Map([
     [["ctrl", "x"], {
         description: "清空输入框",

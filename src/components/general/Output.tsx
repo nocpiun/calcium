@@ -4,7 +4,7 @@ import { useContextMenu, ContextMenuItem } from "use-context-menu";
 
 import { HistoryItemInfo } from "../sidebar/History";
 
-import { errorText } from "../../global";
+import { errorText, acTable } from "../../global";
 import Emitter from "../../utils/Emitter";
 import Utils from "../../utils/Utils";
 import Compiler from "../../compiler/Compiler";
@@ -15,7 +15,7 @@ import { NumberSys, RecordType } from "../../types";
 import useEmitter from "../../hooks/useEmitter";
 import useEaster from "../../hooks/useEaster";
 
-import InputBox, { specialSymbols, cursor } from "../InputBox";
+import InputBox, { cursor } from "../InputBox";
 import type Dialog from "../Dialog";
 import VariableDialog from "../../dialogs/VariableDialog";
 import FunctionDialog from "../../dialogs/FunctionDialog";
@@ -125,18 +125,6 @@ const Output: React.FC = () => {
             case "\\text{Result}":
                 if(contentArray.length > 1) handleResult(currentContent);
                 return;
-            case "i": // Pi or Phi
-                if(contentArray[cursorIndex - 1] === "p") { // Pi
-                    contentArray[cursorIndex - 1] = "\\pi";
-                    return contentArray.join(" ");
-                } else if(contentArray[cursorIndex - 2] === "p" && contentArray[cursorIndex - 1] === "h") { // Phi
-                    contentArray[cursorIndex - 2] = "\\phi";
-                    contentArray = Utils.arrayRemove(contentArray, cursorIndex - 1);
-                    return contentArray.join(" ");
-                } else {
-                    setOutputContent("");
-                    return currentContent.replace(cursor, symbol +" "+ cursor);
-                }
             case "^":
                 if(contentArray[cursorIndex - 1].indexOf("^") > -1) {
                     const currentExponentialStr = contentArray[cursorIndex - 1].replace("^", "");
@@ -149,48 +137,37 @@ const Output: React.FC = () => {
 
                 return currentContent.replace(cursor, "^2 "+ cursor);
             default:
-                // Function auto complete
-                for(let i = 0; i < specialSymbols.length; i++) {
-                    var specialSymbol = specialSymbols[i];
-                    if(symbol !== specialSymbol[specialSymbol.length - 1]) continue;
+                // Auto complete
+                tableLoop: for(let [key, value] of acTable) {
+                    if(symbol !== key[key.length - 1]) continue;
 
-                    var splited = specialSymbol.split("");
-                    var passed = true;
-                    for(let j = splited.length - 2; j >= 0; j--) {
-                        if(contentArray[cursorIndex - (splited.length - j) + 1] !== splited[j]) {
-                            passed = false;
-                        }
+                    const lastCharIndex = cursorIndex;
+                    for(let i = lastCharIndex - 1; i > lastCharIndex - key.length; i--) {
+                        if(i < 0) continue tableLoop;
+
+                        const j = i - (lastCharIndex - key.length + 1);
+                        if(contentArray[i] !== key[j]) continue tableLoop;
                     }
 
-                    if(!passed) continue;
-
-                    switch(specialSymbol) {
-                        case "sqrt":
-                            specialSymbol = "√(";
-                            break;
-                        case "cbrt":
-                            specialSymbol = "^3√(";
-                            break;
-                        default:
-                            specialSymbol = "\\"+ specialSymbol +"(";
-                            break;
+                    contentArray[lastCharIndex - (key.length - 1)] = value;
+                    for(let i = lastCharIndex - 1; i >= lastCharIndex - key.length + 2; i--) {
+                        contentArray = Utils.arrayRemove(contentArray, i);
                     }
 
-                    var begin = cursorIndex - splited.length + 1;
-                    contentArray[begin] = specialSymbol;
-                    for(let j = 0; j < splited.length - 2; j++) {
-                        contentArray = Utils.arrayRemove(contentArray, begin + 1);
+                    if(Is.mathFunction(value)) { // Add right bracket automatically
+                        setOutputContent("");
+                        return contentArray.join(" ").replace(cursor, cursor +" )");
                     }
-                    contentArray.push(")"); // Add right bracket automatically
 
                     return contentArray.join(" ");
                 }
 
-                if(Is.mathFunction(symbol) || symbol === "(") { // Add right bracket automatically
+                if(symbol === "(") { // Add right bracket automatically
                     setOutputContent("");
                     return currentContent.replace(cursor, symbol +" "+ cursor +" )");
                 }
-                
+
+                // Default (normal) Input
                 setOutputContent("");
                 return currentContent.replace(cursor, symbol +" "+ cursor);
         }

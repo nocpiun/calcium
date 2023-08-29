@@ -18,12 +18,6 @@ interface InputBoxState {
     onInputSymbol?: (symbol: string) => string | void
 }
 
-export const specialSymbols: string[] = [
-    "sin", "cos", "tan", "cot", "sec", "csc",
-    "ln", "lg", "deg",
-    "sqrt", "cbrt"
-];
-
 export const cursor = "$";
 
 type _Props = InputBoxProps & DOMAttributes<HTMLDivElement>;

@@ -11,12 +11,14 @@ import { useContextMenu, ContextMenuItem, ContextMenuDivider } from "use-context
 import useEmitter from "../../hooks/useEmitter";
 
 import SidebarPage from "./SidebarPage";
-import InputBox, { specialSymbols, cursor } from "../InputBox";
+import InputBox, { cursor } from "../InputBox";
 import FunctionListItem from "./FunctionListItem";
 
+import Is from "../../compiler/Is";
 import Emitter from "../../utils/Emitter";
 import Logger from "../../utils/Logger";
 import Utils from "../../utils/Utils";
+import { acTable } from "../../global";
 import { Mode } from "../../types";
 
 import MainContext from "../../contexts/MainContext";
@@ -80,14 +82,6 @@ const FunctionList: React.FC = () => {
             case "Enter":
                 if(contentArray.length > 1) handleAddFunction();
                 return;
-            case "i": // Pi
-                if(contentArray[cursorIndex - 1] === "p") {
-                    contentArray[cursorIndex - 1] = "\\pi";
-                    return contentArray.join(" ");
-                } else {
-
-                    return currentContent.replace(cursor, symbol +" "+ cursor);
-                }
             case "^":
                 if(contentArray[cursorIndex - 1].indexOf("^") > -1) {
                     const currentExponentialStr = contentArray[cursorIndex - 1].replace("^", "");
@@ -100,49 +94,35 @@ const FunctionList: React.FC = () => {
 
                 return currentContent.replace(cursor, "^2 "+ cursor);
             default:
-                /**
-                 * Function auto complete
-                 * 
-                 * For example,
-                 * input 'lg', then it will auto complete it as '\lg('
-                 * which can be correctly displayed by KaTeX
-                 */
-                for(let i = 0; i < specialSymbols.length; i++) {
-                    var specialSymbol = specialSymbols[i];
-                    if(symbol !== specialSymbol[specialSymbol.length - 1]) continue;
+                // Auto complete
+                tableLoop: for(let [key, value] of acTable) {
+                    if(symbol !== key[key.length - 1]) continue;
 
-                    var splited = specialSymbol.split("");
-                    var passed = true;
-                    for(let j = splited.length - 2; j >= 0; j--) {
-                        if(contentArray[cursorIndex - (splited.length - j) + 1] !== splited[j]) {
-                            passed = false;
-                        }
+                    const lastCharIndex = cursorIndex;
+                    for(let i = lastCharIndex - 1; i > lastCharIndex - key.length; i--) {
+                        if(i < 0) continue tableLoop;
+
+                        const j = i - (lastCharIndex - key.length + 1);
+                        if(contentArray[i] !== key[j]) continue tableLoop;
                     }
 
-                    if(!passed) continue;
-
-                    switch(specialSymbol) {
-                        case "sqrt":
-                            specialSymbol = "√(";
-                            break;
-                        case "cbrt":
-                            specialSymbol = "^3√(";
-                            break;
-                        default:
-                            specialSymbol = "\\"+ specialSymbol +"(";
-                            break;
+                    contentArray[lastCharIndex - (key.length - 1)] = value;
+                    for(let i = lastCharIndex - 1; i >= lastCharIndex - key.length + 2; i--) {
+                        contentArray = Utils.arrayRemove(contentArray, i);
                     }
 
-                    var begin = cursorIndex - splited.length + 1;
-                    contentArray[begin] = specialSymbol;
-                    for(let j = 0; j < splited.length - 2; j++) {
-                        contentArray = Utils.arrayRemove(contentArray, begin + 1);
+                    if(Is.mathFunction(value)) { // Add right bracket automatically
+                        return contentArray.join(" ").replace(cursor, cursor +" )");
                     }
-                    contentArray.push(")"); // Add right bracket automatically
 
                     return contentArray.join(" ");
                 }
-                
+
+                if(symbol === "(") { // Add right bracket automatically
+                    return currentContent.replace(cursor, symbol +" "+ cursor +" )");
+                }
+
+                // Default (normal) Input
                 return currentContent.replace(cursor, symbol +" "+ cursor);
         }
     }, [inputRef, mode, handleAddFunction]);
