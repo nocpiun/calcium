@@ -1,4 +1,5 @@
 import Is from "./Is";
+import Utils from "../utils/Utils";
 
 export default class Compute {
     /** @see https://www.cnblogs.com/jialuchun/p/6559422.html */
@@ -40,12 +41,40 @@ export default class Compute {
         return Math.sqrt(2 * Math.PI) * Math.pow(t, x + 0.5) * Math.exp(-t) * a;
     }
 
-    public static mean(...nums: number[]): number {
+    public static order(nums: number[]): number[] {
+        var result: number[] = [];
+        for(let i = 0; i < nums.length; i++) {
+            if(result.length === 0) {
+                result.push(nums[i]);
+                continue;
+            }
+
+            let j = 0;
+            while(j < result.length && nums[i] > result[j]) j++;
+            result = Utils.arrayPut(result, j, nums[i]);
+        }
+        return result;
+    }
+
+    public static total(...nums: number[]): number {
         var sum = 0;
         for(let i = 0; i < nums.length; i++) {
             sum += nums[i];
         }
-        return sum / nums.length;
+        return sum;
+    }
+
+    public static mean(...nums: number[]): number {
+        return Compute.total(...nums) / nums.length;
+    }
+
+    public static median(...nums: number[]): number {
+        var ordered = Compute.order([...nums]);
+        return (
+            ordered.length % 2 !== 0
+            ? ordered[ordered.length / 2 - .5]
+            : Compute.mean(ordered[ordered.length / 2], ordered[ordered.length / 2 - 1])
+        );
     }
 
     public static stdev(...nums: number[]): number {
@@ -54,13 +83,8 @@ export default class Compute {
         for(let i = 0; i < nums.length; i++) {
             devPowList.push(Compute.safePow(nums[i] - average, 2));
         }
-        
-        var devPowSum = 0;
-        for(let i = 0; i < devPowList.length; i++) {
-            devPowSum += devPowList[i];
-        }
 
-        return Math.sqrt(devPowSum / (nums.length - 1));
+        return Math.sqrt(Compute.total(...devPowList) / (nums.length - 1));
     }
 
     public static stdevp(...nums: number[]): number {
@@ -69,13 +93,8 @@ export default class Compute {
         for(let i = 0; i < nums.length; i++) {
             devPowList.push(Compute.safePow(nums[i] - average, 2));
         }
-        
-        var devPowSum = 0;
-        for(let i = 0; i < devPowList.length; i++) {
-            devPowSum += devPowList[i];
-        }
 
-        return Math.sqrt(devPowSum / nums.length);
+        return Math.sqrt(Compute.total(...devPowList) / nums.length);
     }
 
     public static nPr(n: number, r: number): number {
@@ -99,3 +118,5 @@ export default class Compute {
         return y > 0 ? Math.pow(x, y) : (1 / Math.pow(x, -y));
     }
 }
+
+(window as any)["order"] = Compute.order;

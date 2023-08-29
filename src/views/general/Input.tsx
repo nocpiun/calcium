@@ -104,7 +104,8 @@ const Input: React.FC = memo(() => {
                         <div style={{ flexGrow: 5 }}/>
                     </div>
                     <div className="keypad-row">
-                        <InputButton symbol="\text{stdev}" inputValue="\text{stdev}(" grow={2}/>
+                        <InputButton symbol="\text{stdev}" inputValue="\text{stdev}(" grow={1}/>
+                        <InputButton symbol="\text{var}" inputValue="\text{var}(" grow={1}/>
                         <InputButton symbol="\text{stdevp}" inputValue="\text{stdevp}(" grow={2}/>
                         <InputButton symbol="\deg" inputValue="\deg(" grow={1}/>
                         <div className="keypad-placeholder"/>
@@ -122,8 +123,9 @@ const Input: React.FC = memo(() => {
                         <div style={{ flexGrow: 5 }}/>
                     </div>
                     <div className="keypad-row">
-                        <InputButton symbol="\text{nPr}" inputValue="\text{nPr}(" grow={2}/>
-                        <InputButton symbol="\text{nCr}" inputValue="\text{nCr}(" grow={2}/>
+                        <InputButton symbol="\text{min}" inputValue="\text{min}(" grow={1}/>
+                        <InputButton symbol="\text{max}" inputValue="\text{max}(" grow={1}/>
+                        <InputButton symbol="\text{median}" inputValue="\text{median}(" grow={2}/>
                         <InputButton symbol="\text{rad}" inputValue="\text{rad}(" grow={1}/>
                         <div className="keypad-placeholder"/>
                         <InputButton symbol="\leftarrow" grow={1} title="向前移动光标"/>
@@ -140,9 +142,12 @@ const Input: React.FC = memo(() => {
                         <div style={{ flexGrow: 5 }}/>
                     </div>
                     <div className="keypad-row">
-                        <div style={{ flexGrow: 5 }}/>
+                        <InputButton symbol="\text{count}" inputValue="\text{count}(" grow={2}/>
+                        <InputButton symbol="\text{total}" inputValue="\text{total}(" grow={2}/>
+                        <InputButton symbol="\text{nPr}" inputValue="\text{nPr}(" grow={1}/>
                         <div className="keypad-placeholder"/>
-                        <InputButton symbol="\%" inputValue="\%(" grow={2}/>
+                        <InputButton symbol="\sum" grow={1} disabled/>
+                        <InputButton symbol="\%" inputValue="\%(" grow={1}/>
                         <InputButton symbol="×" grow={1}/>
                         <InputButton symbol="/" grow={1}/>
                         <div className="keypad-placeholder"/>
@@ -155,7 +160,8 @@ const Input: React.FC = memo(() => {
                         <div style={{ flexGrow: 5 }}/>
                     </div>
                     <div className="keypad-row">
-                        <div style={{ flexGrow: 5 }}/>
+                        <div style={{ flexGrow: 4 }}/>
+                        <InputButton symbol="\text{nCr}" inputValue="\text{nCr}(" grow={1}/>
                         <div className="keypad-placeholder"/>
                         <InputButton symbol="1" grow={1}/>
                         <InputButton symbol="2" grow={1}/>

@@ -162,7 +162,7 @@ const Output: React.FC = () => {
                     return contentArray.join(" ");
                 }
 
-                if(symbol === "(") { // Add right bracket automatically
+                if(symbol === "(" || Is.mathFunction(symbol)) { // Add right bracket automatically
                     setOutputContent("");
                     return currentContent.replace(cursor, symbol +" "+ cursor +" )");
                 }
