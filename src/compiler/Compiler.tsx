@@ -11,6 +11,7 @@ import OperatorToken from "./token/OperatorToken";
 import BracketToken from "./token/BracketToken";
 import AbsToken from "./token/AbsToken";
 import FunctionToken from "./token/FunctionToken";
+import SigmaToken from "./token/SigmaToken";
 
 import { functions, constants } from "../global";
 import { Operator, NumberSys } from "../types";
@@ -33,6 +34,9 @@ export default class Compiler {
 
     private tempParamRaw: NumberSymbol[] = [];
     private tempParamList: Token[] = [];
+    
+    private sigmaI: number = -1;
+    private sigmaN: number = -1;
     
     public constructor(
         raw: string[],
@@ -167,6 +171,12 @@ export default class Compiler {
 
             } else if(Is.rightBracket(symbol)) { // right bracket
 
+                if(this.sigmaI > -1 && this.sigmaN > -1) {
+                    root.add(new SigmaToken(this.sigmaI, this.sigmaN, this.secondaryRaw));
+
+                    continue;
+                }
+
                 var secondaryCompiler = new Compiler(this.secondaryRaw, this.variables, this.isProgrammingMode, this.numberSys);
                 var bracketContent = secondaryCompiler.tokenize();
                 if(!bracketContent) {
@@ -237,6 +247,14 @@ export default class Compiler {
                 } else {
                     this.inAbs = true;
                 }
+
+            } else if(symbol.indexOf("\\Sigma") > -1) { // sum (sigma)
+
+                const resolved = symbol.match(/\d+/g) ?? ["0", "0"];
+                this.sigmaI = parseFloat(resolved[0]);
+                this.sigmaN = parseFloat(resolved[1]);
+
+                this.layer++;
 
             } else if(Is.mathFunction(symbol)) { // function
 

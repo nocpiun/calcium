@@ -75,6 +75,38 @@
     }
 }
 
+.dialog-input-box-style() {
+    width: 100%;
+    height: 100%;
+    outline: none;
+    background-color: transparent;
+    padding: 0 10px;
+    border: 1px solid var(--ca-gray4);
+    border-radius: 3px;
+    color: var(--ca-gray-light);
+    font-size: 14pt;
+    font-family: @font;
+    caret-color: var(--ca-gray-light);
+    &:focus {
+        border-color: var(--ca-gray-light);
+    }
+}
+
+.dialog-button-style() {
+    width: 62px;
+    height: 30px;
+    background-color: var(--ca-green2);
+    border-color: transparent;
+    border-radius: 3px;
+    color: #fff;
+    font-family: @font;
+    outline: none;
+    cursor: pointer;
+    &:hover, &:active {
+        background-color: var(--ca-green3);
+    }
+}
+
 @border-style: 1px solid var(--ca-gray2);
 
 .border-line(@position) when (@position = top) {

@@ -1,5 +1,5 @@
 export enum TokenType {
-    ROOT, NUMBER, OPERATOR, BRACKET, ABS, FUNCTION
+    ROOT, NUMBER, OPERATOR, BRACKET, ABS, FUNCTION, SIGMA
 }
 
 export default abstract class Token<T = any> {

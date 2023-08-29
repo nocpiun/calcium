@@ -19,6 +19,7 @@ import InputBox, { cursor } from "../../components/InputBox";
 import type Dialog from "../../components/Dialog";
 import VariableDialog from "../../dialogs/VariableDialog";
 import FunctionDialog from "../../dialogs/FunctionDialog";
+import SumDialog from "../../dialogs/SumDialog";
 
 const Output: React.FC = () => {
     const [outputContent, setOutputContent] = useState<string>("");
@@ -26,6 +27,7 @@ const Output: React.FC = () => {
     const inputRef = useRef<InputBox>(null);
     const varsDialogRef = useRef<Dialog>(null);
     const funcsDialogRef = useRef<Dialog>(null);
+    const sumDialogRef = useRef<Dialog>(null);
 
     const handleResult = useCallback((currentContent: string) => {
         if(currentContent.split(" ").length <= 1) return;
@@ -136,6 +138,9 @@ const Output: React.FC = () => {
                 }
 
                 return currentContent.replace(cursor, "^2 "+ cursor);
+            case "\\sum":
+                sumDialogRef.current?.open();
+                return;
             default:
                 // Auto complete
                 tableLoop: for(let [key, value] of acTable) {
@@ -184,7 +189,7 @@ const Output: React.FC = () => {
         }],
         ["open-vars-dialog", () => varsDialogRef.current?.open()],
         ["open-funcs-dialog", () => funcsDialogRef.current?.open()],
-        ["do-input", (symbol: string) => handleInput(symbol)]
+        ["do-input", (symbol: string) => inputRef.current?.handleInput(symbol)]
     ]);
 
     useEaster(setOutputContent); // K U N
@@ -215,6 +220,7 @@ const Output: React.FC = () => {
                 {/* Dialogs */}
                 <VariableDialog variableList={variableRef.current} ref={varsDialogRef}/>
                 <FunctionDialog ref={funcsDialogRef}/>
+                <SumDialog ref={sumDialogRef}/>
             </div>
             {contextMenu}
         </>

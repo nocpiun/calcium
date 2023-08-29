@@ -146,7 +146,7 @@ const Input: React.FC = memo(() => {
                         <InputButton symbol="\text{total}" inputValue="\text{total}(" grow={2}/>
                         <InputButton symbol="\text{nPr}" inputValue="\text{nPr}(" grow={1}/>
                         <div className="keypad-placeholder"/>
-                        <InputButton symbol="\sum" grow={1} disabled/>
+                        <InputButton symbol="\sum" inputValue="\sum" grow={1}/>
                         <InputButton symbol="\%" inputValue="\%(" grow={1}/>
                         <InputButton symbol="×" grow={1}/>
                         <InputButton symbol="/" grow={1}/>

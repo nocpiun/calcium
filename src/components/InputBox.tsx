@@ -64,7 +64,7 @@ export default class InputBox extends Component<_Props, InputBoxState> {
         this.handleInput(symbol);
     }
 
-    private handleInput(symbol: string): void {
+    public handleInput(symbol: string): void {
         if(this.state.onInputSymbol) this.value = this.state.onInputSymbol(symbol) ?? this.state.displayContent;
     }
 

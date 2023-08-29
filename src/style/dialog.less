@@ -161,18 +161,7 @@
         flex-flow: row;
         align-items: flex-end;
         .footer-button {
-            width: 62px;
-            height: 30px;
-            background-color: var(--ca-green2);
-            border-color: transparent;
-            border-radius: 3px;
-            color: #fff;
-            font-family: @font;
-            outline: none;
-            cursor: pointer;
-            &:hover, &:active {
-                background-color: var(--ca-green3);
-            }
+            .dialog-button-style();
         }
     }
 
@@ -235,20 +224,7 @@
                     .unit-value-input {
                         width: 280px;
                         input[type=text] {
-                            width: 100%;
-                            height: 100%;
-                            outline: none;
-                            background-color: transparent;
-                            padding: 0 10px;
-                            border: 1px solid var(--ca-gray4);
-                            border-radius: 3px;
-                            color: var(--ca-gray-light);
-                            font-size: 14pt;
-                            font-family: @font;
-                            caret-color: var(--ca-gray-light);
-                            &:focus {
-                                border-color: var(--ca-gray-light);
-                            }
+                            .dialog-input-box-style();
                         }
                     }
                     .unit-info {
@@ -264,6 +240,46 @@
                         }
                     }
                 }
+            }
+        }
+    }
+
+    &.sum-dialog .main-container {
+        .sigma-symbol {
+            font-size: 18pt;
+            * {
+                font-family: "KaTeX_Main", "KaTeX_Math", "KaTeX_Size2";
+            }
+        }
+        .input-items {
+            display: flex;
+            flex-direction: column;
+            margin-top: 40px;
+            .input-item {
+                display: flex;
+                height: 38px;
+                justify-content: center;
+                margin-bottom: 10px;
+                &-tag {
+                    display: flex;
+                    width: 50px;
+                    justify-content: right;
+                    align-items: center;
+                    padding-right: 7px;
+                }
+                input {
+                    .dialog-input-box-style();
+                    width: 350px;
+                }
+            }
+        }
+        .submit-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            .submit-button {
+                margin: 0 auto;
+                .dialog-button-style();
             }
         }
     }
