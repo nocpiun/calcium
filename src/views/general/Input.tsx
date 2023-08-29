@@ -1,7 +1,7 @@
 import React, { memo } from "react";
 import { useContextMenu, ContextMenuItem, ContextMenuDivider } from "use-context-menu";
 
-import InputButton from "../InputButton";
+import InputButton from "../../components/InputButton";
 
 import Emitter from "../../utils/Emitter";
 

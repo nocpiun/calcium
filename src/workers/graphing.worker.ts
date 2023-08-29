@@ -1,5 +1,5 @@
 /* eslint-disable no-restricted-globals */
-import Render from "../components/graphing/Render";
+import Render from "./Render";
 import Utils from "../utils/Utils";
 
 const ctx: Worker = self as any;

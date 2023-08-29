@@ -1,30 +1,35 @@
-import React, { useState, useRef, useCallback } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { BlockMath } from "react-katex";
 import { useContextMenu, ContextMenuItem } from "use-context-menu";
 
-import { HistoryItemInfo } from "../sidebar/History";
+import { HistoryItemInfo } from "../../components/sidebar/History";
 
-import { errorText, acTable } from "../../global";
+import { errorText } from "../../global";
+import { NumberSys } from "../../types";
 import Emitter from "../../utils/Emitter";
 import Utils from "../../utils/Utils";
 import Compiler from "../../compiler/Compiler";
 import Is from "../../compiler/Is";
+import Transformer from "../../compiler/Transformer";
 import Logger from "../../utils/Logger";
-import { NumberSys, RecordType } from "../../types";
+import { RecordType } from "../../types";
 
 import useEmitter from "../../hooks/useEmitter";
 import useEaster from "../../hooks/useEaster";
 
-import InputBox, { cursor } from "../InputBox";
-import type Dialog from "../Dialog";
-import VariableDialog from "../../dialogs/VariableDialog";
+import NumberBox from "./NumberBox";
+import InputBox, { cursor } from "../../components/InputBox";
+import type Dialog from "../../components/Dialog";
 import FunctionDialog from "../../dialogs/FunctionDialog";
 
-const Output: React.FC = () => {
+const ProgrammingOutput: React.FC = () => {
     const [outputContent, setOutputContent] = useState<string>("");
-    const variableRef = useRef<Map<string, string>>(new Map<string, string>());
+    const [numberSys, setNumberSys] = useState<NumberSys>(NumberSys.DEC);
+    const [hexValue, setHex] = useState<string>("0");
+    const [decValue, setDec] = useState<string>("0");
+    const [octValue, setOct] = useState<string>("0");
+    const [binValue, setBin] = useState<string>("0");
     const inputRef = useRef<InputBox>(null);
-    const varsDialogRef = useRef<Dialog>(null);
     const funcsDialogRef = useRef<Dialog>(null);
 
     const handleResult = useCallback((currentContent: string) => {
@@ -34,45 +39,31 @@ const Output: React.FC = () => {
         var rawText = InputBox.removeCursor(currentContent);
         var raw = rawText.split(" ");
 
-        if(rawText === "2 . 5") {
-            setOutputContent("2.5c^{trl}"); // Chicken is beautiful
-            return;
-        }
-
-        if(Is.variable(raw[0]) && raw[1] === "=") { // variable declaring or setting
-            const varName = raw[0];
-
-            // Remove variableName and `=`
-            raw = Utils.arrayRemove(raw, 0);
-            raw = Utils.arrayRemove(raw, 0);
-
-            var variableCompiler = new Compiler(raw, variableRef.current);
-            var variableValue = variableCompiler.compile();
-            var variableError = false;
-
-            if(variableValue.indexOf("NaN") > -1 || variableValue === "") variableError = true;
-
-            if(!variableError) {
-                variableRef.current.set(varName, variableValue);
-                setOutputContent(varName +"="+ variableRef.current.get(varName));
-            } else {
-                setOutputContent(varName +"=\\text{"+ errorText +"}");
-            }
-
-            return;
-        }
-
-        var compiler = new Compiler(raw, variableRef.current);
+        var compiler = new Compiler(raw, new Map(), true, numberSys);
         var result = compiler.compile();
         var error = false;
 
         if(result.indexOf("NaN") > -1 || result === "") error = true;
 
         // Display the result
-        if(result.indexOf("Infinity") > -1) result = result.replace("Infinity", "\\infty");
+        var displayValue: string = result;
+        switch(numberSys) {
+            case NumberSys.HEX:
+                displayValue = Transformer.decToHex(result);
+                break;
+            case NumberSys.DEC:
+                /* Do nothing */
+                break;
+            case NumberSys.OCT:
+                displayValue = Transformer.decToOct(result);
+                break;
+            case NumberSys.BIN:
+                displayValue = Transformer.decToBin(result);
+                break;
+        }
         if(!error) {
-            setOutputContent("="+ result);
-            Logger.info("Calculated: "+ rawText.replaceAll(" ", "") +"="+ result);
+            setOutputContent("=\\text{"+ displayValue +"}");
+            Logger.info(rawText.replaceAll(" ", "") +"="+ result);
         } else {
             setOutputContent("=\\text{"+ errorText +"}");
             Logger.error("Error");
@@ -81,8 +72,13 @@ const Output: React.FC = () => {
         if(error) return;
 
         // Add the result to history list
-        Emitter.get().emit("add-record", rawText, result, RecordType.GENERAL, NumberSys.DEC);
-    }, []);
+        Emitter.get().emit("add-record", rawText, "\\text{"+ displayValue +"}", RecordType.PROGRAMMING, numberSys);
+
+        setHex(Transformer.decToHex(result));
+        setDec(result);
+        setOct(Transformer.decToOct(result));
+        setBin(Transformer.decToBin(result));
+    }, [numberSys]);
 
     const handleInput = useCallback((symbol: string) => {
         if(!inputRef.current) return;
@@ -121,78 +117,71 @@ const Output: React.FC = () => {
                 if(cursorIndex === contentArray.length - 1) return;
 
                 return inputBox.moveCursorTo(cursorIndex + 1);
+            case "<":
+                setOutputContent("");
+                return currentContent.replace(cursor, "\\text{Lsh} "+ cursor);
+            case ">":
+                setOutputContent("");
+                return currentContent.replace(cursor, "\\text{Rsh} "+ cursor);
             case "Enter":
             case "\\text{Result}":
                 if(contentArray.length > 1) handleResult(currentContent);
                 return;
-            case "^":
-                if(contentArray[cursorIndex - 1].indexOf("^") > -1) {
-                    const currentExponentialStr = contentArray[cursorIndex - 1].replace("^", "");
-                    const newExponential = parseInt(currentExponentialStr) + 1;
-                    if(newExponential > 9) return;
-
-                    contentArray[cursorIndex - 1] = "^"+ newExponential;
-                    return contentArray.join(" ");
-                }
-
-                return currentContent.replace(cursor, "^2 "+ cursor);
             default:
-                // Auto complete
-                tableLoop: for(let [key, value] of acTable) {
-                    if(symbol !== key[key.length - 1]) continue;
-
-                    const lastCharIndex = cursorIndex;
-                    for(let i = lastCharIndex - 1; i > lastCharIndex - key.length; i--) {
-                        if(i < 0) continue tableLoop;
-
-                        const j = i - (lastCharIndex - key.length + 1);
-                        if(contentArray[i] !== key[j]) continue tableLoop;
-                    }
-
-                    contentArray[lastCharIndex - (key.length - 1)] = value;
-                    for(let i = lastCharIndex - 1; i >= lastCharIndex - key.length + 2; i--) {
-                        contentArray = Utils.arrayRemove(contentArray, i);
-                    }
-
-                    if(Is.mathFunction(value)) { // Add right bracket automatically
-                        setOutputContent("");
-                        return contentArray.join(" ").replace(cursor, cursor +" )");
-                    }
-
-                    return contentArray.join(" ");
-                }
-
-                if(symbol === "(") { // Add right bracket automatically
-                    setOutputContent("");
-                    return currentContent.replace(cursor, symbol +" "+ cursor +" )");
-                }
-
-                // Default (normal) Input
                 setOutputContent("");
-                return currentContent.replace(cursor, symbol +" "+ cursor);
+
+                var transformed = symbol;
+                if(
+                    (symbol.charCodeAt(0) >= 65 && symbol.charCodeAt(0) <= 70) || // A~F
+                    (symbol.charCodeAt(0) >= 97 && symbol.charCodeAt(0) <= 102)   // a~f
+                ) {
+                    transformed = "\\text{"+ symbol.toUpperCase() +"}";
+                }
+
+                if(Is.mathFunction(symbol)) { // Add right bracket automatically
+                    setOutputContent("");
+                    return currentContent.replace(cursor, transformed +" "+ cursor +" )");
+                }
+                return currentContent.replace(cursor, transformed +" "+ cursor);
         }
     }, [inputRef, handleResult]);
 
+    useEffect(() => {
+        if(outputContent !== "") return;
+
+        setHex("0");
+        setDec("0");
+        setOct("0");
+        setBin("0");
+    }, [outputContent]);
+
     useEmitter([
         ["clear-input", () => setOutputContent("")],
+        ["number-sys-chose", (type: NumberSys) => {
+            setNumberSys(type);
+        }],
         ["history-item-click", (itemInfo: HistoryItemInfo) => {
-            if(itemInfo.type !== RecordType.GENERAL) return;
+            if(itemInfo.type !== RecordType.PROGRAMMING) return;
             if(!inputRef.current) return;
 
             inputRef.current.value = itemInfo.input +" "+ cursor;
             setOutputContent("="+ itemInfo.output);
+            Emitter.get().emit("number-sys-chose", itemInfo.numberSys);
         }],
-        ["open-vars-dialog", () => varsDialogRef.current?.open()],
         ["open-funcs-dialog", () => funcsDialogRef.current?.open()],
         ["do-input", (symbol: string) => handleInput(symbol)]
     ]);
 
-    useEaster(setOutputContent); // K U N
+    useEaster(setOutputContent); // Sing, Dance, Rap, Basketball
 
     const { contextMenu, onContextMenu } = useContextMenu(
         <>
             <ContextMenuItem onSelect={() => Emitter.get().emit("clear-input")}>清空</ContextMenuItem>
-            <ContextMenuItem onSelect={() => Utils.writeClipboard(outputContent.substring(1))}>复制结果</ContextMenuItem>
+            <ContextMenuItem onSelect={() => {
+                Utils.writeClipboard(
+                    Compiler.purifyNumber(outputContent.substring(1)).toUpperCase()
+                )
+            }}>复制结果</ContextMenuItem>
         </>
     );
 
@@ -202,9 +191,18 @@ const Output: React.FC = () => {
                 className="output-container"
                 onContextMenu={onContextMenu}>
                 <span className="output-tag">Output</span>
+
+                <ul className="number-box-list">
+                    <NumberBox name="Hex" value={hexValue} type={NumberSys.HEX}/>
+                    <NumberBox name="Dec" value={decValue} type={NumberSys.DEC}/>
+                    <NumberBox name="Oct" value={octValue} type={NumberSys.OCT}/>
+                    <NumberBox name="Bin" value={binValue} type={NumberSys.BIN}/>
+                </ul>
+
                 <InputBox
                     ref={inputRef}
                     ltr={true}
+                    isProgrammingMode={true}
                     onInputSymbol={(symbol) => handleInput(symbol)}/>
                 <div className="output-box">
                     <span className="display">
@@ -213,7 +211,6 @@ const Output: React.FC = () => {
                 </div>
 
                 {/* Dialogs */}
-                <VariableDialog variableList={variableRef.current} ref={varsDialogRef}/>
                 <FunctionDialog ref={funcsDialogRef}/>
             </div>
             {contextMenu}
@@ -221,4 +218,4 @@ const Output: React.FC = () => {
     );
 }
 
-export default Output;
+export default ProgrammingOutput;

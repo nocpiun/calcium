@@ -2,11 +2,11 @@ import React, { useContext } from "react";
 
 import { Mode } from "../types";
 
-import Input from "./general/Input";
-import ProgrammingInput from "./programming/ProgrammingInput";
-import Output from "./general/Output";
-import ProgrammingOutput from "./programming/ProgrammingOutput";
-import Graphing from "./graphing";
+import Input from "../views/general/Input";
+import ProgrammingInput from "../views/programming/ProgrammingInput";
+import Output from "../views/general/Output";
+import ProgrammingOutput from "../views/programming/ProgrammingOutput";
+import Graphing from "../views/graphing";
 
 import MainContext from "../contexts/MainContext";
 

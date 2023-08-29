@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-redeclare */
 /* eslint-disable no-self-assign */
 import Point from "./Point";
-import Compiler from "../../compiler/Compiler";
+import Compiler from "../compiler/Compiler";
 
-import List from "../../utils/List";
-import Utils from "../../utils/Utils";
-import { MouseDirection, ZoomDirection } from "../../types";
+import List from "../utils/List";
+import Utils from "../utils/Utils";
+import { MouseDirection, ZoomDirection } from "../types";
 
 const delta: number = .005;
 
