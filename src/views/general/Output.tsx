@@ -214,7 +214,7 @@ const Output: React.FC = () => {
                 <span className="output-tag">Output</span>
                 <InputBox
                     ref={inputRef}
-                    ltr={true}
+                    ltr={false}
                     onInputSymbol={(symbol) => handleInput(symbol)}/>
                 <div className="output-box">
                     <span className="display">

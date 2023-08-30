@@ -201,7 +201,7 @@ const ProgrammingOutput: React.FC = () => {
 
                 <InputBox
                     ref={inputRef}
-                    ltr={true}
+                    ltr={false}
                     isProgrammingMode={true}
                     onInputSymbol={(symbol) => handleInput(symbol)}/>
                 <div className="output-box">
