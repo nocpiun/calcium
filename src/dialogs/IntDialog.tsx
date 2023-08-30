@@ -1,8 +1,10 @@
 import React, {
     forwardRef,
     useState,
+    useEffect,
     useRef,
-    useId
+    useId,
+    useCallback
 } from "react";
 import { BlockMath, InlineMath } from "react-katex";
 
@@ -48,10 +50,10 @@ const IntDialog: React.FC<IntDialogProps> = forwardRef<Dialog, IntDialogProps>(
             }
         };
         
-        const handleSubmit = () => {
+        const handleSubmit = useCallback(() => {
             Emitter.get().emit("do-input", "\\smallint_{"+ a +"}^{"+ b +"}(");
             (ref as React.MutableRefObject<Dialog>).current.close();
-        };
+        }, [a, b, ref]);
 
         const handleClose = () => {
             if(!aInput.current || !bInput.current) return;
@@ -61,9 +63,15 @@ const IntDialog: React.FC<IntDialogProps> = forwardRef<Dialog, IntDialogProps>(
             aInput.current.value = bInput.current.value = "0";
         };
 
+        useEffect(() => {
+            document.body.addEventListener("keydown", (e: KeyboardEvent) => {
+                if(e.key === "Enter") handleSubmit();
+            }, { once: true });
+        }, [handleSubmit]);
+
         return (
             <Dialog
-                title="微积分"
+                title="积分"
                 height={450}
                 className="pre-input-dialog"
                 id={"sum-dialog--"+ useId()}

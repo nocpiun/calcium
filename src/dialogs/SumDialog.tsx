@@ -1,8 +1,10 @@
 import React, {
     forwardRef,
     useState,
+    useEffect,
     useRef,
-    useId
+    useId,
+    useCallback
 } from "react";
 import { BlockMath, InlineMath } from "react-katex";
 
@@ -40,10 +42,10 @@ const SumDialog: React.FC<SumDialogProps> = forwardRef<Dialog, SumDialogProps>(
             iInput.current.value = inputValue.toString();
         };
         
-        const handleSubmit = () => {
+        const handleSubmit = useCallback(() => {
             Emitter.get().emit("do-input", "\\Sigma_{i="+ i +"}^{"+ n +"}(");
             (ref as React.MutableRefObject<Dialog>).current.close();
-        };
+        }, [n, i, ref]);
 
         const handleClose = () => {
             if(!nInput.current || !iInput.current) return;
@@ -52,6 +54,12 @@ const SumDialog: React.FC<SumDialogProps> = forwardRef<Dialog, SumDialogProps>(
             setI(0);
             nInput.current.value = iInput.current.value = "0";
         };
+
+        useEffect(() => {
+            document.body.addEventListener("keydown", (e: KeyboardEvent) => {
+                if(e.key === "Enter") handleSubmit();
+            }, { once: true });
+        }, [handleSubmit]);
 
         return (
             <Dialog
