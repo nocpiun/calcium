@@ -3,7 +3,7 @@ import Compute from "./compiler/Compute";
 import Emitter from "./utils/Emitter";
 import { MathFunction, Shortcut } from "./types";
 
-export const version = "1.2.4";
+export const version = "1.3.0";
 export const errorText = "\\text{Error}";
 
 export const functions: Map<string, MathFunction> = new Map([
@@ -98,13 +98,21 @@ export const acTable: Map<string, string> = new Map([
     ["sqrt",   "√("],
     ["cbrt",   "^3√("],
     ["mean",   "\\text{mean}("],
+    ["median", "\\text{median}("],
     ["stdev",  "\\text{stdev}("],
+    ["var",    "\\text{var}("],
+    ["count",  "\\text{count}("],
+    ["total",  "\\text{total}("],
+    ["min",    "\\text{min}("],
+    ["max",    "\\text{max}("],
     ["npr",    "\\text{nPr}("],
     ["ncr",    "\\text{nCr}("],
     ["xpx",    "\\text{xPx}("],
     ["exp",    "\\exp("],
     ["floor",  "\\text{floor}("],
     ["round",  "\\text{round}("],
+
+    ["jini",   "\\text{taimei}"],
 ]);
 
 export const shortcuts: Map<string[], Shortcut> = new Map([
