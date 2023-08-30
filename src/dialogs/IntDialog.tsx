@@ -1,4 +1,9 @@
-import React, { forwardRef, useState, useRef, useId } from "react";
+import React, {
+    forwardRef,
+    useState,
+    useRef,
+    useId
+} from "react";
 import { BlockMath, InlineMath } from "react-katex";
 
 import Emitter from "../utils/Emitter";
@@ -45,13 +50,25 @@ const IntDialog: React.FC<IntDialogProps> = forwardRef<Dialog, IntDialogProps>(
         
         const handleSubmit = () => {
             Emitter.get().emit("do-input", "\\smallint_{"+ a +"}^{"+ b +"}(");
-            setA(0);
-            setB(0);
             (ref as React.MutableRefObject<Dialog>).current.close();
         };
 
+        const handleClose = () => {
+            if(!aInput.current || !bInput.current) return;
+
+            setA(0);
+            setB(0);
+            aInput.current.value = bInput.current.value = "0";
+        };
+
         return (
-            <Dialog title="微积分" height={450} className="pre-input-dialog" id={"sum-dialog--"+ useId()} ref={ref}>
+            <Dialog
+                title="微积分"
+                height={450}
+                className="pre-input-dialog"
+                id={"sum-dialog--"+ useId()}
+                ref={ref}
+                onClose={() => handleClose()}>
                 <div className="preview-symbol">
                     <BlockMath math={"\\smallint_{a="+ a +"}^{b="+ b +"} f(x) dx"}/>
                 </div>

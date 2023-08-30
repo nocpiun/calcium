@@ -9,6 +9,7 @@ interface DialogProps extends PropsWithChildren {
     id: string
     height?: number
     className?: string
+    onClose?: () => void
 }
 
 export default class Dialog extends Component<DialogProps, {}> {
@@ -19,6 +20,7 @@ export default class Dialog extends Component<DialogProps, {}> {
     }
 
     public close(): void {
+        if(this.props.onClose) this.props.onClose();
         this.dialogRef.current?.close();
     }
 

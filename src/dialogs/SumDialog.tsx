@@ -1,4 +1,9 @@
-import React, { forwardRef, useState, useRef, useId } from "react";
+import React, {
+    forwardRef,
+    useState,
+    useRef,
+    useId
+} from "react";
 import { BlockMath, InlineMath } from "react-katex";
 
 import Emitter from "../utils/Emitter";
@@ -37,13 +42,25 @@ const SumDialog: React.FC<SumDialogProps> = forwardRef<Dialog, SumDialogProps>(
         
         const handleSubmit = () => {
             Emitter.get().emit("do-input", "\\Sigma_{i="+ i +"}^{"+ n +"}(");
-            setI(0);
-            setN(0);
             (ref as React.MutableRefObject<Dialog>).current.close();
         };
 
+        const handleClose = () => {
+            if(!nInput.current || !iInput.current) return;
+
+            setN(0);
+            setI(0);
+            nInput.current.value = iInput.current.value = "0";
+        };
+
         return (
-            <Dialog title="求和" height={450} className="pre-input-dialog" id={"sum-dialog--"+ useId()} ref={ref}>
+            <Dialog
+                title="求和"
+                height={450}
+                className="pre-input-dialog"
+                id={"sum-dialog--"+ useId()}
+                ref={ref}
+                onClose={() => handleClose()}>
                 <div className="preview-symbol">
                     <BlockMath math={"\\sum_{i="+ i +"}^{"+ n +"} k"}/>
                 </div>
