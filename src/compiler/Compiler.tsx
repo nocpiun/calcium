@@ -13,6 +13,7 @@ import AbsToken from "./token/AbsToken";
 import FunctionToken from "./token/FunctionToken";
 import SigmaToken from "./token/SigmaToken";
 import IntToken from "./token/IntToken";
+import ProdToken from "./token/ProdToken";
 
 import { functions, constants } from "../global";
 import { Operator, NumberSys } from "../types";
@@ -40,6 +41,8 @@ export default class Compiler {
     private sigmaN: number = -1;
     private intA: number = NaN;
     private intB: number = NaN;
+    private prodI: number = -1;
+    private prodN: number = -1;
     
     public constructor(
         raw: string[],
@@ -176,13 +179,16 @@ export default class Compiler {
 
                 if(this.sigmaI > -1 && this.sigmaN > -1) { // sum (sigma)
                     root.add(new SigmaToken(this.sigmaI, this.sigmaN, this.secondaryRaw));
+                    continue;
+                }
 
+                if(this.prodI > -1 && this.prodN > -1) { // prod
+                    root.add(new ProdToken(this.prodI, this.prodN, this.secondaryRaw));
                     continue;
                 }
 
                 if(!isNaN(this.intA) && !isNaN(this.intB)) { // integral
                     root.add(new IntToken(this.intA, this.intB, this.secondaryRaw));
-
                     continue;
                 }
 
@@ -262,6 +268,14 @@ export default class Compiler {
                 const resolved = symbol.match(/\d+/g) ?? ["0", "0"];
                 this.sigmaI = parseFloat(resolved[0]);
                 this.sigmaN = parseFloat(resolved[1]);
+
+                this.layer++;
+            
+            } else if(symbol.indexOf("\\Pi") > -1) { // prod
+
+                const resolved = symbol.match(/\d+/g) ?? ["0", "0"];
+                this.prodI = parseFloat(resolved[0]);
+                this.prodN = parseFloat(resolved[1]);
 
                 this.layer++;
             

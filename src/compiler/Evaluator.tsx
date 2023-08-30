@@ -236,6 +236,7 @@ export default class Evaluator {
                     break;
                 case TokenType.SIGMA:
                 case TokenType.INT:
+                case TokenType.PROD:
                     var value = Float.calibrate((token as DynamicToken).evaluate());
                     numbers.add(new NumberToken(
                         Compute.safePow(value, exponential),

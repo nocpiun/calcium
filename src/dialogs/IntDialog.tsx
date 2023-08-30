@@ -74,7 +74,7 @@ const IntDialog: React.FC<IntDialogProps> = forwardRef<Dialog, IntDialogProps>(
                 title="积分"
                 height={450}
                 className="pre-input-dialog"
-                id={"sum-dialog--"+ useId()}
+                id={"int-dialog--"+ useId()}
                 ref={ref}
                 onClose={() => handleClose()}>
                 <div className="preview-symbol">

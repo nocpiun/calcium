@@ -32,7 +32,7 @@ Calculator -> calc -> Ca (Chemical Element) -> Calcium
 #### What features does it include?
 
 - Basic calculating
-- Sigma & Integral calculating
+- Sigma & Integral & Product calculating
 - Variable creating and storing
 - Function Images Graphing
 - Base conversion

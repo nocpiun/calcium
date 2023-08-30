@@ -63,7 +63,8 @@ const Input: React.FC = memo(() => {
                         <InputButton symbol="i" grow={1}/>
                         <InputButton symbol="j" grow={1}/>
                         <div className="keypad-placeholder"/>
-                        <div style={{ flexGrow: 5 }}/>
+                        <InputButton symbol="\prod" grow={2}/>
+                        <div style={{ flexGrow: 3 }}/>
                     </div>
                     <div className="keypad-row">
                         <InputButton symbol="\cosh" inputValue="\cosh(" grow={1}/>
@@ -90,7 +91,7 @@ const Input: React.FC = memo(() => {
                         <InputButton symbol="\lg" inputValue="\lg(" grow={1}/>
                         <InputButton symbol="\log_2{a}" inputValue="\log_2(" grow={1}/>
                         <InputButton symbol="a!" inputValue="!" grow={1}/>
-                        <InputButton symbol="\text{mean}" inputValue="\text{mean}(" grow={1}/>
+                        <InputButton symbol="\exp" inputValue="\exp(" grow={1}/>
                         <div className="keypad-placeholder"/>
                         <InputButton symbol="[" grow={1}/>
                         <InputButton symbol="]" grow={1}/>
@@ -144,8 +145,9 @@ const Input: React.FC = memo(() => {
                         <div style={{ flexGrow: 5 }}/>
                     </div>
                     <div className="keypad-row">
-                        <InputButton symbol="\text{count}" inputValue="\text{count}(" grow={2}/>
-                        <InputButton symbol="\text{total}" inputValue="\text{total}(" grow={2}/>
+                        <InputButton symbol="\text{count}" inputValue="\text{count}(" grow={1}/>
+                        <InputButton symbol="\text{total}" inputValue="\text{total}(" grow={1}/>
+                        <InputButton symbol="\text{mean}" inputValue="\text{mean}(" grow={2}/>
                         <InputButton symbol="\text{nPr}" inputValue="\text{nPr}(" grow={1}/>
                         <div className="keypad-placeholder"/>
                         <InputButton symbol="\sum" inputValue="\sum" grow={1}/>
