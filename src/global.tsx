@@ -44,6 +44,8 @@ export const functions: Map<string, MathFunction> = new Map([
     ["text{nCr}",    [(n, r) => Compute.nCr(n, r),                        2]],
     ["text{xPx}",    [(x) => Compute.safePow(x, x),                       1]],
     ["exp",          [(x) => Compute.safePow(Math.E, x),                  1]],
+    ["text{floor}",  [(x) => Math.floor(x),                               1]],
+    ["text{round}",  [(x) => Math.round(x),                               1]],
 ]);
 
 export const constants: Map<string, number> = new Map([
@@ -101,6 +103,8 @@ export const acTable: Map<string, string> = new Map([
     ["ncr",    "\\text{nCr}("],
     ["xpx",    "\\text{xPx}("],
     ["exp",    "\\exp("],
+    ["floor",  "\\text{floor}("],
+    ["round",  "\\text{round}("],
 ]);
 
 export const shortcuts: Map<string[], Shortcut> = new Map([

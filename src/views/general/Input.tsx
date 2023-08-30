@@ -164,7 +164,8 @@ const Input: React.FC = memo(() => {
                         <div style={{ flexGrow: 5 }}/>
                     </div>
                     <div className="keypad-row">
-                        <div style={{ flexGrow: 4 }}/>
+                        <InputButton symbol="\text{floor}" inputValue="\text{floor}(" grow={2}/>
+                        <InputButton symbol="\text{round}" inputValue="\text{round}(" grow={2}/>
                         <InputButton symbol="\text{nCr}" inputValue="\text{nCr}(" grow={1}/>
                         <div className="keypad-placeholder"/>
                         <InputButton symbol="1" grow={1}/>
