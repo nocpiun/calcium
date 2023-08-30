@@ -43,8 +43,8 @@ const SumDialog: React.FC<SumDialogProps> = forwardRef<Dialog, SumDialogProps>(
         };
 
         return (
-            <Dialog title="求和" height={450} className="sum-dialog" id={"sum-dialog--"+ useId()} ref={ref}>
-                <div className="sigma-symbol">
+            <Dialog title="求和" height={450} className="pre-input-dialog" id={"sum-dialog--"+ useId()} ref={ref}>
+                <div className="preview-symbol">
                     <BlockMath math={"\\sum_{i="+ i +"}^{"+ n +"} k"}/>
                 </div>
                 <div className="input-items">

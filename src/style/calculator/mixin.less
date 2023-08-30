@@ -54,7 +54,8 @@
         cursor: text;
         .scrollbar-style();
         & > span {
-            display: inline;
+            display: inline-flex;
+            align-items: center;
         }
         & > *:first-child when (@ltr = false) {
             // see https://www.zhangxinxu.com/wordpress/2021/12/flex-end-overflow/

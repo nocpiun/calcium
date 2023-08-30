@@ -12,6 +12,7 @@ import BracketToken from "./token/BracketToken";
 import AbsToken from "./token/AbsToken";
 import FunctionToken from "./token/FunctionToken";
 import SigmaToken from "./token/SigmaToken";
+import IntToken from "./token/IntToken";
 
 import { functions, constants } from "../global";
 import { Operator, NumberSys } from "../types";
@@ -37,6 +38,8 @@ export default class Compiler {
     
     private sigmaI: number = -1;
     private sigmaN: number = -1;
+    private intA: number = NaN;
+    private intB: number = NaN;
     
     public constructor(
         raw: string[],
@@ -171,8 +174,14 @@ export default class Compiler {
 
             } else if(Is.rightBracket(symbol)) { // right bracket
 
-                if(this.sigmaI > -1 && this.sigmaN > -1) {
+                if(this.sigmaI > -1 && this.sigmaN > -1) { // sum (sigma)
                     root.add(new SigmaToken(this.sigmaI, this.sigmaN, this.secondaryRaw));
+
+                    continue;
+                }
+
+                if(!isNaN(this.intA) && !isNaN(this.intB)) { // integral
+                    root.add(new IntToken(this.intA, this.intB, this.secondaryRaw));
 
                     continue;
                 }
@@ -253,6 +262,14 @@ export default class Compiler {
                 const resolved = symbol.match(/\d+/g) ?? ["0", "0"];
                 this.sigmaI = parseFloat(resolved[0]);
                 this.sigmaN = parseFloat(resolved[1]);
+
+                this.layer++;
+            
+            } else if(symbol.indexOf("\\smallint") > -1) { // integral
+
+                const resolved = symbol.match(/\d+/g) ?? ["0", "0"];
+                this.intA = parseFloat(resolved[0]);
+                this.intB = parseFloat(resolved[1]);
 
                 this.layer++;
 

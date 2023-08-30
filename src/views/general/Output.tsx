@@ -20,6 +20,7 @@ import type Dialog from "../../components/Dialog";
 import VariableDialog from "../../dialogs/VariableDialog";
 import FunctionDialog from "../../dialogs/FunctionDialog";
 import SumDialog from "../../dialogs/SumDialog";
+import IntDialog from "../../dialogs/IntDialog";
 
 const Output: React.FC = () => {
     const [outputContent, setOutputContent] = useState<string>("");
@@ -28,6 +29,7 @@ const Output: React.FC = () => {
     const varsDialogRef = useRef<Dialog>(null);
     const funcsDialogRef = useRef<Dialog>(null);
     const sumDialogRef = useRef<Dialog>(null);
+    const intDialogRef = useRef<Dialog>(null);
 
     const handleResult = useCallback((currentContent: string) => {
         if(currentContent.split(" ").length <= 1) return;
@@ -141,6 +143,9 @@ const Output: React.FC = () => {
             case "\\sum":
                 sumDialogRef.current?.open();
                 return;
+            case "\\int":
+                intDialogRef.current?.open();
+                return;
             default:
                 // Auto complete
                 tableLoop: for(let [key, value] of acTable) {
@@ -221,6 +226,7 @@ const Output: React.FC = () => {
                 <VariableDialog variableList={variableRef.current} ref={varsDialogRef}/>
                 <FunctionDialog ref={funcsDialogRef}/>
                 <SumDialog ref={sumDialogRef}/>
+                <IntDialog ref={intDialogRef}/>
             </div>
             {contextMenu}
         </>

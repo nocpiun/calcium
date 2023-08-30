@@ -13,7 +13,7 @@ import OperatorToken from "./token/OperatorToken";
 import BracketToken from "./token/BracketToken";
 import AbsToken from "./token/AbsToken";
 import FunctionToken from "./token/FunctionToken";
-import SigmaToken from "./token/SigmaToken";
+import DynamicToken from "./token/DynamicToken";
 
 import { NumberSys, Operator } from "../types";
 
@@ -235,7 +235,8 @@ export default class Evaluator {
                     ));
                     break;
                 case TokenType.SIGMA:
-                    var value = Float.calibrate((token as SigmaToken).evaluate());
+                case TokenType.INT:
+                    var value = Float.calibrate((token as DynamicToken).evaluate());
                     numbers.add(new NumberToken(
                         Compute.safePow(value, exponential),
                         NumberSys.DEC

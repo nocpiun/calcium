@@ -79,6 +79,7 @@ export const acTable: Map<string, string> = new Map([
     ["omega",  "\\omega"],
     ["psi",    "\\psi"],
     ["eta",    "\\eta"],
+    ["dx",     "dx"],
 
     ["sin",    "\\sin("],
     ["cos",    "\\cos("],

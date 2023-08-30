@@ -1,20 +1,19 @@
 import { NumberSys } from "../../types";
 import Compiler from "../Compiler";
-import Token, { TokenType } from "./Token";
+import { TokenType } from "./Token";
+import DynamicToken from "./DynamicToken";
 
-export default class SigmaToken extends Token<void> {
+export default class SigmaToken extends DynamicToken {
     public type: TokenType = TokenType.SIGMA;
 
     public i: number;
     public n: number;
-    public raw: string[];
 
     public constructor(i: number, n: number, raw: string[]) {
-        super();
+        super(raw);
 
         this.i = i;
         this.n = n;
-        this.raw = raw;
     }
 
     public evaluate(): number {

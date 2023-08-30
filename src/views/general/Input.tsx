@@ -41,7 +41,9 @@ const Input: React.FC = memo(() => {
                         <InputButton symbol="d" grow={1}/>
                         <InputButton symbol="e" grow={1}/>
                         <div className="keypad-placeholder"/>
-                        <div style={{ flexGrow: 5 }}/>
+                        <InputButton symbol="\sum" grow={2}/>
+                        <InputButton symbol="\int_a^b" inputValue="\int" grow={2}/>
+                        <InputButton symbol="dx" grow={1}/>
                     </div>
                     <div className="keypad-row">
                         <InputButton symbol="\csc" inputValue="\csc(" grow={1}/>
