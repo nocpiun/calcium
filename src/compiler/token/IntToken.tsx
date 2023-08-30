@@ -3,8 +3,6 @@ import { TokenType } from "./Token";
 import Compiler from "../Compiler";
 import { NumberSys } from "../../types";
 
-const dx: number = .0001;
-
 export default class IntToken extends DynamicToken {
     public type: TokenType = TokenType.INT;
 
@@ -20,16 +18,28 @@ export default class IntToken extends DynamicToken {
 
     public evaluate(): number {
         if(!this.raw.includes("dx")) return NaN;
+        
+        const dx = .0001;
+        const n = (this.b - this.a) / dx;
 
-        var result = 0;
-        for(let i = this.a; i <= this.b; i += dx) {
+        const f = (x: number): number => {
             const varMap = new Map([
                 ["dx", dx.toString()],
-                ["x", i.toString()]
+                ["x", x.toString()]
             ]);
             var compiler = new Compiler(this.raw, varMap, false, NumberSys.DEC);
-            result += parseFloat(compiler.compile());
+            return parseFloat(compiler.compile());
         }
-        return result;
+
+        /**
+         * By Bing AI
+         */
+
+        var sum = f(this.a) + f(this.b);
+        for(let i = 1; i < n; i++) {
+            var x = this.a + i * dx;
+            sum += f(x) * (i % 2 ? 4 : 2);
+        }
+        return (sum * dx / 3) * 10000;
     }
 }
