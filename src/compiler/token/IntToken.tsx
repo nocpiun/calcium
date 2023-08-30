@@ -3,7 +3,7 @@ import { TokenType } from "./Token";
 import Compiler from "../Compiler";
 import { NumberSys } from "../../types";
 
-const dx: number = .001;
+const dx: number = .0001;
 
 export default class IntToken extends DynamicToken {
     public type: TokenType = TokenType.INT;
@@ -19,6 +19,8 @@ export default class IntToken extends DynamicToken {
     }
 
     public evaluate(): number {
+        if(!this.raw.includes("dx")) return NaN;
+
         var result = 0;
         for(let i = this.a; i <= this.b; i += dx) {
             const varMap = new Map([

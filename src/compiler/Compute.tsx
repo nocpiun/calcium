@@ -118,5 +118,3 @@ export default class Compute {
         return y > 0 ? Math.pow(x, y) : (1 / Math.pow(x, -y));
     }
 }
-
-(window as any)["order"] = Compute.order;
