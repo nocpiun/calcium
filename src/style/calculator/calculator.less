@@ -109,4 +109,82 @@
             }
         }
     }
+    .mobile-input-container {
+        flex: 2;
+        display: none; // flex
+        flex-direction: column;
+        flex-flow: column;
+        height: 0;
+        .tabs-container {
+            display: flex;
+            padding-top: 10px;
+            background-color: var(--ca-light2);
+            border-bottom: 1px solid var(--ca-gray2);
+            .keypad-tab {
+                flex: 1;
+                display: flex;
+                justify-content: center;
+                height: 30px;
+                & > div {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-between;
+                    height: 100%;
+                    .keypad-tab-name {
+                        color: var(--ca-gray7);
+                    }
+                    .keypad-tab-bar {
+                        height: 5px;
+                        background-color: transparent;
+                    }
+                }
+                &.open {
+                    .keypad-tab-name {
+                        color: var(--ca-gray-light);
+                    }
+                    .keypad-tab-bar {
+                        background-color: var(--ca-blue1);
+                    }
+                }
+            }
+        }
+        .keypad {
+            flex: 1;
+            height: 0;
+            padding: 5px;
+            overflow-y: auto;
+            section.keypad-section {
+                display: none;
+                flex-direction: column;
+                height: 100%;
+                &.open {
+                    display: block;
+                }
+                .keypad-row {
+                    display: flex;
+                    width: 100%;
+                    height: 55px !important;
+                    align-items: center;
+                    .keypad-button-container {
+                        display: inline-block;
+                        justify-content: space-around;
+                        position: relative;
+                        height: 50px;
+                        margin-right: 5px;
+                        .keypad-button {
+                            background-color: var(--ca-gray5) !important;
+                            .button-style();
+                            span {
+                                font-size: 13pt;
+                            }
+                        }
+                    }
+                    .keypad-placeholder {
+                        width: 2%;
+                        height: 100%;
+                    }
+                }
+            }
+        }
+    }
 }

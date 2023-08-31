@@ -2,11 +2,12 @@ import React, { useContext } from "react";
 
 import { Mode } from "../types";
 
-import Input from "../views/general/Input";
-import ProgrammingInput from "../views/programming/ProgrammingInput";
-import Output from "../views/general/Output";
-import ProgrammingOutput from "../views/programming/ProgrammingOutput";
-import Graphing from "../views/graphing";
+import Input from "./general/Input";
+import MobileInput from "./general/MobileInput";
+import ProgrammingInput from "./programming/ProgrammingInput";
+import Output from "./general/Output";
+import ProgrammingOutput from "./programming/ProgrammingOutput";
+import Graphing from "./graphing";
 
 import MainContext from "../contexts/MainContext";
 
@@ -20,6 +21,7 @@ const Calculator: React.FC = () => {
                     <>
                         <Output/>
                         <Input/>
+                        <MobileInput />
                     </>
                 );
             case Mode.GRAPHING:

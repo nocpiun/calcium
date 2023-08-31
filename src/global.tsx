@@ -71,7 +71,7 @@ export const acTable: Map<string, string> = new Map([
     ["mu",     "\\mu"],
     ["nu",     "\\nu"],
     ["xi",     "\\xi"],
-    ["omic",   "\\omic"],
+    ["omic",   "\\omicron"],
     ["pi",     "\\pi"],
     ["rho",    "\\rho"],
     ["sigma",  "\\sigma"],

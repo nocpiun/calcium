@@ -10,8 +10,8 @@ import "use-context-menu/styles.css";
 import "./style/layout.less";
 
 // Components
+import Calculator from "./views/Calculator";
 import Sidebar from "./components/sidebar";
-import Calculator from "./components/Calculator";
 import StatusBar from "./components/statusbar";
 
 // Contexts
@@ -43,20 +43,17 @@ const App: React.FC = () => {
 	}, []);
 
 	return (
-		<>
-			<main className="calcium">
-				<MainContext.Provider value={{ mode, setMode, functionList, setFunctionList }}>
-					<AliveScope>
-						<div className="app">
-							<Sidebar/>
-							<Calculator/>
-						</div>
-						<StatusBar />
-					</AliveScope>
-				</MainContext.Provider>
-			</main>
-			<p className="no-mobile">Please open the app in your computer!</p>
-		</>
+		<main className="calcium">
+			<MainContext.Provider value={{ mode, setMode, functionList, setFunctionList }}>
+				<AliveScope>
+					<div className="app">
+						<Sidebar/>
+						<Calculator/>
+					</div>
+					<StatusBar />
+				</AliveScope>
+			</MainContext.Provider>
+		</main>
 	);
 }
 

@@ -1,0 +1,40 @@
+@media screen and (max-width: 768px) {
+    main {
+        .app {
+            aside {
+                display: block;
+                position: fixed;
+                width: 0;
+                &.open {
+                    width: auto;
+                }
+                .control-panel-container {
+                    height: 100%;
+                }
+                .ka-wrapper {
+                    display: none;
+                }
+            }
+            .calculator-container {
+                .output-container {
+                    .output-tag {
+                        left: 15px;
+                        bottom: 15px;
+                    }
+                    .input-box, .output-box {
+                        padding-right: 30px;
+                    }
+                }
+                .input-container {
+                    display: none;
+                }
+                .mobile-input-container {
+                    display: flex;
+                }
+            }
+        }
+        .status-bar {
+            display: none;
+        }
+    }
+}
