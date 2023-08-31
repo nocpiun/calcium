@@ -15,19 +15,16 @@ const MobileProgrammingInput: React.FC = memo(() => {
             <div className="keypad">
                 <KeypadSection id="common" default={true}>
                     <div className="keypad-row">
+                        <InputButton symbol="\ll" inputValue="\text{Lsh}" grow={2}/>
+                        <InputButton symbol="\gg" inputValue="\text{Rsh}" grow={2}/>
+                    </div>
+                    <div className="keypad-row">
                         <InputButton symbol="\text{A}" grow={1} group={["hex"]}/>
                         <InputButton symbol="\text{B}" grow={1} group={["hex"]}/>
                         <InputButton symbol="\text{C}" grow={1} group={["hex"]}/>
                         <InputButton symbol="\text{D}" grow={1} group={["hex"]}/>
-                    </div>
-                    <div className="keypad-row">
                         <InputButton symbol="\text{E}" grow={1} group={["hex"]}/>
                         <InputButton symbol="\text{F}" grow={1} group={["hex"]}/>
-                        <div style={{ flexGrow: 2 }}/>
-                    </div>
-                    <div className="keypad-row">
-                        <InputButton symbol="\ll" inputValue="\text{Lsh}" grow={2}/>
-                        <InputButton symbol="\gg" inputValue="\text{Rsh}" grow={2}/>
                     </div>
                     <div className="keypad-row">
                         <InputButton symbol="\text{Clear}" grow={1}/>
@@ -62,7 +59,7 @@ const MobileProgrammingInput: React.FC = memo(() => {
                     <div className="keypad-row">
                         <InputButton symbol="\text{AND}" grow={1}/>
                         <InputButton symbol="\text{OR}" grow={1}/>
-                        <InputButton symbol="\text{NOT}" grow={1}/>
+                        <InputButton symbol="\text{NOT}" inputValue="\text{not}(" grow={1}/>
                     </div>
                     <div className="keypad-row">
                         <InputButton symbol="\text{NAND}" grow={1}/>

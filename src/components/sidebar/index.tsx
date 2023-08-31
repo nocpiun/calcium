@@ -78,6 +78,13 @@ const Sidebar: React.FC = () => {
                 </div>
 
                 {/* Mobile only */}
+                {Utils.isMobile() && (
+                    <div className="mobile-feedback-button">
+                        <span onClick={() => window.open("https://github.com/nocpiun/calcium/issues/new/choose")}>反馈问题</span>
+                    </div>
+                )}
+
+                {/* Mobile only */}
                 {Utils.isMobile() && <div className="mobile-sidebar-backdrop" onClick={() => handleCloseSidebar()}/>}
             </div>
             
