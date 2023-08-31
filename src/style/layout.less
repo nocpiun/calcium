@@ -93,6 +93,21 @@ kbd {
     }
 }
 
+.mobile-open-sidebar {
+    display: none;
+    width: 24px;
+    height: 24px;
+    margin: 13px;
+    position: fixed;
+    &::after {
+        content: "";
+        display: block;
+        width: 24px;
+        height: 24px;
+        background-image: url(/icons/list.svg);
+    }
+}
+
 .katex-logo {
     color: var(--ca-gray-light) !important;
 }

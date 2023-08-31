@@ -9,6 +9,11 @@
         justify-content: space-between;
         background-color: var(--ca-light1);
         .border-line(right);
+        .mobile-sidebar-title {
+            padding: 20px 0;
+            text-align: center;
+            border-bottom: 1px solid var(--ca-gray2);
+        }
         .mode-switcher {
             font-size: 0;
             .mode-button-container {
@@ -47,6 +52,31 @@
                 &:active .highlight-bar {
                     background-color: var(--ca-blue3);
                 }
+                .mobile-mode-button {
+                    display: none; // flex
+                    height: 100%;
+                    &-bar {
+                        width: 5px;
+                    }
+                    &-name {
+                        flex: 1;
+                        display: flex;
+                        align-items: center;
+                        padding-left: 7px;
+                        color: var(--ca-gray7);
+                        font-size: 11pt;
+                        white-space: nowrap;
+                        overflow: hidden;
+                    }
+                    &.active {
+                        .mobile-mode-button-bar {
+                            background-color: var(--ca-blue1);
+                        }
+                        .mobile-mode-button-name {
+                            color: var(--ca-gray-light);
+                        }
+                    }
+                }
             }
         }
         .theme-switcher {
@@ -54,6 +84,16 @@
             .toggle {
                 margin: 0 auto;
             }
+        }
+        .mobile-sidebar-backdrop {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, .3);
+            z-index: -100;
         }
     }
     .ka-wrapper {

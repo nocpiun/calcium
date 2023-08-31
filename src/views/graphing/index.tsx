@@ -9,6 +9,8 @@ import React, {
 import { useContextMenu, ContextMenuItem } from "use-context-menu";
 import download from "downloadjs";
 
+import SidebarOpener from "../../components/SidebarOpener.tsx";
+
 import MainContext from "../../contexts/MainContext";
 
 import useEmitter from "../../hooks/useEmitter";
@@ -41,7 +43,7 @@ const Graphing: React.FC = memo(() => {
 
         // Init worker
         var offscreenCanvas = new OffscreenCanvas(canvas.width, canvas.height);
-        workerRef.current.postMessage({ type: "init", canvas: offscreenCanvas, isDarkMode: Utils.isDarkMode() }, [offscreenCanvas]);
+        workerRef.current.postMessage({ type: "init", canvas: offscreenCanvas, isDarkMode: Utils.isDarkMode(), isMobile: Utils.isMobile() }, [offscreenCanvas]);
         workerRef.current.onmessage = (e: {data: any}) => {
             switch(e.data.type) {
                 case "render":
@@ -81,6 +83,34 @@ const Graphing: React.FC = memo(() => {
         canvas.addEventListener("wheel", (e: WheelEvent) => {
             if(!workerRef.current) return;
             workerRef.current.postMessage({ type: "wheel", dy: e.deltaY });
+        });
+
+        // Init mobile events
+        var touchStart: Touch;
+        canvas.addEventListener("touchstart", (e: TouchEvent) => {
+            if(!workerRef.current) return;
+            touchStart = e.touches[0];
+            workerRef.current.postMessage({ type: "mouse-down", rect: canvas.getBoundingClientRect(), cx: e.touches[0].clientX, cy: e.touches[0].clientY });
+        });
+        canvas.addEventListener("touchmove", (e: TouchEvent) => {
+            if(!workerRef.current) return;
+
+            var direction;
+            if(touchStart.clientX > e.changedTouches[0].clientX + 5) {
+                direction = MouseDirection.LEFT;
+            } else {
+                direction = MouseDirection.RIGHT;
+            }
+
+            workerRef.current.postMessage({ type: "mouse-move", rect: canvas.getBoundingClientRect(), cx: e.changedTouches[0].clientX, cy: e.changedTouches[0].clientY, direction });
+        });
+        canvas.addEventListener("touchend", () => {
+            if(!workerRef.current) return;
+            workerRef.current.postMessage({ type: "mouse-up" });
+        });
+        canvas.addEventListener("touchcancel", () => {
+            if(!workerRef.current) return;
+            workerRef.current.postMessage({ type: "mouse-leave" });
         });
 
         // "graphing-reload" cannot be moved into `useEmitter` hook
@@ -213,9 +243,13 @@ const Graphing: React.FC = memo(() => {
             className="graphing-container"
             id="display-frame"
             onContextMenu={onContextMenu}>
+                <SidebarOpener />
                 <canvas className="graphing-canvas" id="graphing"/>
             </div>
             {contextMenu}
+
+            {/* Mobile only */}
+            {Utils.isMobile() && <div className="mobile-graphing-input-container" id="graphing-input"/>}
         </>
     );
 })

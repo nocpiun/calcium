@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useContext } from "react";
 
 import { Mode } from "../../types";
+import Utils from "../../utils/Utils";
 import Emitter from "../../utils/Emitter";
 
 import MainContext from "../../contexts/MainContext";
@@ -36,16 +37,33 @@ const ModeButton: React.FC<ModeButtonProps> = (props) => {
 
     return (
         <div className="mode-button-container">
-            <div className={"highlight-bar"+ (isActive ? " active" : "")}/>
+            {
+                !Utils.isMobile()
+                ? (
+                    <>
+                        <div className={"highlight-bar"+ (isActive ? " active" : "")}/>
             
-            <button
-                className={"mode-button"+ (isActive ? " active" : "")}
-                title={props.modeName}
-                onClick={() => handleClick()}
-                style={{
-                    maskImage: "url("+ props.icon +")",
-                    WebkitMaskImage: "url("+ props.icon +")"
-                }}/>
+                        <button
+                            className={"mode-button"+ (isActive ? " active" : "")}
+                            title={props.modeName}
+                            onClick={() => handleClick()}
+                            style={{
+                                maskImage: "url("+ props.icon +")",
+                                WebkitMaskImage: "url("+ props.icon +")"
+                            }}/>
+                    </>
+                )
+                : (
+                    <div
+                        className={"mobile-mode-button"+ (isActive ? " active" : "")}
+                        onClick={() => handleClick()}>
+                        <div className="mobile-mode-button-bar"/>
+                        <div className="mobile-mode-button-name">
+                            <span>{props.modeName}</span>
+                        </div>
+                    </div>
+                )
+            }
         </div>
     );
 }

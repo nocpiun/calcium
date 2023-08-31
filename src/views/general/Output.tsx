@@ -16,6 +16,7 @@ import useEmitter from "../../hooks/useEmitter";
 import useEaster from "../../hooks/useEaster";
 
 import InputBox, { cursor } from "../../components/InputBox";
+import SidebarOpener from "../../components/SidebarOpener";
 import type Dialog from "../../components/Dialog";
 import VariableDialog from "../../dialogs/VariableDialog";
 import FunctionDialog from "../../dialogs/FunctionDialog";
@@ -216,6 +217,9 @@ const Output: React.FC = () => {
             <div
                 className="output-container"
                 onContextMenu={onContextMenu}>
+                {/* Mobile only */}
+                {Utils.isMobile() && <SidebarOpener />}
+
                 <span className="output-tag">Output</span>
                 <InputBox
                     ref={inputRef}

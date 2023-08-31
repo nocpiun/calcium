@@ -5,6 +5,7 @@ import React, {
     useReducer,
     useCallback
 } from "react";
+import { createPortal } from "react-dom";
 import { InlineMath } from "react-katex";
 import { useContextMenu, ContextMenuItem, ContextMenuDivider } from "use-context-menu";
 
@@ -13,6 +14,7 @@ import useEmitter from "../../hooks/useEmitter";
 import SidebarPage from "./SidebarPage";
 import InputBox, { cursor } from "../InputBox";
 import FunctionListItem from "./FunctionListItem";
+import MobileInput from "../MobileInput";
 
 import Is from "../../compiler/Is";
 import Emitter from "../../utils/Emitter";
@@ -148,6 +150,36 @@ const FunctionList: React.FC = () => {
         </>
     );
 
+    const mainSection = (
+        <>
+            <div className="function-input-box">
+                <div className="function-input-box-tag">
+                    <span><InlineMath>y =</InlineMath></span>
+                </div>
+                <InputBox
+                    ref={inputRef}
+                    ltr={true}
+                    onInputSymbol={(symbol) => handleInput(symbol)}/>
+                <div className="add-button-container">
+                    <button className="add-button" onClick={() => handleAddFunction()}>
+                        <span>添加</span>
+                    </button>
+                </div>
+            </div>
+            {
+                !Utils.isMobile()
+                ? (
+                    <div className="function-list" id="function-list">
+                        {
+                            functionList.map((item, index) => <FunctionListItem {...item} index={index} key={index}/>)
+                        }
+                    </div>
+                )
+                : <MobileInput isGraphingMode={true}/>
+            }
+        </>
+    );
+
     return (
         <>
             <SidebarPage
@@ -155,29 +187,12 @@ const FunctionList: React.FC = () => {
                 title="函数列表"
                 tip={<>最多添加{maxFunctionAmount}个函数</>} 
                 onContextMenu={onContextMenu}>
-                <div className="function-list-main">
-                    <div className="function-input-box">
-                        <div className="function-input-box-tag">
-                            <span><InlineMath>y =</InlineMath></span>
-                        </div>
-                        <InputBox
-                            ref={inputRef}
-                            ltr={true}
-                            onInputSymbol={(symbol) => handleInput(symbol)}/>
-                        <div className="add-button-container">
-                            <button className="add-button" onClick={() => handleAddFunction()}>
-                                <span>添加</span>
-                            </button>
-                        </div>
-                    </div>
-                    <div className="function-list" id="function-list">
-                        {
-                            functionList.map((item, index) => <FunctionListItem {...item} index={index} key={index}/>)
-                        }
-                    </div>
-                </div>
+                <div className="function-list-main">{mainSection}</div>
             </SidebarPage>
             {contextMenu}
+
+            {/* Portal to `/src/views/graphing/index.tsx` */}
+            {Utils.isMobile() && createPortal(mainSection, Utils.getElem("graphing-input"))}
         </>
     );
 }

@@ -39,7 +39,9 @@ export default class Render {
     public functionList: List<string> = new List();
     private displayedPoints: [Point, Point][] = []; // [p1, p2]
 
-    public constructor(canvas: OffscreenCanvas, ctx: OffscreenCanvasRenderingContext2D, workerCtx: Worker, isDarkMode: boolean) {
+    private isMobile: boolean;
+
+    public constructor(canvas: OffscreenCanvas, ctx: OffscreenCanvasRenderingContext2D, workerCtx: Worker, isDarkMode: boolean, isMobile: boolean) {
         this.canvas = canvas;
         this.ctx = ctx;
         this.workerCtx = workerCtx;
@@ -47,6 +49,8 @@ export default class Render {
         this.mousePoint = this.center;
 
         this.fpsUpdater = setInterval(() => this.workerCtx.postMessage({ type: "fps", fps: this.currentFPS }), 1000);
+
+        this.isMobile = isMobile;
 
         if(!isDarkMode) Render.changeToDark();
     }
@@ -397,7 +401,7 @@ export default class Render {
 
         // Mouse point
         var mouseCoordinatesPoint = this.screenToCoordinates(this.mousePoint);
-        this.drawText("("+ mouseCoordinatesPoint.x.toFixed(2) +", "+ mouseCoordinatesPoint.y.toFixed(2) +")", 30, 30, Render.colors.primary, 15);
+        this.drawText("("+ mouseCoordinatesPoint.x.toFixed(2) +", "+ mouseCoordinatesPoint.y.toFixed(2) +")", !this.isMobile ? 30 : 50, 30, Render.colors.primary, 15);
         
         // Is mouse down
         this.drawText(this.mouseDown ? "Moving" : "", this.canvas.width - 80, 30, Render.colors.primary, 15);

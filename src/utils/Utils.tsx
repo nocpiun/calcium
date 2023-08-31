@@ -138,6 +138,20 @@ export default class Utils {
         return false;
     }
 
+    public static isMobile(): boolean {
+        const mobileClients = [
+            /Android/i,
+            /webOS/i,
+            /iPhone/i,
+            /iPad/i,
+            /iPod/i,
+            /BlackBerry/i,
+            /Windows Phone/i
+        ];
+
+        return mobileClients.some((reg) => window.navigator.userAgent.match(reg));
+    }
+
     public static async writeClipboard(text: string): Promise<void> {
         try {
             await window.navigator.clipboard.writeText(text);

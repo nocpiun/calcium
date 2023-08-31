@@ -1,15 +1,53 @@
 @media screen and (max-width: 768px) {
+    .mobile-open-sidebar {
+        display: block !important;
+    }
     main {
         .app {
+            border-top: none !important;
             aside {
-                display: block;
                 position: fixed;
                 width: 0;
+                height: 100vh;
+                overflow: hidden;
+                transition: width ease .3s;
+                z-index: 100;
                 &.open {
-                    width: auto;
+                    display: block;
+                    width: 37%;
+                    overflow: visible;
+                    .mobile-sidebar-backdrop {
+                        display: block;
+                    }
                 }
                 .control-panel-container {
                     height: 100%;
+                    border: none;
+                    background-color: var(--ca-light2);
+                    box-shadow: 5px 0 15px 5px rgba(0, 0, 0, .1);
+                    z-index: 150;
+                    .mode-switcher {
+                        display: flex;
+                        flex-direction: column;
+                        height: 100%;
+                        margin-top: 5px;
+                        .mode-button-container {
+                            height: 20px;
+                            margin-top: 10px;
+                            .highlight-bar {
+                                display: none;
+                            }
+                            .mode-button {
+                                display: none;
+                            }
+                            .mobile-mode-button {
+                                display: flex;
+                            }
+                        }
+                    }
+                    .theme-switcher {
+                        display: none;
+                    }
                 }
                 .ka-wrapper {
                     display: none;
@@ -24,11 +62,21 @@
                     .input-box, .output-box {
                         padding-right: 30px;
                     }
+                    .number-box-list {
+                        margin-top: 50px;
+                        margin-left: 5px;
+                    }
                 }
                 .input-container {
                     display: none;
                 }
                 .mobile-input-container {
+                    display: flex;
+                }
+                .graphing-container {
+                    height: 49%;
+                }
+                .mobile-graphing-input-container {
                     display: flex;
                 }
             }

@@ -1,11 +1,15 @@
 import React, { memo } from "react";
 
-import KeypadTab from "../../components/KeypadTab";
-import KeypadSection from "../../components/KeypadSection";
+import KeypadTab from "./KeypadTab";
+import KeypadSection from "./KeypadSection";
 
-import InputButton from "../../components/InputButton";
+import InputButton from "./InputButton";
 
-const MobileInput: React.FC = memo(() => {
+interface MobileInputProps {
+    isGraphingMode?: boolean
+}
+
+const MobileInput: React.FC<MobileInputProps> = memo((props) => {
     return (
         <div className="mobile-input-container">
             <div className="tabs-container">
@@ -61,7 +65,7 @@ const MobileInput: React.FC = memo(() => {
                     <div className="keypad-row">
                         <InputButton symbol="0" grow={1}/>
                         <InputButton symbol="." grow={1}/>
-                        <InputButton symbol="\text{Result}" grow={2}/>
+                        {!props.isGraphingMode && <InputButton symbol="\text{Result}" grow={2}/>}
                     </div>
                 </KeypadSection>
                 <KeypadSection id="symbols">

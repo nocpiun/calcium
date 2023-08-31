@@ -19,6 +19,7 @@ import useEaster from "../../hooks/useEaster";
 
 import NumberBox from "./NumberBox";
 import InputBox, { cursor } from "../../components/InputBox";
+import SidebarOpener from "../../components/SidebarOpener";
 import type Dialog from "../../components/Dialog";
 import FunctionDialog from "../../dialogs/FunctionDialog";
 
@@ -190,6 +191,9 @@ const ProgrammingOutput: React.FC = () => {
             <div
                 className="output-container"
                 onContextMenu={onContextMenu}>
+                {/* Mobile only */}
+                {Utils.isMobile() && <SidebarOpener />}
+
                 <span className="output-tag">Output</span>
 
                 <ul className="number-box-list">

@@ -3,8 +3,9 @@ import React, { useContext } from "react";
 import { Mode } from "../types";
 
 import Input from "./general/Input";
-import MobileInput from "./general/MobileInput";
+import MobileInput from "../components/MobileInput";
 import ProgrammingInput from "./programming/ProgrammingInput";
+import MobileProgrammingInput from "../components/MobileProgrammingInput";
 import Output from "./general/Output";
 import ProgrammingOutput from "./programming/ProgrammingOutput";
 import Graphing from "./graphing";
@@ -31,6 +32,7 @@ const Calculator: React.FC = () => {
                     <>
                         <ProgrammingOutput/>
                         <ProgrammingInput/>
+                        <MobileProgrammingInput />
                     </>
                 );
         }
