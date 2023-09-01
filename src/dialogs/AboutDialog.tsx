@@ -41,6 +41,7 @@ const dependencies: [string, string][] = [
     ["eslint@8.3.0", "https://eslint.org"],
     ["downloadjs@1.4.7", "rndme/download"],
     ["use-context-menu@0.4.12", "https://use-context-menu.vercel.app"],
+    ["tone@14.7.77", "https://tonejs.github.io"],
     ["webpack@5.64.4", "https://webpack.js.org"],
     ["css-loader@6.5.1", "webpack-contrib/css-loader"],
     ["style-loader@3.3.1", "webpack-contrib/style-loader"],

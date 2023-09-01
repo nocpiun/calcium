@@ -1,7 +1,10 @@
 import React from "react";
+import { ReactSVG } from "react-svg";
 
 import Utils from "../utils/Utils";
 import Emitter from "../utils/Emitter";
+
+import listIcon from "../icons/list.svg";
 
 const SidebarOpener: React.FC = () => {
     const handleOpenSidebar = () => {
@@ -10,7 +13,11 @@ const SidebarOpener: React.FC = () => {
         Emitter.get().emit("sidebar-state-change");
     };
 
-    return <div className="mobile-open-sidebar" onClick={() => handleOpenSidebar()}/>
+    return (
+        <div className="mobile-open-sidebar" onClick={() => handleOpenSidebar()}>
+            <ReactSVG src={listIcon}/>
+        </div>
+    );
 }
 
 export default SidebarOpener;

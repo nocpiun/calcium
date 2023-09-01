@@ -8,6 +8,7 @@ import React, {
 } from "react";
 import { useContextMenu, ContextMenuItem } from "use-context-menu";
 import download from "downloadjs";
+import * as Tone from "tone";
 
 import SidebarOpener from "../../components/SidebarOpener.tsx";
 
@@ -51,6 +52,22 @@ const Graphing: React.FC = memo(() => {
                     break;
                 case "fps":
                     Emitter.get().emit("graphing-fps", e.data.fps);
+                    break;
+                case "play":
+                    const rawPitches = e.data.rawPitches;
+                    const synth = new Tone.Synth().toDestination();
+                    const now = Tone.now();
+
+                    for(let i = 0; i < rawPitches.length; i += 20) {
+                        if(!isFinite(rawPitches[i])) continue;
+
+                        const n = Utils.pitchToNoteStr(rawPitches[i]);
+                        try {
+                            synth.triggerAttackRelease(n, "8n", now + i * .001);
+                        } catch (e) {
+                            continue;
+                        }
+                    }
                     break;
             }
         };
@@ -157,6 +174,11 @@ const Graphing: React.FC = memo(() => {
                     break;
                 }
             }
+        });
+
+        Emitter.get().on("play-function", (index: number) => {
+            if(!workerRef.current) return;
+            workerRef.current.postMessage({ type: "play-function", index });
         });
     }, []);
 

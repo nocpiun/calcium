@@ -299,6 +299,24 @@ export default class Render {
         }
     }
 
+    public play(index: number): void {
+        var rawPitches: number[] = [];
+        var rawText = this.functionList.get(index);
+
+        for(let x = -8; x <= 8; x += delta) {
+            var y = parseFloat(new Compiler(rawText.split(" "), new Map([["x", x.toString()]])).compile());
+
+            rawPitches.push(y);
+        }
+
+        const min = Math.min(...rawPitches);
+        for(let i = 0; i < rawPitches.length && min < 0; i++) {
+            rawPitches[i] += -min;
+        }
+
+        this.workerCtx.postMessage({ type: "play", rawPitches });
+    }
+
     private stopMoving(): void {
         this.mouseDown = false;
         this.mouseDX = 0;

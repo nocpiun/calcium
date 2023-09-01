@@ -3,6 +3,7 @@ import React from "react";
 
 import { NumberSys } from "../types";
 import Transformer from "../compiler/Transformer";
+import Is from "../compiler/Is";
 
 export default class Utils {
     public static getElem<E extends HTMLElement = HTMLElement>(id: string): E {
@@ -177,5 +178,16 @@ export default class Utils {
         } catch (e) {
             throw e;
         }
+    }
+
+    public static pitchToNoteStr(pitch: number): string {
+        const noteList = ["C", "C#", "D", "D#", "E", "E#", "F", "F#", "G", "G#", "A", "A#", "B"];
+
+        var delta = Math.floor(pitch / 13);
+        delta = !Is.float(pitch / 13) && pitch !== 0 ? delta - 1 : delta;
+        const part = 2 + delta;
+        const note = noteList[Math.floor(pitch) % 13];
+
+        return note + part.toString();
     }
 }
