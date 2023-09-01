@@ -9,21 +9,21 @@ export default class IntToken extends DynamicToken {
     public a: number;
     public b: number;
 
-    public constructor(a: number, b: number, raw: string[]) {
-        super(raw);
+    public constructor(a: number, b: number, raw: string[], variables: Map<string, string>) {
+        super(raw, variables);
 
         this.a = a;
         this.b = b;
     }
 
-    public evaluate(variables: Map<string, string>): number {
+    public evaluate(): number {
         if(!this.raw.includes("dx")) return NaN;
         
         const dx = .0001;
         const n = (this.b - this.a) / dx;
 
         const f = (x: number): number => {
-            var compiler = new Compiler(this.raw, variables.set("dx", dx.toString()).set("x", x.toString()), false, NumberSys.DEC);
+            var compiler = new Compiler(this.raw, this.variables.set("dx", dx.toString()).set("x", x.toString()), false, NumberSys.DEC);
             return parseFloat(compiler.compile());
         }
 

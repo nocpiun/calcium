@@ -9,17 +9,17 @@ export default class ProdToken extends DynamicToken {
     public i: number;
     public n: number;
 
-    public constructor(i: number, n: number, raw: string[]) {
-        super(raw);
+    public constructor(i: number, n: number, raw: string[], variables: Map<string, string>) {
+        super(raw, variables);
 
         this.i = i;
         this.n = n;
     }
 
-    public evaluate(variables: Map<string, string>): number {
+    public evaluate(): number {
         var result = 1;
         for(let i = this.i; i <= this.n; i++) {
-            var compiler = new Compiler(this.raw, variables.set("i", i.toString()), false, NumberSys.DEC);
+            var compiler = new Compiler(this.raw, this.variables.set("i", i.toString()), false, NumberSys.DEC);
             result *= parseFloat(compiler.compile());
         }
         return result;

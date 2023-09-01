@@ -199,7 +199,7 @@ export default class Evaluator {
                     operators.add(token as OperatorToken);
                     break;
                 case TokenType.BRACKET:
-                    var rawValue = new Evaluator(new RootToken([token], root.variables)).evaluate();
+                    var rawValue = new Evaluator(token as BracketToken).evaluate();
                     var value = (token as BracketToken).factorial
                     ? Compute.factorial(rawValue)
                     : rawValue;
@@ -210,7 +210,7 @@ export default class Evaluator {
                     ));
                     break;
                 case TokenType.ABS:
-                    var rawValue = Math.abs(new Evaluator(new RootToken([token], root.variables)).evaluate());
+                    var rawValue = Math.abs(new Evaluator(token as AbsToken).evaluate());
                     var value = (token as AbsToken).factorial
                     ? Compute.factorial(rawValue)
                     : rawValue;
@@ -236,7 +236,7 @@ export default class Evaluator {
                 case TokenType.SIGMA:
                 case TokenType.INT:
                 case TokenType.PROD:
-                    var value = Float.calibrate((token as DynamicToken).evaluate(root.variables));
+                    var value = Float.calibrate((token as DynamicToken).evaluate());
                     numbers.add(new NumberToken(
                         Compute.safePow(value, exponential),
                         NumberSys.DEC

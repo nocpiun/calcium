@@ -57,7 +57,7 @@ export default class Compiler {
     }
 
     private tokenize(): RootToken | void {
-        var root = new RootToken([], this.variables);
+        var root = new RootToken([]);
 
         /**
          * Resolve raw input content
@@ -178,17 +178,17 @@ export default class Compiler {
             } else if(Is.rightBracket(symbol)) { // right bracket
 
                 if(this.sigmaI > -1 && this.sigmaN > -1) { // sum (sigma)
-                    root.add(new SigmaToken(this.sigmaI, this.sigmaN, this.secondaryRaw));
+                    root.add(new SigmaToken(this.sigmaI, this.sigmaN, this.secondaryRaw, this.variables));
                     continue;
                 }
 
                 if(this.prodI > -1 && this.prodN > -1) { // prod
-                    root.add(new ProdToken(this.prodI, this.prodN, this.secondaryRaw));
+                    root.add(new ProdToken(this.prodI, this.prodN, this.secondaryRaw, this.variables));
                     continue;
                 }
 
                 if(!isNaN(this.intA) && !isNaN(this.intB)) { // integral
-                    root.add(new IntToken(this.intA, this.intB, this.secondaryRaw));
+                    root.add(new IntToken(this.intA, this.intB, this.secondaryRaw, this.variables));
                     continue;
                 }
 
