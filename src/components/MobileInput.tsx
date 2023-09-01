@@ -70,83 +70,93 @@ const MobileInput: React.FC<MobileInputProps> = memo((props) => {
                     </div>
                 </KeypadSection>
                 <KeypadSection id="symbols">
-                    <div className="keypad-row">
-                        <InputButton symbol="a" grow={1}/>
-                        <InputButton symbol="b" grow={1}/>
-                        <InputButton symbol="c" grow={1}/>
-                        <InputButton symbol="d" grow={1}/>
-                        <InputButton symbol="e" grow={1}/>
-                    </div>
-                    <div className="keypad-row">
-                        <InputButton symbol="f" grow={1}/>
-                        <InputButton symbol="g" grow={1}/>
-                        <InputButton symbol="h" grow={1}/>
-                        <InputButton symbol="i" grow={1}/>
-                        <InputButton symbol="j" grow={1}/>
-                    </div>
-                    <div className="keypad-row">
-                        <InputButton symbol="k" grow={1}/>
-                        <InputButton symbol="l" grow={1}/>
-                        <InputButton symbol="m" grow={1}/>
-                        <InputButton symbol="n" grow={1}/>
-                        <InputButton symbol="o" grow={1}/>
-                    </div>
-                    <div className="keypad-row">
-                        <InputButton symbol="p" grow={1}/>
-                        <InputButton symbol="q" grow={1}/>
-                        <InputButton symbol="r" grow={1}/>
-                        <InputButton symbol="s" grow={1}/>
-                        <InputButton symbol="t" grow={1}/>
-                    </div>
-                    <div className="keypad-row">
-                        <InputButton symbol="u" grow={1}/>
-                        <InputButton symbol="v" grow={1}/>
-                        <InputButton symbol="w" grow={1}/>
-                        <InputButton symbol="x" grow={1}/>
-                        <InputButton symbol="y" grow={1}/>
-                    </div>
-                    <div className="keypad-row">
-                        <InputButton symbol="z" grow={1}/>
-                        <InputButton symbol="\alpha" grow={1}/>
-                        <InputButton symbol="\beta" grow={1}/>
-                        <InputButton symbol="\gamma" grow={1}/>
-                        <InputButton symbol="\delta" grow={1}/>
-                    </div>
-                    <div className="keypad-row">
-                        <InputButton symbol="\epsilon" grow={1}/>
-                        <InputButton symbol="\zeta" grow={1}/>
-                        <InputButton symbol="\eta" grow={1}/>
-                        <InputButton symbol="\theta" grow={1}/>
-                        <InputButton symbol="\iota" grow={1}/>
-                    </div>
-                    <div className="keypad-row">
-                        <InputButton symbol="\kappa" grow={1}/>
-                        <InputButton symbol="\lambda" grow={1}/>
-                        <InputButton symbol="\mu" grow={1}/>
-                        <InputButton symbol="\nu" grow={1}/>
-                        <InputButton symbol="\xi" grow={1}/>
-                    </div>
-                    <div className="keypad-row">
-                        <InputButton symbol="\omicron" grow={1}/>
-                        <InputButton symbol="\pi" grow={1}/>
-                        <InputButton symbol="\rho" grow={1}/>
-                        <InputButton symbol="\sigma" grow={1}/>
-                        <InputButton symbol="\tau" grow={1}/>
-                    </div>
-                    <div className="keypad-row">
-                        <InputButton symbol="\upsilon" grow={1}/>
-                        <InputButton symbol="\phi" grow={1}/>
-                        <InputButton symbol="\chi" grow={1}/>
-                        <InputButton symbol="\psi" grow={1}/>
-                        <InputButton symbol="\omega" grow={1}/>
-                    </div>
-                    <div className="keypad-row">
-                        <InputButton symbol="\Delta" grow={1}/>
-                        <InputButton symbol="dx" grow={1}/>
-                        <InputButton symbol="=" grow={1}/>
-                        <InputButton symbol="," grow={1}/>
-                        <InputButton symbol="\text{Del}" grow={1}/>
-                    </div>
+                    {
+                        !props.isGraphingMode
+                        ? <>
+                            <div className="keypad-row">
+                                <InputButton symbol="a" grow={1}/>
+                                <InputButton symbol="b" grow={1}/>
+                                <InputButton symbol="c" grow={1}/>
+                                <InputButton symbol="d" grow={1}/>
+                                <InputButton symbol="e" grow={1}/>
+                            </div>
+                            <div className="keypad-row">
+                                <InputButton symbol="f" grow={1}/>
+                                <InputButton symbol="g" grow={1}/>
+                                <InputButton symbol="h" grow={1}/>
+                                <InputButton symbol="i" grow={1}/>
+                                <InputButton symbol="j" grow={1}/>
+                            </div>
+                            <div className="keypad-row">
+                                <InputButton symbol="k" grow={1}/>
+                                <InputButton symbol="l" grow={1}/>
+                                <InputButton symbol="m" grow={1}/>
+                                <InputButton symbol="n" grow={1}/>
+                                <InputButton symbol="o" grow={1}/>
+                            </div>
+                            <div className="keypad-row">
+                                <InputButton symbol="p" grow={1}/>
+                                <InputButton symbol="q" grow={1}/>
+                                <InputButton symbol="r" grow={1}/>
+                                <InputButton symbol="s" grow={1}/>
+                                <InputButton symbol="t" grow={1}/>
+                            </div>
+                            <div className="keypad-row">
+                                <InputButton symbol="u" grow={1}/>
+                                <InputButton symbol="v" grow={1}/>
+                                <InputButton symbol="w" grow={1}/>
+                                <InputButton symbol="x" grow={1}/>
+                                <InputButton symbol="y" grow={1}/>
+                            </div>
+                            <div className="keypad-row">
+                                <InputButton symbol="z" grow={1}/>
+                                <InputButton symbol="\alpha" grow={1}/>
+                                <InputButton symbol="\beta" grow={1}/>
+                                <InputButton symbol="\gamma" grow={1}/>
+                                <InputButton symbol="\delta" grow={1}/>
+                            </div>
+                            <div className="keypad-row">
+                                <InputButton symbol="\epsilon" grow={1}/>
+                                <InputButton symbol="\zeta" grow={1}/>
+                                <InputButton symbol="\eta" grow={1}/>
+                                <InputButton symbol="\theta" grow={1}/>
+                                <InputButton symbol="\iota" grow={1}/>
+                            </div>
+                            <div className="keypad-row">
+                                <InputButton symbol="\kappa" grow={1}/>
+                                <InputButton symbol="\lambda" grow={1}/>
+                                <InputButton symbol="\mu" grow={1}/>
+                                <InputButton symbol="\nu" grow={1}/>
+                                <InputButton symbol="\xi" grow={1}/>
+                            </div>
+                            <div className="keypad-row">
+                                <InputButton symbol="\omicron" grow={1}/>
+                                <InputButton symbol="\pi" grow={1}/>
+                                <InputButton symbol="\rho" grow={1}/>
+                                <InputButton symbol="\sigma" grow={1}/>
+                                <InputButton symbol="\tau" grow={1}/>
+                            </div>
+                            <div className="keypad-row">
+                                <InputButton symbol="\upsilon" grow={1}/>
+                                <InputButton symbol="\phi" grow={1}/>
+                                <InputButton symbol="\chi" grow={1}/>
+                                <InputButton symbol="\psi" grow={1}/>
+                                <InputButton symbol="\omega" grow={1}/>
+                            </div>
+                            <div className="keypad-row">
+                                <InputButton symbol="\Delta" grow={1}/>
+                                <InputButton symbol="dx" grow={1}/>
+                                <InputButton symbol="=" grow={1}/>
+                                <InputButton symbol="," grow={1}/>
+                                <InputButton symbol="\text{Del}" grow={1}/>
+                            </div>
+                        </>
+                        : <div className="keypad-row">
+                            <InputButton symbol="x" grow={3}/>
+                            <InputButton symbol="," grow={1}/>
+                            <InputButton symbol="\text{Del}" grow={1}/>
+                        </div>
+                    }
                 </KeypadSection>
                 <KeypadSection id="functions">
                     <div className="keypad-row">

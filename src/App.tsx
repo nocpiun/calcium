@@ -43,9 +43,11 @@ const App: React.FC = () => {
 		});
 
 		// To prevent some part of the page being covered by the bottom toolbar of mobile browsers
-		const { height } = Utils.getWindowConfig();
-		document.body.style.height = height +"px";
-		Utils.getElem("calcium-main").style.height = height +"px";
+		if(Utils.isMobile()) {
+			const { height } = Utils.getWindowConfig();
+			document.body.style.height = height +"px";
+			Utils.getElem("calcium-main").style.height = height +"px";
+		}
 	}, []);
 
 	return (
