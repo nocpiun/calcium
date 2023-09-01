@@ -13,8 +13,9 @@ ctx.addEventListener("message", (e) => {
 
     switch(req.type) {
         case "init":
-            renderer = new Render(req.canvas, req.canvas.getContext("2d"), ctx, req.isDarkMode, req.isMobile);
-            init(req.canvas);
+            var canvasCtx = req.canvas.getContext("2d")
+            renderer = new Render(req.canvas, canvasCtx, ctx, req.isDarkMode, req.isMobile);
+            init(req.canvas, canvasCtx);
             break;
         case "reset":
             reset();
@@ -52,7 +53,7 @@ ctx.addEventListener("message", (e) => {
     }
 });
 
-function init(canvas: OffscreenCanvas) {
+function init(canvas: OffscreenCanvas, ctx: CanvasRenderingContext2D) {
     // Init ratio
     const ratio = Utils.getPixelRatio(ctx);
     canvas.width *= ratio;

@@ -63,9 +63,10 @@ const MobileInput: React.FC<MobileInputProps> = memo((props) => {
                         <InputButton symbol="-" grow={1}/>
                     </div>
                     <div className="keypad-row">
-                        <InputButton symbol="0" grow={1}/>
+                        {!props.isGraphingMode ? <InputButton symbol="0" grow={1}/> : <InputButton symbol="0" grow={3}/>}
                         <InputButton symbol="." grow={1}/>
-                        {!props.isGraphingMode && <InputButton symbol="\text{Result}" grow={2}/>}
+                        {!props.isGraphingMode && <InputButton symbol="," grow={1}/>}
+                        {!props.isGraphingMode && <InputButton symbol="\text{Result}" grow={1}/>}
                     </div>
                 </KeypadSection>
                 <KeypadSection id="symbols">
@@ -142,8 +143,8 @@ const MobileInput: React.FC<MobileInputProps> = memo((props) => {
                     <div className="keypad-row">
                         <InputButton symbol="\Delta" grow={1}/>
                         <InputButton symbol="dx" grow={1}/>
+                        <InputButton symbol="=" grow={1}/>
                         <InputButton symbol="," grow={1}/>
-                        <div style={{ flexGrow: 1 }}/>
                         <InputButton symbol="\text{Del}" grow={1}/>
                     </div>
                 </KeypadSection>
