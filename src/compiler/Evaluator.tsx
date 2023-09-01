@@ -6,7 +6,6 @@ import Compute from "./Compute";
 
 import { TokenType } from "./token/Token";
 import PowerableToken from "./token/PowerableToken";
-import ChildrenToken from "./token/ChildrenToken";
 import RootToken from "./token/RootToken";
 import NumberToken from "./token/NumberToken";
 import OperatorToken from "./token/OperatorToken";
@@ -200,7 +199,7 @@ export default class Evaluator {
                     operators.add(token as OperatorToken);
                     break;
                 case TokenType.BRACKET:
-                    var rawValue = new Evaluator(token as BracketToken).evaluate();
+                    var rawValue = new Evaluator(new RootToken([token], root.variables)).evaluate();
                     var value = (token as BracketToken).factorial
                     ? Compute.factorial(rawValue)
                     : rawValue;
@@ -211,7 +210,7 @@ export default class Evaluator {
                     ));
                     break;
                 case TokenType.ABS:
-                    var rawValue = Math.abs(new Evaluator(token as AbsToken).evaluate());
+                    var rawValue = Math.abs(new Evaluator(new RootToken([token], root.variables)).evaluate());
                     var value = (token as AbsToken).factorial
                     ? Compute.factorial(rawValue)
                     : rawValue;
@@ -225,7 +224,7 @@ export default class Evaluator {
                     var { func, param } = token as FunctionToken;
                     var calculatedParam = [];
                     for(let i = 0; i < param.length; i++) {
-                        calculatedParam.push(new Evaluator(param[i] as ChildrenToken).evaluate());
+                        calculatedParam.push(new Evaluator(new RootToken([param[i]], root.variables)).evaluate());
                     }
 
                     var value = Float.calibrate(parseFloat(func(...calculatedParam).toFixed(14)));
@@ -237,7 +236,7 @@ export default class Evaluator {
                 case TokenType.SIGMA:
                 case TokenType.INT:
                 case TokenType.PROD:
-                    var value = Float.calibrate((token as DynamicToken).evaluate());
+                    var value = Float.calibrate((token as DynamicToken).evaluate(root.variables));
                     numbers.add(new NumberToken(
                         Compute.safePow(value, exponential),
                         NumberSys.DEC

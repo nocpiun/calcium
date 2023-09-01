@@ -57,7 +57,7 @@ export default class Compiler {
     }
 
     private tokenize(): RootToken | void {
-        var root = new RootToken([]);
+        var root = new RootToken([], this.variables);
 
         /**
          * Resolve raw input content
@@ -265,6 +265,10 @@ export default class Compiler {
 
             } else if(symbol.indexOf("\\Sigma") > -1) { // sum (sigma)
 
+                if(i !== 0 && (Is.number(this.raw[i - 1], this.isProgrammingMode) || Is.constant(this.raw[i - 1]) || Is.variable(this.raw[i - 1]))) {
+                    root.add(new OperatorToken(Operator.MUL, false));
+                }
+
                 const resolved = symbol.match(/\d+/g) ?? ["0", "0"];
                 this.sigmaI = parseFloat(resolved[0]);
                 this.sigmaN = parseFloat(resolved[1]);
@@ -273,6 +277,10 @@ export default class Compiler {
             
             } else if(symbol.indexOf("\\Pi") > -1) { // prod
 
+                if(i !== 0 && (Is.number(this.raw[i - 1], this.isProgrammingMode) || Is.constant(this.raw[i - 1]) || Is.variable(this.raw[i - 1]))) {
+                    root.add(new OperatorToken(Operator.MUL, false));
+                }
+
                 const resolved = symbol.match(/\d+/g) ?? ["0", "0"];
                 this.prodI = parseFloat(resolved[0]);
                 this.prodN = parseFloat(resolved[1]);
@@ -280,6 +288,10 @@ export default class Compiler {
                 this.layer++;
             
             } else if(symbol.indexOf("\\smallint") > -1) { // integral
+
+                if(i !== 0 && (Is.number(this.raw[i - 1], this.isProgrammingMode) || Is.constant(this.raw[i - 1]) || Is.variable(this.raw[i - 1]))) {
+                    root.add(new OperatorToken(Operator.MUL, false));
+                }
 
                 const resolved = symbol.match(/\d+/g) ?? ["0", "0"];
                 this.intA = parseFloat(resolved[0]);

@@ -9,5 +9,5 @@ export default abstract class DynamicToken extends Token<void> {
         this.raw = raw;
     }
     
-    public abstract evaluate(): number;
+    public abstract evaluate(variables: Map<string, string>): number;
 }

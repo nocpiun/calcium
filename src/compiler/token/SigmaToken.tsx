@@ -16,10 +16,10 @@ export default class SigmaToken extends DynamicToken {
         this.n = n;
     }
 
-    public evaluate(): number {
+    public evaluate(variables: Map<string, string>): number {
         var result = 0;
         for(let i = this.i; i <= this.n; i++) {
-            var compiler = new Compiler(this.raw, new Map([["i", i.toString()]]), false, NumberSys.DEC);
+            var compiler = new Compiler(this.raw, variables.set("i", i.toString()), false, NumberSys.DEC);
             result += parseFloat(compiler.compile());
         }
         return result;

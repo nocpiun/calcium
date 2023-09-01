@@ -16,18 +16,14 @@ export default class IntToken extends DynamicToken {
         this.b = b;
     }
 
-    public evaluate(): number {
+    public evaluate(variables: Map<string, string>): number {
         if(!this.raw.includes("dx")) return NaN;
         
         const dx = .0001;
         const n = (this.b - this.a) / dx;
 
         const f = (x: number): number => {
-            const varMap = new Map([
-                ["dx", dx.toString()],
-                ["x", x.toString()]
-            ]);
-            var compiler = new Compiler(this.raw, varMap, false, NumberSys.DEC);
+            var compiler = new Compiler(this.raw, variables.set("dx", dx.toString()).set("x", x.toString()), false, NumberSys.DEC);
             return parseFloat(compiler.compile());
         }
 
