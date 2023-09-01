@@ -95,6 +95,8 @@ const Graphing: React.FC = memo(() => {
         canvas.addEventListener("touchmove", (e: TouchEvent) => {
             if(!workerRef.current) return;
 
+            e.preventDefault();
+
             var direction;
             if(touchStart.clientX > e.changedTouches[0].clientX + 5) {
                 direction = MouseDirection.LEFT;

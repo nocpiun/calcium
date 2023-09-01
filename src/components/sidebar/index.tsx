@@ -73,16 +73,17 @@ const Sidebar: React.FC = () => {
                     <ModeButton modeName="图像" mode={Mode.GRAPHING} icon={GraphingIcon}/>
                     <ModeButton modeName="程序员" mode={Mode.PROGRAMMING} icon={ProgrammingIcon}/>
                 </div>
-                <div className="theme-switcher">
-                    <Toggle tooltip="浅色 / 深色主题" onChange={(e) => handleToggle(e)} defaultValue={themeValue === "light"}/>
-                </div>
-
+                
                 {/* Mobile only */}
                 {Utils.isMobile() && (
                     <div className="mobile-feedback-button">
                         <span onClick={() => window.open("https://github.com/nocpiun/calcium/issues/new/choose")}>反馈问题</span>
                     </div>
                 )}
+
+                <div className="theme-switcher">
+                    <Toggle tooltip="浅色 / 深色主题" onChange={(e) => handleToggle(e)} defaultValue={themeValue === "light"}/>
+                </div>
 
                 {/* Mobile only */}
                 {Utils.isMobile() && <div className="mobile-sidebar-backdrop" onClick={() => handleCloseSidebar()}/>}

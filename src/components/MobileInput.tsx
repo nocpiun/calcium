@@ -33,8 +33,8 @@ const MobileInput: React.FC<MobileInputProps> = memo((props) => {
                         <InputButton symbol="\csc" inputValue="\csc(" grow={1}/>
                     </div>
                     <div className="keypad-row">
-                        <InputButton symbol="a^2" grow={1}/>
-                        <InputButton symbol="\sqrt{a}" grow={1}/>
+                        <InputButton symbol="a^2" inputValue="^2" grow={1}/>
+                        <InputButton symbol="\sqrt{a}" inputValue="√(" grow={1}/>
                         <InputButton symbol="\pi" grow={1}/>
                         <InputButton symbol="e" grow={1}/>
                     </div>

@@ -224,7 +224,7 @@ export default class Evaluator {
                     var { func, param } = token as FunctionToken;
                     var calculatedParam = [];
                     for(let i = 0; i < param.length; i++) {
-                        calculatedParam.push(new Evaluator(new RootToken([param[i]], root.variables)).evaluate());
+                        calculatedParam.push(new Evaluator(param[i] as RootToken).evaluate());
                     }
 
                     var value = Float.calibrate(parseFloat(func(...calculatedParam).toFixed(14)));
