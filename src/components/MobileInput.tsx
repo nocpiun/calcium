@@ -213,8 +213,13 @@ const MobileInput: React.FC<MobileInputProps> = memo((props) => {
                 <KeypadSection id="professional">
                     <div className="keypad-row">
                         <InputButton symbol="\sum" grow={2}/>
-                        <InputButton symbol="\int_a^b" inputValue="\int" grow={2}/>
+                        <InputButton symbol="x" grow={1}/>
                         <InputButton symbol="dx" grow={1}/>
+                        <InputButton symbol="i" grow={1}/>
+                    </div>
+                    <div className="keypad-row">
+                        <InputButton symbol="\int_a^b" inputValue="\int" grow={2}/>
+                        <div style={{ flexGrow: 3 }}/>
                     </div>
                     <div className="keypad-row">
                         <InputButton symbol="\prod" grow={2}/>

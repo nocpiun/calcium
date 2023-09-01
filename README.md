@@ -13,7 +13,7 @@
 
 </div>
 
-![Screenshot](./images/screenshot.png)
+![Banner](./images/banner.png)
 
 ## Description
 
