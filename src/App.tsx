@@ -3,6 +3,7 @@ import { AliveScope } from "react-activation";
 
 import { shortcuts } from "./global";
 import { Mode, RenderedFunction } from "./types";
+import Utils from "./utils/Utils";
 
 // Layout
 import "katex/dist/katex.min.css";
@@ -40,10 +41,15 @@ const App: React.FC = () => {
 		document.body.addEventListener("contextmenu", (e: MouseEvent) => {
 			e.preventDefault();
 		});
+
+		// To prevent some part of the page being covered by the bottom toolbar of mobile browsers
+		const { height } = Utils.getWindowConfig();
+		document.body.style.height = height +"px";
+		Utils.getElem("calcium-main").style.height = height +"px";
 	}, []);
 
 	return (
-		<main className="calcium">
+		<main className="calcium" id="calcium-main">
 			<MainContext.Provider value={{ mode, setMode, functionList, setFunctionList }}>
 				<AliveScope>
 					<div className="app">

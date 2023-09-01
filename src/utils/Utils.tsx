@@ -19,6 +19,24 @@ export default class Utils {
         return (self.devicePixelRatio || 1) / backingStore;
     }
 
+    /** @see https://blog.csdn.net/crazyxiaoyuge/article/details/112189600 */
+    public static getWindowConfig(): { width: number, height: number } {
+        var width = window.innerWidth;
+        var height = window.innerHeight;
+        
+        if(typeof width !== "number") {
+            if(document.compatMode === "CSS1Compat") {
+                width = document.documentElement.clientWidth;
+                height = document.documentElement.clientHeight;
+            } else {
+                width = document.body.clientWidth;
+                height = document.body.clientHeight;
+            }
+        }
+
+        return { width, height };
+    }
+
     public static arrayRemove<T = any>(oldArray: T[], index: number): T[] {
         if(index < 0 || index >= oldArray.length) return [];
         var newArray = oldArray;
