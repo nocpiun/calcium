@@ -26,7 +26,8 @@ const StatusBar: React.FC = () => {
     const convertingDialogRef = useRef<Dialog>(null);
 
     useEmitter([
-        ["graphing-fps", (currentFPS: number) => setFPS(currentFPS)]
+        ["graphing-fps", (currentFPS: number) => setFPS(currentFPS)],
+        ["open-about-dialog", () => aboutDialogRef.current?.open()]
     ]);
 
     return (
@@ -60,7 +61,7 @@ const StatusBar: React.FC = () => {
                     }
                     <BarItem title="单位换算" onClick={() => convertingDialogRef.current?.open()}/>
                     <BarItem title="快捷键" onClick={() => shortcutDialogRef.current?.open()}/>
-                    <BarItem title={"Calcium "+ version} onClick={() => aboutDialogRef.current?.open()}/>
+                    <BarItem title={"Calcium "+ version} onClick={() => Emitter.get().emit("open-about-dialog")}/>
                 </div>
             </footer>
 

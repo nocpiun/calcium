@@ -8,6 +8,7 @@ import History from "./History";
 import FunctionList from "./FunctionList";
 
 import { Mode } from "../../types";
+import { version } from "../../global";
 import Utils from "../../utils/Utils";
 import Storage from "../../utils/Storage";
 import Emitter from "../../utils/Emitter";
@@ -64,7 +65,7 @@ const Sidebar: React.FC = () => {
                 {/* Mobile only */}
                 {Utils.isMobile() && (
                     <div className="mobile-sidebar-title">
-                        <span>Calcium</span>
+                        <span>Calcium {version}</span>
                     </div>
                 )}
 
@@ -76,8 +77,10 @@ const Sidebar: React.FC = () => {
                 
                 {/* Mobile only */}
                 {Utils.isMobile() && (
-                    <div className="mobile-feedback-button">
+                    <div className="mobile-links">
                         <span onClick={() => window.open("https://github.com/nocpiun/calcium/issues/new/choose")}>反馈问题</span>
+                        <span onClick={() => Emitter.get().emit("open-about-dialog")}>关于</span>
+                        <span onClick={() => window.open("https://nin.red/#/donate")}>支持我</span>
                     </div>
                 )}
 
