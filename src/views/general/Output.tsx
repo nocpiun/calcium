@@ -165,7 +165,9 @@ const Output: React.FC = () => {
                         if(contentArray[i] !== key[j]) continue tableLoop;
                     }
 
-                    contentArray[lastCharIndex - (key.length - 1)] = value;
+                    key.length !== 1
+                    ? contentArray[lastCharIndex - (key.length - 1)] = value
+                    : contentArray = Utils.arrayPut(contentArray, lastCharIndex, value);
                     for(let i = lastCharIndex - 1; i >= lastCharIndex - key.length + 2; i--) {
                         contentArray = Utils.arrayRemove(contentArray, i);
                     }

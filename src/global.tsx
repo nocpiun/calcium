@@ -97,6 +97,7 @@ export const acTable: Map<string, string> = new Map([
     ["rad",    "\\text{rad}("],
     ["sqrt",   "√("],
     ["cbrt",   "^3√("],
+    ["%",      "\\%("],
     ["mean",   "\\text{mean}("],
     ["median", "\\text{median}("],
     ["stdev",  "\\text{stdev}("],
