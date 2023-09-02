@@ -23,6 +23,8 @@ If you have any problem or idea, it's welcome to open an issue to let me know.
 
 _[Here is the Wiki](https://github.com/nocpiun/calcium/wiki)_
 
+_[Here is the Manual](https://blog.nin.red/2023/09/01/calcium/)_
+
 #### Why its name is Calcium?
 
 ```
