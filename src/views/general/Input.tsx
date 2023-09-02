@@ -182,7 +182,8 @@ const Input: React.FC = memo(() => {
                         <div style={{ flexGrow: 5 }}/>
                     </div>
                     <div className="keypad-row">
-                        <div style={{ flexGrow: 5 }}/>
+                        <InputButton symbol="\text{rand}" inputValue="\text{rand}(" grow={2}/>
+                        <div style={{ flexGrow: 3 }}/>
                         <div className="keypad-placeholder"/>
                         <InputButton symbol="4" grow={1}/>
                         <InputButton symbol="5" grow={1}/>

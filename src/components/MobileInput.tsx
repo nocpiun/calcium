@@ -209,6 +209,11 @@ const MobileInput: React.FC<MobileInputProps> = memo((props) => {
                         <InputButton symbol="\text{nCr}" inputValue="\text{nCr}(" grow={1}/>
                         <InputButton symbol="\text{Del}" grow={1}/>
                     </div>
+                    <div className="keypad-row">
+                        <InputButton symbol="\text{rand}" inputValue="\text{rand}(" grow={2}/>
+                        <div style={{ flexGrow: 2 }}/>
+                        <InputButton symbol="\text{Del}" grow={1}/>
+                    </div>
                 </KeypadSection>
                 <KeypadSection id="professional">
                     <div className="keypad-row">
