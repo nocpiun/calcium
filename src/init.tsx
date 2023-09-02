@@ -7,7 +7,7 @@ console.warn = () => {};
 console.error = Logger.error;
 
 Logger.info(
-    "\n%cCalcium%cv"+ version +" | By NoahHrreion\n"+
+    "\n%cCalcium%cv"+ version +" | Nocpiun Org\n"+
     "%cA web-based calculator.\n\n"+
     "%cWebpage: https://calcium.js.org\n"+
     "%cGithub Repo: https://github.com/nocpiun/calcium\n\n"+
