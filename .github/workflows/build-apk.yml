@@ -35,8 +35,6 @@ jobs:
       - name: Build the original project
         run: npm run build
 
-      - run: npm install @capacitor/android
-
       - name: Add android folder if not present
         run: if [ ! -d "./android" ]; then npx cap add android; fi
         shell: bash

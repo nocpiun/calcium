@@ -145,6 +145,9 @@
     "resetMocks": true
   },
   "devDependencies": {
+    "@capacitor/android": "^5.3.0",
+    "@capacitor/cli": "^5.3.0",
+    "@capacitor/core": "^5.3.0",
     "@types/downloadjs": "^1.4.3",
     "@types/react-katex": "^3.0.0"
   }
