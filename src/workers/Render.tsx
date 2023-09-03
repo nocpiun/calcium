@@ -20,6 +20,7 @@ export default class Render {
 
     public canvas: OffscreenCanvas;
     private ctx: OffscreenCanvasRenderingContext2D;
+    private ratio: number;
     private workerCtx: Worker;
 
     public scale: number = 90; // px per unit length
@@ -41,9 +42,18 @@ export default class Render {
 
     private isMobile: boolean;
 
-    public constructor(canvas: OffscreenCanvas, ctx: OffscreenCanvasRenderingContext2D, workerCtx: Worker, isDarkMode: boolean, isMobile: boolean) {
+    public constructor(
+        canvas: OffscreenCanvas,
+        ctx: OffscreenCanvasRenderingContext2D,
+        ratio: number,
+        workerCtx: Worker,
+        isDarkMode: boolean,
+        isMobile: boolean
+    ) {
         this.canvas = canvas;
         this.ctx = ctx;
+        this.ratio = ratio;
+        this.scale *= this.ratio;
         this.workerCtx = workerCtx;
         this.center = new Point(this.canvas.width / 2, this.canvas.height / 2);
         this.mousePoint = this.center;
@@ -74,12 +84,18 @@ export default class Render {
     public handleMouseDown(rect: DOMRect, cx: number, cy: number): void {
         this.mouseDown = true;
 
+        cx *= this.ratio;
+        cy *= this.ratio;
+
         this.refreshMousePoint(rect, cx, cy);
         this.mouseDX = this.mousePoint.x - this.center.x;
         this.mouseDY = this.mousePoint.y - this.center.y;
     }
 
     public handleMouseMove(rect: DOMRect, cx: number, cy: number, direction: MouseDirection): void {
+        cx *= this.ratio;
+        cy *= this.ratio;
+
         this.refreshMousePoint(rect, cx, cy);
 
         if(!this.mouseDown) return;
@@ -139,8 +155,8 @@ export default class Render {
             this.drawStraightLine(y2, Render.colors.secondary);
 
             // number of the line
-            this.drawText((i * this.spacing).toString(), this.center.x + 5, y1 + 5, Render.colors.primary, 15);
-            this.drawText((-i * this.spacing).toString(), this.center.x + 5, y2 + 5, Render.colors.primary, 15);
+            this.drawText((i * this.spacing).toString(), this.center.x + 5 * this.ratio, y1 + 5 * this.ratio, Render.colors.primary, 15);
+            this.drawText((-i * this.spacing).toString(), this.center.x + 5 * this.ratio, y2 + 5 * this.ratio, Render.colors.primary, 15);
         }
         // thinner line
         for(
@@ -177,8 +193,8 @@ export default class Render {
             this.drawVerticalLine(x2, Render.colors.secondary);
 
             // number of the line
-            this.drawText((-k * this.spacing).toString(), x1 - 5, this.center.y + 15, Render.colors.primary, 15);
-            this.drawText((k * this.spacing).toString(), x2 - 5, this.center.y + 15, Render.colors.primary, 15);
+            this.drawText((-k * this.spacing).toString(), x1 - 5 * this.ratio, this.center.y + 15 * this.ratio, Render.colors.primary, 15);
+            this.drawText((k * this.spacing).toString(), x2 - 5 * this.ratio, this.center.y + 15 * this.ratio, Render.colors.primary, 15);
         }
         // thinner line
         for(
@@ -326,7 +342,7 @@ export default class Render {
     private drawLine(begin: Point, end: Point, color: string, width: number = 1): void {
         this.ctx.beginPath();
         this.ctx.strokeStyle = color;
-        this.ctx.lineWidth = width;
+        this.ctx.lineWidth = width * this.ratio;
         this.ctx.moveTo(begin.x, begin.y);
         this.ctx.lineTo(end.x, end.y);
         this.ctx.stroke();
@@ -342,7 +358,7 @@ export default class Render {
     }
 
     private drawText(text: string, x: number, y: number, color: string, fontSize: number = 20): void {
-        this.ctx.font = fontSize +"px Ubuntu-Regular";
+        this.ctx.font = (fontSize * this.ratio) +"px Ubuntu-Regular";
         this.ctx.fillStyle = color;
         this.ctx.fillText(text, x, y);
     }
@@ -415,14 +431,14 @@ export default class Render {
         this.refreshAxisLine();
 
         // O point
-        this.drawText("O", this.center.x - 20, this.center.y + 20, Render.colors.primary, 17);
+        this.drawText("O", this.center.x - 20 * this.ratio, this.center.y + 20 * this.ratio, Render.colors.primary, 17);
 
         // Mouse point
         var mouseCoordinatesPoint = this.screenToCoordinates(this.mousePoint);
-        this.drawText("("+ mouseCoordinatesPoint.x.toFixed(2) +", "+ mouseCoordinatesPoint.y.toFixed(2) +")", !this.isMobile ? 30 : 50, 30, Render.colors.primary, 15);
+        this.drawText("("+ mouseCoordinatesPoint.x.toFixed(2) +", "+ mouseCoordinatesPoint.y.toFixed(2) +")", (!this.isMobile ? 30 : 50) * this.ratio, 30 * this.ratio, Render.colors.primary, 15);
         
         // Is mouse down
-        this.drawText(this.mouseDown ? "Moving" : "", this.canvas.width - 80, 30, Render.colors.primary, 15);
+        this.drawText(this.mouseDown ? "Moving" : "", this.canvas.width - 80 * this.ratio, 30 * this.ratio, Render.colors.primary, 15);
 
         // Draw function images
         for(let i = 0; i < this.displayedPoints.length; i++) {

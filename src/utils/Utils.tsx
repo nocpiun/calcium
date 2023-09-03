@@ -10,15 +10,15 @@ export default class Utils {
         return document.getElementById(id) as E ?? document.body;
     }
 
-    public static getPixelRatio(ctx: any): number {
-        var backingStore = ctx.backingStorePixelRatio ||
-            ctx.webkitBackingStorePixelRatio ||
-            ctx.mozBackingStorePixelRatio ||
-            ctx.msBackingStorePixelRatio ||
-            ctx.oBackingStorePixelRatio ||
-            ctx.backingStorePixelRatio || 1;
-        return (self.devicePixelRatio || 1) / backingStore;
-    }
+    // public static getPixelRatio(ctx: any): number {
+    //     var backingStore = ctx.backingStorePixelRatio ||
+    //         ctx.webkitBackingStorePixelRatio ||
+    //         ctx.mozBackingStorePixelRatio ||
+    //         ctx.msBackingStorePixelRatio ||
+    //         ctx.oBackingStorePixelRatio ||
+    //         ctx.backingStorePixelRatio || 1;
+    //     return (self.devicePixelRatio || 1) / backingStore;
+    // }
 
     /** @see https://blog.csdn.net/crazyxiaoyuge/article/details/112189600 */
     public static getWindowConfig(): { width: number, height: number } {

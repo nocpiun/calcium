@@ -1,6 +1,5 @@
 /* eslint-disable no-restricted-globals */
 import Render from "./Render";
-import Utils from "../utils/Utils";
 
 const ctx: Worker = self as any;
 
@@ -13,9 +12,9 @@ ctx.addEventListener("message", (e) => {
 
     switch(req.type) {
         case "init":
-            var canvasCtx = req.canvas.getContext("2d")
-            renderer = new Render(req.canvas, canvasCtx, ctx, req.isDarkMode, req.isMobile);
-            init(req.canvas, canvasCtx);
+            var canvasCtx = req.canvas.getContext("2d");
+            renderer = new Render(req.canvas, canvasCtx, req.ratio, ctx, req.isDarkMode, req.isMobile);
+            init(canvasCtx, req.ratio);
             break;
         case "reset":
             reset();
@@ -56,11 +55,9 @@ ctx.addEventListener("message", (e) => {
     }
 });
 
-function init(canvas: OffscreenCanvas, ctx: CanvasRenderingContext2D) {
+function init(ctx: CanvasRenderingContext2D, ratio: number) {
     // Init ratio
-    const ratio = Utils.getPixelRatio(ctx);
-    canvas.width *= ratio;
-    canvas.height *= ratio;
+    ctx.scale(ratio, ratio);
 
     function render() {
         renderer.render();

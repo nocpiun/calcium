@@ -39,12 +39,22 @@ const Graphing: React.FC = memo(() => {
         if(!ctx) return;
 
         // Init size
-        canvas.width = Utils.getElem("display-frame").clientWidth;
-        canvas.height = Utils.getElem("display-frame").clientHeight;
+        const width = Utils.getElem("display-frame").clientWidth;
+        const height = Utils.getElem("display-frame").clientHeight;
+        canvas.style.width = width +"px";
+        canvas.style.height = height +"px";
+        canvas.width = width * window.devicePixelRatio;
+        canvas.height = height * window.devicePixelRatio;
 
         // Init worker
         var offscreenCanvas = new OffscreenCanvas(canvas.width, canvas.height);
-        workerRef.current.postMessage({ type: "init", canvas: offscreenCanvas, isDarkMode: Utils.isDarkMode(), isMobile: Utils.isMobile() }, [offscreenCanvas]);
+        workerRef.current.postMessage({
+            type: "init",
+            canvas: offscreenCanvas,
+            ratio: window.devicePixelRatio,
+            isDarkMode: Utils.isDarkMode(),
+            isMobile: Utils.isMobile()
+        }, [offscreenCanvas]);
         workerRef.current.onmessage = (e: {data: any}) => {
             switch(e.data.type) {
                 case "render":
@@ -115,7 +125,7 @@ const Graphing: React.FC = memo(() => {
             e.preventDefault();
 
             var direction;
-            if(touchStart.clientX > e.changedTouches[0].clientX + 5) {
+            if(touchStart.clientX > e.changedTouches[0].clientX) {
                 direction = MouseDirection.LEFT;
             } else {
                 direction = MouseDirection.RIGHT;
