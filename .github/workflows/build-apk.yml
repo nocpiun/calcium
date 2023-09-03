@@ -58,5 +58,5 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
-          name: calcium
+          name: calcium-apk
           path: ./android/app/build/outputs/apk/debug/app-debug.apk
