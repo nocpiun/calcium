@@ -46,7 +46,7 @@ export const functions: Map<string, MathFunction> = new Map([
     ["exp",          [(x) => Compute.safePow(Math.E, x),                     1]],
     ["text{floor}",  [(x) => Math.floor(x),                                  1]],
     ["text{round}",  [(x) => Math.round(x),                                  1]],
-    ["text{rand}", [(a, b) => Math.floor(Math.random() * (b - a + 1) + a), 2]],
+    ["text{rand}",   [(a, b) => Math.floor(Math.random() * (b - a + 1) + a), 2]],
 ]);
 
 export const constants: Map<string, number> = new Map([
