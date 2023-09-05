@@ -87,4 +87,8 @@ export default class List<T = any> {
     public isEmpty(): boolean {
         return this.length === 0;
     }
+
+    public getLast(): T {
+        return this.value[this.length - 1];
+    }
 }

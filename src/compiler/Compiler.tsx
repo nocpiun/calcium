@@ -16,7 +16,7 @@ import IntToken from "./token/IntToken";
 import ProdToken from "./token/ProdToken";
 import VariableToken from "./token/VariableToken";
 
-import { functions, constants } from "../global";
+import { functions } from "../global";
 import { Operator, NumberSys } from "../types";
 import type { MathFunction } from "../types";
 
@@ -135,12 +135,7 @@ export default class Compiler {
                         (root.getLength() > 0 && root.getLastChild().type === TokenType.NUMBER) // Process something like `2^2*a`
                     ) { 
                         root.add(new OperatorToken(Operator.MUL, false));
-
-                        const varName = symbol;
-                        symbol = this.variables.get(varName) ?? (constants.get(varName) ?? "NaN").toString();
-                        symbol !== "NaN"
-                        ? root.add(NumberToken.create(symbol, this.numberSys))
-                        : root.add(new VariableToken(varName));
+                        root.add(new VariableToken(symbol));
 
                         // pow
                         const di = this.raw[i + 1] === "!" ? 2 : 1;
@@ -149,11 +144,7 @@ export default class Compiler {
                             i++;
                         }
                     } else {
-                        const varName = symbol;
-                        symbol = this.variables.get(varName) ?? (constants.get(varName) ?? "NaN").toString();
-                        symbol !== "NaN"
-                        ? root.add(NumberToken.create(symbol, this.numberSys))
-                        : root.add(new VariableToken(varName));
+                        root.add(new VariableToken(symbol));
                     }
                     continue;
                 }
@@ -325,15 +316,26 @@ export default class Compiler {
             } else if(symbol[0] === "^") { // pow
 
                 var exponential = parseInt(symbol[1]);
-                root.getLastChild<NumberToken>().setValue(Compute.safePow(root.getLastChild().value, exponential));
+                var poweredToken = root.getLastChild<NumberToken | VariableToken>();
+                poweredToken instanceof VariableToken
+                ? poweredToken.exponential = exponential
+                : poweredToken.setValue(Compute.safePow(root.getLastChild().value, exponential));
 
             } else if(symbol[0] === "!") { // factorial
 
-                var lastToken = root.getLastChild();
-                if(!(lastToken instanceof NumberToken)) continue;
+                var factorialToken = root.getLastChild();
+                if(factorialToken instanceof VariableToken) {
+                    factorialToken.factorial = {
+                        first: factorialToken.exponential === undefined
+                    };
 
-                var value = Compute.factorial(lastToken.value);
-                lastToken.setValue(value);
+                    continue;
+                }
+
+                if(!(factorialToken instanceof NumberToken)) continue;
+
+                var value = Compute.factorial(factorialToken.value);
+                factorialToken.setValue(value);
 
                 // pow
                 if(i + 1 < this.raw.length && this.raw[i + 1][0] === "^") {
@@ -359,7 +361,7 @@ export default class Compiler {
     public compile(): NumberSymbol {
         var tokenized = this.tokenize();
         
-        if(tokenized && !this.hasError) return new Evaluator(tokenized).evaluate().toString();
+        if(tokenized && !this.hasError) return new Evaluator(tokenized, this.variables).evaluate().toString();
         return "NaN";
     }
 

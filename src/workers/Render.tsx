@@ -353,17 +353,19 @@ export default class Render {
         this.ctx.fillText(text, x, y);
     }
 
-    private drawCompleteFunction(rawText: string): void {
+    private drawCompleteFunction(): void {
+        var root = this.functionList.getLast();
+
         var unitPx = this.scale * this.spacing;
 
         var beginX = -this.center.x / unitPx;
         var endX = (this.canvas.width - this.center.x) / unitPx;
 
         for(let x1 = beginX; x1 <= endX; x1 += delta) {
-            var y1 = parseFloat(new Compiler(rawText.split(" "), new Map([["x", x1.toString()]])).compile());
+            var y1 = new Evaluator(root, new Map([["x", x1.toString()]])).evaluate();
 
             var x2 = x1 + delta;
-            var y2 = parseFloat(new Compiler(rawText.split(" "), new Map([["x", x2.toString()]])).compile());
+            var y2 = new Evaluator(root, new Map([["x", x2.toString()]])).evaluate();
 
             this.displayedPoints.add([new Point(x1, y1), new Point(x2, y2)]);
         }
@@ -441,7 +443,7 @@ export default class Render {
 
     public registerFunction(rawText: string): void {
         this.functionList.add(new Compiler(rawText.split(" ")).tokenize() ?? new RootToken([]));
-        this.drawCompleteFunction(rawText);
+        this.drawCompleteFunction();
     }
 
     public unregisterFunction(index: number): void {

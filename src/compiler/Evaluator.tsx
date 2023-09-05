@@ -15,6 +15,7 @@ import FunctionToken from "./token/FunctionToken";
 import DynamicToken from "./token/DynamicToken";
 import VariableToken from "./token/VariableToken";
 
+import { constants } from "../global";
 import { NumberSys, Operator } from "../types";
 
 export default class Evaluator {
@@ -198,6 +199,26 @@ export default class Evaluator {
                         NumberSys.DEC
                     ));
                     break;
+                case TokenType.VARIABLE:
+                    var varToken = token as VariableToken;
+                    var varName = varToken.name;
+                    var varValue = parseFloat(this.variables.get(varName) ?? "") ?? constants.get(varName) ?? "NaN";
+
+                    if(!varToken.factorial) {
+                        numbers.add(new NumberToken(
+                            Compute.safePow(varValue, exponential),
+                            NumberSys.DEC
+                        ));
+                        continue;
+                    }
+
+                    numbers.add(new NumberToken(
+                        varToken.factorial?.first
+                        ? Compute.safePow(Compute.factorial(varValue), exponential)
+                        : Compute.factorial(Compute.safePow(varValue, exponential)),
+                        NumberSys.DEC
+                    ));
+                    break;
                 case TokenType.OPERATOR:
                     operators.add(token as OperatorToken);
                     break;
@@ -244,11 +265,6 @@ export default class Evaluator {
                         Compute.safePow(value, exponential),
                         NumberSys.DEC
                     ));
-                    break;
-                case TokenType.VARIABLE:
-                    var varValue = this.variables.get((token as VariableToken).name) ?? "NaN";
-                    (token as NumberToken).value = parseFloat(varValue);
-                    numbers.add(token as NumberToken);
                     break;
             }
         }

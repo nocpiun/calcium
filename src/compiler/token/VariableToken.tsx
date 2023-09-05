@@ -1,14 +1,16 @@
-import { NumberSys } from "../../types";
-import NumberToken from "./NumberToken";
+import PowerableToken from "./PowerableToken";
 import { TokenType } from "./Token";
 
-export default class VariableToken extends NumberToken {
+export default class VariableToken extends PowerableToken<void> {
     public type: TokenType = TokenType.VARIABLE;
 
     public name: string;
+    public factorial?: {
+        first: boolean
+    };
 
     public constructor(name: string) {
-        super(NaN, NumberSys.DEC);
+        super();
 
         this.name = name;
     }
