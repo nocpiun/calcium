@@ -15,7 +15,6 @@ import FunctionToken from "@/compiler/token/FunctionToken";
 import DynamicToken from "@/compiler/token/DynamicToken";
 import VariableToken from "@/compiler/token/VariableToken";
 
-import { constants } from "@/global";
 import { NumberSys, Operator } from "@/types";
 
 export default class Evaluator {
@@ -202,7 +201,7 @@ export default class Evaluator {
                 case TokenType.VARIABLE:
                     var varToken = token as VariableToken;
                     var varName = varToken.name;
-                    var varValue = parseFloat(this.variables.get(varName) ?? "") ?? constants.get(varName) ?? "NaN";
+                    var varValue = parseFloat(this.variables.get(varName) ?? "");
 
                     if(!varToken.factorial) {
                         numbers.add(new NumberToken(

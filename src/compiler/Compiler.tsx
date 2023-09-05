@@ -16,7 +16,7 @@ import IntToken from "@/compiler/token/IntToken";
 import ProdToken from "@/compiler/token/ProdToken";
 import VariableToken from "@/compiler/token/VariableToken";
 
-import { functions } from "@/global";
+import { functions, constants } from "@/global";
 import { Operator, NumberSys } from "@/types";
 import type { MathFunction } from "@/types";
 
@@ -135,7 +135,10 @@ export default class Compiler {
                         (root.getLength() > 0 && root.getLastChild().type === TokenType.NUMBER) // Process something like `2^2*a`
                     ) { 
                         root.add(new OperatorToken(Operator.MUL, false));
-                        root.add(new VariableToken(symbol));
+                        
+                        Is.constant(symbol)
+                        ? root.add(new NumberToken(constants.get(symbol) ?? NaN, NumberSys.DEC))
+                        : root.add(new VariableToken(symbol));
 
                         // pow
                         const di = this.raw[i + 1] === "!" ? 2 : 1;
@@ -144,7 +147,9 @@ export default class Compiler {
                             i++;
                         }
                     } else {
-                        root.add(new VariableToken(symbol));
+                        Is.constant(symbol)
+                        ? root.add(new NumberToken(constants.get(symbol) ?? NaN, NumberSys.DEC))
+                        : root.add(new VariableToken(symbol));
                     }
                     continue;
                 }
