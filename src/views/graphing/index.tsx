@@ -21,16 +21,16 @@ import Emitter from "@/utils/Emitter";
 import Logger from "@/utils/Logger";
 import { MovingDirection } from "@/types";
 
-import GraphingWorker from "@/workers/graphing.worker.ts";
+// import GraphingWorker from "@/workers/graphing.worker.ts";
 
 const Graphing: React.FC = memo(() => {
     const { setFunctionList } = useContext(MainContext);
     const [reloadTrigger, reloader] = useState(0);
-    const workerRef = useRef<GraphingWorker | null>(null);
+    const workerRef = useRef<Worker | null>(null);
 
     useEffect(() => {
         // Create worker
-        workerRef.current = new GraphingWorker();
+        workerRef.current = new Worker(new URL("@/workers/graphing.worker.ts", import.meta.url));
         // if(!workerRef.current) return;
 
         // Get canvas object

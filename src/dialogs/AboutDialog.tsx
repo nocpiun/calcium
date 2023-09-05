@@ -48,7 +48,6 @@ const dependencies: [string, string][] = [
     ["file-loader@6.2.0", "webpack-contrib/file-loader"],
     ["resolve-url-loader@4.0.0", "bholloway/resolve-url-loader"],
     ["source-map-loader@3.0.0", "webpack-contrib/source-map-loader"],
-    ["worker-loader@3.0.8", "webpack-contrib/worker-loader"],
     ["@babel/core@7.16.0", "https://babeljs.io"],
     ["babel-loader@8.2.3", "https://babeljs.io"],
     ["less@4.1.3", "https://lesscss.org"],
