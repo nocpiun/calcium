@@ -1,5 +1,5 @@
-import type { MathFunction } from "../../types";
-import Token, { TokenType } from "./Token";
+import type { MathFunction } from "@/types";
+import Token, { TokenType } from "@/compiler/token/Token";
 
 export default class FunctionToken extends Token<void> {
     public readonly type: TokenType = TokenType.FUNCTION;

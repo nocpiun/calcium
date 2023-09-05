@@ -1,4 +1,4 @@
-import Compute from "./Compute";
+import Compute from "@/compiler/Compute";
 
 /** @see https://www.bbsmax.com/A/qVde1Y9AdP/ */
 export default class Float {

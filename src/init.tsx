@@ -1,5 +1,5 @@
-import Logger from "./utils/Logger";
-import { version } from "./global";
+import Logger from "@/utils/Logger";
+import { version } from "@/global";
 
 // To avoid warning message from katex
 console.warn = () => {};

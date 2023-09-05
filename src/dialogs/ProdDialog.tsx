@@ -8,10 +8,10 @@ import React, {
 } from "react";
 import { BlockMath, InlineMath } from "react-katex";
 
-import Emitter from "../utils/Emitter";
-import type { PropsWithRef } from "../types";
+import Emitter from "@/utils/Emitter";
+import type { PropsWithRef } from "@/types";
 
-import Dialog from "../components/Dialog";
+import Dialog from "@/components/Dialog";
 
 interface ProdDialogProps extends PropsWithRef<Dialog> {
     

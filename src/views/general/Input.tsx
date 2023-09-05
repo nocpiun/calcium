@@ -1,9 +1,9 @@
 import React, { memo } from "react";
 import { useContextMenu, ContextMenuItem, ContextMenuDivider } from "use-context-menu";
 
-import InputButton from "../../components/InputButton";
+import InputButton from "@/components/InputButton";
 
-import Emitter from "../../utils/Emitter";
+import Emitter from "@/utils/Emitter";
 
 const Input: React.FC = memo(() => {
     const { contextMenu, onContextMenu } = useContextMenu(

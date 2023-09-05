@@ -1,5 +1,5 @@
-import ChildrenToken from "./ChildrenToken";
-import Token, { TokenType } from "./Token";
+import ChildrenToken from "@/compiler/token/ChildrenToken";
+import Token, { TokenType } from "@/compiler/token/Token";
 
 export default class AbsToken extends ChildrenToken {
     public readonly type: TokenType = TokenType.ABS;

@@ -1,7 +1,7 @@
-import DynamicToken from "./DynamicToken";
-import { TokenType } from "./Token";
-import Compiler from "../Compiler";
-import { NumberSys } from "../../types";
+import DynamicToken from "@/compiler/token/DynamicToken";
+import { TokenType } from "@/compiler/token/Token";
+import Compiler from "@/compiler/Compiler";
+import { NumberSys } from "@/types";
 
 export default class IntToken extends DynamicToken {
     public type: TokenType = TokenType.INT;

@@ -4,19 +4,19 @@ import React, {
     useContext
 } from "react";
 
-import useEmitter from "../../hooks/useEmitter";
+import useEmitter from "@/hooks/useEmitter";
 
-import BarItem from "./BarItem";
-import Dialog from "../Dialog";
-import AboutDialog from "../../dialogs/AboutDialog";
-import ShortcutDialog from "../../dialogs/ShortcutDialog";
-import ConvertingDialog from "../../dialogs/ConvertingDialog";
+import BarItem from "@/components/statusbar/BarItem";
+import Dialog from "@/components/Dialog";
+import AboutDialog from "@/dialogs/AboutDialog";
+import ShortcutDialog from "@/dialogs/ShortcutDialog";
+import ConvertingDialog from "@/dialogs/ConvertingDialog";
 
-import Emitter from "../../utils/Emitter";
-import { version } from "../../global";
-import { Mode } from "../../types";
+import Emitter from "@/utils/Emitter";
+import { version } from "@/global";
+import { Mode } from "@/types";
 
-import MainContext from "../../contexts/MainContext";
+import MainContext from "@/contexts/MainContext";
 
 const StatusBar: React.FC = () => {
     const { mode } = useContext(MainContext);

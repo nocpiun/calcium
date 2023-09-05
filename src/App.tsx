@@ -1,22 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { AliveScope } from "react-activation";
 
-import { shortcuts } from "./global";
-import { Mode, RenderedFunction } from "./types";
-import Utils from "./utils/Utils";
+import { shortcuts } from "@/global";
+import { Mode, RenderedFunction } from "@/types";
+import Utils from "@/utils/Utils";
 
 // Layout
 import "katex/dist/katex.min.css";
 import "use-context-menu/styles.css";
-import "./style/layout.less";
+import "@/style/layout.less";
 
 // Components
-import Calculator from "./views/Calculator";
-import Sidebar from "./components/sidebar";
-import StatusBar from "./components/statusbar";
+import Calculator from "@/views/Calculator";
+import Sidebar from "@/components/sidebar";
+import StatusBar from "@/components/statusbar";
 
 // Contexts
-import MainContext from "./contexts/MainContext";
+import MainContext from "@/contexts/MainContext";
 
 const App: React.FC = () => {
 	const [mode, setMode] = useState<Mode>(Mode.GENERAL);

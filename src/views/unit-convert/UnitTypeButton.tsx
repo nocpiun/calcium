@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 
-import useEmitter from "../../hooks/useEmitter";
+import useEmitter from "@/hooks/useEmitter";
 
-import Emitter from "../../utils/Emitter";
+import Emitter from "@/utils/Emitter";
 
 interface UnitTypeButtonProps {
     name: string

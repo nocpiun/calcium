@@ -1,8 +1,8 @@
 import React from "react";
 
-import type { UnitType, UnitInfo } from "../../types";
-import unitsData from "./unitsData.json";
-import UnitItem from "./UnitItem";
+import type { UnitType, UnitInfo } from "@/types";
+import unitsData from "@/views/unit-convert/unitsData.json";
+import UnitItem from "@/views/unit-convert/UnitItem";
 
 interface UnitsPageType {
     id: string

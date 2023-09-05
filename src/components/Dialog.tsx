@@ -1,8 +1,8 @@
 import React, { Component, ReactElement } from "react";
 import { createPortal } from "react-dom";
 
-import Utils from "../utils/Utils";
-import type { PropsWithChildren } from "../types";
+import Utils from "@/utils/Utils";
+import type { PropsWithChildren } from "@/types";
 
 interface DialogProps extends PropsWithChildren {
     title: string

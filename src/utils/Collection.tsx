@@ -1,4 +1,4 @@
-import List from "./List";
+import List from "@/utils/List";
 
 /**
  * A type of list that doesn't include two same items

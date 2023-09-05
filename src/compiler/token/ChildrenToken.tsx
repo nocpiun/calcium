@@ -1,5 +1,5 @@
-import PowerableToken from "./PowerableToken";
-import Token from "./Token";
+import PowerableToken from "@/compiler/token/PowerableToken";
+import Token from "@/compiler/token/Token";
 
 export default abstract class ChildrenToken extends PowerableToken<Token[]> {
     public getChild<T extends Token = Token>(index: number): T {

@@ -1,9 +1,9 @@
 import React, { memo } from "react";
 
-import KeypadTab from "./KeypadTab";
-import KeypadSection from "./KeypadSection";
+import KeypadTab from "@/components/KeypadTab";
+import KeypadSection from "@/components/KeypadSection";
 
-import InputButton from "./InputButton";
+import InputButton from "@/components/InputButton";
 
 interface MobileInputProps {
     isGraphingMode?: boolean

@@ -1,9 +1,9 @@
 /* eslint-disable no-restricted-globals */
 import React from "react";
 
-import { NumberSys } from "../types";
-import Transformer from "../compiler/Transformer";
-import Is from "../compiler/Is";
+import { NumberSys } from "@/types";
+import Transformer from "@/compiler/Transformer";
+import Is from "@/compiler/Is";
 
 export default class Utils {
     public static getElem<E extends HTMLElement = HTMLElement>(id: string): E {

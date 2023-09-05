@@ -1,6 +1,6 @@
 import React from "react";
 
-import { StateSetter, Mode, RenderedFunction } from "../types";
+import { StateSetter, Mode, RenderedFunction } from "@/types";
 
 interface MainContextType {
     mode: Mode

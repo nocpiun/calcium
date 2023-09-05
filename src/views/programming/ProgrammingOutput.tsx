@@ -2,26 +2,26 @@ import React, { useState, useRef, useEffect, useCallback } from "react";
 import { BlockMath } from "react-katex";
 import { useContextMenu, ContextMenuItem } from "use-context-menu";
 
-import { HistoryItemInfo } from "../../components/sidebar/History";
+import { HistoryItemInfo } from "@/components/sidebar/History";
 
-import { errorText } from "../../global";
-import { NumberSys } from "../../types";
-import Emitter from "../../utils/Emitter";
-import Utils from "../../utils/Utils";
-import Compiler from "../../compiler/Compiler";
-import Is from "../../compiler/Is";
-import Transformer from "../../compiler/Transformer";
-import Logger from "../../utils/Logger";
-import { RecordType } from "../../types";
+import { errorText } from "@/global";
+import { NumberSys } from "@/types";
+import Emitter from "@/utils/Emitter";
+import Utils from "@/utils/Utils";
+import Compiler from "@/compiler/Compiler";
+import Is from "@/compiler/Is";
+import Transformer from "@/compiler/Transformer";
+import Logger from "@/utils/Logger";
+import { RecordType } from "@/types";
 
-import useEmitter from "../../hooks/useEmitter";
-import useEaster from "../../hooks/useEaster";
+import useEmitter from "@/hooks/useEmitter";
+import useEaster from "@/hooks/useEaster";
 
 import NumberBox from "./NumberBox";
-import InputBox, { cursor } from "../../components/InputBox";
-import SidebarOpener from "../../components/SidebarOpener";
-import type Dialog from "../../components/Dialog";
-import FunctionDialog from "../../dialogs/FunctionDialog";
+import InputBox, { cursor } from "@/components/InputBox";
+import SidebarOpener from "@/components/SidebarOpener";
+import type Dialog from "@/components/Dialog";
+import FunctionDialog from "@/dialogs/FunctionDialog";
 
 const ProgrammingOutput: React.FC = () => {
     const [outputContent, setOutputContent] = useState<string>("");

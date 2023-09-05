@@ -1,6 +1,6 @@
 import React, { ReactElement, DOMAttributes } from "react";
 
-import { PropsWithChildren } from "../../types";
+import { PropsWithChildren } from "@/types";
 
 interface SidebarPageProps extends PropsWithChildren {
     id: string

@@ -1,5 +1,5 @@
-import Utils from "./Utils";
-import Logger from "./Logger";
+import Utils from "@/utils/Utils";
+import Logger from "@/utils/Logger";
 
 export default class List<T = any> {
     public value: T[];

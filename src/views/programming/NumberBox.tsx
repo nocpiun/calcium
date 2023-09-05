@@ -1,8 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from "react";
 
-import type { NumberSys } from "../../types";
-import Emitter from "../../utils/Emitter";
+import type { NumberSys } from "@/types";
+import Emitter from "@/utils/Emitter";
 
 interface NumberBoxProps {
     name: string

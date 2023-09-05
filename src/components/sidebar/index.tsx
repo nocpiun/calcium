@@ -2,22 +2,22 @@
 import React, { useState, useEffect, useContext } from "react";
 import KeepAlive from "react-activation";
 
-import ModeButton from "./ModeButton";
-import Toggle from "../Toggle";
-import History from "./History";
-import FunctionList from "./FunctionList";
+import ModeButton from "@/components/sidebar/ModeButton";
+import Toggle from "@/components/Toggle";
+import History from "@/components/sidebar/History";
+import FunctionList from "@/components/sidebar/FunctionList";
 
-import { Mode } from "../../types";
-import { version } from "../../global";
-import Utils from "../../utils/Utils";
-import Storage from "../../utils/Storage";
-import Emitter from "../../utils/Emitter";
+import { Mode } from "@/types";
+import { version } from "@/global";
+import Utils from "@/utils/Utils";
+import Storage from "@/utils/Storage";
+import Emitter from "@/utils/Emitter";
 
-import MainContext from "../../contexts/MainContext";
+import MainContext from "@/contexts/MainContext";
 
-import GeneralIcon from "../../icons/general_mode.svg";
-import GraphingIcon from "../../icons/graphing_mode.svg";
-import ProgrammingIcon from "../../icons/programming_mode.svg";
+import GeneralIcon from "@/icons/general_mode.svg";
+import GraphingIcon from "@/icons/graphing_mode.svg";
+import ProgrammingIcon from "@/icons/programming_mode.svg";
 
 const Sidebar: React.FC = () => {
     const { mode } = useContext(MainContext);

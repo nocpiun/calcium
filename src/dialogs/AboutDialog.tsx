@@ -1,11 +1,11 @@
 import React, { ReactElement, forwardRef, useState, useId } from "react";
 import { InlineMath } from "react-katex";
 
-import type { PropsWithRef } from "../types";
-import { version } from "../global";
+import type { PropsWithRef } from "@/types";
+import { version } from "@/global";
 
-import Dialog from "../components/Dialog";
-import IndialogPage from "../components/IndialogPage";
+import Dialog from "@/components/Dialog";
+import IndialogPage from "@/components/IndialogPage";
 
 const licenseContent = `MIT License
 

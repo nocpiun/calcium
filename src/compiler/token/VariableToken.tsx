@@ -1,5 +1,5 @@
-import PowerableToken from "./PowerableToken";
-import { TokenType } from "./Token";
+import PowerableToken from "@/compiler/token/PowerableToken";
+import { TokenType } from "@/compiler/token/Token";
 
 export default class VariableToken extends PowerableToken<void> {
     public type: TokenType = TokenType.VARIABLE;

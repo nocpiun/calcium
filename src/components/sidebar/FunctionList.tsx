@@ -9,23 +9,23 @@ import { createPortal } from "react-dom";
 import { InlineMath } from "react-katex";
 import { useContextMenu, ContextMenuItem, ContextMenuDivider } from "use-context-menu";
 
-import useEmitter from "../../hooks/useEmitter";
+import useEmitter from "@/hooks/useEmitter";
 
-import SidebarPage from "./SidebarPage";
-import InputBox, { cursor } from "../InputBox";
-import FunctionListItem from "./FunctionListItem";
-import MobileInput from "../MobileInput";
+import SidebarPage from "@/components/sidebar/SidebarPage";
+import InputBox, { cursor } from "@/components/InputBox";
+import FunctionListItem from "@/components/sidebar/FunctionListItem";
+import MobileInput from "@/components/MobileInput";
 
-import Is from "../../compiler/Is";
-import Emitter from "../../utils/Emitter";
-import Logger from "../../utils/Logger";
-import Utils from "../../utils/Utils";
-import { acTable } from "../../global";
-import { Mode } from "../../types";
+import Is from "@/compiler/Is";
+import Emitter from "@/utils/Emitter";
+import Logger from "@/utils/Logger";
+import Utils from "@/utils/Utils";
+import { acTable } from "@/global";
+import { Mode } from "@/types";
 
-import MainContext from "../../contexts/MainContext";
+import MainContext from "@/contexts/MainContext";
 
-import IdReducer from "../../reducers/IdReducer";
+import IdReducer from "@/reducers/IdReducer";
 
 const maxFunctionAmount: number = 50;
 

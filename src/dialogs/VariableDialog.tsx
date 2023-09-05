@@ -1,10 +1,10 @@
 import React, { forwardRef, useId } from "react";
 import { InlineMath } from "react-katex";
 
-import { constants } from "../global";
-import type { PropsWithRef } from "../types";
+import { constants } from "@/global";
+import type { PropsWithRef } from "@/types";
 
-import Dialog from "../components/Dialog";
+import Dialog from "@/components/Dialog";
 
 interface VariableDialogProps extends PropsWithRef<Dialog> {
     variableList: Map<string, string>

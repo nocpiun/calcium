@@ -1,16 +1,16 @@
 import React, { useContext } from "react";
 
-import { Mode } from "../types";
+import { Mode } from "@/types";
 
-import Input from "./general/Input";
-import MobileInput from "../components/MobileInput";
-import ProgrammingInput from "./programming/ProgrammingInput";
-import MobileProgrammingInput from "../components/MobileProgrammingInput";
-import Output from "./general/Output";
-import ProgrammingOutput from "./programming/ProgrammingOutput";
-import Graphing from "./graphing";
+import Input from "@/views/general/Input";
+import MobileInput from "@/components/MobileInput";
+import ProgrammingInput from "@/views/programming/ProgrammingInput";
+import MobileProgrammingInput from "@/components/MobileProgrammingInput";
+import Output from "@/views/general/Output";
+import ProgrammingOutput from "@/views/programming/ProgrammingOutput";
+import Graphing from "@/views/graphing";
 
-import MainContext from "../contexts/MainContext";
+import MainContext from "@/contexts/MainContext";
 
 const Calculator: React.FC = () => {
     const { mode } = useContext(MainContext);

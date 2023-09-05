@@ -1,9 +1,9 @@
 import ReactDOM from "react-dom/client";
 
-import App from "./App";
+import App from "@/App";
 
 // Init the App
-import "./init";
+import "@/init";
 
 // Render the App
 const root = ReactDOM.createRoot(

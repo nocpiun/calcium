@@ -1,4 +1,4 @@
-import type { IdReducerStateType, IdReducerActionType } from "../types";
+import type { IdReducerStateType, IdReducerActionType } from "@/types";
 
 const IdReducer = (state: IdReducerStateType, action: IdReducerActionType) => {
     switch(action.type) {

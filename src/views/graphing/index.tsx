@@ -10,18 +10,18 @@ import { useContextMenu, ContextMenuItem } from "use-context-menu";
 import download from "downloadjs";
 import * as Tone from "tone";
 
-import SidebarOpener from "../../components/SidebarOpener.tsx";
+import SidebarOpener from "@/components/SidebarOpener.tsx";
 
-import MainContext from "../../contexts/MainContext";
+import MainContext from "@/contexts/MainContext";
 
-import useEmitter from "../../hooks/useEmitter";
+import useEmitter from "@/hooks/useEmitter";
 
-import Utils from "../../utils/Utils";
-import Emitter from "../../utils/Emitter";
-import Logger from "../../utils/Logger";
-import { MovingDirection } from "../../types";
+import Utils from "@/utils/Utils";
+import Emitter from "@/utils/Emitter";
+import Logger from "@/utils/Logger";
+import { MovingDirection } from "@/types";
 
-import GraphingWorker from "../../workers/graphing.worker.ts";
+import GraphingWorker from "@/workers/graphing.worker.ts";
 
 const Graphing: React.FC = memo(() => {
     const { setFunctionList } = useContext(MainContext);

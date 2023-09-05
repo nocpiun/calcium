@@ -1,4 +1,4 @@
-import Compiler from "../compiler/Compiler";
+import Compiler from "@/compiler/Compiler";
 
 type VariableList = Map<string, string>;
 

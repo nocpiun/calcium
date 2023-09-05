@@ -1,13 +1,13 @@
 import React, { forwardRef, useState, useId } from "react";
 
-import UnitTypeButton from "../views/unit-convert/UnitTypeButton";
-import UnitsPage from "../views/unit-convert/UnitsPage";
+import UnitTypeButton from "@/views/unit-convert/UnitTypeButton";
+import UnitsPage from "@/views/unit-convert/UnitsPage";
 
-import useEmitter from "../hooks/useEmitter";
+import useEmitter from "@/hooks/useEmitter";
 
-import type { PropsWithRef, UnitType } from "../types";
-import Dialog from "../components/Dialog";
-import unitsData from "../views/unit-convert/unitsData.json";
+import type { PropsWithRef, UnitType } from "@/types";
+import Dialog from "@/components/Dialog";
+import unitsData from "@/views/unit-convert/unitsData.json";
 
 interface ConvertingDialogProps extends PropsWithRef<Dialog> {
     

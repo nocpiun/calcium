@@ -1,5 +1,5 @@
-import Is from "./Is";
-import Utils from "../utils/Utils";
+import Is from "@/compiler/Is";
+import Utils from "@/utils/Utils";
 
 export default class Compute {
     /** @see https://www.cnblogs.com/jialuchun/p/6559422.html */

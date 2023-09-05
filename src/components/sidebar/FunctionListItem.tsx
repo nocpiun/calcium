@@ -3,9 +3,9 @@ import { InlineMath } from "react-katex";
 import { ReactSVG } from "react-svg";
 import { useContextMenu, ContextMenuItem } from "use-context-menu";
 
-import Emitter from "../../utils/Emitter";
+import Emitter from "@/utils/Emitter";
 
-import removeIcon from "../../icons/remove.svg";
+import removeIcon from "@/icons/remove.svg";
 
 interface ListItemProps {
     id: number

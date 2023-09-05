@@ -6,14 +6,14 @@ import React, {
 } from "react";
 import { useContextMenu, ContextMenuItem } from "use-context-menu";
 
-import SidebarPage from "./SidebarPage";
-import HistoryItem from "./HistoryItem";
+import SidebarPage from "@/components/sidebar/SidebarPage";
+import HistoryItem from "@/components/sidebar/HistoryItem";
 
-import Emitter from "../../utils/Emitter";
-import Utils from "../../utils/Utils";
-import { NumberSys, RecordType } from "../../types";
+import Emitter from "@/utils/Emitter";
+import Utils from "@/utils/Utils";
+import { NumberSys, RecordType } from "@/types";
 
-import IdReducer from "../../reducers/IdReducer";
+import IdReducer from "@/reducers/IdReducer";
 
 export interface HistoryItemInfo {
     id: number

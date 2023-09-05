@@ -1,5 +1,5 @@
 /* eslint-disable no-restricted-globals */
-import Render from "./Render";
+import Render from "@/workers/Render";
 
 const ctx: Worker = self as any;
 

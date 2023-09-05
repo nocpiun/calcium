@@ -2,8 +2,8 @@
 import React, { useState, useEffect } from "react";
 import { InlineMath } from "react-katex";
 
-import { NumberSys } from "../types";
-import Emitter from "../utils/Emitter";
+import { NumberSys } from "@/types";
+import Emitter from "@/utils/Emitter";
 
 interface InputButtonProps {
     symbol: string

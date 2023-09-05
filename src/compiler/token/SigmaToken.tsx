@@ -1,7 +1,7 @@
-import { NumberSys } from "../../types";
-import Compiler from "../Compiler";
-import { TokenType } from "./Token";
-import DynamicToken from "./DynamicToken";
+import { NumberSys } from "@/types";
+import Compiler from "@/compiler/Compiler";
+import { TokenType } from "@/compiler/token/Token";
+import DynamicToken from "@/compiler/token/DynamicToken";
 
 export default class SigmaToken extends DynamicToken {
     public type: TokenType = TokenType.SIGMA;

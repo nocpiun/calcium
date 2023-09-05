@@ -1,9 +1,9 @@
 import React, { forwardRef, useId } from "react";
 
-import { shortcuts } from "../global";
-import type { PropsWithRef } from "../types";
+import { shortcuts } from "@/global";
+import type { PropsWithRef } from "@/types";
 
-import Dialog from "../components/Dialog";
+import Dialog from "@/components/Dialog";
 
 interface ShortcutDialogProps extends PropsWithRef<Dialog> {
     

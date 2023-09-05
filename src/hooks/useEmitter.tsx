@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect } from "react";
 
-import Emitter from "../utils/Emitter";
+import Emitter from "@/utils/Emitter";
 
 type EmitterInstance = [string, (...args: any[]) => any];
 

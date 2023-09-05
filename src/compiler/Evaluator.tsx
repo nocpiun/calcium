@@ -1,22 +1,22 @@
 /* eslint-disable @typescript-eslint/no-redeclare */
-import List from "../utils/List";
-import Float from "./Float";
-import Transformer from "./Transformer";
-import Compute from "./Compute";
+import List from "@/utils/List";
+import Float from "@/compiler/Float";
+import Transformer from "@/compiler/Transformer";
+import Compute from "@/compiler/Compute";
 
-import { TokenType } from "./token/Token";
-import PowerableToken from "./token/PowerableToken";
-import RootToken from "./token/RootToken";
-import NumberToken from "./token/NumberToken";
-import OperatorToken from "./token/OperatorToken";
-import BracketToken from "./token/BracketToken";
-import AbsToken from "./token/AbsToken";
-import FunctionToken from "./token/FunctionToken";
-import DynamicToken from "./token/DynamicToken";
-import VariableToken from "./token/VariableToken";
+import { TokenType } from "@/compiler/token/Token";
+import PowerableToken from "@/compiler/token/PowerableToken";
+import RootToken from "@/compiler/token/RootToken";
+import NumberToken from "@/compiler/token/NumberToken";
+import OperatorToken from "@/compiler/token/OperatorToken";
+import BracketToken from "@/compiler/token/BracketToken";
+import AbsToken from "@/compiler/token/AbsToken";
+import FunctionToken from "@/compiler/token/FunctionToken";
+import DynamicToken from "@/compiler/token/DynamicToken";
+import VariableToken from "@/compiler/token/VariableToken";
 
-import { constants } from "../global";
-import { NumberSys, Operator } from "../types";
+import { constants } from "@/global";
+import { NumberSys, Operator } from "@/types";
 
 export default class Evaluator {
     public token: RootToken;

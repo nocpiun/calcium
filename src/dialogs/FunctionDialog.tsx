@@ -1,10 +1,10 @@
 import React, { forwardRef, useId } from "react";
 import { InlineMath } from "react-katex";
 
-import { functions } from "../global";
-import type { PropsWithRef } from "../types";
+import { functions } from "@/global";
+import type { PropsWithRef } from "@/types";
 
-import Dialog from "../components/Dialog";
+import Dialog from "@/components/Dialog";
 
 interface FunctionDialogProps extends PropsWithRef<Dialog> {
     

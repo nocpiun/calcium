@@ -1,11 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect, useContext } from "react";
 
-import { Mode } from "../../types";
-import Utils from "../../utils/Utils";
-import Emitter from "../../utils/Emitter";
+import { Mode } from "@/types";
+import Utils from "@/utils/Utils";
+import Emitter from "@/utils/Emitter";
 
-import MainContext from "../../contexts/MainContext";
+import MainContext from "@/contexts/MainContext";
 
 interface ModeButtonProps {
     modeName: string

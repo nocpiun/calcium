@@ -2,9 +2,9 @@ import React from "react";
 import { InlineMath } from "react-katex";
 import { useContextMenu, ContextMenuItem, ContextMenuDivider } from "use-context-menu";
 
-import { HistoryItemInfo } from "./History";
+import { HistoryItemInfo } from "@/components/sidebar/History";
 
-import Emitter from "../../utils/Emitter";
+import Emitter from "@/utils/Emitter";
 
 const HistoryItem: React.FC<HistoryItemInfo> = (props) => {
     const handleClick = () => {

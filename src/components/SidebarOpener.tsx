@@ -1,10 +1,10 @@
 import React from "react";
 import { ReactSVG } from "react-svg";
 
-import Utils from "../utils/Utils";
-import Emitter from "../utils/Emitter";
+import Utils from "@/utils/Utils";
+import Emitter from "@/utils/Emitter";
 
-import listIcon from "../icons/list.svg";
+import listIcon from "@/icons/list.svg";
 
 const SidebarOpener: React.FC = () => {
     const handleOpenSidebar = () => {

@@ -1,9 +1,9 @@
-import Utils from "../../utils/Utils";
-import { NumberSys } from "../../types";
-import PowerableToken from "./PowerableToken";
-import { TokenType } from "./Token";
+import Utils from "@/utils/Utils";
+import { NumberSys } from "@/types";
+import PowerableToken from "@/compiler/token/PowerableToken";
+import { TokenType } from "@/compiler/token/Token";
 
-import Is from "../Is";
+import Is from "@/compiler/Is";
 
 export default class NumberToken extends PowerableToken<number> {
     public readonly type: TokenType = TokenType.NUMBER;

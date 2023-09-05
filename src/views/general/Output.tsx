@@ -2,27 +2,27 @@ import React, { useState, useRef, useCallback } from "react";
 import { BlockMath } from "react-katex";
 import { useContextMenu, ContextMenuItem } from "use-context-menu";
 
-import { HistoryItemInfo } from "../../components/sidebar/History";
+import { HistoryItemInfo } from "@/components/sidebar/History";
 
-import { errorText, acTable } from "../../global";
-import Emitter from "../../utils/Emitter";
-import Utils from "../../utils/Utils";
-import Compiler from "../../compiler/Compiler";
-import Is from "../../compiler/Is";
-import Logger from "../../utils/Logger";
-import { NumberSys, RecordType } from "../../types";
+import { errorText, acTable } from "@/global";
+import Emitter from "@/utils/Emitter";
+import Utils from "@/utils/Utils";
+import Compiler from "@/compiler/Compiler";
+import Is from "@/compiler/Is";
+import Logger from "@/utils/Logger";
+import { NumberSys, RecordType } from "@/types";
 
-import useEmitter from "../../hooks/useEmitter";
-import useEaster from "../../hooks/useEaster";
+import useEmitter from "@/hooks/useEmitter";
+import useEaster from "@/hooks/useEaster";
 
-import InputBox, { cursor } from "../../components/InputBox";
-import SidebarOpener from "../../components/SidebarOpener";
-import type Dialog from "../../components/Dialog";
-import VariableDialog from "../../dialogs/VariableDialog";
-import FunctionDialog from "../../dialogs/FunctionDialog";
-import SumDialog from "../../dialogs/SumDialog";
-import IntDialog from "../../dialogs/IntDialog";
-import ProdDialog from "../../dialogs/ProdDialog";
+import InputBox, { cursor } from "@/components/InputBox";
+import SidebarOpener from "@/components/SidebarOpener";
+import type Dialog from "@/components/Dialog";
+import VariableDialog from "@/dialogs/VariableDialog";
+import FunctionDialog from "@/dialogs/FunctionDialog";
+import SumDialog from "@/dialogs/SumDialog";
+import IntDialog from "@/dialogs/IntDialog";
+import ProdDialog from "@/dialogs/ProdDialog";
 
 const Output: React.FC = () => {
     const [outputContent, setOutputContent] = useState<string>("");

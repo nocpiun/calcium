@@ -2,10 +2,10 @@
 import React, { Component, ReactElement, DOMAttributes } from "react";
 import { BlockMath } from "react-katex";
 
-import Cursor from "./Cursor";
+import Cursor from "@/components/Cursor";
 
-import Utils from "../utils/Utils";
-import Emitter from "../utils/Emitter";
+import Utils from "@/utils/Utils";
+import Emitter from "@/utils/Emitter";
 
 interface InputBoxProps {
     ltr: boolean

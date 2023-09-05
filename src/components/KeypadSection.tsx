@@ -1,8 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from "react";
 
-import Emitter from "../utils/Emitter";
-import { PropsWithChildren } from "../types";
+import Emitter from "@/utils/Emitter";
+import { PropsWithChildren } from "@/types";
 
 interface KeypadPageProps extends PropsWithChildren {
     id: string

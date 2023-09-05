@@ -1,24 +1,24 @@
 /* eslint-disable @typescript-eslint/no-redeclare */
-import Evaluator from "./Evaluator";
-import Is from "./Is";
-import Compute from "./Compute";
+import Evaluator from "@/compiler/Evaluator";
+import Is from "@/compiler/Is";
+import Compute from "@/compiler/Compute";
 
-import Token, { TokenType } from "./token/Token";
-import PowerableToken from "./token/PowerableToken";
-import RootToken from "./token/RootToken";
-import NumberToken from "./token/NumberToken";
-import OperatorToken from "./token/OperatorToken";
-import BracketToken from "./token/BracketToken";
-import AbsToken from "./token/AbsToken";
-import FunctionToken from "./token/FunctionToken";
-import SigmaToken from "./token/SigmaToken";
-import IntToken from "./token/IntToken";
-import ProdToken from "./token/ProdToken";
-import VariableToken from "./token/VariableToken";
+import Token, { TokenType } from "@/compiler/token/Token";
+import PowerableToken from "@/compiler/token/PowerableToken";
+import RootToken from "@/compiler/token/RootToken";
+import NumberToken from "@/compiler/token/NumberToken";
+import OperatorToken from "@/compiler/token/OperatorToken";
+import BracketToken from "@/compiler/token/BracketToken";
+import AbsToken from "@/compiler/token/AbsToken";
+import FunctionToken from "@/compiler/token/FunctionToken";
+import SigmaToken from "@/compiler/token/SigmaToken";
+import IntToken from "@/compiler/token/IntToken";
+import ProdToken from "@/compiler/token/ProdToken";
+import VariableToken from "@/compiler/token/VariableToken";
 
-import { functions } from "../global";
-import { Operator, NumberSys } from "../types";
-import type { MathFunction } from "../types";
+import { functions } from "@/global";
+import { Operator, NumberSys } from "@/types";
+import type { MathFunction } from "@/types";
 
 export type NumberSymbol = string;
 

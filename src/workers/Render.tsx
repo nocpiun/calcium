@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-redeclare */
 /* eslint-disable no-self-assign */
-import Point from "./Point";
-import Compiler from "../compiler/Compiler";
-import Evaluator from "../compiler/Evaluator";
-import RootToken from "../compiler/token/RootToken";
+import Point from "@/workers/Point";
+import Compiler from "@/compiler/Compiler";
+import Evaluator from "@/compiler/Evaluator";
+import RootToken from "@/compiler/token/RootToken";
 
-import List from "../utils/List";
-import Collection from "../utils/Collection";
-import { MovingDirection, ZoomDirection } from "../types";
+import List from "@/utils/List";
+import Collection from "@/utils/Collection";
+import { MovingDirection, ZoomDirection } from "@/types";
 
 const delta: number = .01;
 

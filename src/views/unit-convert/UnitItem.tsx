@@ -1,11 +1,11 @@
 import React, { useRef } from "react";
 
-import Float from "../../compiler/Float";
+import Float from "@/compiler/Float";
 
-import type { UnitType, UnitInfo } from "../../types";
-import Emitter from "../../utils/Emitter";
+import type { UnitType, UnitInfo } from "@/types";
+import Emitter from "@/utils/Emitter";
 
-import useEmitter from "../../hooks/useEmitter";
+import useEmitter from "@/hooks/useEmitter";
 
 interface UnitItemType extends UnitInfo {
     unitType: UnitType

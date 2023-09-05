@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from "react";
 
-import Emitter from "../utils/Emitter";
+import Emitter from "@/utils/Emitter";
 
 interface KeypadTabProps {
     name: string
