@@ -70,3 +70,5 @@ function reset() {
     renderer.reset();
     self.cancelAnimationFrame(rafTimer);
 }
+
+export default Object.assign({}); // To avoid the annoying type warning

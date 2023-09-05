@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-redeclare */
 /* eslint-disable no-self-assign */
-import Point from "@/workers/Point";
 import Compiler from "@/compiler/Compiler";
 import Evaluator from "@/compiler/Evaluator";
 import RootToken from "@/compiler/token/RootToken";
@@ -12,6 +11,16 @@ import { MovingDirection, ZoomDirection } from "@/types";
 const delta: number = .01;
 
 // Inside of Service Worker
+
+class Point {
+    public x: number;
+    public y: number;
+
+    public constructor(x: number, y: number) {
+        this.x = x;
+        this.y = y;
+    }
+}
 
 export default class Render {
     public static colors = {
@@ -236,29 +245,7 @@ export default class Render {
         for(let i = 0; i < this.functionList.length; i++) {
             var root = this.functionList.get(i);
 
-            if(direction === MovingDirection.LEFT) {
-                for(let x1 = beginX; x1 <= endX; x1 += delta) {
-                    // var y1 = parseFloat(new Compiler(rawText.split(" "), new Map([["x", x1.toString()]])).compile());
-    
-                    // var x2 = x1 + delta;
-                    // var y2 = parseFloat(new Compiler(rawText.split(" "), new Map([["x", x2.toString()]])).compile());
-                    var y1 = new Evaluator(root, new Map([["x", x1.toString()]])).evaluate();
-    
-                    var x2 = x1 + delta;
-                    var y2 = new Evaluator(root, new Map([["x", x2.toString()]])).evaluate();
-    
-                    this.displayedPoints.add([new Point(x1, y1), new Point(x2, y2)]);
-                }
-            } else {
-                for(let x1 = endX; x1 >= beginX; x1 -= delta) {
-                    var y1 = new Evaluator(root, new Map([["x", x1.toString()]])).evaluate();
-    
-                    var x2 = x1 + delta;
-                    var y2 = new Evaluator(root, new Map([["x", x2.toString()]])).evaluate();
-    
-                    this.displayedPoints.unshift([new Point(x1, y1), new Point(x2, y2)]);
-                }
-            }
+            this.calculatePoints(root, beginX, endX, direction);
         }
     }
 
@@ -285,22 +272,8 @@ export default class Render {
             for(let i = 0; i < this.functionList.length; i++) {
                 var root = this.functionList.get(i);
 
-                for(let x1 = oldBegin; x1 >= newBegin; x1 -= delta) {
-                    var y1 = new Evaluator(root, new Map([["x", x1.toString()]])).evaluate();
-    
-                    var x2 = x1 + delta;
-                    var y2 = new Evaluator(root, new Map([["x", x2.toString()]])).evaluate();
-    
-                    this.displayedPoints.unshift([new Point(x1, y1), new Point(x2, y2)]);
-                }
-                for(let x1 = oldEnd; x1 <= newEnd; x1 += delta) {
-                    var y1 = new Evaluator(root, new Map([["x", x1.toString()]])).evaluate();
-    
-                    var x2 = x1 + delta;
-                    var y2 = new Evaluator(root, new Map([["x", x2.toString()]])).evaluate();
-    
-                    this.displayedPoints.add([new Point(x1, y1), new Point(x2, y2)]);
-                }
+                this.calculatePoints(root, newBegin, oldBegin, MovingDirection.RIGHT);
+                this.calculatePoints(root, oldEnd, newEnd);
             }
         }
     }
@@ -310,7 +283,7 @@ export default class Render {
         var root = this.functionList.get(index);
 
         for(let x = -8; x <= 8; x += delta) {
-            var y = new Evaluator(root, new Map([["x", x.toString()]])).evaluate();
+            var y = Render.calculateY(root, x);
 
             rawPitches.push(y);
         }
@@ -361,14 +334,7 @@ export default class Render {
         var beginX = -this.center.x / unitPx;
         var endX = (this.canvas.width - this.center.x) / unitPx;
 
-        for(let x1 = beginX; x1 <= endX; x1 += delta) {
-            var y1 = new Evaluator(root, new Map([["x", x1.toString()]])).evaluate();
-
-            var x2 = x1 + delta;
-            var y2 = new Evaluator(root, new Map([["x", x2.toString()]])).evaluate();
-
-            this.displayedPoints.add([new Point(x1, y1), new Point(x2, y2)]);
-        }
+        this.calculatePoints(root, beginX, endX);
     }
 
     private fullyRefreshFunctions(): void {
@@ -379,16 +345,7 @@ export default class Render {
         var beginX = -this.center.x / unitPx;
         var endX = (this.canvas.width - this.center.x) / unitPx;
 
-        this.functionList.forEach((root) => {
-            for(let x1 = beginX; x1 <= endX; x1 += delta) {
-                var y1 = new Evaluator(root, new Map([["x", x1.toString()]])).evaluate();
-    
-                var x2 = x1 + delta;
-                var y2 = new Evaluator(root, new Map([["x", x2.toString()]])).evaluate();
-    
-                this.displayedPoints.add([new Point(x1, y1), new Point(x2, y2)]);
-            }
-        });
+        this.functionList.forEach((root) => this.calculatePoints(root, beginX, endX));
     }
 
     private clear(): void {
@@ -449,5 +406,31 @@ export default class Render {
     public unregisterFunction(index: number): void {
         this.functionList.remove(index);
         this.fullyRefreshFunctions();
+    }
+
+    public calculatePoints(functionRoot: RootToken, beginX: number, endX: number, direction: MovingDirection = MovingDirection.LEFT): void {
+        if(direction === MovingDirection.LEFT) {
+            for(let x1 = beginX; x1 <= endX; x1 += delta) {
+                var y1 = Render.calculateY(functionRoot, x1);
+
+                var x2 = x1 + delta;
+                var y2 = Render.calculateY(functionRoot, x2);
+
+                this.displayedPoints.add([new Point(x1, y1), new Point(x2, y2)]);
+            }
+        } else {
+            for(let x1 = endX; x1 >= beginX; x1 -= delta) {
+                var y1 = Render.calculateY(functionRoot, x1);
+
+                var x2 = x1 + delta;
+                var y2 = Render.calculateY(functionRoot, x2);
+
+                this.displayedPoints.unshift([new Point(x1, y1), new Point(x2, y2)]);
+            }
+        }
+    }
+
+    public static calculateY(functionRoot: RootToken, x: number): number {
+        return new Evaluator(functionRoot, new Map([["x", x.toString()]])).evaluate();
     }
 }
