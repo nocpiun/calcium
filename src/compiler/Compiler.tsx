@@ -14,6 +14,7 @@ import FunctionToken from "./token/FunctionToken";
 import SigmaToken from "./token/SigmaToken";
 import IntToken from "./token/IntToken";
 import ProdToken from "./token/ProdToken";
+import VariableToken from "./token/VariableToken";
 
 import { functions, constants } from "../global";
 import { Operator, NumberSys } from "../types";
@@ -46,7 +47,7 @@ export default class Compiler {
     
     public constructor(
         raw: string[],
-        variables: Map<string, string>,
+        variables: Map<string, string> = new Map([]),
         isProgrammingMode: boolean = false,
         numberSys: NumberSys = NumberSys.DEC
     ) {
@@ -56,7 +57,7 @@ export default class Compiler {
         this.numberSys = numberSys;
     }
 
-    private tokenize(): RootToken | void {
+    public tokenize(): RootToken | void {
         var root = new RootToken([]);
 
         /**
@@ -135,8 +136,11 @@ export default class Compiler {
                     ) { 
                         root.add(new OperatorToken(Operator.MUL, false));
 
-                        symbol = this.variables.get(symbol) ?? (constants.get(symbol) ?? "NaN").toString();
-                        root.add(NumberToken.create(symbol, this.numberSys));
+                        const varName = symbol;
+                        symbol = this.variables.get(varName) ?? (constants.get(varName) ?? "NaN").toString();
+                        symbol !== "NaN"
+                        ? root.add(NumberToken.create(symbol, this.numberSys))
+                        : root.add(new VariableToken(varName));
 
                         // pow
                         const di = this.raw[i + 1] === "!" ? 2 : 1;
@@ -147,7 +151,12 @@ export default class Compiler {
 
                         continue;
                     } else {
-                        symbol = this.variables.get(symbol) ?? (constants.get(symbol) ?? "NaN").toString();
+                        // symbol = this.variables.get(symbol) ?? (constants.get(symbol) ?? "NaN").toString();
+                        const varName = symbol;
+                        symbol = this.variables.get(varName) ?? (constants.get(varName) ?? "NaN").toString();
+                        symbol !== "NaN"
+                        ? root.add(NumberToken.create(symbol, this.numberSys))
+                        : root.add(new VariableToken(varName));
                     }
                 }
 
@@ -160,7 +169,7 @@ export default class Compiler {
                     tempNumber += Compiler.purifyNumber(this.raw[i + 1]);
                     i++;
                 }
-                root.add(NumberToken.create(tempNumber, this.numberSys));
+                if(tempNumber !== "NaN") root.add(NumberToken.create(tempNumber, this.numberSys));
 
             } else if(Is.operator(symbol)) { // operator
 

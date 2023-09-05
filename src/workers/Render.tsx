@@ -2,6 +2,8 @@
 /* eslint-disable no-self-assign */
 import Point from "./Point";
 import Compiler from "../compiler/Compiler";
+import Evaluator from "../compiler/Evaluator";
+import RootToken from "../compiler/token/RootToken";
 
 import List from "../utils/List";
 import Collection from "../utils/Collection";
@@ -37,7 +39,7 @@ export default class Render {
     public center: Point;
     private mousePoint: Point;
 
-    public functionList: List<string> = new List();
+    public functionList: List<RootToken> = new List();
     private displayedPoints: Collection<[Point, Point]> = new Collection(); // [p1, p2]
 
     private isMobile: boolean;
@@ -232,23 +234,27 @@ export default class Render {
 
         // Add newly in-screen points
         for(let i = 0; i < this.functionList.length; i++) {
-            var rawText = this.functionList.get(i);
+            var root = this.functionList.get(i);
 
             if(direction === MovingDirection.LEFT) {
                 for(let x1 = beginX; x1 <= endX; x1 += delta) {
-                    var y1 = parseFloat(new Compiler(rawText.split(" "), new Map([["x", x1.toString()]])).compile());
+                    // var y1 = parseFloat(new Compiler(rawText.split(" "), new Map([["x", x1.toString()]])).compile());
+    
+                    // var x2 = x1 + delta;
+                    // var y2 = parseFloat(new Compiler(rawText.split(" "), new Map([["x", x2.toString()]])).compile());
+                    var y1 = new Evaluator(root, new Map([["x", x1.toString()]])).evaluate();
     
                     var x2 = x1 + delta;
-                    var y2 = parseFloat(new Compiler(rawText.split(" "), new Map([["x", x2.toString()]])).compile());
+                    var y2 = new Evaluator(root, new Map([["x", x2.toString()]])).evaluate();
     
                     this.displayedPoints.add([new Point(x1, y1), new Point(x2, y2)]);
                 }
             } else {
                 for(let x1 = endX; x1 >= beginX; x1 -= delta) {
-                    var y1 = parseFloat(new Compiler(rawText.split(" "), new Map([["x", x1.toString()]])).compile());
+                    var y1 = new Evaluator(root, new Map([["x", x1.toString()]])).evaluate();
     
                     var x2 = x1 + delta;
-                    var y2 = parseFloat(new Compiler(rawText.split(" "), new Map([["x", x2.toString()]])).compile());
+                    var y2 = new Evaluator(root, new Map([["x", x2.toString()]])).evaluate();
     
                     this.displayedPoints.unshift([new Point(x1, y1), new Point(x2, y2)]);
                 }
@@ -277,21 +283,21 @@ export default class Render {
             }
         } else {
             for(let i = 0; i < this.functionList.length; i++) {
-                var rawText = this.functionList.get(i);
+                var root = this.functionList.get(i);
 
                 for(let x1 = oldBegin; x1 >= newBegin; x1 -= delta) {
-                    var y1 = parseFloat(new Compiler(rawText.split(" "), new Map([["x", x1.toString()]])).compile());
+                    var y1 = new Evaluator(root, new Map([["x", x1.toString()]])).evaluate();
     
                     var x2 = x1 + delta;
-                    var y2 = parseFloat(new Compiler(rawText.split(" "), new Map([["x", x2.toString()]])).compile());
+                    var y2 = new Evaluator(root, new Map([["x", x2.toString()]])).evaluate();
     
                     this.displayedPoints.unshift([new Point(x1, y1), new Point(x2, y2)]);
                 }
                 for(let x1 = oldEnd; x1 <= newEnd; x1 += delta) {
-                    var y1 = parseFloat(new Compiler(rawText.split(" "), new Map([["x", x1.toString()]])).compile());
+                    var y1 = new Evaluator(root, new Map([["x", x1.toString()]])).evaluate();
     
                     var x2 = x1 + delta;
-                    var y2 = parseFloat(new Compiler(rawText.split(" "), new Map([["x", x2.toString()]])).compile());
+                    var y2 = new Evaluator(root, new Map([["x", x2.toString()]])).evaluate();
     
                     this.displayedPoints.add([new Point(x1, y1), new Point(x2, y2)]);
                 }
@@ -301,10 +307,10 @@ export default class Render {
 
     public play(index: number): void {
         var rawPitches: number[] = [];
-        var rawText = this.functionList.get(index);
+        var root = this.functionList.get(index);
 
         for(let x = -8; x <= 8; x += delta) {
-            var y = parseFloat(new Compiler(rawText.split(" "), new Map([["x", x.toString()]])).compile());
+            var y = new Evaluator(root, new Map([["x", x.toString()]])).evaluate();
 
             rawPitches.push(y);
         }
@@ -371,12 +377,12 @@ export default class Render {
         var beginX = -this.center.x / unitPx;
         var endX = (this.canvas.width - this.center.x) / unitPx;
 
-        this.functionList.forEach((rawText: string) => {
+        this.functionList.forEach((root) => {
             for(let x1 = beginX; x1 <= endX; x1 += delta) {
-                var y1 = parseFloat(new Compiler(rawText.split(" "), new Map([["x", x1.toString()]])).compile());
+                var y1 = new Evaluator(root, new Map([["x", x1.toString()]])).evaluate();
     
                 var x2 = x1 + delta;
-                var y2 = parseFloat(new Compiler(rawText.split(" "), new Map([["x", x2.toString()]])).compile());
+                var y2 = new Evaluator(root, new Map([["x", x2.toString()]])).evaluate();
     
                 this.displayedPoints.add([new Point(x1, y1), new Point(x2, y2)]);
             }
@@ -434,7 +440,7 @@ export default class Render {
     }
 
     public registerFunction(rawText: string): void {
-        this.functionList.add(rawText);
+        this.functionList.add(new Compiler(rawText.split(" ")).tokenize() ?? new RootToken([]));
         this.drawCompleteFunction(rawText);
     }
 

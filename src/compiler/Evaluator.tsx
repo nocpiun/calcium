@@ -13,14 +13,17 @@ import BracketToken from "./token/BracketToken";
 import AbsToken from "./token/AbsToken";
 import FunctionToken from "./token/FunctionToken";
 import DynamicToken from "./token/DynamicToken";
+import VariableToken from "./token/VariableToken";
 
 import { NumberSys, Operator } from "../types";
 
 export default class Evaluator {
     public token: RootToken;
+    private variables: Map<string, string>;
 
-    public constructor(token: RootToken) {
+    public constructor(token: RootToken, variables: Map<string, string> = new Map([])) {
         this.token = token;
+        this.variables = variables;
     }
 
     public evaluate(): number {
@@ -199,7 +202,7 @@ export default class Evaluator {
                     operators.add(token as OperatorToken);
                     break;
                 case TokenType.BRACKET:
-                    var rawValue = new Evaluator(token as BracketToken).evaluate();
+                    var rawValue = new Evaluator(token as BracketToken, this.variables).evaluate();
                     var value = (token as BracketToken).factorial
                     ? Compute.factorial(rawValue)
                     : rawValue;
@@ -210,7 +213,7 @@ export default class Evaluator {
                     ));
                     break;
                 case TokenType.ABS:
-                    var rawValue = Math.abs(new Evaluator(token as AbsToken).evaluate());
+                    var rawValue = Math.abs(new Evaluator(token as AbsToken, this.variables).evaluate());
                     var value = (token as AbsToken).factorial
                     ? Compute.factorial(rawValue)
                     : rawValue;
@@ -224,7 +227,7 @@ export default class Evaluator {
                     var { func, param } = token as FunctionToken;
                     var calculatedParam = [];
                     for(let i = 0; i < param.length; i++) {
-                        calculatedParam.push(new Evaluator(param[i] as RootToken).evaluate());
+                        calculatedParam.push(new Evaluator(param[i] as RootToken, this.variables).evaluate());
                     }
 
                     var value = Float.calibrate(parseFloat(func(...calculatedParam).toFixed(14)));
@@ -241,6 +244,11 @@ export default class Evaluator {
                         Compute.safePow(value, exponential),
                         NumberSys.DEC
                     ));
+                    break;
+                case TokenType.VARIABLE:
+                    var varValue = this.variables.get((token as VariableToken).name) ?? "NaN";
+                    (token as NumberToken).value = parseFloat(varValue);
+                    numbers.add(token as NumberToken);
                     break;
             }
         }
