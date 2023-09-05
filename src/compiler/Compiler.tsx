@@ -148,16 +148,14 @@ export default class Compiler {
                             root.getChild<PowerableToken>(root.getLength() - di).exponential = parseInt(this.raw[i + di][1]);
                             i++;
                         }
-
-                        continue;
                     } else {
-                        // symbol = this.variables.get(symbol) ?? (constants.get(symbol) ?? "NaN").toString();
                         const varName = symbol;
                         symbol = this.variables.get(varName) ?? (constants.get(varName) ?? "NaN").toString();
                         symbol !== "NaN"
                         ? root.add(NumberToken.create(symbol, this.numberSys))
                         : root.add(new VariableToken(varName));
                     }
+                    continue;
                 }
 
                 var tempNumber: NumberSymbol = symbol;
