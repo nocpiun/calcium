@@ -21,17 +21,15 @@ import Emitter from "@/utils/Emitter";
 import Logger from "@/utils/Logger";
 import { MovingDirection } from "@/types";
 
-// import GraphingWorker from "@/workers/graphing.worker.ts";
-
 const Graphing: React.FC = memo(() => {
     const { setFunctionList } = useContext(MainContext);
     const [reloadTrigger, reloader] = useState(0);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
     const workerRef = useRef<Worker | null>(null);
 
     useEffect(() => {
         // Create worker
         workerRef.current = new Worker(new URL("@/workers/graphing.worker.ts", import.meta.url));
-        // if(!workerRef.current) return;
 
         // Get canvas object
         const canvas = Utils.getElem<HTMLCanvasElement>("graphing");
@@ -58,6 +56,7 @@ const Graphing: React.FC = memo(() => {
         workerRef.current.onmessage = (e: {data: any}) => {
             switch(e.data.type) {
                 case "render":
+                    if(isLoading) setIsLoading(false);
                     ctx.transferFromImageBitmap(e.data.imageBitmap);
                     break;
                 case "fps":
@@ -279,7 +278,13 @@ const Graphing: React.FC = memo(() => {
             id="display-frame"
             onContextMenu={onContextMenu}>
                 <SidebarOpener />
+
                 <canvas className="graphing-canvas" id="graphing"/>
+                <div className="loading-container" style={{ display: isLoading ? "flex" : "none" }}>
+                    <div className="loading-text">
+                        <p>Calcium</p>
+                    </div>
+                </div>
             </div>
             {contextMenu}
 

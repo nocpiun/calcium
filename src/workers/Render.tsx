@@ -166,8 +166,8 @@ export default class Render {
             this.drawStraightLine(y2, Render.colors.secondary);
 
             // number of the line
-            this.drawText((i * this.spacing).toString(), this.center.x + 5 * this.ratio, y1 + 5 * this.ratio, Render.colors.primary, 15);
-            this.drawText((-i * this.spacing).toString(), this.center.x + 5 * this.ratio, y2 + 5 * this.ratio, Render.colors.primary, 15);
+            this.drawText((i * this.spacing).toString(), this.center.x - (this.getTextWidth((i * this.spacing).toString()) + 5) * this.ratio, y1 + 5 * this.ratio, Render.colors.primary, 15);
+            this.drawText((-i * this.spacing).toString(), this.center.x - (this.getTextWidth((-i * this.spacing).toString()) + 5) * this.ratio, y2 + 5 * this.ratio, Render.colors.primary, 15);
         }
         // thinner line
         for(
@@ -204,8 +204,8 @@ export default class Render {
             this.drawVerticalLine(x2, Render.colors.secondary);
 
             // number of the line
-            this.drawText((-k * this.spacing).toString(), x1 - 5 * this.ratio, this.center.y + 15 * this.ratio, Render.colors.primary, 15);
-            this.drawText((k * this.spacing).toString(), x2 - 5 * this.ratio, this.center.y + 15 * this.ratio, Render.colors.primary, 15);
+            this.drawText((-k * this.spacing).toString(), x1 - (this.getTextWidth((-k * this.spacing).toString()) / 2) * this.ratio, this.center.y + 15 * this.ratio, Render.colors.primary, 15);
+            this.drawText((k * this.spacing).toString(), x2 - (this.getTextWidth((k * this.spacing).toString()) / 2) * this.ratio, this.center.y + 15 * this.ratio, Render.colors.primary, 15);
         }
         // thinner line
         for(
@@ -307,7 +307,9 @@ export default class Render {
         this.ctx.strokeStyle = color;
         this.ctx.lineWidth = width * this.ratio;
         this.ctx.moveTo(begin.x, begin.y);
-        this.ctx.lineTo(end.x, end.y);
+        if(!(Math.abs(begin.y - end.y) > this.canvas.height && begin.y * end.y < 0)) {
+            this.ctx.lineTo(end.x, end.y);
+        }
         this.ctx.stroke();
         this.ctx.closePath();
     }
@@ -391,6 +393,7 @@ export default class Render {
 
         // Draw function images
         for(let i = 0; i < this.displayedPoints.length; i++) {
+            // this.drawPoint(this.coordinatesToScreen(this.displayedPoints.get(i)[0]), Render.colors.highlight);
             this.drawLine(this.coordinatesToScreen(this.displayedPoints.get(i)[0]), this.coordinatesToScreen(this.displayedPoints.get(i)[1]), Render.colors.highlight);
         }
 
@@ -406,6 +409,10 @@ export default class Render {
     public unregisterFunction(index: number): void {
         this.functionList.remove(index);
         this.fullyRefreshFunctions();
+    }
+
+    public getTextWidth(text: string): number {
+        return this.ctx.measureText(text).width;
     }
 
     public calculatePoints(functionRoot: RootToken, beginX: number, endX: number, direction: MovingDirection = MovingDirection.LEFT): void {
