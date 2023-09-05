@@ -75,7 +75,7 @@ export interface Shortcut {
     action: () => void
 }
 
-export enum MouseDirection {
+export enum MovingDirection {
     LEFT, RIGHT
 }
 

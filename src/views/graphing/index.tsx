@@ -19,7 +19,7 @@ import useEmitter from "../../hooks/useEmitter";
 import Utils from "../../utils/Utils";
 import Emitter from "../../utils/Emitter";
 import Logger from "../../utils/Logger";
-import { MouseDirection } from "../../types";
+import { MovingDirection } from "../../types";
 
 import GraphingWorker from "../../workers/graphing.worker.ts";
 
@@ -90,11 +90,11 @@ const Graphing: React.FC = memo(() => {
         canvas.addEventListener("mousemove", (e: MouseEvent) => {
             if(!workerRef.current) return;
 
-            var direction;
+            var direction: MovingDirection;
             if(e.movementX < 0) {
-                direction = MouseDirection.LEFT;
+                direction = MovingDirection.LEFT;
             } else {
-                direction = MouseDirection.RIGHT;
+                direction = MovingDirection.RIGHT;
             }
 
             workerRef.current.postMessage({ type: "mouse-move", rect: canvas.getBoundingClientRect(), cx: e.clientX, cy: e.clientY, direction });
@@ -113,29 +113,30 @@ const Graphing: React.FC = memo(() => {
         });
 
         // Init mobile events
-        var touchStart: Touch;
+        var lastTouch: Touch;
         canvas.addEventListener("touchstart", (e: TouchEvent) => {
             if(!workerRef.current) return;
-            touchStart = e.touches[0];
             workerRef.current.postMessage({ type: "mouse-down", rect: canvas.getBoundingClientRect(), cx: e.touches[0].clientX, cy: e.touches[0].clientY });
         });
         canvas.addEventListener("touchmove", (e: TouchEvent) => {
             if(!workerRef.current) return;
 
             e.preventDefault();
+            if(!lastTouch) lastTouch = e.changedTouches[0];
 
-            var direction;
-            if(touchStart.clientX > e.changedTouches[0].clientX) {
-                direction = MouseDirection.LEFT;
+            var direction: MovingDirection;
+            if(lastTouch.clientX > e.changedTouches[0].clientX) {
+                direction = MovingDirection.LEFT;
             } else {
-                direction = MouseDirection.RIGHT;
+                direction = MovingDirection.RIGHT;
             }
+            lastTouch = e.changedTouches[0];
 
             workerRef.current.postMessage({ type: "mouse-move", rect: canvas.getBoundingClientRect(), cx: e.changedTouches[0].clientX, cy: e.changedTouches[0].clientY, direction });
         });
         canvas.addEventListener("touchend", () => {
             if(!workerRef.current) return;
-            workerRef.current.postMessage({ type: "mouse-up" });
+            workerRef.current.postMessage({ type: "mouse-leave" });
         });
         canvas.addEventListener("touchcancel", () => {
             if(!workerRef.current) return;

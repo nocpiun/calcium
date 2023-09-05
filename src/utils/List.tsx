@@ -51,9 +51,7 @@ export default class List<T = any> {
     }
 
     public clear(): void {
-        this.forEach((_value, i) => {
-            this.remove(i);
-        });
+        this.value = [];
     }
 
     public has(item: T): boolean {
@@ -79,15 +77,7 @@ export default class List<T = any> {
     }
 
     public deduplicate(): void {
-        for(let i = 0; i < this.length; i++) {
-            var current = this.value[i];
-            for(let j = 0; j < this.length; j++) {
-                if(this.value[j] === current && j !== i) {
-                    this.value.splice(j, 1);
-                    j--;
-                }
-            }
-        }
+        this.value = [...new Set(this.value)];
     }
 
     public equals(list: List): boolean {
