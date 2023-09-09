@@ -37,6 +37,7 @@ const dependencies: [string, string][] = [
     ["react-katex@3.0.1", "talyssonoc/react-katex"],
     ["react-svg@16.1.15", "tanem/react-svg"],
     ["react-activation@0.12.4", "CJY0208/react-activation"],
+    ["react-tooltip@5.21.3", "https://react-tooltip.com"],
     ["react-app-polyfill@3.0.0", "https://create-react-app.dev"],
     ["eslint@8.3.0", "https://eslint.org"],
     ["downloadjs@1.4.7", "rndme/download"],

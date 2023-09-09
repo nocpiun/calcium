@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useId } from "react";
+import { Tooltip } from "react-tooltip";
 import { InlineMath } from "react-katex";
 
 import { NumberSys } from "@/types";
@@ -18,6 +19,7 @@ interface InputButtonProps {
 const InputButton: React.FC<InputButtonProps> = (props) => {
     const [disabled, setDisabled] = useState<boolean>(props.disabled ?? false);
     const inputValue = props.inputValue ?? props.symbol;
+    const id = useId();
 
     const clickHandle = () => {
         Emitter.get().emit("input", inputValue);
@@ -42,13 +44,23 @@ const InputButton: React.FC<InputButtonProps> = (props) => {
                 className="keypad-button"
                 onClick={() => clickHandle()}
                 disabled={disabled}
-                title={props.title}
                 style={props.style}
-                tabIndex={-1}>
+                tabIndex={-1}
+                data-tooltip-id={id}
+                data-tooltip-content={props.title}>
                 <span>
                     <InlineMath>{props.symbol}</InlineMath>
                 </span>
             </button>
+
+            {
+                props.title &&
+                <Tooltip
+                    id={id}
+                    place="top"
+                    opacity={1}
+                    border="1px solid var(--ca-gray2)"/>
+            }
         </div>
     );
 }

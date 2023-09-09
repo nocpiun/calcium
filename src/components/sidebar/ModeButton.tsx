@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useId } from "react";
+import { Tooltip } from "react-tooltip";
 
 import { Mode } from "@/types";
 import Utils from "@/utils/Utils";
@@ -16,6 +17,7 @@ interface ModeButtonProps {
 const ModeButton: React.FC<ModeButtonProps> = (props) => {
     const { setMode } = useContext(MainContext);
     const [isActive, setIsActive] = useState<boolean>(false);
+    const id = useId();
 
     const handleClick = () => {
         Emitter.get().emit("switch-mode", props.mode);
@@ -45,12 +47,19 @@ const ModeButton: React.FC<ModeButtonProps> = (props) => {
             
                         <button
                             className={"mode-button"+ (isActive ? " active" : "")}
-                            title={props.modeName}
+                            data-tooltip-id={id}
+                            data-tooltip-content={props.modeName}
                             onClick={() => handleClick()}
                             style={{
                                 maskImage: "url("+ props.icon +")",
                                 WebkitMaskImage: "url("+ props.icon +")"
                             }}/>
+                        
+                        <Tooltip
+                            id={id}
+                            place="right"
+                            opacity={1}
+                            border="1px solid var(--ca-gray2)"/>
                     </>
                 )
                 : (

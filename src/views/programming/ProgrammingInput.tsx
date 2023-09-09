@@ -75,8 +75,8 @@ const ProgrammingInput: React.FC = memo(() => {
                         <div className="keypad-placeholder"/>
                         <InputButton symbol="\ll" inputValue="\text{Lsh}" grow={1} title="左移位"/>
                         <InputButton symbol="\gg" inputValue="\text{Rsh}" grow={1} title="右移位"/>
-                        <InputButton symbol="\leftarrow" grow={1}/>
-                        <InputButton symbol="\rightarrow" grow={1}/>
+                        <InputButton symbol="\leftarrow" grow={1} title="向前移动光标"/>
+                        <InputButton symbol="\rightarrow" grow={1} title="向后移动光标"/>
                         <div className="keypad-placeholder"/>
                         <div style={{ flexGrow: 5 }}/>
                         <div className="keypad-placeholder"/>

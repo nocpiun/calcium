@@ -8,6 +8,7 @@ import Utils from "@/utils/Utils";
 // Layout
 import "katex/dist/katex.min.css";
 import "use-context-menu/styles.css";
+import "react-tooltip/dist/react-tooltip.css";
 import "@/style/layout.less";
 
 // Components

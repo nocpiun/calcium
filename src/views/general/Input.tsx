@@ -35,14 +35,14 @@ const Input: React.FC = memo(() => {
                         <InputButton symbol="\sqrt{a}" inputValue="√(" grow={1}/>
                         <InputButton symbol="\sqrt[3]{a}" inputValue="^3√(" grow={1}/>
                         <div className="keypad-placeholder"/>
-                        <InputButton symbol="a" grow={1}/>
-                        <InputButton symbol="b" grow={1}/>
-                        <InputButton symbol="c" grow={1}/>
-                        <InputButton symbol="d" grow={1}/>
-                        <InputButton symbol="e" grow={1}/>
+                        <InputButton symbol="a" grow={1} title="a"/>
+                        <InputButton symbol="b" grow={1} title="b"/>
+                        <InputButton symbol="c" grow={1} title="c"/>
+                        <InputButton symbol="d" grow={1} title="d"/>
+                        <InputButton symbol="e" grow={1} title="e"/>
                         <div className="keypad-placeholder"/>
-                        <InputButton symbol="\sum" grow={2}/>
-                        <InputButton symbol="\int_a^b" inputValue="\int" grow={2}/>
+                        <InputButton symbol="\sum" grow={2} title="求和"/>
+                        <InputButton symbol="\int_a^b" inputValue="\int" grow={2} title="积分"/>
                         <InputButton symbol="dx" grow={1}/>
                     </div>
                     <div className="keypad-row">
@@ -57,13 +57,13 @@ const Input: React.FC = memo(() => {
                         <InputButton symbol="\pi" grow={1}/>
                         <InputButton symbol="x^x" inputValue="\text{xPx}(" grow={1}/>
                         <div className="keypad-placeholder"/>
-                        <InputButton symbol="f" grow={1}/>
-                        <InputButton symbol="g" grow={1}/>
-                        <InputButton symbol="h" grow={1}/>
-                        <InputButton symbol="i" grow={1}/>
-                        <InputButton symbol="j" grow={1}/>
+                        <InputButton symbol="f" grow={1} title="f"/>
+                        <InputButton symbol="g" grow={1} title="g"/>
+                        <InputButton symbol="h" grow={1} title="h"/>
+                        <InputButton symbol="i" grow={1} title="i"/>
+                        <InputButton symbol="j" grow={1} title="j"/>
                         <div className="keypad-placeholder"/>
-                        <InputButton symbol="\prod" grow={2}/>
+                        <InputButton symbol="\prod" grow={2} title="求积"/>
                         <div style={{ flexGrow: 3 }}/>
                     </div>
                     <div className="keypad-row">
@@ -78,11 +78,11 @@ const Input: React.FC = memo(() => {
                         <InputButton symbol="\sin" inputValue="\sin(" grow={1}/>
                         <InputButton symbol="\cos" inputValue="\cos(" grow={1}/>
                         <div className="keypad-placeholder"/>
-                        <InputButton symbol="k" grow={1}/>
-                        <InputButton symbol="l" grow={1}/>
-                        <InputButton symbol="m" grow={1}/>
-                        <InputButton symbol="n" grow={1}/>
-                        <InputButton symbol="o" grow={1}/>
+                        <InputButton symbol="k" grow={1} title="k"/>
+                        <InputButton symbol="l" grow={1} title="l"/>
+                        <InputButton symbol="m" grow={1} title="m"/>
+                        <InputButton symbol="n" grow={1} title="n"/>
+                        <InputButton symbol="o" grow={1} title="o"/>
                         <div className="keypad-placeholder"/>
                         <div style={{ flexGrow: 5 }}/>
                     </div>
@@ -98,11 +98,11 @@ const Input: React.FC = memo(() => {
                         <InputButton symbol="\tan" inputValue="\tan(" grow={1}/>
                         <InputButton symbol="\cot" inputValue="\cot(" grow={1}/>
                         <div className="keypad-placeholder"/>
-                        <InputButton symbol="p" grow={1}/>
-                        <InputButton symbol="q" grow={1}/>
-                        <InputButton symbol="r" grow={1}/>
-                        <InputButton symbol="s" grow={1}/>
-                        <InputButton symbol="t" grow={1}/>
+                        <InputButton symbol="p" grow={1} title="p"/>
+                        <InputButton symbol="q" grow={1} title="q"/>
+                        <InputButton symbol="r" grow={1} title="r"/>
+                        <InputButton symbol="s" grow={1} title="s"/>
+                        <InputButton symbol="t" grow={1} title="t"/>
                         <div className="keypad-placeholder"/>
                         <div style={{ flexGrow: 5 }}/>
                     </div>
@@ -117,11 +117,11 @@ const Input: React.FC = memo(() => {
                         <InputButton symbol="\sec" inputValue="\sec(" grow={1}/>
                         <InputButton symbol="\csc" inputValue="\csc(" grow={1}/>
                         <div className="keypad-placeholder"/>
-                        <InputButton symbol="u" grow={1}/>
-                        <InputButton symbol="v" grow={1}/>
-                        <InputButton symbol="w" grow={1}/>
-                        <InputButton symbol="x" grow={1}/>
-                        <InputButton symbol="y" grow={1}/>
+                        <InputButton symbol="u" grow={1} title="u"/>
+                        <InputButton symbol="v" grow={1} title="v"/>
+                        <InputButton symbol="w" grow={1} title="w"/>
+                        <InputButton symbol="x" grow={1} title="x"/>
+                        <InputButton symbol="y" grow={1} title="y"/>
                         <div className="keypad-placeholder"/>
                         <div style={{ flexGrow: 5 }}/>
                     </div>
@@ -136,11 +136,11 @@ const Input: React.FC = memo(() => {
                         <InputButton symbol="\text{Clear}" grow={1} title="清空输入框"/>
                         <InputButton symbol="\text{Del}" grow={1} title="退格"/>
                         <div className="keypad-placeholder"/>
-                        <InputButton symbol="z" grow={1}/>
-                        <InputButton symbol="\alpha" grow={1}/>
-                        <InputButton symbol="\beta" grow={1}/>
-                        <InputButton symbol="\gamma" grow={1}/>
-                        <InputButton symbol="\delta" grow={1}/>
+                        <InputButton symbol="z" grow={1} title="z"/>
+                        <InputButton symbol="\alpha" grow={1} title="alpha"/>
+                        <InputButton symbol="\beta" grow={1} title="beta"/>
+                        <InputButton symbol="\gamma" grow={1} title="gamma"/>
+                        <InputButton symbol="\delta" grow={1} title="delta"/>
                         <div className="keypad-placeholder"/>
                         <div style={{ flexGrow: 5 }}/>
                     </div>
@@ -150,16 +150,16 @@ const Input: React.FC = memo(() => {
                         <InputButton symbol="\text{mean}" inputValue="\text{mean}(" grow={2}/>
                         <InputButton symbol="\text{nPr}" inputValue="\text{nPr}(" grow={1}/>
                         <div className="keypad-placeholder"/>
-                        <InputButton symbol="\sum" inputValue="\sum" grow={1}/>
+                        <InputButton symbol="\sum" inputValue="\sum" grow={1} title="求和"/>
                         <InputButton symbol="\%" inputValue="\%(" grow={1}/>
                         <InputButton symbol="×" grow={1}/>
                         <InputButton symbol="/" grow={1}/>
                         <div className="keypad-placeholder"/>
-                        <InputButton symbol="\epsilon" grow={1}/>
-                        <InputButton symbol="\zeta" grow={1}/>
-                        <InputButton symbol="\eta" grow={1}/>
-                        <InputButton symbol="\theta" grow={1}/>
-                        <InputButton symbol="\iota" grow={1}/>
+                        <InputButton symbol="\epsilon" grow={1} title="epsilon"/>
+                        <InputButton symbol="\zeta" grow={1} title="zeta"/>
+                        <InputButton symbol="\eta" grow={1} title="eta"/>
+                        <InputButton symbol="\theta" grow={1} title="theta"/>
+                        <InputButton symbol="\iota" grow={1} title="iota"/>
                         <div className="keypad-placeholder"/>
                         <div style={{ flexGrow: 5 }}/>
                     </div>
@@ -173,11 +173,11 @@ const Input: React.FC = memo(() => {
                         <InputButton symbol="3" grow={1}/>
                         <InputButton symbol="+" grow={1}/>
                         <div className="keypad-placeholder"/>
-                        <InputButton symbol="\kappa" grow={1}/>
-                        <InputButton symbol="\lambda" grow={1}/>
-                        <InputButton symbol="\mu" grow={1}/>
-                        <InputButton symbol="\nu" grow={1}/>
-                        <InputButton symbol="\xi" grow={1}/>
+                        <InputButton symbol="\kappa" grow={1} title="kappa"/>
+                        <InputButton symbol="\lambda" grow={1} title="lambda"/>
+                        <InputButton symbol="\mu" grow={1} title="mu"/>
+                        <InputButton symbol="\nu" grow={1} title="nu"/>
+                        <InputButton symbol="\xi" grow={1} title="xi"/>
                         <div className="keypad-placeholder"/>
                         <div style={{ flexGrow: 5 }}/>
                     </div>
@@ -190,11 +190,11 @@ const Input: React.FC = memo(() => {
                         <InputButton symbol="6" grow={1}/>
                         <InputButton symbol="-" grow={1}/>
                         <div className="keypad-placeholder"/>
-                        <InputButton symbol="\omicron" grow={1}/>
-                        <InputButton symbol="\pi" grow={1}/>
-                        <InputButton symbol="\rho" grow={1}/>
-                        <InputButton symbol="\sigma" grow={1}/>
-                        <InputButton symbol="\tau" grow={1}/>
+                        <InputButton symbol="\omicron" grow={1} title="omicron"/>
+                        <InputButton symbol="\pi" grow={1} title="pi"/>
+                        <InputButton symbol="\rho" grow={1} title="rho"/>
+                        <InputButton symbol="\sigma" grow={1} title="sigma"/>
+                        <InputButton symbol="\tau" grow={1} title="tau"/>
                         <div className="keypad-placeholder"/>
                         <div style={{ flexGrow: 5 }}/>
                     </div>
@@ -206,11 +206,11 @@ const Input: React.FC = memo(() => {
                         <InputButton symbol="9" grow={1}/>
                         <InputButton symbol="=" grow={1}/>
                         <div className="keypad-placeholder"/>
-                        <InputButton symbol="\upsilon" grow={1}/>
-                        <InputButton symbol="\phi" grow={1}/>
-                        <InputButton symbol="\chi" grow={1}/>
-                        <InputButton symbol="\psi" grow={1}/>
-                        <InputButton symbol="\omega" grow={1}/>
+                        <InputButton symbol="\upsilon" grow={1} title="upsilon"/>
+                        <InputButton symbol="\phi" grow={1} title="phi"/>
+                        <InputButton symbol="\chi" grow={1} title="chi"/>
+                        <InputButton symbol="\psi" grow={1} title="psi"/>
+                        <InputButton symbol="\omega" grow={1} title="omega"/>
                         <div className="keypad-placeholder"/>
                         <InputButton symbol="\leftarrow" grow={1} title="向前移动光标"/>
                         <InputButton symbol="\rightarrow" grow={1} title="向后移动光标"/>
@@ -223,7 +223,7 @@ const Input: React.FC = memo(() => {
                         <InputButton symbol="." grow={1}/>
                         <InputButton symbol="\text{Result}" grow={2}/>
                         <div className="keypad-placeholder"/>
-                        <InputButton symbol="\Delta" grow={1}/>
+                        <InputButton symbol="\Delta" grow={1} title="Delta"/>
                         <InputButton symbol="," grow={1}/>
                         <div style={{ flexGrow: 3 }}/>
                         <div className="keypad-placeholder"/>

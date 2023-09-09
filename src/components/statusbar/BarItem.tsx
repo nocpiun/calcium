@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useId } from "react";
+import { Tooltip } from "react-tooltip";
 
 interface BarItemProps {
     title: string
@@ -10,6 +11,8 @@ interface BarItemProps {
 }
 
 const BarItem: React.FC<BarItemProps> = (props) => {
+    const id = useId();
+
     const handleClick = () => {
         if(props.to) {
             window.open(props.to, "blank");
@@ -20,12 +23,24 @@ const BarItem: React.FC<BarItemProps> = (props) => {
     };
 
     return (
-        <div
-            className={"bar-item"+ (props.disabled ? " disabled" : "") + (props.className ? " "+ props.className : "")}
-            title={props.tooltip}
-            onClick={() => handleClick()}>
-            <span>{props.title}</span>
-        </div>
+        <>
+            <div
+                className={"bar-item"+ (props.disabled ? " disabled" : "") + (props.className ? " "+ props.className : "")}
+                data-tooltip-id={id}
+                data-tooltip-content={props.tooltip}
+                onClick={() => handleClick()}>
+                <span>{props.title}</span>
+            </div>
+
+            {
+                props.tooltip &&
+                <Tooltip
+                    id={id}
+                    place="top"
+                    opacity={1}
+                    border="1px solid var(--ca-gray2)"/>
+            }
+        </>
     );
 }
 
