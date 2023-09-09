@@ -61,6 +61,10 @@ const UnitItem: React.FC<UnitItemType> = (props) => {
 
     return (
         <div className="unit-item">
+            <div className="unit-info">
+                <span className="unit-name">{props.name}</span>
+                <span className="unit-display-name">{props.displayName}</span>
+            </div>
             <div className="unit-value-input">
                 <input
                     type="text"
@@ -70,10 +74,6 @@ const UnitItem: React.FC<UnitItemType> = (props) => {
                     defaultValue={0}
                     autoComplete="off"
                     ref={inputRef}/>
-            </div>
-            <div className="unit-info">
-                <span className="unit-name">{props.name}</span>
-                <span className="unit-display-name">{props.displayName}</span>
             </div>
         </div>
     );

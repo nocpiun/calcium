@@ -221,15 +221,9 @@
                     justify-content: space-between;
                     height: 38px;
                     padding-bottom: 5px;
-                    .unit-value-input {
-                        width: 280px;
-                        input[type=text] {
-                            .dialog-input-box-style();
-                        }
-                    }
                     .unit-info {
-                        padding-top: 15px;
-                        padding-right: 5px;
+                        padding: 10px 5px;
+                        padding-bottom: 0;
                         font-size: 10pt;
                         span.unit-name {
                             margin-right: 3px;
@@ -237,6 +231,15 @@
                         }
                         span.unit-display-name {
                             font-size: 11pt;
+                        }
+                    }
+                    .unit-value-input {
+                        display: flex;
+                        flex-direction: column;
+                        width: 300px;
+                        input[type=text] {
+                            width: auto !important;
+                            .dialog-input-box-style();
                         }
                     }
                 }
