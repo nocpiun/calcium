@@ -1,9 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect, useContext } from "react";
+import { Tooltip } from "react-tooltip";
+import Toggle from "@nocp/toggle";
 import KeepAlive from "react-activation";
 
 import ModeButton from "@/components/sidebar/ModeButton";
-import Toggle from "@/components/Toggle";
 import History from "@/components/sidebar/History";
 import FunctionList from "@/components/sidebar/FunctionList";
 
@@ -85,7 +86,18 @@ const Sidebar: React.FC = () => {
                 )}
 
                 <div className="theme-switcher">
-                    <Toggle tooltip="浅色 / 深色主题" onChange={(e) => handleToggle(e)} defaultValue={themeValue === "light"}/>
+                    <Toggle
+                        data-tooltip-id="theme-switcher"
+                        data-tooltip-content="浅色 / 深色主题"
+                        onToggle={(e) => handleToggle(e)}
+                        defaultToggleValue={themeValue === "light"}/>
+
+                    <Tooltip
+                        id="theme-switcher"
+                        place="right"
+                        opacity={1}
+                        border="1px solid var(--ca-gray2)"
+                        delayShow={500}/>
                 </div>
 
                 {/* Mobile only */}

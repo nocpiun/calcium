@@ -1,4 +1,4 @@
-import React, { ReactElement, DOMAttributes } from "react";
+import React, { ReactElement } from "react";
 
 import { PropsWithChildren } from "@/types";
 
@@ -8,7 +8,7 @@ interface SidebarPageProps extends PropsWithChildren {
     tip?: ReactElement
 }
 
-const SidebarPage: React.FC<SidebarPageProps & DOMAttributes<HTMLDivElement>> = (props) => {
+const SidebarPage: React.FC<SidebarPageProps & React.DOMAttributes<HTMLDivElement>> = (props) => {
     const { title, tip, children, ...attrProps } = props;
 
     return (
