@@ -38,7 +38,8 @@ const BarItem: React.FC<BarItemProps> = (props) => {
                     id={id}
                     place="top"
                     opacity={1}
-                    border="1px solid var(--ca-gray2)"/>
+                    border="1px solid var(--ca-gray2)"
+                    delayShow={500}/>
             }
         </>
     );
