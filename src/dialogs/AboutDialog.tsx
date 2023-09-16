@@ -38,7 +38,7 @@ const dependencies: [string, string][] = [
     ["react-svg@16.1.15", "tanem/react-svg"],
     ["react-activation@0.12.4", "CJY0208/react-activation"],
     ["react-tooltip@5.21.3", "https://react-tooltip.com"],
-    ["@nocp/toggle@0.4.0", "nocpiun/toggle"],
+    ["@nocp/toggle@0.5.0", "nocpiun/toggle"],
     ["react-app-polyfill@3.0.0", "https://create-react-app.dev"],
     ["eslint@8.3.0", "https://eslint.org"],
     ["downloadjs@1.4.7", "rndme/download"],
