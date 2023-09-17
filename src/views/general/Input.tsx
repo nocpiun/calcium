@@ -89,7 +89,7 @@ const Input: React.FC = memo(() => {
                     <div className="keypad-row">
                         <InputButton symbol="\ln" inputValue="\ln(" grow={1}/>
                         <InputButton symbol="\lg" inputValue="\lg(" grow={1}/>
-                        <InputButton symbol="\log_2{a}" inputValue="\log_2(" grow={1}/>
+                        <InputButton symbol="\log_n{a}" inputValue="\log(" grow={1}/>
                         <InputButton symbol="a!" inputValue="!" grow={1}/>
                         <InputButton symbol="\exp" inputValue="\exp(" grow={1}/>
                         <div className="keypad-placeholder"/>

@@ -14,7 +14,7 @@ import useEmitter from "@/hooks/useEmitter";
 import SidebarPage from "@/components/sidebar/SidebarPage";
 import InputBox, { cursor } from "@/components/InputBox";
 import FunctionListItem from "@/components/sidebar/FunctionListItem";
-import MobileInput from "@/components/MobileInput";
+import MobileInput from "@/views/general/MobileInput";
 
 import Is from "@/compiler/Is";
 import Emitter from "@/utils/Emitter";

@@ -3,9 +3,9 @@ import React, { useContext } from "react";
 import { Mode } from "@/types";
 
 import Input from "@/views/general/Input";
-import MobileInput from "@/components/MobileInput";
+import MobileInput from "@/views/general/MobileInput";
 import ProgrammingInput from "@/views/programming/ProgrammingInput";
-import MobileProgrammingInput from "@/components/MobileProgrammingInput";
+import MobileProgrammingInput from "@/views/programming/MobileProgrammingInput";
 import Output from "@/views/general/Output";
 import ProgrammingOutput from "@/views/programming/ProgrammingOutput";
 import Graphing from "@/views/graphing";
