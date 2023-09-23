@@ -7,6 +7,8 @@ import { version } from "@/global";
 import Dialog from "@/components/Dialog";
 import IndialogPage from "@/components/IndialogPage";
 
+import ReleasesIndialogPage from "@/dialogs/ReleasesIndialogPage";
+
 const licenseContent = `MIT License
 
 Copyright (c) ${new Date().getFullYear()} NriotHrreion
@@ -33,12 +35,14 @@ const dependencies: [string, string][] = [
     ["react@18.2.0", "https://react.dev"],
     ["react-dom@18.2.0", "https://react.dev/reference/react-dom"],
     ["typescript@4.9.4", "https://typescriptlang.org"],
+    ["axios@1.5.0", "https://axios-http.com"],
     ["katex@0.16.4", "https://katex.org"],
     ["react-katex@3.0.1", "talyssonoc/react-katex"],
     ["react-svg@16.1.15", "tanem/react-svg"],
     ["react-activation@0.12.4", "CJY0208/react-activation"],
     ["react-tooltip@5.21.3", "https://react-tooltip.com"],
     ["@nocp/toggle@0.5.0", "nocpiun/toggle"],
+    ["react-markdown@8.0.7", "https://remarkjs.github.io/react-markdown/"],
     ["react-app-polyfill@3.0.0", "https://create-react-app.dev"],
     ["eslint@8.3.0", "https://eslint.org"],
     ["downloadjs@1.4.7", "rndme/download"],
@@ -88,13 +92,14 @@ const AboutDialog: React.FC<AboutDialogProps> = forwardRef<Dialog, AboutDialogPr
     (props, ref) => {
         const [isLicenseVisible, setLicenseVisible] = useState<boolean>(false);
         const [isDependencyListVisible, setDependencyListVisible] = useState<boolean>(false);
+        const [isReleasesVisible, setReleasesVisible] = useState<boolean>(false);
 
         return (
             <Dialog title="关于" height={530} className="about-dialog" id={"about-dialog--"+ useId()} ref={ref}>
                 <p><img src="/icon.png" alt="icon" width={18}/> <b>Calcium</b> 是一个由React+Typescript编写的基于web的网页计算器.</p>
 
                 <ul>
-                    <li><AboutItem name="版本" content={version}/></li>
+                    <li><AboutItem name="版本" content={<button onClick={() => setReleasesVisible(true)}>{version}</button>}/></li>
                     <li><AboutItem name="作者" content="NoahHrreion"/></li>
                     <li><AboutItem name="数学显示" content={<a href="https://katex.org" target="_blank" rel="noreferrer" className="katex-logo"><InlineMath>\KaTeX</InlineMath></a>}/></li>
                     <li><AboutItem name="支持我" content={<a href="https://nin.red/#/donate" target="_blank" rel="noreferrer">打赏</a>}/></li>
@@ -127,6 +132,10 @@ const AboutDialog: React.FC<AboutDialogProps> = forwardRef<Dialog, AboutDialogPr
                             })
                         }
                     </div>
+                </IndialogPage>
+
+                <IndialogPage title="更新日志" visible={isReleasesVisible} onBack={() => setReleasesVisible(false)}>
+                    <ReleasesIndialogPage />
                 </IndialogPage>
             </Dialog>
         );
