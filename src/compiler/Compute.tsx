@@ -1,5 +1,6 @@
 import Is from "@/compiler/Is";
 import Utils from "@/utils/Utils";
+import Float from "@/compiler/Float";
 
 export default class Compute {
     /** @see https://www.cnblogs.com/jialuchun/p/6559422.html */
@@ -116,5 +117,30 @@ export default class Compute {
     public static safePow(x: number, y: number): number {
         if(y === 0) return 1;
         return y > 0 ? Math.pow(x, y) : (1 / Math.pow(x, -y));
+    }
+
+    public static maxCommonDivisor(a: number, b: number): number {
+        var c;
+        while(c !== 0) {
+            c = a % b;
+            if(c !== 0) {
+                a = b;
+                b = c;
+            }
+        }
+        return b;
+    }
+
+    public static reduction(a: number, b: number): [number, number] {
+        const commonDivisor = Compute.maxCommonDivisor(a, b);
+        return [Float.divide(a, commonDivisor), Float.divide(b, commonDivisor)];
+    }
+
+    public static toFrac(n: number): [number, number] {
+        const numStr = n.toString();
+        if(numStr.indexOf(".") === -1) return [n, 1];
+
+        const exp = numStr.split(".")[1].length;
+        return Compute.reduction(parseInt(numStr.replace(".", "")), 10 ** exp);
     }
 }
