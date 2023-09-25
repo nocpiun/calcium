@@ -19,6 +19,21 @@
             font-size: 11pt;
             color: var(--ca-gray1) !important;
         }
+        .tofrac-switcher {
+            position: absolute;
+            left: 80px;
+            bottom: 15px;
+            font-size: 11pt;
+            border: 2px solid var(--ca-gray2);
+            border-radius: 50px;
+            background-color: var(--ca-gray5);
+            outline: none;
+            cursor: pointer;
+            &.active {
+                border-color: var(--ca-gray4);
+                background-color: var(--ca-gray9);
+            }
+        }
         .number-box-list {
             width: 40%;
             margin: 20px;

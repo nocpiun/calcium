@@ -1,5 +1,5 @@
 import React, { useState, useRef, useCallback } from "react";
-import { BlockMath } from "react-katex";
+import { BlockMath, InlineMath } from "react-katex";
 import { useContextMenu, ContextMenuItem } from "use-context-menu";
 
 import { HistoryItemInfo } from "@/components/sidebar/History";
@@ -8,6 +8,7 @@ import { errorText, acTable } from "@/global";
 import Emitter from "@/utils/Emitter";
 import Utils from "@/utils/Utils";
 import Compiler from "@/compiler/Compiler";
+import Compute from "@/compiler/Compute";
 import Is from "@/compiler/Is";
 import Logger from "@/utils/Logger";
 import { NumberSys, RecordType } from "@/types";
@@ -26,6 +27,7 @@ import ProdDialog from "@/dialogs/ProdDialog";
 
 const Output: React.FC = () => {
     const [outputContent, setOutputContent] = useState<string>("");
+    const [isTofrac, setIsTofrac] = useState<boolean>(false);
     const variableRef = useRef<Map<string, string>>(new Map<string, string>());
     const inputRef = useRef<InputBox>(null);
     const varsDialogRef = useRef<Dialog>(null);
@@ -33,6 +35,10 @@ const Output: React.FC = () => {
     const sumDialogRef = useRef<Dialog>(null);
     const intDialogRef = useRef<Dialog>(null);
     const prodDialogRef = useRef<Dialog>(null);
+
+    const handleTofracSwitch = () => {
+        setIsTofrac(!isTofrac);
+    };
 
     const handleResult = useCallback((currentContent: string) => {
         if(currentContent.split(" ").length <= 1) return;
@@ -75,6 +81,12 @@ const Output: React.FC = () => {
 
         if(result.indexOf("NaN") > -1 || result === "") error = true;
 
+        // tofrac
+        if(isTofrac && result.indexOf(".") > -1 && result.split(".")[1].length <= 7) {
+            const [a, b] = Compute.toFrac(parseFloat(result));
+            result = "\\frac{"+ a +"}{"+ b +"}";
+        }
+
         // Display the result
         if(result.indexOf("Infinity") > -1) result = result.replace("Infinity", "\\infty");
         if(!error) {
@@ -89,7 +101,7 @@ const Output: React.FC = () => {
 
         // Add the result to history list
         Emitter.get().emit("add-record", rawText, result, RecordType.GENERAL, NumberSys.DEC);
-    }, []);
+    }, [isTofrac]);
 
     const handleInput = useCallback((symbol: string) => {
         if(!inputRef.current) return;
@@ -223,6 +235,9 @@ const Output: React.FC = () => {
                 {Utils.isMobile() && <SidebarOpener />}
 
                 <span className="output-tag">Output</span>
+                <button className={"tofrac-switcher"+ (isTofrac ? " active" : "")} onClick={() => handleTofracSwitch()}>
+                    <InlineMath math="\frac{a}{b}"/>
+                </button>
                 <InputBox
                     ref={inputRef}
                     ltr={false}
