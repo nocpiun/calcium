@@ -1,4 +1,9 @@
-import React, { useState, useRef, useCallback } from "react";
+import React, {
+    useState,
+    useEffect,
+    useRef,
+    useCallback
+} from "react";
 import { BlockMath, InlineMath } from "react-katex";
 import { useContextMenu, ContextMenuItem } from "use-context-menu";
 
@@ -202,6 +207,28 @@ const Output: React.FC = () => {
                 return currentContent.replace(cursor, symbol +" "+ cursor);
         }
     }, [inputRef, handleResult]);
+
+    useEffect(() => {
+        var pureContent = outputContent.replace("=", "");
+        if(pureContent === "\\text{"+ errorText +"}") return;
+        if(pureContent === "\\infty") return;
+
+        if(isTofrac && pureContent.indexOf(".") > -1 && pureContent.split(".")[1].length <= 7) {
+            const [a, b] = Compute.toFrac(parseFloat(pureContent));
+            setOutputContent("=\\frac{"+ a +"}{"+ b +"}");
+            return;
+        }
+
+        if(!isTofrac && pureContent.indexOf("\\frac{") > -1) {
+            const matchedStr = pureContent.match(/\d+/g);
+            if(!matchedStr) return;
+
+            var a = parseInt(matchedStr[0]),
+                b = parseInt(matchedStr[1]);
+
+            setOutputContent("="+ (a / b));
+        }
+    }, [isTofrac, outputContent]);
 
     useEmitter([
         ["clear-input", () => setOutputContent("")],

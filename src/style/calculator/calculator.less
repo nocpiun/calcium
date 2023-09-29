@@ -11,6 +11,9 @@
         .border-line(bottom);
         position: relative;
         min-height: 206px;
+        * {
+            font-family: @font-katex;
+        }
         .output-tag {
             &:extend(p all);
             position: absolute;
@@ -96,6 +99,9 @@
                 .scrollbar-style();
                 & > div:first-child {
                     margin-left: auto;
+                }
+                span.mfrac {
+                    font-size: .82em;
                 }
             }
         }
