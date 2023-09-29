@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import Axios from "axios";
 
+import useEmitter from "@/hooks/useEmitter";
 import { RepoReleaseResponse } from "@/types";
 import Logger from "@/utils/Logger";
 
@@ -14,13 +15,17 @@ const ReleasesIndialogPage: React.FC = () => {
         window.open(releaseItem.html_url);
     };
 
-    useEffect(() => {
-        Axios.get<RepoReleaseResponse[]>(fetchURL).then((res) => {
-            setList(res.data);
-        }).catch((err) => {
-            Logger.error("Axios cannot fetch release list from Github, ERROR: "+ err);
-        });
-    }, []);
+    useEmitter([
+        ["release-indialog-open", () => {
+            if(list) return;
+
+            Axios.get<RepoReleaseResponse[]>(fetchURL).then((res) => {
+                setList(res.data);
+            }).catch((err) => {
+                Logger.error("Axios cannot fetch release list from Github, ERROR: "+ err);
+            });
+        }]
+    ]);
 
     return (
         <div className="release-list">

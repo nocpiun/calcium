@@ -1,6 +1,7 @@
 import React, { ReactElement, forwardRef, useState, useId } from "react";
 import { InlineMath } from "react-katex";
 
+import Emitter from "@/utils/Emitter";
 import type { PropsWithRef } from "@/types";
 import { version } from "@/global";
 
@@ -99,7 +100,13 @@ const AboutDialog: React.FC<AboutDialogProps> = forwardRef<Dialog, AboutDialogPr
                 <p><img src="/icon.png" alt="icon" width={18}/> <b>Calcium</b> 是一个由React+Typescript编写的基于web的网页计算器.</p>
 
                 <ul>
-                    <li><AboutItem name="版本" content={<button onClick={() => setReleasesVisible(true)}>{version}</button>}/></li>
+                    <li><AboutItem name="版本" content={
+                        <button onClick={() => {
+                            setReleasesVisible(true);
+                            Emitter.get().emit("release-indialog-open")}}>
+                            {version}
+                        </button>
+                    }/></li>
                     <li><AboutItem name="作者" content="NoahHrreion"/></li>
                     <li><AboutItem name="数学显示" content={<a href="https://katex.org" target="_blank" rel="noreferrer" className="katex-logo"><InlineMath>\KaTeX</InlineMath></a>}/></li>
                     <li><AboutItem name="支持我" content={<a href="https://nin.red/#/donate" target="_blank" rel="noreferrer">打赏</a>}/></li>
