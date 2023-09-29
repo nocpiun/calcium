@@ -6,6 +6,12 @@ import Transformer from "@/compiler/Transformer";
 import Is from "@/compiler/Is";
 
 export default class Utils {
+    /**
+     * Get element by ID
+     * 
+     * If it cannot get that element, it will return the
+     * body element
+     */
     public static getElem<E extends HTMLElement = HTMLElement>(id: string): E {
         return document.getElementById(id) as E ?? document.body;
     }
@@ -20,7 +26,14 @@ export default class Utils {
     //     return (self.devicePixelRatio || 1) / backingStore;
     // }
 
-    /** @see https://blog.csdn.net/crazyxiaoyuge/article/details/112189600 */
+    /**
+     * Get the real width and height of the browser window
+     * 
+     * For preventing the page being covered by the toolbar
+     * in mobile clients
+     * 
+     * @see https://blog.csdn.net/crazyxiaoyuge/article/details/112189600
+     */
     public static getWindowConfig(): { width: number, height: number } {
         var width = window.innerWidth;
         var height = window.innerHeight;
@@ -38,6 +51,9 @@ export default class Utils {
         return { width, height };
     }
 
+    /**
+     * Remove an item from an array by its index
+     */
     public static arrayRemove<T = any>(oldArray: T[], index: number): T[] {
         if(index < 0 || index >= oldArray.length) return [];
         var newArray = oldArray;
@@ -52,6 +68,9 @@ export default class Utils {
         return newArray;
     }
 
+    /**
+     * Put an item into an array
+     */
     public static arrayPut<T = any>(oldArray: T[], index: number, item: T): T[] {
         if(index < 0 || index >= oldArray.length + 1) return [];
         var newArray = oldArray;
@@ -60,6 +79,9 @@ export default class Utils {
         return newArray;
     }
 
+    /**
+     * To determine whether the symbol is allowed
+     */
     public static isAllowedSymbol(symbol: string): boolean {
         const blocked = [
             "Tab", "CapsLock", "NumLock", "ScrollLock", "Shift", "Control", "Alt", "Meta", "ContextMenu",
@@ -72,6 +94,10 @@ export default class Utils {
         return !(blocked.indexOf(symbol) > -1);
     }
 
+    /**
+     * To determine whether the symbol is allowed
+     * in programming mode
+     */
     public static isAllowedProgrammingSymbol(symbol: string): boolean {
         const allowed = [
             "1", "2", "3", "4", "5", "6", "7", "8", "9", "0",
@@ -84,13 +110,20 @@ export default class Utils {
         return allowed.indexOf(symbol) > -1;
     }
 
-    /** @see https://bbs.csdn.net/topics/310077618 */
+    /**
+     * To fix `offsetLeft` of an element always be 0
+     * 
+     * @see https://bbs.csdn.net/topics/310077618
+     */
     public static getOffsetLeft(elem: HTMLElement): number {
         var offset = elem.offsetLeft;
         if(elem.offsetParent) offset += Utils.getOffsetLeft(elem.offsetParent as HTMLElement);
         return offset;
     }
 
+    /**
+     * To determine whether two objects are equal
+     */
     public static is<T = unknown>(obj1: T, obj2: T): boolean {
         if(!(typeof obj1 === "object" && typeof obj2 === "object")) {
             return obj1 === obj2;
@@ -111,6 +144,9 @@ export default class Utils {
         return isEqual;
     }
     
+    /**
+     * To determine whether two arrays are equal
+     */
     public static arrayIs<T extends any[] = unknown[]>(arr1: T, arr2: T): boolean {
         if(arr1.length !== arr2.length) return false;
         
@@ -124,11 +160,17 @@ export default class Utils {
         return true;
     }
 
+    /**
+     * Scroll to the end of the whole page
+     */
     public static scrollToEnd(id: string, top: number = 1, left: number = 1): void {
         var elem = Utils.getElem(id);
         elem.scrollTo({ top: elem.scrollHeight * top, left: elem.scrollWidth * left });
     }
 
+    /**
+     * Get the current value of a react state object
+     */
     public static getCurrentState<T>(setState: React.Dispatch<React.SetStateAction<T>>): Promise<T> {
         return new Promise((resolve, reject) => {
             setState((currentState) => {
@@ -138,6 +180,10 @@ export default class Utils {
         });
     }
 
+    /**
+     * To transform a number string in any number system,
+     * which is going to be calculated, into a JS number
+     */
     public static strToNum(str: string, numberSys: NumberSys): number {
         if(numberSys === NumberSys.HEX) {
             return parseInt(Transformer.hexToDec(str));
@@ -146,10 +192,16 @@ export default class Utils {
         }
     }
 
+    /**
+     * To determine whether the dark theme is on
+     */
     public static isDarkMode(): boolean {
         return document.body.getAttribute("theme") === "dark";
     }
 
+    /**
+     * To determine whether there's any dialog opened
+     */
     public static isAnyDialogOpen(): boolean {
         var dialogs = document.getElementsByTagName("dialog");
         for(let i = 0; i < dialogs.length; i++) {
@@ -158,6 +210,9 @@ export default class Utils {
         return false;
     }
 
+    /**
+     * To determine whether the app is opened in mobile clients
+     */
     public static isMobile(): boolean {
         const mobileClients = [
             /Android/i,
@@ -172,6 +227,11 @@ export default class Utils {
         return mobileClients.some((reg) => window.navigator.userAgent.match(reg));
     }
 
+    /**
+     * Copy some text to the clipboard
+     * 
+     * @async
+     */
     public static async writeClipboard(text: string): Promise<void> {
         try {
             await window.navigator.clipboard.writeText(text);
@@ -180,6 +240,9 @@ export default class Utils {
         }
     }
 
+    /**
+     * To transform a pitch value into a note string
+     */
     public static pitchToNoteStr(pitch: number): string {
         const noteList = ["C", "C#", "D", "D#", "E", "E#", "F", "F#", "G", "G#", "A", "A#", "B"];
 

@@ -119,7 +119,7 @@ export default class Compute {
         return y > 0 ? Math.pow(x, y) : (1 / Math.pow(x, -y));
     }
 
-    public static maxCommonDivisor(a: number, b: number): number {
+    public static gcd(a: number, b: number): number {
         var c;
         while(c !== 0) {
             c = a % b;
@@ -132,7 +132,7 @@ export default class Compute {
     }
 
     public static reduction(a: number, b: number): [number, number] {
-        const commonDivisor = Compute.maxCommonDivisor(a, b);
+        const commonDivisor = Compute.gcd(a, b);
         return [Float.divide(a, commonDivisor), Float.divide(b, commonDivisor)];
     }
 

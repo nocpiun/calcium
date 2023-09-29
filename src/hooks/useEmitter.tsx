@@ -5,6 +5,19 @@ import Emitter from "@/utils/Emitter";
 
 type EmitterInstance = [string, (...args: any[]) => any];
 
+/**
+ * Create an event listener with `EventEmitter`
+ * 
+ * @example
+ * ```ts
+ * useEmitter([
+ *     ["foo", () => console.log("bar")]
+ * ]);
+ * 
+ * // in somewhere...
+ * new Emitter().emit("foo"); // bar
+ * ```
+ */
 export default function useEmitter(instances: EmitterInstance[]) {
     useEffect(() => {
         instances.forEach((instance: EmitterInstance, i: number) => {

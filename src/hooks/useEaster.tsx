@@ -1,6 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect } from "react";
 
+/**
+ * Apply the *easter* to a React component
+ */
 export default function useEaster(contentSetter: React.Dispatch<React.SetStateAction<string>>) {
     useEffect(() => {
         document.body.addEventListener("keydown", (e: KeyboardEvent) => {
