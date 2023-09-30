@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, {
     useState,
     useEffect,
@@ -11,7 +13,7 @@ import HistoryItem from "@/components/sidebar/HistoryItem";
 
 import Emitter from "@/utils/Emitter";
 import Utils from "@/utils/Utils";
-import { NumberSys, RecordType } from "@/types";
+import { NumberSys, RecordType, RollbackToward } from "@/types";
 
 import IdReducer from "@/reducers/IdReducer";
 
@@ -25,6 +27,7 @@ export interface HistoryItemInfo {
 
 const History: React.FC = () => {
     const [list, setList] = useState<HistoryItemInfo[]>([]);
+    const [rollbackIndex, setRollbackIndex] = useState<number>(0);
     const [unusedId, dispatchId] = useReducer(IdReducer, { id: 0 });
     const listElemRef = useRef<HTMLDivElement>(null);
 
@@ -71,7 +74,36 @@ const History: React.FC = () => {
 
     useEffect(() => {
         Utils.scrollToEnd("history-body", 1, 0);
+        setRollbackIndex(list.length - 1);
     }, [list]);
+
+    useEffect(() => {
+        Emitter.get().on("input-last-result", async () => {
+            const currentList = await Utils.getCurrentState(setList);
+            Emitter.get().emit("set-content", currentList[currentList.length - 1].output.split("").join(" "));
+        });
+
+        Emitter.get().on("record-rollback", async (toward: RollbackToward) => {
+            const currentList = await Utils.getCurrentState(setList);
+            const currentRollbackIndex = await Utils.getCurrentState(setRollbackIndex);
+            if(currentList.length === 0) return;
+            const record = currentList[currentRollbackIndex + toward];
+
+            if(
+                (
+                    toward === RollbackToward.PREV &&
+                    currentRollbackIndex > 0
+                ) ||
+                (
+                    toward === RollbackToward.NEXT &&
+                    currentRollbackIndex < currentList.length - 1
+                )
+            ) {
+                setRollbackIndex(currentRollbackIndex + toward);
+                Emitter.get().emit("set-content", record.input, record.output);
+            }
+        });
+    }, []);
 
     const { contextMenu, onContextMenu } = useContextMenu(
         <>

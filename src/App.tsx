@@ -27,15 +27,17 @@ const App: React.FC = () => {
 	useEffect(() => {
 		document.body.addEventListener("keydown", (e: KeyboardEvent) => {
 			shortcuts.forEach((shortcut, key) => {
-				if(e.ctrlKey && key.includes("ctrl") && key.includes(e.key)) {
+				if(
+					key.includes(e.key) &&
+					(
+						(e.ctrlKey && key.includes("ctrl")) ||
+						(e.shiftKey && key.includes("shift")) ||
+						(e.altKey && key.includes("alt")) ||
+						(key.length === 1)
+					)
+				) {
 					e.preventDefault();
 					shortcut.action();
-					return;
-				}
-				if(e.shiftKey && key.includes("shift") && key.includes(e.key)) {
-					e.preventDefault();
-					shortcut.action();
-					return;
 				}
 			});
 		});

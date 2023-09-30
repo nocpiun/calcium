@@ -1,7 +1,7 @@
 import Compute from "@/compiler/Compute";
 
 import Emitter from "@/utils/Emitter";
-import { MathFunction, Shortcut } from "@/types";
+import { MathFunction, Shortcut, RollbackToward } from "@/types";
 
 export const version = "1.3.1";
 export const errorText = "\\text{Error}";
@@ -139,6 +139,12 @@ export const shortcuts: Map<string[], Shortcut> = new Map([
             Emitter.get().emit("clear-function");
         }
     }],
+    [["ctrl", "e"], {
+        description: "打开或关闭分数模式",
+        action: () => {
+            Emitter.get().emit("switch-tofrac");
+        }
+    }],
     [["shift", "ArrowLeft"], {
         description: "将光标移到前部",
         action: () => {
@@ -149,6 +155,24 @@ export const shortcuts: Map<string[], Shortcut> = new Map([
         description: "将光标移到尾部",
         action: () => {
             Emitter.get().emit("move-back");
+        }
+    }],
+    [["ctrl", "f"], {
+        description: "输入上一次的计算结果",
+        action: () => {
+            Emitter.get().emit("input-last-result");
+        }
+    }],
+    [["ArrowUp"], {
+        description: "输入上一个算式",
+        action: () => {
+            Emitter.get().emit("record-rollback", RollbackToward.PREV);
+        }
+    }],
+    [["ArrowDown"], {
+        description: "输入下一个算式",
+        action: () => {
+            Emitter.get().emit("record-rollback", RollbackToward.NEXT);
         }
     }],
 ]);

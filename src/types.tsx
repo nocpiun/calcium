@@ -114,3 +114,7 @@ export interface RepoReleaseAsset {
     size: number
     browser_download_url: string
 }
+
+export enum RollbackToward {
+    PREV = -1, NEXT = 1
+}

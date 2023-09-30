@@ -4,6 +4,8 @@ import React from "react";
 import { NumberSys } from "@/types";
 import Transformer from "@/compiler/Transformer";
 import Is from "@/compiler/Is";
+import Compute from "@/compiler/Compute";
+import Float from "@/compiler/Float";
 
 export default class Utils {
     /**
@@ -252,5 +254,26 @@ export default class Utils {
         const note = noteList[Math.floor(pitch) % 13];
 
         return note + part.toString();
+    }
+
+    /**
+     * 
+     */
+    public static strToFrac(str: string): string {
+        const [a, b] = Compute.toFrac(parseFloat(str));
+        return "\\frac{"+ a +"}{"+ b +"}";
+    }
+
+    /**
+     * 
+     */
+    public static fracToStr(fracStr: string): string {
+        const matchedStr = fracStr.match(/\d+/g);
+        if(!matchedStr) return "";
+
+        var a = parseInt(matchedStr[0]),
+            b = parseInt(matchedStr[1]);
+        
+        return Float.divide(a, b).toString();
     }
 }

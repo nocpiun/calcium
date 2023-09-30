@@ -15,6 +15,7 @@ import Utils from "@/utils/Utils";
 import Compiler from "@/compiler/Compiler";
 import Compute from "@/compiler/Compute";
 import Is from "@/compiler/Is";
+import Float from "@/compiler/Float";
 import Logger from "@/utils/Logger";
 import { NumberSys, RecordType } from "@/types";
 
@@ -42,7 +43,7 @@ const Output: React.FC = () => {
     const prodDialogRef = useRef<Dialog>(null);
 
     const handleTofracSwitch = () => {
-        setIsTofrac(!isTofrac);
+        setIsTofrac((current) => !current);
     };
 
     const handleResult = useCallback((currentContent: string) => {
@@ -214,24 +215,18 @@ const Output: React.FC = () => {
         if(pureContent === "\\infty") return;
 
         if(isTofrac && pureContent.indexOf(".") > -1 && pureContent.split(".")[1].length <= 7) {
-            const [a, b] = Compute.toFrac(parseFloat(pureContent));
-            setOutputContent("=\\frac{"+ a +"}{"+ b +"}");
+            setOutputContent("="+ Utils.strToFrac(pureContent));
             return;
         }
 
         if(!isTofrac && pureContent.indexOf("\\frac{") > -1) {
-            const matchedStr = pureContent.match(/\d+/g);
-            if(!matchedStr) return;
-
-            var a = parseInt(matchedStr[0]),
-                b = parseInt(matchedStr[1]);
-
-            setOutputContent("="+ (a / b));
+            setOutputContent("="+ Utils.fracToStr(pureContent));
         }
     }, [isTofrac, outputContent]);
 
     useEmitter([
         ["clear-input", () => setOutputContent("")],
+        ["switch-tofrac", () => handleTofracSwitch()],
         ["history-item-click", (itemInfo: HistoryItemInfo) => {
             if(itemInfo.type !== RecordType.GENERAL) return;
             if(!inputRef.current) return;
@@ -241,7 +236,17 @@ const Output: React.FC = () => {
         }],
         ["open-vars-dialog", () => varsDialogRef.current?.open()],
         ["open-funcs-dialog", () => funcsDialogRef.current?.open()],
-        ["do-input", (symbol: string) => inputRef.current?.handleInput(symbol)]
+        ["do-input", (symbol: string) => inputRef.current?.handleInput(symbol)],
+        ["set-content", (inputContent: string, outputContent: string = "") => {
+            if(!inputRef.current) return;
+
+            if(inputContent.replaceAll(" ", "").indexOf("\\frac{") > -1) {
+                inputContent = Utils.fracToStr(inputContent).split("").join(" ");
+            }
+
+            inputRef.current.value = inputContent +" "+ cursor;
+            setOutputContent((outputContent.length !== 0 ? "=" : "")+ outputContent);
+        }]
     ]);
 
     useEaster(setOutputContent); // K U N
