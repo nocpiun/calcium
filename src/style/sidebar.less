@@ -15,66 +15,67 @@
             border-bottom: 1px solid var(--ca-gray2);
             white-space: nowrap;
         }
-        .mode-switcher {
-            font-size: 0;
-            .mode-button-container {
-                position: relative;
-                .highlight-bar {
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    width: 3px;
-                    height: 100%;
-                    &.active {
-                        background-color: var(--ca-blue4) !important;
-                    }
-                }
-                .mode-button {
-                    width: 100%;
-                    height: 0;
-                    padding-bottom: 100%;
-                    background-color: transparent;
-                    border: none;
-                    mask-repeat: no-repeat;
-                    mask-size: 50%;
-                    mask-position: center center;
-                    background-color: var(--ca-gray1);
-                    cursor: pointer;
-                    &.active {
-                        background-color: var(--ca-gray-light) !important;
-                    }
-                    &:hover {
-                        background-color: var(--ca-gray6);
-                    }
-                }
-                &:hover .highlight-bar {
-                    background-color: var(--ca-gray7);
-                }
-                &:active .highlight-bar {
-                    background-color: var(--ca-blue3);
-                }
-                .mobile-mode-button {
-                    display: none; // flex
-                    height: 100%;
-                    &-bar {
-                        width: 5px;
-                    }
-                    &-name {
-                        flex: 1;
-                        display: flex;
-                        align-items: center;
-                        padding-left: 7px;
-                        color: var(--ca-gray7);
-                        font-size: 11pt;
-                        white-space: nowrap;
-                        overflow: hidden;
-                    }
-                    &.active {
-                        .mobile-mode-button-bar {
-                            background-color: var(--ca-blue1);
+        .mode-switcher-wrapper {
+            position: relative;
+            .mode-switcher-tab-slider {
+                position: absolute;
+                left: 0;
+                width: 3px;
+                height: 33%;
+                background-color: var(--ca-blue4);
+                transition: transform .15s ease;
+            }
+            .mode-switcher {
+                font-size: 0;
+                .mode-button-container {
+                    position: relative;
+                    .mode-button {
+                        width: 100%;
+                        height: 0;
+                        padding-bottom: 100%;
+                        background-color: transparent;
+                        border: none;
+                        mask-repeat: no-repeat;
+                        mask-size: 50%;
+                        mask-position: center center;
+                        background-color: var(--ca-gray1);
+                        cursor: pointer;
+                        &.active {
+                            background-color: var(--ca-gray-light) !important;
                         }
-                        .mobile-mode-button-name {
-                            color: var(--ca-gray-light);
+                        &:hover {
+                            background-color: var(--ca-gray6);
+                        }
+                    }
+                    &:hover .highlight-bar {
+                        background-color: var(--ca-gray7);
+                    }
+                    &:active .highlight-bar {
+                        background-color: var(--ca-blue3);
+                    }
+                    .mobile-mode-button {
+                        display: none; // flex
+                        height: 100%;
+                        &-bar {
+                            width: 5px;
+                        }
+                        &-name {
+                            flex: 1;
+                            display: flex;
+                            align-items: center;
+                            padding-left: 7px;
+                            color: var(--ca-gray7);
+                            font-size: 11pt;
+                            white-space: nowrap;
+                            overflow: hidden;
+                        }
+                        &.active {
+                            .mobile-mode-button-bar {
+                                background-color: var(--ca-blue1);
+                            }
+                            .mobile-mode-button-name {
+                                color: var(--ca-gray-light);
+                            }
                         }
                     }
                 }

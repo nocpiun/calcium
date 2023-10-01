@@ -70,10 +70,13 @@ const Sidebar: React.FC = () => {
                     </div>
                 )}
 
-                <div className="mode-switcher">
-                    <ModeButton modeName="通用" mode={Mode.GENERAL} icon={GeneralIcon}/>
-                    <ModeButton modeName="图像" mode={Mode.GRAPHING} icon={GraphingIcon}/>
-                    <ModeButton modeName="程序员" mode={Mode.PROGRAMMING} icon={ProgrammingIcon}/>
+                <div className="mode-switcher-wrapper">
+                    <div className="mode-switcher-tab-slider" style={{ transform: "translateY("+ mode * 100 +"%)" }}/>
+                    <div className="mode-switcher">
+                        <ModeButton modeName="通用" mode={Mode.GENERAL} icon={GeneralIcon}/>
+                        <ModeButton modeName="图像" mode={Mode.GRAPHING} icon={GraphingIcon}/>
+                        <ModeButton modeName="程序员" mode={Mode.PROGRAMMING} icon={ProgrammingIcon}/>
+                    </div>
                 </div>
                 
                 {/* Mobile only */}

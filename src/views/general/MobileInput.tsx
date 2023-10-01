@@ -1,4 +1,6 @@
-import React, { memo } from "react";
+import React, { memo, useState } from "react";
+
+import useEmitter from "@/hooks/useEmitter";
 
 import KeypadTab from "@/components/KeypadTab";
 import KeypadSection from "@/components/KeypadSection";
@@ -10,13 +12,37 @@ interface MobileInputProps {
 }
 
 const MobileInput: React.FC<MobileInputProps> = memo((props) => {
+    const [sliderLeft, setSliderLeft] = useState<number>(31);
+
+    useEmitter([
+        ["open-keypad-tab", (targetId: string) => {
+            switch(targetId) {
+                case "common":
+                    setSliderLeft(31);
+                    break;
+                case "symbols":
+                    setSliderLeft(31 * 3 + 31.5);
+                    break;
+                case "functions":
+                    setSliderLeft(31 * 5 + 31.5 * 2);
+                    break;
+                case "professional":
+                    setSliderLeft(31 * 7 + 31.5 * 3);
+                    break;
+            }
+        }]
+    ]);
+
     return (
         <div className="mobile-input-container">
-            <div className="tabs-container">
-                <KeypadTab name="常用" id="common" default={true}/>
-                <KeypadTab name="符号" id="symbols"/>
-                <KeypadTab name="函数" id="functions"/>
-                <KeypadTab name="高级" id="professional"/>
+            <div className="tabs-wrapper">
+                <div className="tabs-container">
+                    <KeypadTab name="常用" id="common" default={true}/>
+                    <KeypadTab name="符号" id="symbols"/>
+                    <KeypadTab name="函数" id="functions"/>
+                    <KeypadTab name="高级" id="professional"/>
+                </div>
+                <div className="tab-slider" style={{ transform: "translateX("+ sliderLeft +"px)" }}/>
             </div>
             <div className="keypad">
                 <KeypadSection id="common" default={true}>

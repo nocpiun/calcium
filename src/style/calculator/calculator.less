@@ -145,37 +145,48 @@
         flex-direction: column;
         flex-flow: column;
         height: 0;
-        .tabs-container {
-            display: flex;
-            padding-top: 10px;
-            background-color: var(--ca-light2);
-            border-bottom: 1px solid var(--ca-gray2);
-            .keypad-tab {
-                flex: 1;
+        .tabs-wrapper {
+            position: relative;
+            .tabs-container {
                 display: flex;
-                justify-content: center;
-                height: 30px;
-                & > div {
+                padding-top: 10px;
+                background-color: var(--ca-light2);
+                border-bottom: 1px solid var(--ca-gray2);
+                .keypad-tab {
+                    flex: 1;
                     display: flex;
-                    flex-direction: column;
-                    justify-content: space-between;
-                    height: 100%;
-                    .keypad-tab-name {
-                        color: var(--ca-gray7);
+                    justify-content: center;
+                    height: 30px;
+                    & > div {
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: space-between;
+                        height: 100%;
+                        .keypad-tab-name {
+                            color: var(--ca-gray7);
+                        }
+                        // .keypad-tab-bar {
+                        //     height: 5px;
+                        //     background-color: transparent;
+                        // }
                     }
-                    .keypad-tab-bar {
-                        height: 5px;
-                        background-color: transparent;
+                    &.open {
+                        .keypad-tab-name {
+                            color: var(--ca-gray-light);
+                        }
+                        // .keypad-tab-bar {
+                        //     background-color: var(--ca-blue1);
+                        // }
                     }
                 }
-                &.open {
-                    .keypad-tab-name {
-                        color: var(--ca-gray-light);
-                    }
-                    .keypad-tab-bar {
-                        background-color: var(--ca-blue1);
-                    }
-                }
+            }
+            .tab-slider {
+                width: 32px;
+                height: 5px;
+                position: absolute;
+                bottom: 0;
+                background-color: var(--ca-blue1);
+                transition: transform .15s ease;
             }
         }
         .keypad {

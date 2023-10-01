@@ -8,9 +8,9 @@ export interface ReducerAction<T, P> {
 }
 
 export enum Mode {
-    GENERAL,
-    GRAPHING,
-    PROGRAMMING
+    GENERAL = 0,
+    GRAPHING = 1,
+    PROGRAMMING = 2
 }
 
 export enum NumberSys {

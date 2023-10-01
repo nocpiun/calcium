@@ -43,8 +43,6 @@ const ModeButton: React.FC<ModeButtonProps> = (props) => {
                 !Utils.isMobile()
                 ? (
                     <>
-                        <div className={"highlight-bar"+ (isActive ? " active" : "")}/>
-            
                         <button
                             className={"mode-button"+ (isActive ? " active" : "")}
                             data-tooltip-id={id}

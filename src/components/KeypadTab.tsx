@@ -26,7 +26,7 @@ const KeypadTab: React.FC<KeypadTabProps> = (props) => {
         <div className={"keypad-tab"+ (open ? " open" : "")} id={props.id} onClick={() => handleClick()}>
             <div>
                 <div className="keypad-tab-name">{props.name}</div>
-                <div className="keypad-tab-bar"/>
+                {/* <div className="keypad-tab-bar"/> */}
             </div>
         </div>
     );
