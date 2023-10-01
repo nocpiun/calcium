@@ -5,6 +5,8 @@ import { shortcuts } from "@/global";
 import { Mode, RenderedFunction } from "@/types";
 import Utils from "@/utils/Utils";
 
+import useDefer from "@/hooks/useDefer";
+
 // Layout
 import "katex/dist/katex.min.css";
 import "use-context-menu/styles.css";
@@ -23,6 +25,7 @@ import MainContext from "@/contexts/MainContext";
 const App: React.FC = () => {
 	const [mode, setMode] = useState<Mode>(Mode.GENERAL);
 	const [functionList, setFunctionList] = useState<RenderedFunction[]>([]);
+	const defer = useDefer();
 
 	useEffect(() => {
 		document.body.addEventListener("keydown", (e: KeyboardEvent) => {
@@ -56,13 +59,15 @@ const App: React.FC = () => {
 
 	return (
 		<main className="calcium" id="calcium-main">
-			<MainContext.Provider value={{ mode, setMode, functionList, setFunctionList }}>
+			<MainContext.Provider value={{ mode, setMode, functionList, setFunctionList, defer }}>
 				<AliveScope>
-					<div className="app">
-						<Sidebar/>
-						<Calculator/>
-					</div>
-					<StatusBar />
+					{defer(0) && (
+						<div className="app">
+							{defer(1) && <Sidebar />}
+							{defer(1) && <Calculator />}
+						</div>
+					)}
+					{defer(0) && <StatusBar />}
 				</AliveScope>
 			</MainContext.Provider>
 		</main>

@@ -1,11 +1,15 @@
-import React, { memo } from "react";
+import React, { memo, useContext } from "react";
 import { useContextMenu, ContextMenuItem, ContextMenuDivider } from "use-context-menu";
 
 import InputButton from "@/components/InputButton";
 
 import Emitter from "@/utils/Emitter";
 
+import MainContext from "@/contexts/MainContext";
+
 const ProgrammingInput: React.FC = memo(() => {
+    const { defer } = useContext(MainContext);
+
     const { contextMenu, onContextMenu } = useContextMenu(
         <>
             <ContextMenuItem onSelect={() => Emitter.get().emit("do-input", "\\text{Result}")}>计算结果...</ContextMenuItem>
@@ -21,7 +25,7 @@ const ProgrammingInput: React.FC = memo(() => {
             <div
                 className="input-container"
                 onContextMenu={onContextMenu}>
-                <div className="keypad">
+                {defer(3) && <div className="keypad">
                     <div className="keypad-row">
                         <div style={{ flexGrow: 5 }}/>
                         <div className="keypad-placeholder"/>
@@ -160,7 +164,7 @@ const ProgrammingInput: React.FC = memo(() => {
                         <InputButton symbol="\text{Del}" grow={1} title="退格"/>
                         <InputButton symbol="\text{CH}" grow={1} title="清空历史记录"/>
                     </div>
-                </div>
+                </div>}
             </div>
             {contextMenu}
         </>
