@@ -165,24 +165,15 @@
                         .keypad-tab-name {
                             color: var(--ca-gray7);
                         }
-                        // .keypad-tab-bar {
-                        //     height: 5px;
-                        //     background-color: transparent;
-                        // }
                     }
-                    &.open {
-                        .keypad-tab-name {
-                            color: var(--ca-gray-light);
-                        }
-                        // .keypad-tab-bar {
-                        //     background-color: var(--ca-blue1);
-                        // }
+                    &.open .keypad-tab-name {
+                        color: var(--ca-gray-light);
                     }
                 }
             }
             .tab-slider {
-                width: 32px;
-                height: 5px;
+                width: 25%;
+                height: 3px;
                 position: absolute;
                 bottom: 0;
                 background-color: var(--ca-blue1);

@@ -12,22 +12,22 @@ interface MobileInputProps {
 }
 
 const MobileInput: React.FC<MobileInputProps> = memo((props) => {
-    const [sliderLeft, setSliderLeft] = useState<number>(31);
+    const [sliderLeft, setSliderLeft] = useState<number>(0);
 
     useEmitter([
         ["open-keypad-tab", (targetId: string) => {
             switch(targetId) {
                 case "common":
-                    setSliderLeft(31);
+                    setSliderLeft(0);
                     break;
                 case "symbols":
-                    setSliderLeft(31 * 3 + 31.5);
+                    setSliderLeft(100);
                     break;
                 case "functions":
-                    setSliderLeft(31 * 5 + 31.5 * 2);
+                    setSliderLeft(200);
                     break;
                 case "professional":
-                    setSliderLeft(31 * 7 + 31.5 * 3);
+                    setSliderLeft(300);
                     break;
             }
         }]
@@ -42,7 +42,7 @@ const MobileInput: React.FC<MobileInputProps> = memo((props) => {
                     <KeypadTab name="函数" id="functions"/>
                     <KeypadTab name="高级" id="professional"/>
                 </div>
-                <div className="tab-slider" style={{ transform: "translateX("+ sliderLeft +"px)" }}/>
+                <div className="tab-slider" style={{ transform: "translateX("+ sliderLeft +"%)" }}/>
             </div>
             <div className="keypad">
                 <KeypadSection id="common" default={true}>
