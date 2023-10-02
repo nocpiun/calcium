@@ -3,9 +3,9 @@ import React, { useState, useEffect } from "react";
 
 import type { NumberSys } from "@/types";
 import Emitter from "@/utils/Emitter";
+import Utils from "@/utils/Utils";
 
 interface NumberBoxProps {
-    name: string
     value: string
     type: NumberSys
 }
@@ -25,7 +25,7 @@ const NumberBox: React.FC<NumberBoxProps> = (props) => {
 
     return (
         <li className={"number-box"+ (isActive ? " active" : "")} onClick={() => clickHandle()}>
-            <span className="name">{props.name}</span>
+            <span className="name">{Utils.firstLetterUpperCase(props.type)}</span>
             <span className="number">{props.value}</span>
         </li>
     );

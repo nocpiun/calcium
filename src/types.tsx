@@ -41,14 +41,6 @@ export interface RenderedFunction {
     value: string
 }
 
-export interface IdReducerStateType {
-    id: number
-}
-
-export interface IdReducerActionType extends ReducerAction<"refresh", number> {
-    
-}
-
 export type WorkerResponse = {
     imageBitmap: ImageBitmap
 }

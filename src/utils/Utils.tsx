@@ -18,16 +18,6 @@ export default class Utils {
         return document.getElementById(id) as E ?? document.body;
     }
 
-    // public static getPixelRatio(ctx: any): number {
-    //     var backingStore = ctx.backingStorePixelRatio ||
-    //         ctx.webkitBackingStorePixelRatio ||
-    //         ctx.mozBackingStorePixelRatio ||
-    //         ctx.msBackingStorePixelRatio ||
-    //         ctx.oBackingStorePixelRatio ||
-    //         ctx.backingStorePixelRatio || 1;
-    //     return (self.devicePixelRatio || 1) / backingStore;
-    // }
-
     /**
      * Get the real width and height of the browser window
      * 
@@ -172,6 +162,17 @@ export default class Utils {
 
     /**
      * Get the current value of a react state object
+     * 
+     * This method should be called with `await`
+     * 
+     * @example
+     * ```ts
+     * const [state, setState] = useState(0);
+     * 
+     * // ...
+     * // (in async function)
+     * var currentState = await getCurrentState(setState);
+     * ```
      */
     public static getCurrentState<T>(setState: React.Dispatch<React.SetStateAction<T>>): Promise<T> {
         return new Promise((resolve, reject) => {
@@ -257,7 +258,8 @@ export default class Utils {
     }
 
     /**
-     * 
+     * To transform a real number string into fraction form
+     * and return it in KaTeX grammar
      */
     public static strToFrac(str: string): string {
         const [a, b] = Compute.toFrac(parseFloat(str));
@@ -265,7 +267,8 @@ export default class Utils {
     }
 
     /**
-     * 
+     * To transform a fraction form number string into
+     * real number form
      */
     public static fracToStr(fracStr: string): string {
         const matchedStr = fracStr.match(/\d+/g);
@@ -275,5 +278,17 @@ export default class Utils {
             b = parseInt(matchedStr[1]);
         
         return Float.divide(a, b).toString();
+    }
+
+    /**
+     * To transform the first letter of a string into upper case
+     * 
+     * @example
+     * ```ts
+     * Utils.firstLetterUpperCase("hello"); // -> "Hello"
+     * ```
+     */
+    public static firstLetterUpperCase(str: string): string {
+        return str.slice(0, 1).toUpperCase() + str.slice(1).toLowerCase();
     }
 }

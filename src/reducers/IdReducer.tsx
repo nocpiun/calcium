@@ -1,4 +1,12 @@
-import type { IdReducerStateType, IdReducerActionType } from "@/types";
+import type { ReducerAction } from "@/types";
+
+interface IdReducerStateType {
+    id: number
+}
+
+interface IdReducerActionType extends ReducerAction<"refresh", number> {
+    
+}
 
 const IdReducer = (state: IdReducerStateType, action: IdReducerActionType) => {
     switch(action.type) {

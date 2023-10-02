@@ -1,4 +1,10 @@
-import React, { useState, useRef, useEffect, useCallback } from "react";
+import React, {
+    useState,
+    useReducer,
+    useRef,
+    useEffect,
+    useCallback
+} from "react";
 import { BlockMath } from "react-katex";
 import { useContextMenu, ContextMenuItem } from "use-context-menu";
 
@@ -17,6 +23,8 @@ import { RecordType } from "@/types";
 import useEmitter from "@/hooks/useEmitter";
 import useEaster from "@/hooks/useEaster";
 
+import NumberSysReducer from "@/reducers/NumberSysReducer";
+
 import NumberBox from "./NumberBox";
 import InputBox, { cursor } from "@/components/InputBox";
 import SidebarOpener from "@/components/SidebarOpener";
@@ -26,10 +34,12 @@ import FunctionDialog from "@/dialogs/FunctionDialog";
 const ProgrammingOutput: React.FC = () => {
     const [outputContent, setOutputContent] = useState<string>("");
     const [numberSys, setNumberSys] = useState<NumberSys>(NumberSys.DEC);
-    const [hexValue, setHex] = useState<string>("0");
-    const [decValue, setDec] = useState<string>("0");
-    const [octValue, setOct] = useState<string>("0");
-    const [binValue, setBin] = useState<string>("0");
+    const [numberValues, dispatchNumberValue] = useReducer(NumberSysReducer, {
+        hex: "0",
+        dec: "0",
+        oct: "0",
+        bin: "0"
+    });
     const inputRef = useRef<InputBox>(null);
     const funcsDialogRef = useRef<Dialog>(null);
 
@@ -75,10 +85,8 @@ const ProgrammingOutput: React.FC = () => {
         // Add the result to history list
         Emitter.get().emit("add-record", rawText, "\\text{"+ displayValue +"}", RecordType.PROGRAMMING, numberSys);
 
-        setHex(Transformer.decToHex(result));
-        setDec(result);
-        setOct(Transformer.decToOct(result));
-        setBin(Transformer.decToBin(result));
+        // Update the values of all number systems
+        dispatchNumberValue({ type: "set", payload: result });
     }, [numberSys]);
 
     const handleInput = useCallback((symbol: string) => {
@@ -148,19 +156,20 @@ const ProgrammingOutput: React.FC = () => {
     }, [inputRef, handleResult]);
 
     useEffect(() => {
-        if(outputContent !== "") return;
+        Emitter.get().once("number-sys-chose", (type: NumberSys) => {
+            setNumberSys(type);
 
-        setHex("0");
-        setDec("0");
-        setOct("0");
-        setBin("0");
-    }, [outputContent]);
+            const value = numberValues[type];
+
+            if(!inputRef.current || value === "0") return;
+            inputRef.current.value = value.split("").join(" ") +" "+ cursor;
+            setOutputContent("");
+            dispatchNumberValue({ type: "set", payload: numberValues.dec });
+        });
+    }, [numberValues]);
 
     useEmitter([
         ["clear-input", () => setOutputContent("")],
-        ["number-sys-chose", (type: NumberSys) => {
-            setNumberSys(type);
-        }],
         ["history-item-click", (itemInfo: HistoryItemInfo) => {
             if(itemInfo.type !== RecordType.PROGRAMMING) return;
             if(!inputRef.current) return;
@@ -197,10 +206,12 @@ const ProgrammingOutput: React.FC = () => {
                 <span className="output-tag">Output</span>
 
                 <ul className="number-box-list">
-                    <NumberBox name="Hex" value={hexValue} type={NumberSys.HEX}/>
-                    <NumberBox name="Dec" value={decValue} type={NumberSys.DEC}/>
-                    <NumberBox name="Oct" value={octValue} type={NumberSys.OCT}/>
-                    <NumberBox name="Bin" value={binValue} type={NumberSys.BIN}/>
+                    {Object.keys(numberValues).map((key, index) => {
+                        return <NumberBox
+                            type={key as NumberSys}
+                            value={numberValues[key as keyof typeof numberValues]}
+                            key={index}/>;
+                    })}
                 </ul>
 
                 <InputBox
