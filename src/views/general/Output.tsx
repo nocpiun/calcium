@@ -1,7 +1,6 @@
 import React, {
     useState,
     useEffect,
-    useContext,
     useRef,
     useCallback
 } from "react";
@@ -22,8 +21,6 @@ import { NumberSys, RecordType } from "@/types";
 import useEmitter from "@/hooks/useEmitter";
 import useEaster from "@/hooks/useEaster";
 
-import MainContext from "@/contexts/MainContext";
-
 import InputBox, { cursor } from "@/components/InputBox";
 import SidebarOpener from "@/components/SidebarOpener";
 import type Dialog from "@/components/Dialog";
@@ -34,7 +31,6 @@ import IntDialog from "@/dialogs/IntDialog";
 import ProdDialog from "@/dialogs/ProdDialog";
 
 const Output: React.FC = () => {
-    const { defer } = useContext(MainContext);
     const [outputContent, setOutputContent] = useState<string>("");
     const [isTofrac, setIsTofrac] = useState<boolean>(false);
     const variableRef = useRef<Map<string, string>>(new Map<string, string>());
@@ -270,18 +266,18 @@ const Output: React.FC = () => {
                 {Utils.isMobile() && <SidebarOpener />}
 
                 <span className="output-tag">Output</span>
-                {defer(2) && <button className={"tofrac-switcher"+ (isTofrac ? " active" : "")} onClick={() => handleTofracSwitch()}>
+                <button className={"tofrac-switcher"+ (isTofrac ? " active" : "")} onClick={() => handleTofracSwitch()}>
                     <InlineMath math="\frac{a}{b}"/>
-                </button>}
-                {defer(2) && <InputBox
+                </button>
+                <InputBox
                     ref={inputRef}
                     ltr={false}
-                    onInputSymbol={(symbol) => handleInput(symbol)}/>}
-                {defer(2) && <div className="output-box">
+                    onInputSymbol={(symbol) => handleInput(symbol)}/>
+                <div className="output-box">
                     <span className="display">
                         {outputContent.split(" ").map((symbol, index) => <BlockMath key={index}>{symbol}</BlockMath>)}
                     </span>
-                </div>}
+                </div>
 
                 {/* Dialogs */}
                 <VariableDialog variableList={variableRef.current} ref={varsDialogRef}/>

@@ -116,7 +116,6 @@ export const acTable: Map<string, string> = new Map([
     ["round",  "\\text{round}("],
     ["rand",   "\\text{rand}("],
 
-    ["jini",   "\\text{taimei}"],
     ["kun",    "\\text{坤}"],
 ]);
 

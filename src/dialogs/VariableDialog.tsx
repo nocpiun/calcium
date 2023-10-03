@@ -24,7 +24,7 @@ const VariableDialog: React.FC<VariableDialogProps> = forwardRef<Dialog, Variabl
                     <tbody>
                         {
                             Array.from(constants).map(([constName, value], index) => {
-                                if(constName === "\\text{坤}") return <></>;
+                                if(constName === "\\text{坤}") return <React.Fragment key={index}/>;
 
                                 return (
                                     <tr key={index}>
