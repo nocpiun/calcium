@@ -50,9 +50,10 @@ export const functions: Map<string, MathFunction> = new Map([
 ]);
 
 export const constants: Map<string, number> = new Map([
-    ["\\pi",  Math.PI],
-    ["e",     Math.E],
-    ["\\phi", (Math.sqrt(5) - 1) / 2],
+    ["\\pi",      Math.PI],
+    ["e",         Math.E],
+    ["\\phi",     (Math.sqrt(5) - 1) / 2],
+    ["\\text{坤}", Math.sqrt(2 * Math.PI)],
 ]);
 
 /**
@@ -116,6 +117,7 @@ export const acTable: Map<string, string> = new Map([
     ["rand",   "\\text{rand}("],
 
     ["jini",   "\\text{taimei}"],
+    ["kun",    "\\text{坤}"],
 ]);
 
 export const shortcuts: Map<string[], Shortcut> = new Map([
