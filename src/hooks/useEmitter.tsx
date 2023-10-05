@@ -18,7 +18,7 @@ type EmitterInstance = [string, (...args: any[]) => any];
  * new Emitter().emit("foo"); // bar
  * ```
  */
-export default function useEmitter(instances: EmitterInstance[]) {
+export default function useEmitter(instances: EmitterInstance[]): void {
     useEffect(() => {
         instances.forEach((instance: EmitterInstance, i: number) => {
             Emitter.get().on(instance[0], (...args: any[]) => instance[1](...args));

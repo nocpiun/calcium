@@ -3,7 +3,7 @@ import Compiler from "@/compiler/Compiler";
 import { TokenType } from "@/compiler/token/Token";
 import DynamicToken from "@/compiler/token/DynamicToken";
 
-export default class SigmaToken extends DynamicToken {
+export default class SumToken extends DynamicToken {
     public type: TokenType = TokenType.SIGMA;
 
     public i: number;

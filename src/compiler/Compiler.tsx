@@ -11,7 +11,7 @@ import OperatorToken from "@/compiler/token/OperatorToken";
 import BracketToken from "@/compiler/token/BracketToken";
 import AbsToken from "@/compiler/token/AbsToken";
 import FunctionToken from "@/compiler/token/FunctionToken";
-import SigmaToken from "@/compiler/token/SigmaToken";
+import SumToken from "@/compiler/token/SumToken";
 import IntToken from "@/compiler/token/IntToken";
 import ProdToken from "@/compiler/token/ProdToken";
 import VariableToken from "@/compiler/token/VariableToken";
@@ -176,7 +176,7 @@ export default class Compiler {
             } else if(Is.rightBracket(symbol)) { // right bracket
 
                 if(this.sigmaI > -1 && this.sigmaN > -1) { // sum (sigma)
-                    this.root.add(new SigmaToken(this.sigmaI, this.sigmaN, this.secondaryRaw, this.variables));
+                    this.root.add(new SumToken(this.sigmaI, this.sigmaN, this.secondaryRaw, this.variables));
                     continue;
                 }
 
