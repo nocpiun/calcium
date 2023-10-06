@@ -8,11 +8,13 @@ import ModeButton from "@/components/sidebar/ModeButton";
 import History from "@/components/sidebar/History";
 import FunctionList from "@/components/sidebar/FunctionList";
 
-import { Mode } from "@/types";
+import { Mode, Theme } from "@/types";
 import { version } from "@/global";
 import Utils from "@/utils/Utils";
 import Storage from "@/utils/Storage";
 import Emitter from "@/utils/Emitter";
+
+import useThemeDetector from "@/hooks/useThemeDetector";
 
 import MainContext from "@/contexts/MainContext";
 
@@ -23,11 +25,11 @@ import ProgrammingIcon from "@/icons/programming_mode.svg";
 const Sidebar: React.FC = () => {
     const { mode } = useContext(MainContext);
     const [sidebarOpen, setSidebarOpen] = useState<boolean>(!Utils.isMobile());
-    const themeValue = Storage.get().getItem("theme", "light");
+    const themeValue = Storage.get().getItem("theme", useThemeDetector());
 
     const handleToggle = (isActive: boolean) => {
-        document.body.setAttribute("theme", isActive ? "light" : "dark");
-        Storage.get().setItem("theme", isActive ? "light" : "dark");
+        document.body.setAttribute("theme", isActive ? Theme.LIGHT : Theme.DARK);
+        Storage.get().setItem("theme", isActive ? Theme.LIGHT : Theme.DARK);
     };
 
     const layoutSwitch = (calcMode: Mode) => {
@@ -93,7 +95,7 @@ const Sidebar: React.FC = () => {
                         data-tooltip-id="theme-switcher"
                         data-tooltip-content="浅色 / 深色主题"
                         onToggle={(e) => handleToggle(e)}
-                        defaultToggleValue={themeValue === "light"}/>
+                        defaultToggleValue={themeValue === Theme.LIGHT}/>
 
                     <Tooltip
                         id="theme-switcher"

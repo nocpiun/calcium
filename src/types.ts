@@ -13,6 +13,11 @@ export enum Mode {
     PROGRAMMING = 2
 }
 
+export enum Theme {
+    LIGHT = "light",
+    DARK = "dark"
+}
+
 export enum NumberSys {
     HEX = "hex",
     DEC = "dec",
