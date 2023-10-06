@@ -76,3 +76,24 @@ declare module "*.worker.ts" {
   }
   export default WebpackWorker;
 }
+
+declare module "relationship.js" {
+  interface Options {
+    text: string
+    target?: string
+    sex?: -1 | 0 | 1
+    type?: "default" | "chain" | "pair"
+    reverse?: boolean
+    mode?: string
+    optimal?: boolean
+  }
+
+  interface ModeData {
+    [key: string]: string[]
+  }
+
+  function relationship(arg: Options | string): string[];
+
+  export default relationship;
+  export function setMode(name: string, data: ModeData);
+}
