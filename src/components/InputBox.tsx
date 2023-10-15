@@ -36,8 +36,20 @@ export default class InputBox extends Component<_Props, InputBoxState> {
         return InputBox.removeCursor(this.state.displayContent);
     }
 
+    /**
+     * Set value of the input box and then scroll to the end
+     * 
+     * Only when the purified new value is equal to the purified
+     * old value, don't do auto scroll
+     */
     public set value(newValue: string) {
-        this.setState({ displayContent: newValue }, () => Utils.scrollToEnd("display"));
+        const oldValue = this.state.displayContent;
+
+        this.setState({ displayContent: newValue }, () => {
+            if(InputBox.removeCursor(oldValue) === InputBox.removeCursor(newValue)) return;
+
+            Utils.scrollToEnd("display");
+        });
     }
 
     public reset(): void {

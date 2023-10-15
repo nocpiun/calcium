@@ -1,14 +1,24 @@
 import React from "react";
 
+import InputButton from "@/components/InputButton";
+
+import Emitter from "@/utils/Emitter";
+
 interface SeniorityInputButtonProps {
     name: string
     id: string
 }
 
-/** @todo */
 const SeniorityInputButton: React.FC<SeniorityInputButtonProps> = (props) => {
+    const handleClick = () => {
+        Emitter.get().emit("seniority-input", props.name, props.id);
+    };
+
     return (
-        <div></div>
+        <InputButton
+            symbol={props.name}
+            grow={1}
+            onClick={() => handleClick()}/>
     );
 }
 

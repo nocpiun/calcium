@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useEffect, useId } from "react";
+import React, { useState, useEffect, useId, DOMAttributes } from "react";
 import { Tooltip } from "react-tooltip";
 import { InlineMath } from "react-katex";
 
@@ -14,6 +14,7 @@ interface InputButtonProps {
     disabled?: boolean
     title?: string
     style?: React.CSSProperties
+    onClick?: () => void
 }
 
 const InputButton: React.FC<InputButtonProps> = (props) => {
@@ -22,6 +23,11 @@ const InputButton: React.FC<InputButtonProps> = (props) => {
     const id = useId();
 
     const clickHandle = () => {
+        if(props.onClick) {
+            props.onClick();
+            return;
+        }
+
         Emitter.get().emit("input", inputValue);
     };
 
