@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useEffect, useId, DOMAttributes } from "react";
+import React, { useState, useEffect, useId } from "react";
 import { Tooltip } from "react-tooltip";
 import { InlineMath } from "react-katex";
 
