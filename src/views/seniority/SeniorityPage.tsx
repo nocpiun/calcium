@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import relationship from "relationship.js";
 
 import useEmitter from "@/hooks/useEmitter";
+import Utils from "@/utils/Utils";
 
 import SeniorityInputButton from "@/views/seniority/SeniorityInputButton";
 
@@ -10,14 +11,25 @@ const inputSplit: string = getComputedStyle(document.body).getPropertyValue("--c
 const SeniorityPage: React.FC = () => {
     const [content, setContent] = useState<string[]>([]);
     const [result, setResult] = useState<string[]>([]);
+    const displayContainerRef = useRef<HTMLDivElement>(null);
+
+    const handleWheel = (e: React.WheelEvent) => {
+        if(!displayContainerRef.current) return;
+        e.stopPropagation();
+
+        displayContainerRef.current.scrollLeft += (e.deltaY > 0 ? 1 : -1) * 50;
+    };
 
     useEffect(() => {
+        if(!displayContainerRef.current) return;
+
         if(content.length === 0) {
             setResult([]);
             return;
         }
 
         setResult(relationship({ text: content.join(inputSplit) }));
+        Utils.scrollToEnd(displayContainerRef.current, 0, 1);
     }, [content]);
 
     useEmitter([
@@ -42,7 +54,7 @@ const SeniorityPage: React.FC = () => {
     return (
         <>
             <div className="seniority-output">
-                <div className="seniority-display-container">
+                <div className="seniority-display-container" onWheel={(e) => handleWheel(e)} ref={displayContainerRef}>
                     <div className="seniority-display">
                         <div className="seniority-symbol first">我</div>
                         {content.map((item, index) => {
