@@ -9,6 +9,7 @@ import Collection from "@/utils/Collection";
 import { MovingDirection, ZoomDirection } from "@/types";
 
 const delta: number = .01;
+const initialScale = 90;
 
 // Inside of Service Worker
 
@@ -34,7 +35,7 @@ export default class Render {
     private ratio: number;
     private workerCtx: Worker;
 
-    public scale: number = 90; // px per unit length
+    public scale: number = initialScale; // px per unit length
     public spacing: number = 1; // unit length
 
     private mouseDown: boolean = false;
@@ -127,15 +128,32 @@ export default class Render {
     }
 
     public handleWheel(dy: number): void {
+        // const delta = 20 / (1 + Math.pow(2 * Math.E, -(this.scale / 33 - 3)));
         const delta = 7;
+        const mouseOriginPoint = this.screenToCoordinates(this.mousePoint);
 
         dy > 0
         ? this.scale -= delta
         : this.scale += delta;
 
-        if(this.scale < 53) this.scale = 53;
+        if(this.scale * this.spacing <= 66) {
+            this.spacing === 2
+            ? this.spacing = 5
+            : this.spacing *= 2;
+        } else if(this.scale * this.spacing >= 138) {
+            this.spacing === 5
+            ? this.spacing = 2
+            : this.spacing /= 2;
+        }
 
         this.zoomFunctionImage(dy > 0 ? ZoomDirection.ZOOM_OUT : ZoomDirection.ZOOM_IN);
+
+        const mouseCurrentPoint = this.screenToCoordinates(this.mousePoint);
+        var centerDx = mouseCurrentPoint.x - mouseOriginPoint.x,
+            centerDy = mouseCurrentPoint.y - mouseOriginPoint.y;
+        
+        this.center.x += centerDx * this.scale;
+        this.center.y -= centerDy * this.scale;
     }
 
     private refreshMousePoint(rect: DOMRect, cx: number, cy: number): void {
@@ -249,7 +267,9 @@ export default class Render {
         }
     }
 
-    private zoomFunctionImage(direction: ZoomDirection) {
+    private zoomFunctionImage(direction: ZoomDirection): void {
+        if(this.displayedPoints.length === 0) return;
+
         var unitPx = this.scale * this.spacing;
         var oldBegin = this.displayedPoints.get(0)[0].x,
             newBegin = -this.center.x / unitPx,
@@ -357,11 +377,11 @@ export default class Render {
 
     // Point transforming
     private screenToCoordinates(point: Point): Point {
-        var unitPx = this.scale * this.spacing;
+        var unitPx = this.scale;
         return new Point((point.x - this.center.x) / unitPx, -(point.y - this.center.y) / unitPx);
     }
     private coordinatesToScreen(point: Point): Point {
-        var unitPx = this.scale * this.spacing;
+        var unitPx = this.scale;
         return new Point(this.center.x + (point.x * unitPx), this.center.y - (point.y * unitPx));
     }
     /*****/
