@@ -39,7 +39,7 @@ export enum Operator {
     RSH = "rsh",
 }
 
-export type MathFunction = [(...params: number[]) => number, number /* amount of params */];
+export type FunctionInfo = [(...params: number[]) => number, number /* amount of params */];
 
 export interface RenderedFunction {
     id: number

@@ -18,7 +18,7 @@ import VariableToken from "@/compiler/token/VariableToken";
 
 import { functions, constants } from "@/global";
 import { Operator, NumberSys } from "@/types";
-import type { MathFunction } from "@/types";
+import type { FunctionInfo } from "@/types";
 
 export type NumberSymbol = string;
 
@@ -32,7 +32,7 @@ export default class Compiler {
 
     private layer: number = 0;
     private inAbs: boolean = false;
-    private currentFunction: MathFunction | null = null;
+    private currentFunction: FunctionInfo | null = null;
     private secondaryRaw: string[] = [];
     private hasError: boolean = false;
 

@@ -1,12 +1,12 @@
 import Compute from "@/compiler/Compute";
 
 import Emitter from "@/utils/Emitter";
-import { MathFunction, Shortcut, RollbackToward } from "@/types";
+import { FunctionInfo, Shortcut, RollbackToward } from "@/types";
 
 export const version = "1.3.3";
 export const errorText = "\\text{Error}";
 
-export const functions: Map<string, MathFunction> = new Map([
+export const functions: Map<string, FunctionInfo> = new Map([
     ["sin",          [(x) => Math.sin(x),                                    1]],
     ["cos",          [(x) => Math.cos(x),                                    1]],
     ["tan",          [(x) => Compute.safeTan(x),                             1]],

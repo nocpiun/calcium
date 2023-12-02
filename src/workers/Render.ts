@@ -1,33 +1,23 @@
 /* eslint-disable @typescript-eslint/no-redeclare */
 /* eslint-disable no-self-assign */
+import Point from "@/workers/Point";
+import Function from "@/workers/Function";
 import Compiler from "@/compiler/Compiler";
-import Evaluator from "@/compiler/Evaluator";
 import RootToken from "@/compiler/token/RootToken";
 
 import List from "@/utils/List";
 import Collection from "@/utils/Collection";
 import { MovingDirection, ZoomDirection } from "@/types";
 
-const delta: number = .01;
+export const delta: number = .01;
 const initialScale = 90;
-
-// Inside of Service Worker
-
-class Point {
-    public x: number;
-    public y: number;
-
-    public constructor(x: number, y: number) {
-        this.x = x;
-        this.y = y;
-    }
-}
 
 export default class Render {
     public static colors = {
         primary: "#cbd0df",
         secondary: "#8c949e",
-        highlight: "#fff"
+        highlight: "#fff",
+        background: "#f7f7f7" // for text bg
     };
 
     public canvas: OffscreenCanvas;
@@ -49,8 +39,8 @@ export default class Render {
     public center: Point;
     private mousePoint: Point;
 
-    public functionList: List<RootToken> = new List();
-    private displayedPoints: Collection<[Point, Point]> = new Collection(); // [p1, p2]
+    public functionList: List<Function> = new List();
+    private displayedPoints: Collection<Point> = new Collection(); //
 
     private isMobile: boolean;
 
@@ -67,7 +57,7 @@ export default class Render {
         this.ratio = ratio;
         this.scale *= this.ratio;
         this.workerCtx = workerCtx;
-        this.center = new Point(this.canvas.width / 2, this.canvas.height / 2);
+        this.center = this.createPoint(this.canvas.width / 2, this.canvas.height / 2);
         this.mousePoint = this.center;
 
         this.fpsUpdater = setInterval(() => this.workerCtx.postMessage({ type: "fps", fps: this.currentFPS }), 1000);
@@ -80,11 +70,17 @@ export default class Render {
     public static changeToDark(): void {
         Render.colors.primary = "#404041";
         Render.colors.highlight = "#222";
+        Render.colors.background = "#f7f7f7";
     }
 
     public static changeToLight(): void {
         Render.colors.primary = "#cbd0df";
         Render.colors.highlight = "#fff";
+        Render.colors.background = "#0e1117";
+    }
+
+    public createPoint(x: number, y: number): Point {
+        return new Point(this, x, y);
     }
 
     public reset(): void {
@@ -128,13 +124,12 @@ export default class Render {
     }
 
     public handleWheel(dy: number): void {
-        // const delta = 20 / (1 + Math.pow(2 * Math.E, -(this.scale / 33 - 3)));
         const delta = 7;
-        const mouseOriginPoint = this.screenToCoordinates(this.mousePoint);
+        const mouseOriginPoint = this.mousePoint.toCoordinates();
 
         dy > 0
-        ? this.scale -= delta
-        : this.scale += delta;
+        ? this.scale -= delta / this.spacing
+        : this.scale += delta / this.spacing;
 
         if(this.scale * this.spacing <= 66) {
             this.spacing === 2
@@ -148,7 +143,7 @@ export default class Render {
 
         this.zoomFunctionImage(dy > 0 ? ZoomDirection.ZOOM_OUT : ZoomDirection.ZOOM_IN);
 
-        const mouseCurrentPoint = this.screenToCoordinates(this.mousePoint);
+        const mouseCurrentPoint = this.mousePoint.toCoordinates();
         var centerDx = mouseCurrentPoint.x - mouseOriginPoint.x,
             centerDy = mouseCurrentPoint.y - mouseOriginPoint.y;
         
@@ -157,7 +152,7 @@ export default class Render {
     }
 
     private refreshMousePoint(rect: DOMRect, cx: number, cy: number): void {
-        var mousePoint = new Point(cx - rect.left, cy - rect.top);
+        var mousePoint = this.createPoint(cx - rect.left, cy - rect.top);
         this.mousePoint = mousePoint;
     }
 
@@ -184,8 +179,8 @@ export default class Render {
             this.drawStraightLine(y2, Render.colors.secondary);
 
             // number of the line
-            this.drawText((i * this.spacing).toString(), this.center.x - (this.getTextWidth((i * this.spacing).toString()) + 5) * this.ratio, y1 + 5 * this.ratio, Render.colors.primary, 15);
-            this.drawText((-i * this.spacing).toString(), this.center.x - (this.getTextWidth((-i * this.spacing).toString()) + 5) * this.ratio, y2 + 5 * this.ratio, Render.colors.primary, 15);
+            this.drawText((i * this.spacing).toString(), this.center.x - (this.getTextWidth((i * this.spacing).toString()) + 5) * this.ratio, y1 + 5 * this.ratio, Render.colors.primary, 15, true);
+            this.drawText((-i * this.spacing).toString(), this.center.x - (this.getTextWidth((-i * this.spacing).toString()) + 5) * this.ratio, y2 + 5 * this.ratio, Render.colors.primary, 15, true);
         }
         // thinner line
         for(
@@ -222,8 +217,8 @@ export default class Render {
             this.drawVerticalLine(x2, Render.colors.secondary);
 
             // number of the line
-            this.drawText((-k * this.spacing).toString(), x1 - (this.getTextWidth((-k * this.spacing).toString()) / 2) * this.ratio, this.center.y + 15 * this.ratio, Render.colors.primary, 15);
-            this.drawText((k * this.spacing).toString(), x2 - (this.getTextWidth((k * this.spacing).toString()) / 2) * this.ratio, this.center.y + 15 * this.ratio, Render.colors.primary, 15);
+            this.drawText((-k * this.spacing).toString(), x1 - (this.getTextWidth((-k * this.spacing).toString()) / 2) * this.ratio, this.center.y + 15 * this.ratio, Render.colors.primary, 15, true);
+            this.drawText((k * this.spacing).toString(), x2 - (this.getTextWidth((k * this.spacing).toString()) / 2) * this.ratio, this.center.y + 15 * this.ratio, Render.colors.primary, 15, true);
         }
         // thinner line
         for(
@@ -244,10 +239,10 @@ export default class Render {
     private moveFunctionImage(direction: MovingDirection): void {
         if(this.displayedPoints.length === 0) return;
 
-        var unitPx = this.scale * this.spacing;
-        var oldBegin = this.displayedPoints.get(0)[0].x,
+        var unitPx = this.scale;
+        var oldBegin = this.displayedPoints.get(0).x,
             newBegin = -this.center.x / unitPx,
-            oldEnd = this.displayedPoints.get(this.displayedPoints.length - 1)[0].x,
+            oldEnd = this.displayedPoints.get(this.displayedPoints.length - 1).x,
             newEnd = (this.canvas.width - this.center.x) / unitPx;
         var beginX = NaN, endX = NaN;
 
@@ -261,59 +256,48 @@ export default class Render {
 
         // Add newly in-screen points
         for(let i = 0; i < this.functionList.length; i++) {
-            var root = this.functionList.get(i);
+            var func = this.functionList.get(i);
 
-            this.calculatePoints(root, beginX, endX, direction);
+            this.calculatePoints(func, beginX, endX, direction);
         }
     }
 
     private zoomFunctionImage(direction: ZoomDirection): void {
         if(this.displayedPoints.length === 0) return;
 
-        var unitPx = this.scale * this.spacing;
-        var oldBegin = this.displayedPoints.get(0)[0].x,
+        var unitPx = this.scale;
+        var oldBegin = this.displayedPoints.get(0).x,
             newBegin = -this.center.x / unitPx,
-            oldEnd = this.displayedPoints.get(this.displayedPoints.length - 1)[0].x,
+            oldEnd = this.displayedPoints.get(this.displayedPoints.length - 1).x,
             newEnd = (this.canvas.width - this.center.x) / unitPx;
 
         if(direction === ZoomDirection.ZOOM_IN) {
-            for(let i = 0; i < this.displayedPoints.length; i++) {
-                var coordinatePoint = this.displayedPoints.get(i)[0];
+            // for(let i = 0; i < this.displayedPoints.length; i++) {
+            //     var coordinatePoint = this.displayedPoints.get(i);
                 
-                if(
-                    (oldBegin <= coordinatePoint.x && coordinatePoint.x <= newBegin) ||
-                    (newEnd <= coordinatePoint.x && coordinatePoint.x <= oldEnd)
-                ) {
-                    this.displayedPoints.remove(i);
-                    i--;
-                }
+            //     if(
+            //         (oldBegin <= coordinatePoint.x && coordinatePoint.x <= newBegin) ||
+            //         (newEnd <= coordinatePoint.x && coordinatePoint.x <= oldEnd)
+            //     ) {
+            //         this.displayedPoints.remove(i);
+            //         i--;
+            //     }
+            // }
+
+            this.displayedPoints.clear();
+            for(let i = 0; i < this.functionList.length; i++) {
+                var func = this.functionList.get(i);
+
+                this.calculatePoints(func, newBegin, newEnd);
             }
         } else {
             for(let i = 0; i < this.functionList.length; i++) {
-                var root = this.functionList.get(i);
+                var func = this.functionList.get(i);
 
-                this.calculatePoints(root, newBegin, oldBegin, MovingDirection.RIGHT);
-                this.calculatePoints(root, oldEnd, newEnd);
+                this.calculatePoints(func, newBegin, oldBegin, MovingDirection.RIGHT);
+                this.calculatePoints(func, oldEnd, newEnd);
             }
         }
-    }
-
-    public play(index: number): void {
-        var rawPitches: number[] = [];
-        var root = this.functionList.get(index);
-
-        for(let x = -8; x <= 8; x += delta) {
-            var y = Render.calculateY(root, x);
-
-            rawPitches.push(y);
-        }
-
-        const min = Math.min(...rawPitches);
-        for(let i = 0; i < rawPitches.length && min < 0; i++) {
-            rawPitches[i] += -min;
-        }
-
-        this.workerCtx.postMessage({ type: "play", rawPitches });
     }
 
     private stopMoving(): void {
@@ -334,57 +318,70 @@ export default class Render {
         this.ctx.closePath();
     }
 
+    private drawPoint(point: Point, color: string): void {
+        this.ctx.beginPath();
+        this.ctx.strokeStyle = color;
+        this.ctx.fillRect(point.x, point.y, 2, 2);
+        this.ctx.stroke();
+        this.ctx.closePath();
+    }
+
+    // private drawCurve(begin: Point, control: Point, end: Point, color: string, width: number = 1): void {
+    //     this.ctx.beginPath();
+    //     this.ctx.strokeStyle = color;
+    //     this.ctx.lineWidth = width * this.ratio;
+    //     this.ctx.moveTo(begin.x, begin.y);
+    //     this.ctx.quadraticCurveTo(control.x, control.y, end.x, end.y);
+    //     this.ctx.stroke();
+    //     this.ctx.closePath();
+    // }
+
     private drawStraightLine(y: number, color: string, width: number = 1): void {
-        this.drawLine(new Point(0, y), new Point(this.canvas.width, y), color, width);
+        this.drawLine(this.createPoint(0, y), this.createPoint(this.canvas.width, y), color, width);
     }
 
     private drawVerticalLine(x: number, color: string, width: number = 1): void {
-        this.drawLine(new Point(x, 0), new Point(x, this.canvas.height), color, width);
+        this.drawLine(this.createPoint(x, 0), this.createPoint(x, this.canvas.height), color, width);
     }
 
-    private drawText(text: string, x: number, y: number, color: string, fontSize: number = 20): void {
+    private drawText(text: string, x: number, y: number, color: string, fontSize: number = 20, background: boolean = false): void {
+        const textWidth = this.getTextWidth(text);
+
+        if(background) {
+            this.ctx.fillStyle = Render.colors.background;
+            this.ctx.fillRect(x, y - fontSize * this.ratio + 2, textWidth, fontSize * this.ratio);
+        }
         this.ctx.font = (fontSize * this.ratio) +"px Ubuntu-Regular";
         this.ctx.fillStyle = color;
         this.ctx.fillText(text, x, y);
     }
 
     private drawCompleteFunction(): void {
-        var root = this.functionList.getLast();
+        var func = this.functionList.getLast();
 
-        var unitPx = this.scale * this.spacing;
+        var unitPx = this.scale;
 
         var beginX = -this.center.x / unitPx;
         var endX = (this.canvas.width - this.center.x) / unitPx;
 
-        this.calculatePoints(root, beginX, endX);
+        this.calculatePoints(func, beginX, endX);
     }
 
     private fullyRefreshFunctions(): void {
         this.displayedPoints.clear();
 
-        var unitPx = this.scale * this.spacing;
+        var unitPx = this.scale;
 
         var beginX = -this.center.x / unitPx;
         var endX = (this.canvas.width - this.center.x) / unitPx;
 
-        this.functionList.forEach((root) => this.calculatePoints(root, beginX, endX));
+        this.functionList.forEach((func) => this.calculatePoints(func, beginX, endX));
     }
 
     private clear(): void {
         this.canvas.width = this.canvas.width;
         this.canvas.height = this.canvas.height;
     }
-
-    // Point transforming
-    private screenToCoordinates(point: Point): Point {
-        var unitPx = this.scale;
-        return new Point((point.x - this.center.x) / unitPx, -(point.y - this.center.y) / unitPx);
-    }
-    private coordinatesToScreen(point: Point): Point {
-        var unitPx = this.scale;
-        return new Point(this.center.x + (point.x * unitPx), this.center.y - (point.y * unitPx));
-    }
-    /*****/
 
     private updateFPS(): void {
         const now = (+new Date());
@@ -402,10 +399,10 @@ export default class Render {
         this.refreshAxisLine();
 
         // O point
-        this.drawText("O", this.center.x - 20 * this.ratio, this.center.y + 20 * this.ratio, Render.colors.primary, 17);
+        this.drawText("O", this.center.x - 20 * this.ratio, this.center.y + 20 * this.ratio, Render.colors.primary, 17, true);
 
         // Mouse point
-        var mouseCoordinatesPoint = this.screenToCoordinates(this.mousePoint);
+        var mouseCoordinatesPoint = this.mousePoint.toCoordinates();
         this.drawText("("+ mouseCoordinatesPoint.x.toFixed(2) +", "+ mouseCoordinatesPoint.y.toFixed(2) +")", (!this.isMobile ? 30 : 50) * this.ratio, 30 * this.ratio, Render.colors.primary, 15);
         
         // Is mouse down
@@ -413,8 +410,9 @@ export default class Render {
 
         // Draw function images
         for(let i = 0; i < this.displayedPoints.length; i++) {
-            // this.drawPoint(this.coordinatesToScreen(this.displayedPoints.get(i)[0]), Render.colors.highlight);
-            this.drawLine(this.coordinatesToScreen(this.displayedPoints.get(i)[0]), this.coordinatesToScreen(this.displayedPoints.get(i)[1]), Render.colors.highlight);
+            this.drawPoint(this.displayedPoints.get(i).toScreen(), Render.colors.highlight);
+            // this.drawLine(this.displayedPoints.get(i)[0].toScreen(), this.displayedPoints.get(i)[1].toScreen(), Render.colors.highlight);
+            // this.drawCurve(this.displayedPoints.get(i)[0].toScreen(), this.displayedPoints.get(i)[1].toScreen(), this.displayedPoints.get(i)[2].toScreen(), "#f00");
         }
 
         var imageBitmap = this.canvas.transferToImageBitmap();
@@ -422,7 +420,7 @@ export default class Render {
     }
 
     public registerFunction(rawText: string): void {
-        this.functionList.add(new Compiler(rawText.split(" ")).tokenize() ?? new RootToken([]));
+        this.functionList.add(new Function(new Compiler(rawText.split(" ")).tokenize() ?? new RootToken([])));
         this.drawCompleteFunction();
     }
 
@@ -435,29 +433,17 @@ export default class Render {
         return this.ctx.measureText(text).width;
     }
 
-    public calculatePoints(functionRoot: RootToken, beginX: number, endX: number, direction: MovingDirection = MovingDirection.LEFT): void {
+    public calculatePoints(func: Function, beginX: number, endX: number, direction: MovingDirection = MovingDirection.LEFT): void {
         if(direction === MovingDirection.LEFT) {
-            for(let x1 = beginX; x1 <= endX; x1 += delta) {
-                var y1 = Render.calculateY(functionRoot, x1);
-
-                var x2 = x1 + delta;
-                var y2 = Render.calculateY(functionRoot, x2);
-
-                this.displayedPoints.add([new Point(x1, y1), new Point(x2, y2)]);
+            for(let x = beginX; x <= endX; x += delta * this.spacing) {
+                var y = func.calculate(x);
+                this.displayedPoints.add(this.createPoint(x, y));
             }
         } else {
-            for(let x1 = endX; x1 >= beginX; x1 -= delta) {
-                var y1 = Render.calculateY(functionRoot, x1);
-
-                var x2 = x1 + delta;
-                var y2 = Render.calculateY(functionRoot, x2);
-
-                this.displayedPoints.unshift([new Point(x1, y1), new Point(x2, y2)]);
+            for(let x = endX; x >= beginX; x -= delta * this.spacing) {
+                var y = func.calculate(x);
+                this.displayedPoints.unshift(this.createPoint(x, y));
             }
         }
-    }
-
-    public static calculateY(functionRoot: RootToken, x: number): number {
-        return new Evaluator(functionRoot, new Map([["x", x.toString()]])).evaluate();
     }
 }

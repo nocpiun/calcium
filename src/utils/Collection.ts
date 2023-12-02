@@ -17,4 +17,21 @@ export default class Collection<T = any> extends List<T> {
     public shift(): T | undefined {
         return this.value.shift();
     }
+
+    public put(index: number, item: T): void {
+        var temp;
+
+        for(let i = index; i < this.length; i++) {
+            if(!temp) {
+                temp = this.set(i, item);
+                continue;
+            }
+
+            temp = this.set(i, temp);
+
+            if(i === this.length - 1) {
+                this.add(temp);
+            }
+        }
+    }
 }

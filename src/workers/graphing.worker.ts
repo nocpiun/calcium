@@ -30,7 +30,7 @@ ctx.addEventListener("message", (e) => {
             renderer.functionList.clear();
             break;
         case "play-function":
-            renderer.play(req.index);
+            renderer.functionList.get(req.index).play(ctx);
             break;
         case "mouse-down":
             renderer.handleMouseDown(req.rect, req.cx, req.cy);

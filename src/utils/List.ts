@@ -35,8 +35,10 @@ export default class List<T = any> {
         return this.value[index];
     }
 
-    public set(index: number, item: T): void {
+    public set(index: number, item: T): T {
+        var oldItem = this.value[index];
         this.value[index] = item;
+        return oldItem;
     }
 
     public remove(index: number): void {
