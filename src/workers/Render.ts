@@ -16,8 +16,7 @@ export default class Render {
     public static colors = {
         primary: "#cbd0df",
         secondary: "#8c949e",
-        highlight: "#fff",
-        background: "#f7f7f7" // for text bg
+        highlight: "#fff"
     };
 
     public canvas: OffscreenCanvas;
@@ -70,13 +69,11 @@ export default class Render {
     public static changeToDark(): void {
         Render.colors.primary = "#404041";
         Render.colors.highlight = "#222";
-        Render.colors.background = "#f7f7f7";
     }
 
     public static changeToLight(): void {
         Render.colors.primary = "#cbd0df";
         Render.colors.highlight = "#fff";
-        Render.colors.background = "#0e1117";
     }
 
     public createPoint(x: number, y: number): Point {
@@ -179,8 +176,8 @@ export default class Render {
             this.drawStraightLine(y2, Render.colors.secondary);
 
             // number of the line
-            this.drawText((i * this.spacing).toString(), this.center.x - (this.getTextWidth((i * this.spacing).toString()) + 5) * this.ratio, y1 + 5 * this.ratio, Render.colors.primary, 15, true);
-            this.drawText((-i * this.spacing).toString(), this.center.x - (this.getTextWidth((-i * this.spacing).toString()) + 5) * this.ratio, y2 + 5 * this.ratio, Render.colors.primary, 15, true);
+            this.drawText((i * this.spacing).toString(), this.center.x - (this.getTextWidth((i * this.spacing).toString()) + 5) * this.ratio, y1 + 5 * this.ratio, Render.colors.primary, 15);
+            this.drawText((-i * this.spacing).toString(), this.center.x - (this.getTextWidth((-i * this.spacing).toString()) + 5) * this.ratio, y2 + 5 * this.ratio, Render.colors.primary, 15);
         }
         // thinner line
         for(
@@ -217,8 +214,8 @@ export default class Render {
             this.drawVerticalLine(x2, Render.colors.secondary);
 
             // number of the line
-            this.drawText((-k * this.spacing).toString(), x1 - (this.getTextWidth((-k * this.spacing).toString()) / 2) * this.ratio, this.center.y + 15 * this.ratio, Render.colors.primary, 15, true);
-            this.drawText((k * this.spacing).toString(), x2 - (this.getTextWidth((k * this.spacing).toString()) / 2) * this.ratio, this.center.y + 15 * this.ratio, Render.colors.primary, 15, true);
+            this.drawText((-k * this.spacing).toString(), x1 - (this.getTextWidth((-k * this.spacing).toString()) / 2) * this.ratio, this.center.y + 15 * this.ratio, Render.colors.primary, 15);
+            this.drawText((k * this.spacing).toString(), x2 - (this.getTextWidth((k * this.spacing).toString()) / 2) * this.ratio, this.center.y + 15 * this.ratio, Render.colors.primary, 15);
         }
         // thinner line
         for(
@@ -344,13 +341,7 @@ export default class Render {
         this.drawLine(this.createPoint(x, 0), this.createPoint(x, this.canvas.height), color, width);
     }
 
-    private drawText(text: string, x: number, y: number, color: string, fontSize: number = 20, background: boolean = false): void {
-        const textWidth = this.getTextWidth(text);
-
-        if(background) {
-            this.ctx.fillStyle = Render.colors.background;
-            this.ctx.fillRect(x, y - fontSize * this.ratio + 2, textWidth, fontSize * this.ratio);
-        }
+    private drawText(text: string, x: number, y: number, color: string, fontSize: number = 20): void {
         this.ctx.font = (fontSize * this.ratio) +"px Ubuntu-Regular";
         this.ctx.fillStyle = color;
         this.ctx.fillText(text, x, y);
@@ -399,7 +390,7 @@ export default class Render {
         this.refreshAxisLine();
 
         // O point
-        this.drawText("O", this.center.x - 20 * this.ratio, this.center.y + 20 * this.ratio, Render.colors.primary, 17, true);
+        this.drawText("O", this.center.x - 20 * this.ratio, this.center.y + 20 * this.ratio, Render.colors.primary, 17);
 
         // Mouse point
         var mouseCoordinatesPoint = this.mousePoint.toCoordinates();
