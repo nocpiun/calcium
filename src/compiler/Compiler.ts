@@ -18,7 +18,6 @@ import VariableToken from "@/compiler/token/VariableToken";
 
 import { functions, constants } from "@/global";
 import { Operator, NumberSys } from "@/types";
-import type { FunctionInfo } from "@/types";
 
 export type NumberSymbol = string;
 
@@ -32,7 +31,7 @@ export default class Compiler {
 
     private layer: number = 0;
     private inAbs: boolean = false;
-    private currentFunction: FunctionInfo | null = null;
+    private currentFunction: string | null = null;
     private secondaryRaw: string[] = [];
     private hasError: boolean = false;
 
@@ -198,7 +197,7 @@ export default class Compiler {
                 }
 
                 if(this.currentFunction) {
-                    this.root.add(new FunctionToken(this.currentFunction[0], this.tempParamList));
+                    this.root.add(new FunctionToken(this.currentFunction, this.tempParamList));
                     this.tempParamRaw = [];
                     this.tempParamList = [];
                     this.currentFunction = null;
@@ -304,7 +303,7 @@ export default class Compiler {
                     return;
                 }
 
-                this.currentFunction = functions.get(functionName) ?? [((x) => x), 1];
+                this.currentFunction = functionName ?? "";
                 this.layer++;
 
             } else if(symbol[0] === "^") { // pow

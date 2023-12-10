@@ -1,23 +1,21 @@
-import RootToken from "@/compiler/token/RootToken";
 import Evaluator from "@/compiler/Evaluator";
-import { delta } from "@/workers/Render";
+import RootToken from "@/compiler/token/RootToken";
+import { delta } from "@/renderer/Render";
 
 export default class Function {
+    public id: number;
     public root: RootToken;
 
-    public constructor(root: RootToken) {
+    public constructor(id: number, root: RootToken) {
+        this.id = id;
         this.root = root;
     }
 
-    public calculate(x: number): number {
-        return new Evaluator(this.root, new Map([["x", x.toString()]])).evaluate();
-    }
-
-    public play(workerCtx: Worker): void {
+    public async play(workerCtx: Worker): Promise<void> {
         var rawPitches: number[] = [];
 
         for(let x = -8; x <= 8; x += delta) {
-            var y = this.calculate(x);
+            var y = new Evaluator(this.root, new Map([["x", x.toString()]])).evaluate();
 
             rawPitches.push(y);
         }

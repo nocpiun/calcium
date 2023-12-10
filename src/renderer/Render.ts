@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/no-redeclare */
 /* eslint-disable no-self-assign */
-import Point from "@/workers/Point";
-import Function from "@/workers/Function";
-import Compiler from "@/compiler/Compiler";
+import Point from "@/renderer/Point";
+import Function from "@/renderer/Function";
 import RootToken from "@/compiler/token/RootToken";
 
 import List from "@/utils/List";
@@ -23,6 +22,7 @@ export default class Render {
     private ctx: OffscreenCanvasRenderingContext2D;
     private ratio: number;
     private workerCtx: Worker;
+    private calculatingWorker: Worker = new Worker(new URL("@/workers/calculating.worker.ts", import.meta.url));
 
     public scale: number = initialScale; // px per unit length
     public spacing: number = 1; // unit length
@@ -39,7 +39,7 @@ export default class Render {
     private mousePoint: Point;
 
     public functionList: List<Function> = new List();
-    private displayedPoints: Collection<Point> = new Collection(); //
+    private displayedPoints: Collection<Point> = new Collection();
 
     private isMobile: boolean;
 
@@ -59,10 +59,14 @@ export default class Render {
         this.center = this.createPoint(this.canvas.width / 2, this.canvas.height / 2);
         this.mousePoint = this.center;
 
+        // FPS
         this.fpsUpdater = setInterval(() => this.workerCtx.postMessage({ type: "fps", fps: this.currentFPS }), 1000);
 
-        this.isMobile = isMobile;
+        // Worker listener
+        this.calculatingWorker.addEventListener("message", (e) => this.handleCalculatingWorkerMessaging(e));
 
+        // Appearance
+        this.isMobile = isMobile;
         if(!isDarkMode) Render.changeToDark();
     }
 
@@ -74,6 +78,27 @@ export default class Render {
     public static changeToLight(): void {
         Render.colors.primary = "#cbd0df";
         Render.colors.highlight = "#fff";
+    }
+
+    private handleCalculatingWorkerMessaging(e: MessageEvent): void {
+        const res = e.data;
+
+        switch(res.type) {
+            case "compile":
+                this.functionList.add(new Function(res.id, RootToken.create(e.data.root)));
+                this.drawCompleteFunction();
+                break;
+            case "evaluate":
+                switch(res.operate) {
+                    case "add":
+                        this.displayedPoints.add(this.createPoint(res.x, res.y));
+                        break;
+                    case "unshift":
+                        this.displayedPoints.unshift(this.createPoint(res.x, res.y));
+                        break;
+                }
+                break;
+        }
     }
 
     public createPoint(x: number, y: number): Point {
@@ -269,19 +294,8 @@ export default class Render {
             newEnd = (this.canvas.width - this.center.x) / unitPx;
 
         if(direction === ZoomDirection.ZOOM_IN) {
-            // for(let i = 0; i < this.displayedPoints.length; i++) {
-            //     var coordinatePoint = this.displayedPoints.get(i);
-                
-            //     if(
-            //         (oldBegin <= coordinatePoint.x && coordinatePoint.x <= newBegin) ||
-            //         (newEnd <= coordinatePoint.x && coordinatePoint.x <= oldEnd)
-            //     ) {
-            //         this.displayedPoints.remove(i);
-            //         i--;
-            //     }
-            // }
-
             this.displayedPoints.clear();
+            
             for(let i = 0; i < this.functionList.length; i++) {
                 var func = this.functionList.get(i);
 
@@ -322,16 +336,6 @@ export default class Render {
         this.ctx.stroke();
         this.ctx.closePath();
     }
-
-    // private drawCurve(begin: Point, control: Point, end: Point, color: string, width: number = 1): void {
-    //     this.ctx.beginPath();
-    //     this.ctx.strokeStyle = color;
-    //     this.ctx.lineWidth = width * this.ratio;
-    //     this.ctx.moveTo(begin.x, begin.y);
-    //     this.ctx.quadraticCurveTo(control.x, control.y, end.x, end.y);
-    //     this.ctx.stroke();
-    //     this.ctx.closePath();
-    // }
 
     private drawStraightLine(y: number, color: string, width: number = 1): void {
         this.drawLine(this.createPoint(0, y), this.createPoint(this.canvas.width, y), color, width);
@@ -402,17 +406,14 @@ export default class Render {
         // Draw function images
         for(let i = 0; i < this.displayedPoints.length; i++) {
             this.drawPoint(this.displayedPoints.get(i).toScreen(), Render.colors.highlight);
-            // this.drawLine(this.displayedPoints.get(i)[0].toScreen(), this.displayedPoints.get(i)[1].toScreen(), Render.colors.highlight);
-            // this.drawCurve(this.displayedPoints.get(i)[0].toScreen(), this.displayedPoints.get(i)[1].toScreen(), this.displayedPoints.get(i)[2].toScreen(), "#f00");
         }
 
         var imageBitmap = this.canvas.transferToImageBitmap();
         this.workerCtx.postMessage({ type: "render", imageBitmap }, [imageBitmap]);
     }
 
-    public registerFunction(rawText: string): void {
-        this.functionList.add(new Function(new Compiler(rawText.split(" ")).tokenize() ?? new RootToken([])));
-        this.drawCompleteFunction();
+    public registerFunction(rawText: string, id: number): void {
+        this.calculatingWorker.postMessage({ type: "compile", rawText, id });
     }
 
     public unregisterFunction(index: number): void {
@@ -424,16 +425,18 @@ export default class Render {
         return this.ctx.measureText(text).width;
     }
 
-    public calculatePoints(func: Function, beginX: number, endX: number, direction: MovingDirection = MovingDirection.LEFT): void {
+    public async calculatePoints(func: Function, beginX: number, endX: number, direction: MovingDirection = MovingDirection.LEFT): Promise<void> {
         if(direction === MovingDirection.LEFT) {
             for(let x = beginX; x <= endX; x += delta * this.spacing) {
-                var y = func.calculate(x);
-                this.displayedPoints.add(this.createPoint(x, y));
+                // var y = await func.calculate(x);
+                // this.displayedPoints.add(this.createPoint(x, y));
+                this.calculatingWorker.postMessage({ type: "evaluate", id: func.id, root: func.root, x, operate: "add" });
             }
         } else {
             for(let x = endX; x >= beginX; x -= delta * this.spacing) {
-                var y = func.calculate(x);
-                this.displayedPoints.unshift(this.createPoint(x, y));
+                // var y = await func.calculate(x);
+                // this.displayedPoints.unshift(this.createPoint(x, y));
+                this.calculatingWorker.postMessage({ type: "evaluate", id: func.id, root: func.root, x, operate: "unshift" });
             }
         }
     }

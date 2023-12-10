@@ -1,4 +1,4 @@
-import Render from "@/workers/Render";
+import Render from "@/renderer/Render";
 
 export default class Point {
     private renderer: Render;

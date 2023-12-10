@@ -1,5 +1,5 @@
 /* eslint-disable no-restricted-globals */
-import Render from "@/workers/Render";
+import Render from "@/renderer/Render";
 
 const ctx: Worker = self as any;
 
@@ -20,7 +20,7 @@ ctx.addEventListener("message", (e) => {
             reset();
             break;
         case "add-function":
-            renderer.registerFunction(req.rawText);
+            renderer.registerFunction(req.rawText, req.id);
             break;
         case "remove-function":
             renderer.unregisterFunction(req.index);

@@ -193,9 +193,9 @@ const Graphing: React.FC = memo(() => {
     }, []);
 
     useEmitter([
-        ["add-function", (rawText: string) => {
+        ["add-function", (rawText: string, id: number) => {
             if(!workerRef.current) return;
-            workerRef.current.postMessage({ type: "add-function", rawText });
+            workerRef.current.postMessage({ type: "add-function", rawText, id });
         }],
         ["clear-function", () => {
             if(!workerRef.current) return;

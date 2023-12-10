@@ -46,8 +46,8 @@ const FunctionList: React.FC = () => {
         var value = inputBox.value;
         if(value === cursor) return;
         setFunctionList([...currentList, { id: unusedId.id, value }]);
+        Emitter.get().emit("add-function", value, unusedId.id);
         dispatchId({ type: "refresh", payload: 1 });
-        Emitter.get().emit("add-function", value);
         Logger.info("Function rendered: "+ value.replaceAll(" ", ""));
 
         inputBox.reset();

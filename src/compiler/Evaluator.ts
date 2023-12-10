@@ -15,6 +15,7 @@ import FunctionToken from "@/compiler/token/FunctionToken";
 import DynamicToken from "@/compiler/token/DynamicToken";
 import VariableToken from "@/compiler/token/VariableToken";
 
+import { functions } from "@/global";
 import { NumberSys, Operator } from "@/types";
 
 export default class Evaluator {
@@ -247,10 +248,13 @@ export default class Evaluator {
                     var { func, param } = token as FunctionToken;
                     var calculatedParam = [];
                     for(let i = 0; i < param.length; i++) {
-                        calculatedParam.push(new Evaluator(param[i] as RootToken, this.variables).evaluate());
+                        calculatedParam.push(new Evaluator(RootToken.create(param[i] as RootToken), this.variables).evaluate());
                     }
 
-                    var value = Float.calibrate(parseFloat(func(...calculatedParam).toFixed(14)));
+                    var value = Float.calibrate(parseFloat(
+                        (functions.get(func) ?? [(x) => x, 1])[0](...calculatedParam).toFixed(14)
+                    ));
+                    
                     numbers.add(new NumberToken(
                         Compute.safePow(value, exponential),
                         NumberSys.DEC
