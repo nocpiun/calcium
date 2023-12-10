@@ -146,11 +146,6 @@ export default class Render {
         this.stopMoving();
     }
 
-    public handleMouseLeave(): void {
-        this.stopMoving();
-        this.mousePoint = this.center;
-    }
-
     public handleWheel(dy: number): void {
         const delta = 7;
         const mouseOriginPoint = this.mousePoint.toCoordinates();

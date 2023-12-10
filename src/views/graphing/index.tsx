@@ -86,7 +86,7 @@ const Graphing: React.FC = memo(() => {
             if(!workerRef.current) return;
             workerRef.current.postMessage({ type: "mouse-down", rect: canvas.getBoundingClientRect(), cx: e.clientX, cy: e.clientY });
         });
-        canvas.addEventListener("mousemove", (e: MouseEvent) => {
+        window.addEventListener("mousemove", (e: MouseEvent) => {
             if(!workerRef.current) return;
 
             var direction: MovingDirection;
@@ -98,13 +98,9 @@ const Graphing: React.FC = memo(() => {
 
             workerRef.current.postMessage({ type: "mouse-move", rect: canvas.getBoundingClientRect(), cx: e.clientX, cy: e.clientY, direction });
         });
-        canvas.addEventListener("mouseup", () => {
+        window.addEventListener("mouseup", () => {
             if(!workerRef.current) return;
             workerRef.current.postMessage({ type: "mouse-up" });
-        });
-        canvas.addEventListener("mouseleave", () => {
-            if(!workerRef.current) return;
-            workerRef.current.postMessage({ type: "mouse-leave" });
         });
         canvas.addEventListener("wheel", (e: WheelEvent) => {
             if(!workerRef.current) return;

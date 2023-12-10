@@ -41,9 +41,6 @@ ctx.addEventListener("message", (e) => {
         case "mouse-up":
             renderer.handleMouseUp();
             break;
-        case "mouse-leave":
-            renderer.handleMouseLeave();
-            break;
         case "wheel":
             renderer.handleWheel(req.dy);
             break;
