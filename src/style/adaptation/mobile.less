@@ -27,21 +27,26 @@
                     box-shadow: 5px 0 15px 5px rgba(0, 0, 0, .1);
                     justify-content: flex-start;
                     z-index: 150;
-                    .mode-switcher {
-                        display: flex;
-                        flex-direction: column;
-                        margin-top: 5px;
-                        .mode-button-container {
-                            height: 20px;
-                            margin-top: 10px;
-                            .highlight-bar {
-                                display: none;
-                            }
-                            .mode-button {
-                                display: none;
-                            }
-                            .mobile-mode-button {
-                                display: flex;
+                    .mode-switcher-wrapper {
+                        .mode-switcher-tab-slider {
+                            display: none;
+                        }
+                        .mode-switcher {
+                            display: flex;
+                            flex-direction: column;
+                            margin-top: 5px;
+                            .mode-button-container {
+                                height: 20px;
+                                margin-top: 10px;
+                                .highlight-bar {
+                                    display: none;
+                                }
+                                .mode-button {
+                                    display: none;
+                                }
+                                .mobile-mode-button {
+                                    display: flex !important;
+                                }
                             }
                         }
                     }
