@@ -80,6 +80,12 @@ export default class Render {
         Render.colors.highlight = "#fff";
     }
 
+    /**
+     * Messaging between rendering thread and calculating thread
+     * 
+     * Rendering thread: @/workers/graphing.worker.ts
+     * Calculating thread: @/workers/calculating.worker.ts
+     */
     private handleCalculatingWorkerMessaging(e: MessageEvent): void {
         const res = e.data;
 

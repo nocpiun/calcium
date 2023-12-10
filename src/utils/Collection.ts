@@ -6,12 +6,10 @@ import List from "@/utils/List";
 export default class Collection<T = any> extends List<T> {
     public override add(item: T): void {
         this.value.push(item);
-        this.deduplicate();
     }
 
     public unshift(item: T): void {
         this.value.unshift(item);
-        this.deduplicate();
     }
 
     public shift(): T | undefined {

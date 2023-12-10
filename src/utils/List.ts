@@ -78,9 +78,9 @@ export default class List<T = any> {
         return -1;
     }
 
-    public deduplicate(): void {
-        this.value = [...new Set(this.value)];
-    }
+    // public deduplicate(): void {
+    //     this.value = [...new Set(this.value)];
+    // }
 
     public equals(list: List): boolean {
         return Utils.arrayIs(this.value, list.value);
