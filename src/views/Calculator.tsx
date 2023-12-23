@@ -15,7 +15,7 @@ import MainContext from "@/contexts/MainContext";
 const Calculator: React.FC = () => {
     const { mode } = useContext(MainContext);
     
-    const layoutSwitch = (calcMode: Mode) => {
+    const layoutSwitcher = (calcMode: Mode) => {
         switch(calcMode) {
             case Mode.GENERAL:
                 return (
@@ -40,7 +40,7 @@ const Calculator: React.FC = () => {
 
     return (
         <div className="calculator-container" data-mode={mode}>
-            {layoutSwitch(mode)}
+            {layoutSwitcher(mode)}
         </div>
     );
 }

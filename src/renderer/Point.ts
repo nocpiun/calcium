@@ -1,24 +1,24 @@
-import Render from "@/renderer/Render";
+import Graphics from "@/renderer/Graphics";
 
 export default class Point {
-    private renderer: Render;
+    private graphics: Graphics;
 
     public x: number;
     public y: number;
 
-    public constructor(renderer: Render, x: number, y: number) {
-        this.renderer = renderer;
+    public constructor(graphics: Graphics, x: number, y: number) {
+        this.graphics = graphics;
         this.x = x;
         this.y = y;
     }
 
     public toCoordinates(): Point {
-        var unitPx = this.renderer.scale;
-        return new Point(this.renderer, (this.x - this.renderer.center.x) / unitPx, -(this.y - this.renderer.center.y) / unitPx);
+        var unitPx = this.graphics.scale;
+        return new Point(this.graphics, (this.x - this.graphics.center.x) / unitPx, -(this.y - this.graphics.center.y) / unitPx);
     }
 
     public toScreen(): Point {
-        var unitPx = this.renderer.scale;
-        return new Point(this.renderer, this.renderer.center.x + (this.x * unitPx), this.renderer.center.y - (this.y * unitPx));
+        var unitPx = this.graphics.scale;
+        return new Point(this.graphics, this.graphics.center.x + (this.x * unitPx), this.graphics.center.y - (this.y * unitPx));
     }
 }

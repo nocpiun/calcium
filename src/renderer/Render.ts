@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-redeclare */
-/* eslint-disable no-self-assign */
+import Graphics from "@/renderer/Graphics";
 import Point from "@/renderer/Point";
 import Function from "@/renderer/Function";
 import RootToken from "@/compiler/token/RootToken";
@@ -9,23 +9,10 @@ import Collection from "@/utils/Collection";
 import { MovingDirection, ZoomDirection } from "@/types";
 
 export const delta: number = .01;
-const initialScale = 90;
 
-export default class Render {
-    public static colors = {
-        primary: "#cbd0df",
-        secondary: "#8c949e",
-        highlight: "#fff"
-    };
-
-    public canvas: OffscreenCanvas;
-    private ctx: OffscreenCanvasRenderingContext2D;
-    private ratio: number;
+export default class Render extends Graphics {
     private workerCtx: Worker;
     private calculatingWorker: Worker = new Worker(new URL("@/workers/calculating.worker.ts", import.meta.url));
-
-    public scale: number = initialScale; // px per unit length
-    public spacing: number = 1; // unit length
 
     private mouseDown: boolean = false;
     private mouseDX: number = 0; // mouse delta x
@@ -35,13 +22,8 @@ export default class Render {
     private currentFPS: number = 0;
     private lastTime: number = 0; // for FPS calculating
 
-    public center: Point;
-    private mousePoint: Point;
-
     public functionList: List<Function> = new List();
     private displayedPoints: Collection<Point> = new Collection();
-
-    private isMobile: boolean;
 
     public constructor(
         canvas: OffscreenCanvas,
@@ -51,33 +33,16 @@ export default class Render {
         isDarkMode: boolean,
         isMobile: boolean
     ) {
-        this.canvas = canvas;
-        this.ctx = ctx;
-        this.ratio = ratio;
-        this.scale *= this.ratio;
+        super(canvas, ctx, ratio, isDarkMode, isMobile);
+
         this.workerCtx = workerCtx;
         this.center = this.createPoint(this.canvas.width / 2, this.canvas.height / 2);
-        this.mousePoint = this.center;
 
         // FPS
         this.fpsUpdater = setInterval(() => this.workerCtx.postMessage({ type: "fps", fps: this.currentFPS }), 1000);
 
         // Worker listener
         this.calculatingWorker.addEventListener("message", (e) => this.handleCalculatingWorkerMessaging(e));
-
-        // Appearance
-        this.isMobile = isMobile;
-        if(!isDarkMode) Render.changeToDark();
-    }
-
-    public static changeToDark(): void {
-        Render.colors.primary = "#404041";
-        Render.colors.highlight = "#222";
-    }
-
-    public static changeToLight(): void {
-        Render.colors.primary = "#cbd0df";
-        Render.colors.highlight = "#fff";
     }
 
     /**
@@ -105,10 +70,6 @@ export default class Render {
                 }
                 break;
         }
-    }
-
-    public createPoint(x: number, y: number): Point {
-        return new Point(this, x, y);
     }
 
     public reset(): void {
@@ -179,86 +140,6 @@ export default class Render {
         this.mousePoint = mousePoint;
     }
 
-    private refreshAxisLine(): void {
-        var unitPx = this.spacing * this.scale;
-        var secondaryUnitPx = (this.spacing / 5) * this.scale;
-        /**
-         * X Direction
-         */
-        // X Axis
-        this.drawStraightLine(this.center.y, Render.colors.primary, 2);
-        // thicker line
-        for(
-            let i = 1;
-            (
-                this.center.y - i * unitPx >= 0 ||
-                this.center.y + i * unitPx <= this.canvas.height
-            );
-            i++
-        ) {
-            var y1 = this.center.y - i * unitPx;
-            var y2 = this.center.y + i * unitPx;
-            this.drawStraightLine(y1, Render.colors.secondary);
-            this.drawStraightLine(y2, Render.colors.secondary);
-
-            // number of the line
-            this.drawText((i * this.spacing).toString(), this.center.x - (this.getTextWidth((i * this.spacing).toString()) + 5) * this.ratio, y1 + 5 * this.ratio, Render.colors.primary, 15);
-            this.drawText((-i * this.spacing).toString(), this.center.x - (this.getTextWidth((-i * this.spacing).toString()) + 5) * this.ratio, y2 + 5 * this.ratio, Render.colors.primary, 15);
-        }
-        // thinner line
-        for(
-            let i = 1;
-            (
-                this.center.y - i * secondaryUnitPx >= 0 ||
-                this.center.y + i * secondaryUnitPx <= this.canvas.height
-            );
-            i++
-        ) {
-            var y1 = this.center.y - i * secondaryUnitPx;
-            var y2 = this.center.y + i * secondaryUnitPx;
-            this.drawStraightLine(y1, Render.colors.secondary, .3);
-            this.drawStraightLine(y2, Render.colors.secondary, .3);
-        }
-
-        /**
-         * Y Direction
-         */
-        // Y Axis
-        this.drawVerticalLine(this.center.x, Render.colors.primary, 2);
-        // thicker line
-        for(
-            let k = 1;
-            (
-                this.center.x - k * unitPx >= 0 ||
-                this.center.x + k * unitPx <= this.canvas.width
-            );
-            k++
-        ) {
-            var x1 = this.center.x - k * unitPx;
-            var x2 = this.center.x + k * unitPx;
-            this.drawVerticalLine(x1, Render.colors.secondary);
-            this.drawVerticalLine(x2, Render.colors.secondary);
-
-            // number of the line
-            this.drawText((-k * this.spacing).toString(), x1 - (this.getTextWidth((-k * this.spacing).toString()) / 2) * this.ratio, this.center.y + 15 * this.ratio, Render.colors.primary, 15);
-            this.drawText((k * this.spacing).toString(), x2 - (this.getTextWidth((k * this.spacing).toString()) / 2) * this.ratio, this.center.y + 15 * this.ratio, Render.colors.primary, 15);
-        }
-        // thinner line
-        for(
-            let l = 1;
-            (
-                this.center.x - l * secondaryUnitPx >= 0 ||
-                this.center.x + l * secondaryUnitPx <= this.canvas.width
-            );
-            l++
-        ) {
-            var x1 = this.center.x - l * secondaryUnitPx;
-            var x2 = this.center.x + l * secondaryUnitPx;
-            this.drawVerticalLine(x1, Render.colors.secondary, .3);
-            this.drawVerticalLine(x2, Render.colors.secondary, .3);
-        }
-    }
-
     private moveFunctionImage(direction: MovingDirection): void {
         if(this.displayedPoints.length === 0) return;
 
@@ -318,40 +199,6 @@ export default class Render {
         this.mouseDY = 0;
     }
 
-    private drawLine(begin: Point, end: Point, color: string, width: number = 1): void {
-        this.ctx.beginPath();
-        this.ctx.strokeStyle = color;
-        this.ctx.lineWidth = width * this.ratio;
-        this.ctx.moveTo(begin.x, begin.y);
-        if(!(Math.abs(begin.y - end.y) > this.canvas.height && begin.y * end.y < 0)) {
-            this.ctx.lineTo(end.x, end.y);
-        }
-        this.ctx.stroke();
-        this.ctx.closePath();
-    }
-
-    private drawPoint(point: Point, color: string): void {
-        this.ctx.beginPath();
-        this.ctx.strokeStyle = color;
-        this.ctx.fillRect(point.x, point.y, 2, 2);
-        this.ctx.stroke();
-        this.ctx.closePath();
-    }
-
-    private drawStraightLine(y: number, color: string, width: number = 1): void {
-        this.drawLine(this.createPoint(0, y), this.createPoint(this.canvas.width, y), color, width);
-    }
-
-    private drawVerticalLine(x: number, color: string, width: number = 1): void {
-        this.drawLine(this.createPoint(x, 0), this.createPoint(x, this.canvas.height), color, width);
-    }
-
-    private drawText(text: string, x: number, y: number, color: string, fontSize: number = 20): void {
-        this.ctx.font = (fontSize * this.ratio) +"px Ubuntu-Regular";
-        this.ctx.fillStyle = color;
-        this.ctx.fillText(text, x, y);
-    }
-
     private drawCompleteFunction(): void {
         var func = this.functionList.getLast();
 
@@ -374,11 +221,6 @@ export default class Render {
         this.functionList.forEach((func) => this.calculatePoints(func, beginX, endX));
     }
 
-    private clear(): void {
-        this.canvas.width = this.canvas.width;
-        this.canvas.height = this.canvas.height;
-    }
-
     private updateFPS(): void {
         const now = (+new Date());
         var fps = 1000 / (now - this.lastTime);
@@ -390,9 +232,7 @@ export default class Render {
     // To render each frame
     public render(): void {
         this.updateFPS();
-        this.clear();
-
-        this.refreshAxisLine();
+        super.render();
 
         // O point
         this.drawText("O", this.center.x - 20 * this.ratio, this.center.y + 20 * this.ratio, Render.colors.primary, 17);
@@ -420,10 +260,6 @@ export default class Render {
     public unregisterFunction(index: number): void {
         this.functionList.remove(index);
         this.fullyRefreshFunctions();
-    }
-
-    public getTextWidth(text: string): number {
-        return this.ctx.measureText(text).width;
     }
 
     public async calculatePoints(func: Function, beginX: number, endX: number, direction: MovingDirection = MovingDirection.LEFT): Promise<void> {
