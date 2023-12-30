@@ -291,4 +291,14 @@ export default class Utils {
     public static firstLetterUpperCase(str: string): string {
         return str.slice(0, 1).toUpperCase() + str.slice(1).toLowerCase();
     }
+
+    public static rawHexTextToKatex(str: string): string {
+        return str.split("").join(" ")
+            .replaceAll("A", "\\text{A}")
+            .replaceAll("B", "\\text{B}")
+            .replaceAll("C", "\\text{C}")
+            .replaceAll("D", "\\text{D}")
+            .replaceAll("E", "\\text{E}")
+            .replaceAll("F", "\\text{F}");
+    }
 }

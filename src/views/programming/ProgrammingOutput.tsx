@@ -145,18 +145,16 @@ const ProgrammingOutput: React.FC = () => {
         }
     }, [inputRef, handleResult]);
 
-    useEffect(() => {
-        Emitter.get().once("number-sys-chose", (type: NumberSys) => {
-            setNumberSys(type);
+    Emitter.get().on("number-sys-chose", (type: NumberSys) => {
+        setNumberSys(type);
 
-            const value = numberValues[type];
+        const value = numberValues[type];
 
-            if(!inputRef.current || value === "0") return;
-            inputRef.current.value = value.split("").join(" ") +" "+ cursor;
-            setOutputContent("");
-            dispatchNumberValue({ type: "set", payload: numberValues.dec });
-        });
-    }, [numberValues]);
+        if(!inputRef.current || value === "0") return;
+        inputRef.current.value = Utils.rawHexTextToKatex(value) +" "+ cursor;
+        setOutputContent("");
+        dispatchNumberValue({ type: "set", payload: numberValues.dec });
+    });
 
     useEmitter([
         ["clear-input", () => setOutputContent("")],
