@@ -1,10 +1,13 @@
-import React from "react";
+import React, { useRef } from "react";
 import { InlineMath } from "react-katex";
 import { ReactSVG } from "react-svg";
 import { useContextMenu, ContextMenuItem } from "use-context-menu";
 
 import Emitter from "@/utils/Emitter";
+import Dialog from "@/components/Dialog";
+import FunctionEditorDialog from "@/dialogs/FunctionEditorDialog";
 
+import moreIcon from "@/icons/more.svg";
 import removeIcon from "@/icons/remove.svg";
 
 interface ListItemProps {
@@ -14,6 +17,12 @@ interface ListItemProps {
 }
 
 const FunctionListItem: React.FC<ListItemProps> = (props) => {
+    const functionEditorDialogRef = useRef<Dialog>(null);
+
+    const handleOpenEditorDialog = () => {
+        functionEditorDialogRef.current?.open();
+    };
+    
     const handleRemove = () => {
         Emitter.get().emit("remove-function", props.id, props.index);
     };
@@ -40,10 +49,19 @@ const FunctionListItem: React.FC<ListItemProps> = (props) => {
                 <div className="function-list-item-value">
                     <span><InlineMath>{props.value}</InlineMath></span>
                 </div>
-                <div className="function-list-item-remove" onClick={() => handleRemove()}>
-                    <ReactSVG src={removeIcon}/>
+
+                <div className="function-list-item-buttons">
+                    <button onClick={() => handleOpenEditorDialog()}>
+                        <ReactSVG src={moreIcon}/>
+                    </button>
+                    <button onClick={() => handleRemove()}>
+                        <ReactSVG src={removeIcon}/>
+                    </button>
                 </div>
             </div>
+
+            <FunctionEditorDialog ref={functionEditorDialogRef} index={props.index} value={props.value}/>
+
             {contextMenu}
         </>
     );

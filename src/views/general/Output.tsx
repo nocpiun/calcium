@@ -117,9 +117,6 @@ const Output: React.FC = () => {
         var cursorIndex = inputBox.getCursorIndex();
 
         switch(symbol) {
-            case "\\text{Clear}":
-                setOutputContent("");
-                return cursor;
             case "Backspace":
             case "\\text{Del}":
                 var target = cursorIndex;
@@ -132,34 +129,16 @@ const Output: React.FC = () => {
 
                 setOutputContent("");
                 return contentArray.join(" ");
+            case "\\text{Clear}":
+                setOutputContent("");
+                return cursor;
             case "\\text{CH}":
                 Emitter.get().emit("clear-record");
                 break;
-            case "ArrowLeft":
-            case "\\leftarrow":
-                if(cursorIndex === 0) return;
-
-                return inputBox.moveCursorTo(cursorIndex - 1);
-            case "ArrowRight":
-            case "\\rightarrow":
-                if(cursorIndex === contentArray.length - 1) return;
-
-                return inputBox.moveCursorTo(cursorIndex + 1);
             case "Enter":
             case "\\text{Result}":
                 if(contentArray.length > 1) handleResult(currentContent);
                 return;
-            case "^":
-                if(contentArray[cursorIndex - 1].indexOf("^") > -1) {
-                    const currentExponentialStr = contentArray[cursorIndex - 1].replace("^", "");
-                    const newExponential = parseInt(currentExponentialStr) + 1;
-                    if(newExponential > 9) return;
-
-                    contentArray[cursorIndex - 1] = "^"+ newExponential;
-                    return contentArray.join(" ");
-                }
-
-                return currentContent.replace(cursor, "^2 "+ cursor);
             case "\\sum":
                 sumDialogRef.current?.open();
                 return;

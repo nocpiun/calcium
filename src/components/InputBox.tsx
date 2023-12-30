@@ -77,7 +77,40 @@ export default class InputBox extends Component<_Props, InputBoxState> {
     }
 
     public handleInput(symbol: string): void {
-        if(this.state.onInputSymbol) this.value = this.state.onInputSymbol(symbol) ?? this.state.displayContent;
+        this.value = this.preHandleInput(symbol) ?? this.state.displayContent;
+    }
+
+    public preHandleInput(symbol: string): string | void {
+        const currentContent = this.state.displayContent;
+
+        var contentArray = currentContent.split(" ");
+        var cursorIndex = this.getCursorIndex();
+
+        switch(symbol) {
+            case "ArrowLeft":
+            case "\\leftarrow":
+                if(cursorIndex === 0) return;
+
+                return this.moveCursorTo(cursorIndex - 1);
+            case "ArrowRight":
+            case "\\rightarrow":
+                if(cursorIndex === contentArray.length - 1) return;
+
+                return this.moveCursorTo(cursorIndex + 1);
+            case "^":
+                if(contentArray[cursorIndex - 1].indexOf("^") > -1) {
+                    const currentExponentialStr = contentArray[cursorIndex - 1].replace("^", "");
+                    const newExponential = parseInt(currentExponentialStr) + 1;
+                    if(newExponential > 9) return;
+
+                    contentArray[cursorIndex - 1] = "^"+ newExponential;
+                    return contentArray.join(" ");
+                }
+
+                return currentContent.replace(cursor, "^2 "+ cursor);
+            default:
+                if(this.state.onInputSymbol) return this.state.onInputSymbol(symbol);
+        }
     }
 
     private handleSymbolClick(e: React.MouseEvent, index: number): void {

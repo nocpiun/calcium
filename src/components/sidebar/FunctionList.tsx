@@ -73,28 +73,9 @@ const FunctionList: React.FC = () => {
                 contentArray = Utils.arrayRemove(contentArray, target);
 
                 return contentArray.join(" ");
-            case "ArrowLeft":
-                if(cursorIndex === 0) return;
-
-                return inputBox.moveCursorTo(cursorIndex - 1);
-            case "ArrowRight":
-                if(cursorIndex === contentArray.length - 1) return;
-
-                return inputBox.moveCursorTo(cursorIndex + 1);
             case "Enter":
                 if(contentArray.length > 1) handleAddFunction();
                 return;
-            case "^":
-                if(contentArray[cursorIndex - 1].indexOf("^") > -1) {
-                    const currentExponentialStr = contentArray[cursorIndex - 1].replace("^", "");
-                    const newExponential = parseInt(currentExponentialStr) + 1;
-                    if(newExponential > 9) return;
-
-                    contentArray[cursorIndex - 1] = "^"+ newExponential;
-                    return contentArray.join(" ");
-                }
-
-                return currentContent.replace(cursor, "^2 "+ cursor);
             default:
                 // Auto complete
                 tableLoop: for(let [key, value] of acTable) {
