@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useState, useRef } from "react";
 import { InlineMath } from "react-katex";
 import { ReactSVG } from "react-svg";
 import { useContextMenu, ContextMenuItem } from "use-context-menu";
@@ -17,6 +17,7 @@ interface ListItemProps {
 }
 
 const FunctionListItem: React.FC<ListItemProps> = (props) => {
+    const [isRemoving, setIsRemoving] = useState<boolean>(false); // For animation playing
     const functionEditorDialogRef = useRef<Dialog>(null);
 
     const handleOpenEditorDialog = () => {
@@ -24,7 +25,8 @@ const FunctionListItem: React.FC<ListItemProps> = (props) => {
     };
     
     const handleRemove = () => {
-        Emitter.get().emit("remove-function", props.id, props.index);
+        setIsRemoving(true);
+        setTimeout(() => Emitter.get().emit("remove-function", props.id, props.index), 200);
     };
 
     const handlePlay = () => {
@@ -40,7 +42,7 @@ const FunctionListItem: React.FC<ListItemProps> = (props) => {
     return (
         <>
             <div
-                className="function-list-item"
+                className={"function-list-item"+ (isRemoving ? " play-removing-animation" : "")}
                 id={"rendered-function--"+ props.id}
                 onContextMenu={onContextMenu}>
                 <div className="function-list-item-tag">

@@ -1,0 +1,39 @@
+dialog .pre-input-dialog .main-container {
+    .preview-symbol {
+        font-size: 18pt;
+        * {
+            font-family: "KaTeX_Main", "KaTeX_Math", "KaTeX_Size2";
+        }
+    }
+    .input-items {
+        display: flex;
+        flex-direction: column;
+        margin-top: 40px;
+        .input-item {
+            display: flex;
+            height: 38px;
+            justify-content: center;
+            margin-bottom: 10px;
+            &-tag {
+                display: flex;
+                width: 50px;
+                justify-content: right;
+                align-items: center;
+                padding-right: 7px;
+            }
+            input {
+                .dialog-input-box-style();
+                width: 350px;
+            }
+        }
+    }
+    .submit-container {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+        .submit-button {
+            margin: 0 auto;
+            .dialog-button-style();
+        }
+    }
+}
