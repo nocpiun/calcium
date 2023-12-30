@@ -2,7 +2,6 @@ import React, {
     useState,
     useReducer,
     useRef,
-    useEffect,
     useCallback
 } from "react";
 import { BlockMath } from "react-katex";
