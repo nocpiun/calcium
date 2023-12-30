@@ -45,6 +45,8 @@ Calculator -> calc -> Ca (Chemical Element) -> Calcium
 
 **It's recommended to use Calcium by [calcium.js.org](https://calcium.js.org). But if you want to deploy it locally, please continue reading the following content.**
 
+#### Docker
+
 First, you need to make sure that your server (or computer) has installed Docker.
 
 1. Pull docker repository
@@ -60,6 +62,36 @@ docker run -p 3000:3000 noahhrreion/calcium:main
 ```
 
 3. Enter `http://localhost:3000`, and you can start using Calcium.
+
+#### Launch directly
+
+First, you need to make sure that your server (or computer) has installed Git & NPM.
+
+1. Clone Git repo
+
+```bash
+git clone https://github.com/nocpiun/calcium.git
+```
+
+2. Install dependencies
+
+```bash
+npm i
+```
+
+If it throws error at this step, you can try:
+
+```bash
+npm i --force
+```
+
+3. Launch Calcium
+
+```bash
+npm run start
+```
+
+Enter `http://localhost:3000`, and you can start using Calcium.
 
 ## Contributing
 
