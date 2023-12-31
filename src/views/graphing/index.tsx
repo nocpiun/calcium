@@ -198,6 +198,20 @@ const Graphing: React.FC = memo(() => {
             setFunctionList([]);
             workerRef.current.postMessage({ type: "clear-function" });
         }],
+        ["set-function", async (index: number, value: string, id: number) => {
+            if(!workerRef.current) return;
+            
+            const currentList = await Utils.getCurrentState(setFunctionList);
+            for(let i = 0; i < currentList.length; i++) {
+                if(currentList[i].id === id) {
+                    var newArr: typeof currentList = Object.create(currentList);
+                    newArr[i].value = value;
+                    setFunctionList(newArr);
+                    break;
+                }
+            }
+            workerRef.current.postMessage({ type: "set-function", index, rawText: value });
+        }],
         ["graphing-capture", () => {
             const canvas = Utils.getElem<HTMLCanvasElement>("graphing");
             const dataUrl = canvas.toDataURL();

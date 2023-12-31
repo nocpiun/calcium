@@ -6,7 +6,39 @@ dialog.function-editor-dialog .main-container {
             font-family: @font-katex;
         }
         .function-tag {
+            display: flex;
+            flex-flow: row;
+            align-items: center;
             padding-right: 11px;
+        }
+        .function-value {
+            flex: 1;
+            display: flex;
+            .input-box {
+                flex: 1;
+                .input-box-style();
+                background-color: var(--ca-gray5);
+                border: 1px solid var(--ca-gray4);
+                border-radius: 3px;
+                margin: 5px;
+                margin-left: 0;
+                padding-left: 7px;
+                padding-right: 7px;
+                overflow-x: auto;
+                .display {
+                    font-size: 16px;
+                    min-height: 40px;
+                    max-height: 40px;
+                    .katex-display {
+                        margin: .6em 0;
+                    }
+                    .cursor {
+                        margin: .7em 0;
+                        margin-left: 0;
+                        margin-right: -1px;
+                    }
+                }
+            }
         }
     }
 }

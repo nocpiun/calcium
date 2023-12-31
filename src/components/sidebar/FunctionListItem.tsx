@@ -65,7 +65,7 @@ const FunctionListItem: React.FC<ListItemProps> = (props) => {
                 </div>
             </div>
 
-            <FunctionEditorDialog ref={functionEditorDialogRef} index={props.index} value={props.value}/>
+            <FunctionEditorDialog ref={functionEditorDialogRef} index={props.index} id={props.id} value={props.value}/>
 
             {contextMenu}
         </>

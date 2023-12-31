@@ -10,6 +10,7 @@ import Emitter from "@/utils/Emitter";
 interface InputBoxProps {
     ltr: boolean
     isProgrammingMode?: boolean
+    shouldAvoidDialog?: boolean
     onInputSymbol?: (symbol: string) => string | void
 }
 
@@ -23,6 +24,8 @@ export const cursor = "$";
 type _Props = InputBoxProps & DOMAttributes<HTMLDivElement>;
 
 export default class InputBox extends Component<_Props, InputBoxState> {
+    private shouldAvoidDialog: boolean = true;
+
     public constructor(props: _Props) {
         super(props);
 
@@ -30,6 +33,10 @@ export default class InputBox extends Component<_Props, InputBoxState> {
             displayContent: cursor,
             onInputSymbol: props.onInputSymbol
         };
+
+        if(this.props.shouldAvoidDialog !== undefined && this.props.shouldAvoidDialog === false) {
+            this.shouldAvoidDialog = false;
+        }
     }
 
     public get value(): string {
@@ -177,7 +184,7 @@ export default class InputBox extends Component<_Props, InputBoxState> {
                 e.preventDefault();
                 return;
             }
-            if(Utils.isAnyDialogOpen()) return;
+            if(Utils.isAnyDialogOpen() && this.shouldAvoidDialog) return;
             
             var inputValue = e.key;
             if(inputValue === "*") inputValue = "×";

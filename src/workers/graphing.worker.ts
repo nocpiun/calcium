@@ -29,6 +29,9 @@ ctx.addEventListener("message", (e) => {
             renderer.functionList.forEach((func, index) => renderer.unregisterFunction(index));
             renderer.functionList.clear();
             break;
+        case "set-function":
+            renderer.editFunction(req.index, req.rawText);
+            break;
         case "play-function":
             renderer.functionList.get(req.index).play(ctx);
             break;

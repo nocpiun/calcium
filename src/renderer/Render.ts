@@ -56,8 +56,13 @@ export default class Render extends Graphics {
 
         switch(res.type) {
             case "compile":
-                this.functionList.add(new Function(res.id, RootToken.create(e.data.root)));
+                this.functionList.add(new Function(res.id, RootToken.create(res.root)));
                 this.drawCompleteFunction();
+                break;
+            case "compile-and-set":
+                var oldFunction = this.functionList.get(res.index);
+                this.functionList.set(res.index, new Function(oldFunction.id, RootToken.create(res.root)));
+                this.fullyRefreshFunctions();
                 break;
             case "evaluate":
                 switch(res.operate) {
@@ -260,6 +265,10 @@ export default class Render extends Graphics {
     public unregisterFunction(index: number): void {
         this.functionList.remove(index);
         this.fullyRefreshFunctions();
+    }
+
+    public editFunction(index: number, rawText: string) {
+        this.calculatingWorker.postMessage({ type: "compile-and-set", index, rawText });
     }
 
     public async calculatePoints(func: Function, beginX: number, endX: number, direction: MovingDirection = MovingDirection.LEFT): Promise<void> {

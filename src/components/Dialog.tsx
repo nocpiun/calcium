@@ -9,6 +9,7 @@ interface DialogProps extends PropsWithChildren {
     id: string
     height?: number
     className?: string
+    footer?: React.ReactElement
     onClose?: () => void
 }
 
@@ -22,6 +23,10 @@ export default class Dialog extends Component<DialogProps, {}> {
     public close(): void {
         if(this.props.onClose) this.props.onClose();
         this.dialogRef.current?.close();
+    }
+
+    public get isOpened(): boolean {
+        return this.dialogRef.current?.open || false;
     }
 
     public render(): ReactElement {
@@ -42,6 +47,7 @@ export default class Dialog extends Component<DialogProps, {}> {
                     }
                 </div>
                 <div className="footer-container">
+                    {this.props.footer}
                     <button className="footer-button" onClick={() => this.close()} tabIndex={-1}>关闭</button>
                 </div>
             </dialog>

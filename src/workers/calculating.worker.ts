@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-redeclare */
 /* eslint-disable no-restricted-globals */
 import Compiler from "@/compiler/Compiler";
 import Evaluator from "@/compiler/Evaluator";
@@ -12,6 +13,10 @@ ctx.addEventListener("message", (e) => {
         case "compile":
             var root = new Compiler(req.rawText.split(" ")).tokenize() ?? new RootToken([]);
             ctx.postMessage({ type: req.type, id: req.id, root });
+            break;
+        case "compile-and-set":
+            var root = new Compiler(req.rawText.split(" ")).tokenize() ?? new RootToken([]);
+            ctx.postMessage({ type: req.type, index: req.index, root });
             break;
         case "evaluate":
             var result = new Evaluator(RootToken.create(req.root), new Map([["x", req.x.toString()]])).evaluate();
