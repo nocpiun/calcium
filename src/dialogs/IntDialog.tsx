@@ -8,6 +8,8 @@ import React, {
 } from "react";
 import { BlockMath, InlineMath } from "react-katex";
 
+import useInnerRef from "@/hooks/useInnerRef";
+
 import Emitter from "@/utils/Emitter";
 import type { PropsWithRef } from "@/types";
 
@@ -23,6 +25,7 @@ const IntDialog: React.FC<IntDialogProps> = forwardRef<Dialog, IntDialogProps>(
         const [b, setB] = useState<number>(0);
         const aInput = useRef<HTMLInputElement>(null);
         const bInput = useRef<HTMLInputElement>(null);
+        const dialogRef = useInnerRef(ref);
 
         const handleInputA = () => {
             if(!aInput.current) return;
@@ -65,9 +68,9 @@ const IntDialog: React.FC<IntDialogProps> = forwardRef<Dialog, IntDialogProps>(
 
         useEffect(() => {
             document.body.addEventListener("keydown", (e: KeyboardEvent) => {
-                if(e.key === "Enter") handleSubmit();
+                if(e.key === "Enter" && dialogRef.current?.isOpened) handleSubmit();
             }, { once: true });
-        }, [handleSubmit]);
+        }, [handleSubmit, dialogRef]);
 
         return (
             <Dialog
@@ -75,7 +78,7 @@ const IntDialog: React.FC<IntDialogProps> = forwardRef<Dialog, IntDialogProps>(
                 height={450}
                 className="pre-input-dialog"
                 id={"int-dialog--"+ useId()}
-                ref={ref}
+                ref={dialogRef as React.LegacyRef<Dialog>}
                 onClose={() => handleClose()}>
                 <div className="preview-symbol">
                     <BlockMath math={"\\smallint_{a="+ a +"}^{b="+ b +"} f(x) dx"}/>
@@ -97,11 +100,11 @@ const IntDialog: React.FC<IntDialogProps> = forwardRef<Dialog, IntDialogProps>(
                             <InlineMath>b =</InlineMath>
                         </div>
                         <input
-                        type="text"
-                        defaultValue={b}
-                        autoComplete="off"
-                        ref={bInput}
-                        onInput={() => handleInputB()}/>
+                            type="text"
+                            defaultValue={b}
+                            autoComplete="off"
+                            ref={bInput}
+                            onInput={() => handleInputB()}/>
                     </div>
                 </div>
                 <div className="submit-container">

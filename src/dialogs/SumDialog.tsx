@@ -8,6 +8,8 @@ import React, {
 } from "react";
 import { BlockMath, InlineMath } from "react-katex";
 
+import useInnerRef from "@/hooks/useInnerRef";
+
 import Emitter from "@/utils/Emitter";
 import type { PropsWithRef } from "@/types";
 
@@ -23,6 +25,7 @@ const SumDialog: React.FC<SumDialogProps> = forwardRef<Dialog, SumDialogProps>(
         const [i, setI] = useState<number>(0);
         const nInput = useRef<HTMLInputElement>(null);
         const iInput = useRef<HTMLInputElement>(null);
+        const dialogRef = useInnerRef(ref);
 
         const handleInputN = () => {
             if(!nInput.current) return;
@@ -57,9 +60,9 @@ const SumDialog: React.FC<SumDialogProps> = forwardRef<Dialog, SumDialogProps>(
 
         useEffect(() => {
             document.body.addEventListener("keydown", (e: KeyboardEvent) => {
-                if(e.key === "Enter") handleSubmit();
+                if(e.key === "Enter" && dialogRef.current?.isOpened) handleSubmit();
             }, { once: true });
-        }, [handleSubmit]);
+        }, [handleSubmit, dialogRef]);
 
         return (
             <Dialog
@@ -67,7 +70,7 @@ const SumDialog: React.FC<SumDialogProps> = forwardRef<Dialog, SumDialogProps>(
                 height={450}
                 className="pre-input-dialog"
                 id={"sum-dialog--"+ useId()}
-                ref={ref}
+                ref={dialogRef as React.LegacyRef<Dialog>}
                 onClose={() => handleClose()}>
                 <div className="preview-symbol">
                     <BlockMath math={"\\sum_{i="+ i +"}^{"+ n +"} k"}/>
@@ -89,11 +92,11 @@ const SumDialog: React.FC<SumDialogProps> = forwardRef<Dialog, SumDialogProps>(
                             <InlineMath>i =</InlineMath>
                         </div>
                         <input
-                        type="text"
-                        defaultValue={i}
-                        autoComplete="off"
-                        ref={iInput}
-                        onInput={() => handleInputI()}/>
+                            type="text"
+                            defaultValue={i}
+                            autoComplete="off"
+                            ref={iInput}
+                            onInput={() => handleInputI()}/>
                     </div>
                 </div>
                 <div className="submit-container">

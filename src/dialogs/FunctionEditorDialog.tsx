@@ -8,7 +8,7 @@ import React, {
 } from "react";
 import { InlineMath } from "react-katex";
 
-import useCombinedRefs from "@/hooks/useCombinedRefs";
+import useInnerRef from "@/hooks/useInnerRef";
 
 import Utils from "@/utils/Utils";
 import Emitter from "@/utils/Emitter";
@@ -31,8 +31,7 @@ const FunctionEditorDialog: React.FC<FunctionEditorDialogProps> = forwardRef<Dia
     (props, ref) => {
         const { mode } = useContext(MainContext);
         const inputRef = useRef<InputBox>(null);
-        const innerDialogRef = useRef<Dialog>();
-        const dialogRef = useCombinedRefs(innerDialogRef, ref as React.MutableRefObject<Dialog | undefined>);
+        const dialogRef = useInnerRef(ref);
 
         const handleSave = useCallback(() => {
             if(!inputRef.current || !dialogRef.current) return;
