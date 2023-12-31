@@ -64,7 +64,8 @@ const Input: React.FC = () => {
                         <InputButton symbol="j" grow={1} title="j"/>
                         <div className="keypad-placeholder"/>
                         <InputButton symbol="\prod" grow={2} title="求积"/>
-                        <div style={{ flexGrow: 3 }}/>
+                        <InputButton symbol="W_0" grow={2} title="Lambert W"/>
+                        <div style={{ flexGrow: 1 }}/>
                     </div>
                     <div className="keypad-row">
                         <InputButton symbol="\cosh" inputValue="\cosh(" grow={1}/>

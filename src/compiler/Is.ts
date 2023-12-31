@@ -32,7 +32,7 @@ export default class Is {
     }
     
     public static mathFunction(symbol: string): boolean {
-        const specialFunction = ["√(", "^3√("];
+        const specialFunction = ["√(", "^3√(", "W_0("];
         return (symbol[0] === "\\" && symbol[symbol.length - 1] === "(") || specialFunction.indexOf(symbol) > -1;
     }
     

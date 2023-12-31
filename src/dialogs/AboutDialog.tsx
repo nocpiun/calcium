@@ -50,6 +50,7 @@ const dependencies: [string, string][] = [
     ["use-context-menu@0.4.12", "https://use-context-menu.vercel.app"],
     ["tone@14.7.77", "https://tonejs.github.io"],
     ["relationship.js@1.2.3", "mumuy/relationship"],
+    ["lambert-w-function@3.0.0", "howion/lambert-w-function"],
     ["webpack@5.64.4", "https://webpack.js.org"],
     ["css-loader@6.5.1", "webpack-contrib/css-loader"],
     ["style-loader@3.3.1", "webpack-contrib/style-loader"],
