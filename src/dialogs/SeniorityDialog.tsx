@@ -17,7 +17,7 @@ const SeniorityDialog: React.FC<SeniorityDialogProps> = forwardRef<Dialog, Senio
         };
 
         return (
-            <Dialog title="辈分计算 (Beta)" className="seniority-dialog" id={"seniority-dialog--"+ useId()} onClose={() => handleClose()} ref={ref}>
+            <Dialog title="辈分计算" className="seniority-dialog" id={"seniority-dialog--"+ useId()} onClose={() => handleClose()} ref={ref}>
                 <SeniorityPage />
             </Dialog>
         );

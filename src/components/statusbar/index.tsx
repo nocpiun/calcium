@@ -61,7 +61,7 @@ const StatusBar: React.FC = () => {
                         mode === Mode.GRAPHING &&
                         <BarItem title="重载" onClick={() => Emitter.get().emit("graphing-reload")} tooltip="函数图像渲染重载"/>
                     }
-                    <BarItem title="辈分计算 (beta)" onClick={() => seniorityDialogRef.current?.open()}/>
+                    <BarItem title="辈分计算" onClick={() => seniorityDialogRef.current?.open()}/>
                     <BarItem title="单位换算" onClick={() => convertingDialogRef.current?.open()}/>
                     <BarItem title="快捷键" onClick={() => shortcutDialogRef.current?.open()}/>
                     <BarItem title={"Calcium "+ version} onClick={() => Emitter.get().emit("open-about-dialog")}/>

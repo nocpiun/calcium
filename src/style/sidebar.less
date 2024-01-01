@@ -3,10 +3,10 @@
     display: flex;
     flex-direction: row;
     .control-panel-container {
-        flex: .8;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
+        width: 65px;
         background-color: var(--ca-light1);
         .border-line(right);
         .mobile-sidebar-title {
@@ -90,6 +90,7 @@
             span {
                 display: block;
                 margin: 10px 0;
+                white-space: nowrap;
             }
         }
         .theme-switcher {

@@ -5,19 +5,29 @@ dialog.converting-dialog .main-container {
         display: flex;
         flex-direction: column;
         .unit-type-button {
+            display: flex;
+            flex-flow: row;
+            align-items: center;
             height: 35px;
             text-align: left;
             border: none;
             outline: none;
             border-radius: 4px;
+            margin-bottom: 3px;
             background-color: transparent;
+            transition: background-color 100ms ease;
             cursor: pointer;
+            svg {
+                width: 20px;
+                fill: var(--ca-gray-light);
+                vertical-align: top;
+            }
             span {
                 color: var(--ca-gray-light);
                 font-size: 11pt;
                 margin-left: 10px;
             }
-            &.active {
+            &.active, &:hover {
                 background-color: var(--ca-gray9);
             }
         }
