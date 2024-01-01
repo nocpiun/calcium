@@ -180,9 +180,6 @@ export default class Graphics {
         this.clear();
 
         this.refreshAxisLine();
-
-        // var imageBitmap = this.canvas.transferToImageBitmap();
-        // this.workerCtx.postMessage({ type: "render", imageBitmap }, [imageBitmap]);
     }
 
     public getTextWidth(text: string): number {

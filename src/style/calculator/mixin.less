@@ -110,6 +110,63 @@
     }
 }
 
+.function-list-style() {
+    padding-top: 10px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    .scrollbar-style();
+    &-item {
+        @transition-delay: 90ms;
+        display: flex;
+        height: 25px;
+        margin: 3px 20px;
+        padding: 3px 7px;
+        border-radius: 5px;
+        transition: background-color @transition-delay ease;
+        animation: function-item-added 100ms ease;
+        animation-iteration-count: 1;
+        &-tag {
+            flex: 1;
+            .function-tag();
+            padding: 0 3px;
+        }
+        &-value {
+            flex: 5;
+            display: flex;
+            align-items: center;
+            color: var(--ca-gray-light);
+        }
+        &-buttons {
+            flex: .5;
+            display: flex;
+            button {
+                display: flex;
+                align-items: center;
+                flex-flow: row;
+                border: none;
+                outline: none;
+                background-color: transparent;
+                svg {
+                    width: 19px;
+                    height: 19px;
+                    margin-top: 3px;
+                    transition: fill @transition-delay ease;
+                    cursor: pointer;
+                }
+            }
+        }
+        &.play-removing-animation {
+            animation: function-item-removed 210ms ease-in;
+        }
+        &:hover {
+            background-color: var(--ca-gray9);
+            .function-list-item-buttons svg:hover {
+                fill: var(--ca-gray1);
+            }
+        }
+    }
+}
+
 @border-style: 1px solid var(--ca-gray2);
 
 .border-line(@position) when (@position = top) {

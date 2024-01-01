@@ -147,17 +147,12 @@ const FunctionList: React.FC = () => {
                     </button>
                 </div>
             </div>
-            {
-                !Utils.isMobile()
-                ? (
-                    <div className="function-list" id="function-list">
-                        {
-                            functionList.map((item, index) => <FunctionListItem {...item} index={index} key={index}/>)
-                        }
-                    </div>
-                )
-                : <MobileInput isGraphingMode={true}/>
-            }
+            <div className="function-list" id="function-list">
+                {
+                    functionList.map((item, index) => <FunctionListItem {...item} index={index} key={index}/>)
+                }
+            </div>
+            {Utils.isMobile() && <MobileInput isGraphingMode={true}/>}
         </>
     );
 
