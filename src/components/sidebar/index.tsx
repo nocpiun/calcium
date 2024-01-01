@@ -7,6 +7,7 @@ import KeepAlive from "react-activation";
 import ModeButton from "@/components/sidebar/ModeButton";
 import History from "@/components/sidebar/History";
 import FunctionList from "@/components/sidebar/FunctionList";
+import Sash from "@/components/Sash";
 
 import { Mode, Theme } from "@/types";
 import { version } from "@/global";
@@ -25,6 +26,7 @@ import ProgrammingIcon from "@/icons/programming_mode.svg";
 const Sidebar: React.FC = () => {
     const { mode } = useContext(MainContext);
     const [sidebarOpen, setSidebarOpen] = useState<boolean>(!Utils.isMobile());
+    const [width, setWidth] = useState<number>(382);
     const themeValue = Storage.get().getItem("theme", useThemeDetector());
 
     const handleToggle = (isActive: boolean) => {
@@ -63,7 +65,7 @@ const Sidebar: React.FC = () => {
     }, [sidebarOpen]);
 
     return (
-        <aside className={"sidebar-container"+ (sidebarOpen ? " open" : "")}>
+        <aside className={"sidebar-container"+ (sidebarOpen ? " open" : "")} style={{ width }}>
             <div className="control-panel-container">
                 {/* Mobile only */}
                 {Utils.isMobile() && (
@@ -110,6 +112,15 @@ const Sidebar: React.FC = () => {
             </div>
             
             {layoutSwitch(mode)}
+
+            <Sash
+                direction="vertical"
+                defaultValue={width}
+                minValue={315}
+                maxValue={620}
+                side="left"
+                disabled={mode === Mode.GRAPHING}
+                onChange={(value) => setWidth(value)}/>
         </aside>
     );
 }

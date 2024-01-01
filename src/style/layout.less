@@ -87,3 +87,19 @@ kbd {
     box-shadow: 1px 1px 10px 2px rgba(0, 0, 0, .1);
     z-index: 100;
 }
+
+.sash {
+    position: absolute;
+    transition: all 100ms ease;
+    z-index: 1;
+    @size: 4px;
+    &.vertical {
+        width: @size;
+    }
+    &.horizontal {
+        height: @size;
+    }
+    &.hover {
+        background-color: var(--ca-blue1);
+    }
+}

@@ -1,7 +1,7 @@
 .sidebar-container {
-    flex: 1;
     display: flex;
     flex-direction: row;
+    min-width: 315px;
     .control-panel-container {
         display: flex;
         flex-direction: column;
@@ -270,5 +270,8 @@
                 }
             }
         }
+    }
+    .sash {
+        height: calc(100% - 26px);
     }
 }
