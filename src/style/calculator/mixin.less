@@ -8,6 +8,7 @@
     top: 2px;
     left: 2px;
     right: 2px;
+    width: 100%; // for firefox (firefox absolute positioning issue)
     bottom: 2px;
     flex-flow: row;
     align-items: center;
@@ -54,6 +55,7 @@
         // justify-content: flex-end;
         color: var(--ca-gray-light);
         overflow-x: auto;
+        overflow-y: hidden;
         cursor: text;
         .scrollbar-style();
         & > span {
