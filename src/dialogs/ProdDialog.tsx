@@ -70,6 +70,7 @@ const ProdDialog: React.FC<ProdDialogProps> = forwardRef<Dialog, ProdDialogProps
                 height={450}
                 className="pre-input-dialog"
                 id={"prod-dialog--"+ useId()}
+                footer={<button className="footer-button" onClick={() => handleSubmit()}>输入</button>}
                 ref={dialogRef as React.LegacyRef<Dialog>}
                 onClose={() => handleClose()}>
                 <div className="preview-symbol">
@@ -98,9 +99,6 @@ const ProdDialog: React.FC<ProdDialogProps> = forwardRef<Dialog, ProdDialogProps
                             ref={iInput}
                             onInput={() => handleInputI()}/>
                     </div>
-                </div>
-                <div className="submit-container">
-                    <button className="submit-button" onClick={() => handleSubmit()}>输入</button>
                 </div>
             </Dialog>
         );

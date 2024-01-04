@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useEffect, useRef, useId } from "react";
+import React, { useState, useEffect, useRef, useMemo, useId } from "react";
 
 import Utils from "@/utils/Utils";
 
@@ -19,13 +19,17 @@ const Sash: React.FC<SashProps> = (props) => {
     const [isMoving, setIsMoving] = useState<boolean>(false);
     const id = useRef(useId());
     const timer = useRef<NodeJS.Timeout | null>();
+    const cursorType = useMemo(
+        () => !props.disabled ? (props.direction === "vertical" ? "ew-resize" : "ns-resize") : "default",
+        [props.direction, props.disabled]
+    );
 
     const handleMouseOver = () => {
         if(props.disabled || timer.current) return;
 
         timer.current = setTimeout(() => {
             setIsHovered(true);
-        }, 350);
+        }, 500);
     };
 
     const handleMouseOut = () => {
@@ -58,13 +62,14 @@ const Sash: React.FC<SashProps> = (props) => {
             ) newValue = props.maxValue;
 
             const elem = Utils.getElem("sash--"+ id.current);
-            elem.style[props.side] = newValue +"px";
+            elem.style[props.side] = (newValue - 2) +"px";
             // Do a repaint so that the update of page will
             // be able to keep up with the update of CSS.
             // Thanks to ChatGPT....
             elem.style.display = "none";
             elem.offsetHeight; // trigger a repaint
             elem.style.display = "";
+            
             if(props.onChange) props.onChange(newValue);
         });
         window.addEventListener("mouseup", (e) => {
@@ -74,21 +79,16 @@ const Sash: React.FC<SashProps> = (props) => {
     }, []);
 
     useEffect(() => {
-        if(isHovered) {
-            document.body.style.cursor = props.direction === "vertical" ? "ew-resize" : "ns-resize";
-        } else {
-            document.body.style.cursor = "";
-        }
-    }, [isHovered]);
-
-    useEffect(() => {
-        Utils.getElem("sash--"+ id.current).style[props.side] = props.defaultValue +"px";
+        Utils.getElem("sash--"+ id.current).style[props.side] = (props.defaultValue - 2) +"px";
     }, [props.disabled]);
 
     return <div
         className={"sash "+ props.direction + (isHovered ? " hover" : "")}
         id={"sash--"+ id.current}
-        style={{ [props.side]: props.defaultValue - 2 }}
+        style={{
+            [props.side]: props.defaultValue - 2,
+            cursor: cursorType
+        }}
         onMouseOver={() => handleMouseOver()}
         onMouseOut={() => handleMouseOut()}
         onMouseDown={() => handleMouseDown()}/>;

@@ -70,6 +70,7 @@ const SumDialog: React.FC<SumDialogProps> = forwardRef<Dialog, SumDialogProps>(
                 height={450}
                 className="pre-input-dialog"
                 id={"sum-dialog--"+ useId()}
+                footer={<button className="footer-button" onClick={() => handleSubmit()}>输入</button>}
                 ref={dialogRef as React.LegacyRef<Dialog>}
                 onClose={() => handleClose()}>
                 <div className="preview-symbol">
@@ -98,9 +99,6 @@ const SumDialog: React.FC<SumDialogProps> = forwardRef<Dialog, SumDialogProps>(
                             ref={iInput}
                             onInput={() => handleInputI()}/>
                     </div>
-                </div>
-                <div className="submit-container">
-                    <button className="submit-button" onClick={() => handleSubmit()}>输入</button>
                 </div>
             </Dialog>
         );

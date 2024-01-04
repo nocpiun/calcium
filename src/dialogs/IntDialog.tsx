@@ -78,6 +78,7 @@ const IntDialog: React.FC<IntDialogProps> = forwardRef<Dialog, IntDialogProps>(
                 height={450}
                 className="pre-input-dialog"
                 id={"int-dialog--"+ useId()}
+                footer={<button className="footer-button" onClick={() => handleSubmit()}>输入</button>}
                 ref={dialogRef as React.LegacyRef<Dialog>}
                 onClose={() => handleClose()}>
                 <div className="preview-symbol">
@@ -106,9 +107,6 @@ const IntDialog: React.FC<IntDialogProps> = forwardRef<Dialog, IntDialogProps>(
                             ref={bInput}
                             onInput={() => handleInputB()}/>
                     </div>
-                </div>
-                <div className="submit-container">
-                    <button className="submit-button" onClick={() => handleSubmit()}>输入</button>
                 </div>
             </Dialog>
         );
