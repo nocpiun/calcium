@@ -1,4 +1,6 @@
-import React, { memo } from "react";
+import React, { memo, useState } from "react";
+
+import useEmitter from "@/hooks/useEmitter";
 
 import KeypadTab from "@/components/KeypadTab";
 import KeypadSection from "@/components/KeypadSection";
@@ -6,11 +8,29 @@ import KeypadSection from "@/components/KeypadSection";
 import InputButton from "@/components/InputButton";
 
 const MobileProgrammingInput: React.FC = memo(() => {
+    const [sliderLeft, setSliderLeft] = useState<number>(0);
+
+    useEmitter([
+        ["open-keypad-tab", (targetId: string) => {
+            switch(targetId) {
+                case "common":
+                    setSliderLeft(0);
+                    break;
+                case "logical":
+                    setSliderLeft(100);
+                    break;
+            }
+        }]
+    ]);
+
     return (
         <div className="mobile-input-container">
-            <div className="tabs-container">
-                <KeypadTab name="常用" id="common" default={true}/>
-                <KeypadTab name="逻辑" id="logical"/>
+            <div className="tabs-wrapper">
+                <div className="tabs-container">
+                    <KeypadTab name="常用" id="common" default={true}/>
+                    <KeypadTab name="逻辑" id="logical"/>
+                </div>
+                <div className="tab-slider" style={{ width: "50%", transform: "translateX("+ sliderLeft +"%)" }}/>
             </div>
             <div className="keypad">
                 <KeypadSection id="common" default={true}>

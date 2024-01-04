@@ -65,7 +65,7 @@ const Sidebar: React.FC = () => {
     }, [sidebarOpen]);
 
     return (
-        <aside className={"sidebar-container"+ (sidebarOpen ? " open" : "")} style={{ width }}>
+        <aside className={"sidebar-container"+ (sidebarOpen ? " open" : "")} style={!Utils.isMobile() ? { width } : {}}>
             <div className="control-panel-container">
                 {/* Mobile only */}
                 {Utils.isMobile() && (

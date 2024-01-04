@@ -42,7 +42,7 @@ const MobileInput: React.FC<MobileInputProps> = memo((props) => {
                     <KeypadTab name="函数" id="functions"/>
                     <KeypadTab name="高级" id="professional"/>
                 </div>
-                <div className="tab-slider" style={{ transform: "translateX("+ sliderLeft +"%)" }}/>
+                <div className="tab-slider" style={{ width: "25%", transform: "translateX("+ sliderLeft +"%)" }}/>
             </div>
             <div className="keypad">
                 <KeypadSection id="common" default={true}>
