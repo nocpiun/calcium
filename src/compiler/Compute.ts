@@ -99,11 +99,13 @@ export default class Compute {
     }
 
     public static nPr(n: number, r: number): number {
-        if(n < r) return 0;
+        if(n < r || n < 0 || r < 0) return NaN;
         return Compute.factorial(n) / Compute.factorial(n - r);
     }
 
     public static nCr(n: number, r: number): number {
+        if(n < r || n < 0 || r < 0) return NaN;
+        if(r === 0) return 1;
         return Compute.factorial(n) / (Compute.factorial(r) * Compute.factorial(n - r));
     }
 

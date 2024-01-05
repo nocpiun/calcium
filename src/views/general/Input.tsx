@@ -149,7 +149,7 @@ const Input: React.FC = () => {
                         <InputButton symbol="\text{count}" inputValue="\text{count}(" grow={1}/>
                         <InputButton symbol="\text{total}" inputValue="\text{total}(" grow={1}/>
                         <InputButton symbol="\text{mean}" inputValue="\text{mean}(" grow={2}/>
-                        <InputButton symbol="\text{nPr}" inputValue="\text{nPr}(" grow={1}/>
+                        <InputButton symbol="\text{P}_n^r" inputValue="\text{nPr}(" grow={1}/>
                         <div className="keypad-placeholder"/>
                         <InputButton symbol="\sum" inputValue="\sum" grow={1} title="求和"/>
                         <InputButton symbol="\%" inputValue="\%(" grow={1}/>
@@ -167,7 +167,7 @@ const Input: React.FC = () => {
                     <div className="keypad-row">
                         <InputButton symbol="\text{floor}" inputValue="\text{floor}(" grow={2}/>
                         <InputButton symbol="\text{round}" inputValue="\text{round}(" grow={2}/>
-                        <InputButton symbol="\text{nCr}" inputValue="\text{nCr}(" grow={1}/>
+                        <InputButton symbol="\text{C}_n^r" inputValue="\text{nCr}(" grow={1}/>
                         <div className="keypad-placeholder"/>
                         <InputButton symbol="1" grow={1}/>
                         <InputButton symbol="2" grow={1}/>
