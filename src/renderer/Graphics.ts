@@ -79,8 +79,8 @@ export default class Graphics {
             this.drawStraightLine(y2, Graphics.colors.secondary);
 
             // number of the line
-            this.drawText((i * this.spacing).toString(), this.center.x - (this.getTextWidth((i * this.spacing).toString()) + 5) * this.ratio, y1 + 5 * this.ratio, Graphics.colors.primary, 15);
-            this.drawText((-i * this.spacing).toString(), this.center.x - (this.getTextWidth((-i * this.spacing).toString()) + 5) * this.ratio, y2 + 5 * this.ratio, Graphics.colors.primary, 15);
+            this.drawText((i * this.spacing).toString(), this.center.x - (this.getTextWidth((i * this.spacing).toString()) / this.ratio + 5) * this.ratio, y1 + 5 * this.ratio, Graphics.colors.primary, 15);
+            this.drawText((-i * this.spacing).toString(), this.center.x - (this.getTextWidth((-i * this.spacing).toString()) / this.ratio + 5) * this.ratio, y2 + 5 * this.ratio, Graphics.colors.primary, 15);
         }
         // thinner line
         for(
@@ -117,8 +117,8 @@ export default class Graphics {
             this.drawVerticalLine(x2, Graphics.colors.secondary);
 
             // number of the line
-            this.drawText((-k * this.spacing).toString(), x1 - (this.getTextWidth((-k * this.spacing).toString()) / 2) * this.ratio, this.center.y + 15 * this.ratio, Graphics.colors.primary, 15);
-            this.drawText((k * this.spacing).toString(), x2 - (this.getTextWidth((k * this.spacing).toString()) / 2) * this.ratio, this.center.y + 15 * this.ratio, Graphics.colors.primary, 15);
+            this.drawText((-k * this.spacing).toString(), x1 - (this.getTextWidth((-k * this.spacing).toString()) / this.ratio / 2) * this.ratio, this.center.y + 15 * this.ratio, Graphics.colors.primary, 15);
+            this.drawText((k * this.spacing).toString(), x2 - (this.getTextWidth((k * this.spacing).toString()) / this.ratio / 2) * this.ratio, this.center.y + 15 * this.ratio, Graphics.colors.primary, 15);
         }
         // thinner line
         for(
