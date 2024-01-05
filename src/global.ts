@@ -5,7 +5,7 @@ import Compute from "@/compiler/Compute";
 import Emitter from "@/utils/Emitter";
 import { FunctionInfo, Shortcut, RollbackToward } from "@/types";
 
-export const version = "1.3.3";
+export const version = "1.4.0";
 export const errorText = "\\text{Error}";
 
 export const functions: Map<string, FunctionInfo> = new Map([

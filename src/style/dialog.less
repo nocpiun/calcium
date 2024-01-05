@@ -115,9 +115,19 @@
                 align-items: center;
                 margin-bottom: 10px;
                 .back-button {
-                    color: var(--ca-gray1);
-                    font-size: 11pt;
+                    display: flex;
+                    flex-flow: row;
+                    align-items: center;
                     text-decoration: none;
+                    svg {
+                        width: 15px;
+                        vertical-align: middle;
+                        fill: var(--ca-gray1);
+                    }
+                    span {
+                        color: var(--ca-gray1);
+                        font-size: 11pt;
+                    }
                 }
                 h2 {
                     display: inline-block;
