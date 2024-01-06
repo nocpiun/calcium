@@ -27,7 +27,16 @@ dialog.converting-dialog .main-container {
                 font-size: 11pt;
                 margin-left: 10px;
             }
-            &.active, &:hover {
+            &.active {
+                background-color: var(--ca-blue5) !important;
+                svg {
+                    fill: var(--ca-blue4);
+                }
+                span {
+                    color: var(--ca-blue4);
+                }
+            }
+            &:hover {
                 background-color: var(--ca-gray9);
             }
         }
