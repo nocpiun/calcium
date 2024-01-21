@@ -116,7 +116,7 @@ const Sidebar: React.FC = () => {
             <Sash
                 direction="vertical"
                 defaultValue={width}
-                minValue={315}
+                minValue={362}
                 maxValue={620}
                 side="left"
                 disabled={mode === Mode.GRAPHING}

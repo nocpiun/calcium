@@ -36,6 +36,10 @@ export default class IntToken extends DynamicToken {
             var x = this.a + i * dx;
             sum += f(x) * (i % 2 ? 4 : 2);
         }
+        
+        this.variables.delete("dx");
+        this.variables.delete("x");
+        
         return (sum * dx / 3) * 10000;
     }
 }

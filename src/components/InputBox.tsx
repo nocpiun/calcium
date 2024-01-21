@@ -298,6 +298,8 @@ export class InputContext {
 
         if(Is.variable(symbol.value)) {
             symbol.tag = InputTag.VAR;
+        } else if(Is.constant(symbol.value)) {
+            symbol.tag = InputTag.CONST;
         } else if(Is.mathFunction(symbol.value)) {
             symbol.tag = InputTag.FUNC;
         }

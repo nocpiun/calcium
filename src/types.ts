@@ -42,6 +42,7 @@ export enum Operator {
 export enum InputTag {
     COMMON = "common",
     VAR = "var",
+    CONST = "const",
     FUNC = "func",
 }
 

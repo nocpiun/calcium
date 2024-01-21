@@ -22,6 +22,8 @@ export default class SumToken extends DynamicToken {
             var compiler = new Compiler(this.raw, this.variables.set("i", i.toString()), false, NumberSys.DEC);
             result += parseFloat(compiler.compile());
         }
+        
+        this.variables.delete("i");
         return result;
     }
 }

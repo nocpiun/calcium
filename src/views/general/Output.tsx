@@ -16,7 +16,7 @@ import Compiler from "@/compiler/Compiler";
 import Compute from "@/compiler/Compute";
 import Is from "@/compiler/Is";
 import Logger from "@/utils/Logger";
-import { NumberSys, RecordType, InputTag } from "@/types";
+import { NumberSys, RecordType } from "@/types";
 
 import useEmitter from "@/hooks/useEmitter";
 import useEaster from "@/hooks/useEaster";
@@ -177,7 +177,7 @@ const Output: React.FC = () => {
                     setOutputContent("");
 
                     ctx.input(new InputSymbol(symbol));
-                    ctx.input(new InputSymbol(")", Is.mathFunction(symbol) ? InputTag.FUNC : InputTag.COMMON), ctx.getCursorIndex() + 1);
+                    ctx.input(new InputSymbol(")"), ctx.getCursorIndex() + 1);
                     return;
                 }
 
