@@ -25,7 +25,7 @@ import useEaster from "@/hooks/useEaster";
 import NumberSysReducer from "@/reducers/NumberSysReducer";
 
 import NumberBox from "./NumberBox";
-import InputBox, { cursor } from "@/components/InputBox";
+import InputBox, { cursor, InputSymbol, InputContext } from "@/components/InputBox";
 import SidebarOpener from "@/components/SidebarOpener";
 import type Dialog from "@/components/Dialog";
 import FunctionDialog from "@/dialogs/FunctionDialog";
@@ -46,7 +46,7 @@ const ProgrammingOutput: React.FC = () => {
         if(currentContent.split(" ").length <= 1) return;
 
         // Remove cursor from raw text
-        var rawText = InputBox.removeCursor(currentContent);
+        var rawText = InputContext.removeCursor(currentContent);
         var raw = rawText.split(" ");
 
         var compiler = new Compiler(raw, new Map(), true, numberSys);
@@ -91,40 +91,38 @@ const ProgrammingOutput: React.FC = () => {
     const handleInput = useCallback((symbol: string) => {
         if(!inputRef.current) return;
         const inputBox = inputRef.current;
-        const currentContent = inputBox.state.displayContent;
 
-        var contentArray = currentContent.split(" ");
-        var cursorIndex = inputBox.getCursorIndex();
+        var ctx = inputBox.ctx;
 
         switch(symbol) {
             case "Backspace":
             case "\\text{Del}":
-                var target = cursorIndex;
-                if(contentArray[target] === cursor) {
-                    target--;
-                    if(target < 0) return;
-                }
-
-                contentArray = Utils.arrayRemove(contentArray, target);
+                ctx.backspace();
 
                 setOutputContent("");
-                return contentArray.join(" ");
+                break;
             case "\\text{Clear}":
+                ctx.reset();
+
                 setOutputContent("");
-                return cursor;
+                break;
             case "\\text{CH}":
                 Emitter.get().emit("clear-record");
                 break;
             case "<":
                 setOutputContent("");
-                return currentContent.replace(cursor, "\\text{Lsh} "+ cursor);
+
+                ctx.input(new InputSymbol("\\text{Lsh}"));
+                break;
             case ">":
                 setOutputContent("");
-                return currentContent.replace(cursor, "\\text{Rsh} "+ cursor);
+
+                ctx.input(new InputSymbol("\\text{Rsh}"));
+                break;
             case "Enter":
             case "\\text{Result}":
-                if(contentArray.length > 1) handleResult(currentContent);
-                return;
+                if(ctx.symbolList.length > 1) handleResult(ctx.getCombined());
+                break;
             default:
                 setOutputContent("");
 
@@ -138,9 +136,13 @@ const ProgrammingOutput: React.FC = () => {
 
                 if(Is.mathFunction(symbol)) { // Add right bracket automatically
                     setOutputContent("");
-                    return currentContent.replace(cursor, transformed +" "+ cursor +" )");
+
+                    ctx.input(new InputSymbol(transformed));
+                    ctx.input(new InputSymbol(")"), ctx.getCursorIndex() + 1);
+                    return;
                 }
-                return currentContent.replace(cursor, transformed +" "+ cursor);
+
+                ctx.input(new InputSymbol(transformed));
         }
     }, [inputRef, handleResult]);
 
@@ -150,7 +152,7 @@ const ProgrammingOutput: React.FC = () => {
         const value = numberValues[type];
 
         if(!inputRef.current || value === "0") return;
-        inputRef.current.value = Utils.rawHexTextToKatex(value) +" "+ cursor;
+        inputRef.current.ctx.setContent(Utils.rawHexTextToKatex(value) +" "+ cursor);
         setOutputContent("");
         dispatchNumberValue({ type: "set", payload: numberValues.dec });
     });
@@ -161,7 +163,7 @@ const ProgrammingOutput: React.FC = () => {
             if(itemInfo.type !== RecordType.PROGRAMMING) return;
             if(!inputRef.current) return;
 
-            inputRef.current.value = itemInfo.input +" "+ cursor;
+            inputRef.current.ctx.setContent(itemInfo.input +" "+ cursor);
             setOutputContent("="+ itemInfo.output);
             Emitter.get().emit("number-sys-chose", itemInfo.numberSys);
         }],

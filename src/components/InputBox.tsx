@@ -4,18 +4,20 @@ import { BlockMath } from "react-katex";
 
 import Cursor from "@/components/Cursor";
 
+import { InputTag } from "@/types";
 import Utils from "@/utils/Utils";
 import Emitter from "@/utils/Emitter";
+import Is from "@/compiler/Is";
 
 interface InputBoxProps {
     ltr: boolean
+    highlight?: boolean
     isProgrammingMode?: boolean
     shouldAvoidDialog?: boolean
     onInputSymbol?: (symbol: string) => string | void
 }
 
 interface InputBoxState {
-    displayContent: string
     onInputSymbol?: (symbol: string) => string | void
 }
 
@@ -25,14 +27,16 @@ type _Props = InputBoxProps & DOMAttributes<HTMLDivElement>;
 
 export default class InputBox extends Component<_Props, InputBoxState> {
     private shouldAvoidDialog: boolean = true;
+    public ctx: InputContext;
 
     public constructor(props: _Props) {
         super(props);
 
         this.state = {
-            displayContent: cursor,
             onInputSymbol: props.onInputSymbol
         };
+
+        this.ctx = new InputContext(props.highlight);
 
         if(this.props.shouldAvoidDialog !== undefined && this.props.shouldAvoidDialog === false) {
             this.shouldAvoidDialog = false;
@@ -40,43 +44,11 @@ export default class InputBox extends Component<_Props, InputBoxState> {
     }
 
     public get value(): string {
-        return InputBox.removeCursor(this.state.displayContent);
-    }
-
-    /**
-     * Set value of the input box and then scroll to the end
-     * 
-     * Only when the purified new value is equal to the purified
-     * old value, don't do auto scroll
-     */
-    public set value(newValue: string) {
-        const oldValue = this.state.displayContent;
-
-        this.setState({ displayContent: newValue }, () => {
-            if(InputBox.removeCursor(oldValue) === InputBox.removeCursor(newValue)) return;
-
-            Utils.scrollToEnd("display");
-        });
+        return this.ctx.getCombinedWithoutCursor();
     }
 
     public reset(): void {
-        this.value = cursor;
-    }
-
-    public getCursorIndex(): number {
-        return this.state.displayContent.split(" ").indexOf(cursor);
-    }
-
-    public moveCursorTo(index: number): string {
-        var contentArray = this.state.displayContent.split(" ");
-        var cursorIndex = this.getCursorIndex();
-
-        contentArray = Utils.arrayRemove(contentArray, cursorIndex);
-        contentArray = Utils.arrayPut(contentArray, index, cursor);
-
-        var result = contentArray.join(" ");
-        this.value = result;
-        return result;
+        this.ctx.reset();
     }
 
     public input(symbol: string): void {
@@ -84,77 +56,75 @@ export default class InputBox extends Component<_Props, InputBoxState> {
     }
 
     public handleInput(symbol: string): void {
-        this.value = this.preHandleInput(symbol) ?? this.state.displayContent;
-    }
-
-    public preHandleInput(symbol: string): string | void {
-        const currentContent = this.state.displayContent;
-
-        var contentArray = currentContent.split(" ");
-        var cursorIndex = this.getCursorIndex();
+        var symbolList = this.ctx.symbolList;
+        var cursorIndex = this.ctx.getCursorIndex();
 
         switch(symbol) {
             case "ArrowLeft":
             case "\\leftarrow":
                 if(cursorIndex === 0) return;
 
-                return this.moveCursorTo(cursorIndex - 1);
+                this.ctx.moveCursorTo(cursorIndex - 1);
+                break;
             case "ArrowRight":
             case "\\rightarrow":
-                if(cursorIndex === contentArray.length - 1) return;
+                if(cursorIndex === this.ctx.length - 1) return;
 
-                return this.moveCursorTo(cursorIndex + 1);
+                this.ctx.moveCursorTo(cursorIndex + 1);
+                break;
             case "^":
-                if(contentArray[cursorIndex - 1].indexOf("^") > -1) {
-                    const currentExponentialStr = contentArray[cursorIndex - 1].replace("^", "");
+                if(symbolList[cursorIndex - 1].value.indexOf("^") > -1) {
+                    const currentExponentialStr = symbolList[cursorIndex - 1].value.replace("^", "");
                     const newExponential = parseInt(currentExponentialStr) + 1;
                     if(newExponential > 9) return;
 
-                    contentArray[cursorIndex - 1] = "^"+ newExponential;
-                    return contentArray.join(" ");
+                    symbolList[cursorIndex - 1].value = "^"+ newExponential;
+                    return;
                 }
 
-                return currentContent.replace(cursor, "^2 "+ cursor);
+                this.ctx.input(new InputSymbol("^2"));
+                break;
             default:
-                if(this.state.onInputSymbol) return this.state.onInputSymbol(symbol);
+                if(this.state.onInputSymbol) this.state.onInputSymbol(symbol);
         }
     }
 
     private handleSymbolClick(e: React.MouseEvent, index: number): void {
-        if(index > this.getCursorIndex()) index--;
+        if(index > this.ctx.getCursorIndex()) index--;
 
         var symbolElem = e.target as HTMLElement;
         var mouseX = e.clientX;
         var symbolCenterX = Utils.getOffsetLeft(symbolElem) + (symbolElem.offsetWidth / 2);
         if(mouseX > symbolCenterX) index++;
 
-        this.moveCursorTo(index);
+        this.ctx.moveCursorTo(index);
     }
 
     private handleBlankClick(e: React.MouseEvent) {
         // only the blank area of display box is available
         if((e.target as HTMLElement).className !== "display") return;
 
-        this.moveCursorTo(this.props.ltr ? this.state.displayContent.split(" ").length - 1 : 0);
+        this.ctx.moveCursorTo(this.props.ltr ? this.ctx.length - 1 : 0);
     }
 
     public render(): ReactElement {
-        const { ltr, isProgrammingMode, onInputSymbol, ...attrProps } = this.props;
+        const { ltr, highlight, isProgrammingMode, onInputSymbol, ...attrProps } = this.props;
 
         return (
             <div className="input-box" {...attrProps}>
                 <span className="display" id="display" onClick={(e) => this.handleBlankClick(e)}>
                     {
-                        this.state.displayContent.split(" ").map((symbol, index) => {
+                        this.ctx.symbolList.map((symbol, index) => {
                             return (
-                                symbol === cursor
+                                symbol.value === cursor
                                 ? <Cursor key={index}/>
                                 : (
                                     <span
+                                        className={highlight ? "tag-"+ symbol.tag : undefined}
                                         onClick={(e) => this.handleSymbolClick(e, index)}
                                         data-index={index}
                                         key={index}>
-                                        <BlockMath>{symbol}</BlockMath>
+                                        <BlockMath>{symbol.value}</BlockMath>
                                     </span>
                                 )
                             )
@@ -166,10 +136,11 @@ export default class InputBox extends Component<_Props, InputBoxState> {
     }
 
     public componentDidMount(): void {
+        Emitter.get().on("symbol-list-update", () => this.forceUpdate());
         Emitter.get().on("input", (symbol: string) => this.handleInput(symbol));
         Emitter.get().on("clear-input", () => this.reset());
-        Emitter.get().on("move-front", () => this.value = cursor +" "+ this.value);
-        Emitter.get().on("move-back", () => this.value = this.value +" "+ cursor);
+        Emitter.get().on("move-front", () => this.ctx.moveCursorTo(0));
+        Emitter.get().on("move-back", () => this.ctx.moveCursorTo(this.ctx.length - 1));
 
         document.body.addEventListener("keydown", (e: KeyboardEvent) => {
             if(e.key === cursor) return;
@@ -189,7 +160,16 @@ export default class InputBox extends Component<_Props, InputBoxState> {
             var inputValue = e.key;
             if(inputValue === "*") inputValue = "×";
 
+            // input
+            var oldValue = this.ctx.getCombined();
             this.handleInput(inputValue);
+
+            /**
+             * Only when the purified new value is equal to the purified
+             * old value, don't do auto scroll
+             */
+            if(InputContext.removeCursor(oldValue) === this.ctx.getCombinedWithoutCursor()) return;
+            Utils.scrollToEnd("display");
         });
     }
 
@@ -200,10 +180,128 @@ export default class InputBox extends Component<_Props, InputBoxState> {
             });
         }
     }
+}
+
+export class InputSymbol {
+    public value: string;
+    public tag: InputTag;
+
+    public static cursor = new InputSymbol(cursor);
+
+    public constructor(value: string, tag: InputTag = InputTag.COMMON) {
+        this.value = value;
+        this.tag = tag;
+    }
+}
+
+export class InputContext {
+    private _symbolList: InputSymbol[] = [];
+    private highlight: boolean;
+
+    public get symbolList(): typeof this._symbolList {
+        return this._symbolList;
+    }
+
+    public set symbolList(newValue: typeof this._symbolList) {
+        this._symbolList = newValue;
+        /**
+         * Manually emit the event that makes `InputBox` component being updated forcedly,
+         * so that the value in the input box will be consistent with `symbolList`.
+         */
+        Emitter.get().emit("symbol-list-update");
+    }
+
+    public get length(): number {
+        return this._symbolList.length;
+    }
+
+    public constructor(highlight: boolean = false) {
+        this.highlight = highlight;
+
+        this.reset();
+    }
+
+    public reset(): void {
+        this.symbolList = [InputSymbol.cursor];
+    }
+
+    public set(index: number, symbol: InputSymbol): InputSymbol {
+        var old = this.symbolList[index];
+        this.symbolList[index] = this.highlightSymbol(symbol);
+        /**
+         * To trigger the setter of `symbolList` to emit that event
+         */
+        // eslint-disable-next-line no-self-assign
+        this.symbolList = this.symbolList;
+        return old;
+    }
+
+    public getCursorIndex(): number {
+        for(let i = 0; i < this.symbolList.length; i++) {
+            if(this.symbolList[i].value === cursor) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public moveCursorTo(index: number): void {
+        this.symbolList = Utils.arrayRemove(this.symbolList, this.getCursorIndex());
+        this.symbolList = Utils.arrayPut(this.symbolList, index, InputSymbol.cursor);
+    }
+
+    public getCombined(): string {
+        var combined = "";
+        for(let i = 0; i < this.symbolList.length; i++) {
+            combined += this.symbolList[i].value;
+            if(i < this.symbolList.length - 1) {
+                combined += " ";
+            }
+        }
+        return combined;
+    }
+
+    public getCombinedWithoutCursor(): string {
+        return InputContext.removeCursor(this.getCombined());
+    }
 
     public static removeCursor(content: string): string {
         return content.indexOf(cursor) < content.length - 1
         ? content.replace(cursor +" ", "")
         : content.replace(" "+ cursor, "");
+    }
+
+    public setContent(newValue: string): void {
+        var contentArray = newValue.split(" ");
+        var newSymbolList = [];
+
+        for(let i = 0; i < contentArray.length; i++) {
+            newSymbolList.push(this.highlightSymbol(new InputSymbol(contentArray[i])));
+        }
+
+        this.symbolList = newSymbolList;
+    }
+
+    public input(symbol: InputSymbol, target: number = this.getCursorIndex()): void {
+        this.symbolList = Utils.arrayPut(this.symbolList, target, this.highlightSymbol(symbol));
+    }
+
+    public backspace(): void {
+        var target = this.getCursorIndex() - 1;
+        if(target < 0) return;
+
+        this.symbolList = Utils.arrayRemove(this.symbolList, target);
+    }
+
+    public highlightSymbol(symbol: InputSymbol): InputSymbol {
+        if(!this.highlight || symbol.tag !== InputTag.COMMON) return symbol;
+
+        if(Is.variable(symbol.value)) {
+            symbol.tag = InputTag.VAR;
+        } else if(Is.mathFunction(symbol.value)) {
+            symbol.tag = InputTag.FUNC;
+        }
+
+        return symbol;
     }
 }

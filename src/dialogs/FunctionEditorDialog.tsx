@@ -17,7 +17,7 @@ import { PropsWithRef, Mode } from "@/types";
 import { acTable } from "@/global";
 
 import Dialog from "@/components/Dialog";
-import InputBox, { cursor } from "@/components/InputBox";
+import InputBox, { cursor, InputSymbol } from "@/components/InputBox";
 
 import MainContext from "@/contexts/MainContext";
 
@@ -44,7 +44,7 @@ const FunctionEditorDialog: React.FC<FunctionEditorDialogProps> = forwardRef<Dia
         const handleClose = () => {
             if(!inputRef.current) return;
 
-            inputRef.current.value = props.value +" "+ cursor;
+            inputRef.current.ctx.reset();
         };
 
         const handleInput = useCallback((symbol: string) => {
@@ -52,25 +52,17 @@ const FunctionEditorDialog: React.FC<FunctionEditorDialogProps> = forwardRef<Dia
             if(mode !== Mode.GRAPHING) return;
             if(!dialogRef.current?.isOpened) return;
             const inputBox = inputRef.current;
-            const currentContent = inputBox.state.displayContent;
     
-            var contentArray = currentContent.split(" ");
-            var cursorIndex = inputBox.getCursorIndex();
+            var ctx = inputBox.ctx;
+            var cursorIndex = ctx.getCursorIndex();
     
             switch(symbol) {
                 case "Backspace":
-                    var target = cursorIndex;
-                    if(contentArray[target] === cursor) {
-                        target--;
-                        if(target < 0) return;
-                    }
-    
-                    contentArray = Utils.arrayRemove(contentArray, target);
-    
-                    return contentArray.join(" ");
+                    ctx.backspace();
+                    break;
                 case "Enter":
                     handleSave();
-                    return;
+                    break;
                 default:
                     // Auto complete
                     tableLoop: for(let [key, value] of acTable) {
@@ -81,34 +73,37 @@ const FunctionEditorDialog: React.FC<FunctionEditorDialogProps> = forwardRef<Dia
                             if(i < 0) continue tableLoop;
     
                             const j = i - (lastCharIndex - key.length + 1);
-                            if(contentArray[i] !== key[j]) continue tableLoop;
+                            if(ctx.symbolList[i].value !== key[j]) continue tableLoop;
                         }
     
-                        contentArray[lastCharIndex - (key.length - 1)] = value;
+                        ctx.set(lastCharIndex - (key.length - 1), new InputSymbol(value));
                         for(let i = lastCharIndex - 1; i >= lastCharIndex - key.length + 2; i--) {
-                            contentArray = Utils.arrayRemove(contentArray, i);
+                            ctx.symbolList = Utils.arrayRemove(ctx.symbolList, i);
                         }
     
                         if(Is.mathFunction(value)) { // Add right bracket automatically
-                            return contentArray.join(" ").replace(cursor, cursor +" )");
+                            ctx.input(new InputSymbol(")"), ctx.getCursorIndex() + 1);
+                            return;
                         }
     
-                        return contentArray.join(" ");
+                        return;
                     }
     
                     if(symbol === "(" || Is.mathFunction(symbol)) { // Add right bracket automatically
-                        return currentContent.replace(cursor, symbol +" "+ cursor +" )");
+                        ctx.input(new InputSymbol(symbol));
+                        ctx.input(new InputSymbol(")"), ctx.getCursorIndex() + 1);
+                        return;
                     }
     
                     // Default (normal) Input
-                    return currentContent.replace(cursor, symbol +" "+ cursor);
+                    ctx.input(new InputSymbol(symbol));
             }
         }, [inputRef, dialogRef, mode, handleSave]);
 
         useEffect(() => {
             if(!inputRef.current) return;
 
-            inputRef.current.value = props.value +" "+ cursor;
+            inputRef.current.ctx.setContent(props.value +" "+ cursor);
         }, [inputRef, props.value]);
 
         return (

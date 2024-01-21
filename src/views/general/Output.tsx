@@ -16,12 +16,12 @@ import Compiler from "@/compiler/Compiler";
 import Compute from "@/compiler/Compute";
 import Is from "@/compiler/Is";
 import Logger from "@/utils/Logger";
-import { NumberSys, RecordType } from "@/types";
+import { NumberSys, RecordType, InputTag } from "@/types";
 
 import useEmitter from "@/hooks/useEmitter";
 import useEaster from "@/hooks/useEaster";
 
-import InputBox, { cursor } from "@/components/InputBox";
+import InputBox, { cursor, InputSymbol, InputContext } from "@/components/InputBox";
 import SidebarOpener from "@/components/SidebarOpener";
 import type Dialog from "@/components/Dialog";
 import VariableDialog from "@/dialogs/VariableDialog";
@@ -49,7 +49,7 @@ const Output: React.FC = () => {
         if(currentContent.split(" ").length <= 1) return;
 
         // Remove cursor from raw text
-        var rawText = InputBox.removeCursor(currentContent);
+        var rawText = InputContext.removeCursor(currentContent);
         var raw = rawText.split(" ");
 
         if(rawText === "2 . 5") {
@@ -111,43 +111,38 @@ const Output: React.FC = () => {
     const handleInput = useCallback((symbol: string) => {
         if(!inputRef.current) return;
         const inputBox = inputRef.current;
-        const currentContent = inputBox.state.displayContent;
 
-        var contentArray = currentContent.split(" ");
-        var cursorIndex = inputBox.getCursorIndex();
+        var ctx = inputBox.ctx;
+        var cursorIndex = ctx.getCursorIndex();
 
         switch(symbol) {
             case "Backspace":
             case "\\text{Del}":
-                var target = cursorIndex;
-                if(contentArray[target] === cursor) {
-                    target--;
-                    if(target < 0) return;
-                }
-
-                contentArray = Utils.arrayRemove(contentArray, target);
+                ctx.backspace();
 
                 setOutputContent("");
-                return contentArray.join(" ");
+                break;
             case "\\text{Clear}":
+                ctx.reset();
+
                 setOutputContent("");
-                return cursor;
+                break;
             case "\\text{CH}":
                 Emitter.get().emit("clear-record");
                 break;
             case "Enter":
             case "\\text{Result}":
-                if(contentArray.length > 1) handleResult(currentContent);
-                return;
+                if(ctx.length > 1) handleResult(ctx.getCombined());
+                break;
             case "\\sum":
                 sumDialogRef.current?.open();
-                return;
+                break;
             case "\\int":
                 intDialogRef.current?.open();
-                return;
+                break;
             case "\\prod":
                 prodDialogRef.current?.open();
-                return;
+                break;
             default:
                 // Auto complete
                 tableLoop: for(let [key, value] of acTable) {
@@ -158,32 +153,37 @@ const Output: React.FC = () => {
                         if(i < 0) continue tableLoop;
 
                         const j = i - (lastCharIndex - key.length + 1);
-                        if(contentArray[i] !== key[j]) continue tableLoop;
+                        if(ctx.symbolList[i].value !== key[j]) continue tableLoop;
                     }
 
                     key.length !== 1
-                    ? contentArray[lastCharIndex - (key.length - 1)] = value
-                    : contentArray = Utils.arrayPut(contentArray, lastCharIndex, value);
+                    ? ctx.set(lastCharIndex - (key.length - 1), new InputSymbol(value))
+                    : ctx.symbolList = Utils.arrayPut(ctx.symbolList, lastCharIndex, new InputSymbol(value));
                     for(let i = lastCharIndex - 1; i >= lastCharIndex - key.length + 2; i--) {
-                        contentArray = Utils.arrayRemove(contentArray, i);
+                        ctx.symbolList = Utils.arrayRemove(ctx.symbolList, i);
                     }
 
                     if(Is.mathFunction(value)) { // Add right bracket automatically
                         setOutputContent("");
-                        return contentArray.join(" ").replace(cursor, cursor +" )");
+
+                        ctx.input(new InputSymbol(")"), ctx.getCursorIndex() + 1);
+                        return;
                     }
 
-                    return contentArray.join(" ");
+                    return;
                 }
 
                 if(symbol === "(" || Is.mathFunction(symbol)) { // Add right bracket automatically
                     setOutputContent("");
-                    return currentContent.replace(cursor, symbol +" "+ cursor +" )");
+
+                    ctx.input(new InputSymbol(symbol));
+                    ctx.input(new InputSymbol(")", Is.mathFunction(symbol) ? InputTag.FUNC : InputTag.COMMON), ctx.getCursorIndex() + 1);
+                    return;
                 }
 
                 // Default (normal) Input
                 setOutputContent("");
-                return currentContent.replace(cursor, symbol +" "+ cursor);
+                ctx.input(new InputSymbol(symbol));
         }
     }, [inputRef, handleResult]);
 
@@ -209,7 +209,7 @@ const Output: React.FC = () => {
             if(itemInfo.type !== RecordType.GENERAL) return;
             if(!inputRef.current) return;
 
-            inputRef.current.value = itemInfo.input +" "+ cursor;
+            inputRef.current.ctx.setContent(itemInfo.input +" "+ cursor);
             setOutputContent("="+ itemInfo.output);
         }],
         ["open-vars-dialog", () => varsDialogRef.current?.open()],
@@ -222,7 +222,7 @@ const Output: React.FC = () => {
                 inputContent = Utils.fracToStr(inputContent).split("").join(" ");
             }
 
-            inputRef.current.value = inputContent +" "+ cursor;
+            inputRef.current.ctx.setContent(inputContent +" "+ cursor);
             setOutputContent((outputContent.length !== 0 ? "=" : "")+ outputContent);
         }]
     ]);
@@ -251,6 +251,7 @@ const Output: React.FC = () => {
                 <InputBox
                     ref={inputRef}
                     ltr={false}
+                    highlight={true}
                     onInputSymbol={(symbol) => handleInput(symbol)}/>
                 <div className="output-box">
                     <span className="display">

@@ -12,7 +12,7 @@ import { useContextMenu, ContextMenuItem, ContextMenuDivider } from "use-context
 import useEmitter from "@/hooks/useEmitter";
 
 import SidebarPage from "@/components/sidebar/SidebarPage";
-import InputBox, { cursor } from "@/components/InputBox";
+import InputBox, { cursor, InputSymbol } from "@/components/InputBox";
 import FunctionListItem from "@/components/sidebar/FunctionListItem";
 import MobileInput from "@/views/general/MobileInput";
 
@@ -57,24 +57,16 @@ const FunctionList: React.FC = () => {
         if(!inputRef.current) return;
         if(mode !== Mode.GRAPHING) return;
         const inputBox = inputRef.current;
-        const currentContent = inputBox.state.displayContent;
 
-        var contentArray = currentContent.split(" ");
-        var cursorIndex = inputBox.getCursorIndex();
+        var ctx = inputBox.ctx;
+        var cursorIndex = ctx.getCursorIndex();
 
         switch(symbol) {
             case "Backspace":
-                var target = cursorIndex;
-                if(contentArray[target] === cursor) {
-                    target--;
-                    if(target < 0) return;
-                }
-
-                contentArray = Utils.arrayRemove(contentArray, target);
-
-                return contentArray.join(" ");
+                ctx.backspace();
+                break;
             case "Enter":
-                if(contentArray.length > 1) handleAddFunction();
+                if(ctx.length > 1) handleAddFunction();
                 return;
             default:
                 // Auto complete
@@ -86,27 +78,30 @@ const FunctionList: React.FC = () => {
                         if(i < 0) continue tableLoop;
 
                         const j = i - (lastCharIndex - key.length + 1);
-                        if(contentArray[i] !== key[j]) continue tableLoop;
+                        if(ctx.symbolList[i].value !== key[j]) continue tableLoop;
                     }
 
-                    contentArray[lastCharIndex - (key.length - 1)] = value;
+                    ctx.set(lastCharIndex - (key.length - 1), new InputSymbol(value));
                     for(let i = lastCharIndex - 1; i >= lastCharIndex - key.length + 2; i--) {
-                        contentArray = Utils.arrayRemove(contentArray, i);
+                        ctx.symbolList = Utils.arrayRemove(ctx.symbolList, i);
                     }
 
                     if(Is.mathFunction(value)) { // Add right bracket automatically
-                        return contentArray.join(" ").replace(cursor, cursor +" )");
+                        ctx.input(new InputSymbol(")"), ctx.getCursorIndex() + 1);
+                        return;
                     }
 
-                    return contentArray.join(" ");
+                    return;
                 }
 
                 if(symbol === "(" || Is.mathFunction(symbol)) { // Add right bracket automatically
-                    return currentContent.replace(cursor, symbol +" "+ cursor +" )");
+                    ctx.input(new InputSymbol(symbol));
+                    ctx.input(new InputSymbol(")"), ctx.getCursorIndex() + 1);
+                    return;
                 }
 
                 // Default (normal) Input
-                return currentContent.replace(cursor, symbol +" "+ cursor);
+                ctx.input(new InputSymbol(symbol));
         }
     }, [inputRef, mode, handleAddFunction]);
 

@@ -39,6 +39,12 @@ export enum Operator {
     RSH = "rsh",
 }
 
+export enum InputTag {
+    COMMON = "common",
+    VAR = "var",
+    FUNC = "func",
+}
+
 export type FunctionInfo = [(...params: number[]) => number, number /* amount of params */];
 
 export interface RenderedFunction {
