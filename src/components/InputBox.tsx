@@ -79,6 +79,7 @@ export default class InputBox extends Component<_Props, InputBoxState> {
                     if(newExponential > 9) return;
 
                     symbolList[cursorIndex - 1].value = "^"+ newExponential;
+                    this.forceUpdate();
                     return;
                 }
 
