@@ -44,8 +44,8 @@ describe("Compiler tests", () => {
         const f6 = "( 3 ^2 ) ! ^3";
         expect(calculate(f6)).toBe("47784725839872000");
 
-        // const f7 = "29.4 ^2";
-        // expect(calculate(f7)).toBe("864.36");
+        const f7 = "2 9 . 4 ^2";
+        expect(calculate(f7)).toBe("864.36");
     });
 
     test("Function Calculations", () => {

@@ -117,6 +117,17 @@ export default class Compute {
     }
 
     public static safePow(x: number, y: number): number {
+        if(y < 0) return 1 / Compute.safePow(x, -y);
+
+        var p = 1;
+        for(let i = 0; i < y; i++) {
+            p = Float.multiply(p, x);
+        }
+
+        return p;
+    }
+
+    public static unsafePow(x: number, y: number): number {
         if(y === 0) return 1;
         return y > 0 ? Math.pow(x, y) : (1 / Math.pow(x, -y));
     }
