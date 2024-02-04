@@ -21,7 +21,7 @@ import Emitter from "@/utils/Emitter";
 import Logger from "@/utils/Logger";
 import Utils from "@/utils/Utils";
 import { acTable } from "@/global";
-import { Mode } from "@/types";
+import { Mode, InputTag } from "@/types";
 
 import MainContext from "@/contexts/MainContext";
 
@@ -94,7 +94,23 @@ const FunctionList: React.FC = () => {
                     return;
                 }
 
-                if(symbol === "(" || Is.mathFunction(symbol)) { // Add right bracket automatically
+                if(
+                    (
+                        symbol === "(" &&
+                        (
+                            !(
+                                cursorIndex + 1 < ctx.length &&
+                                cursorIndex - 1 >= 0 &&
+                                ctx.symbolList[cursorIndex + 1].value === ")" &&
+                                ctx.symbolList[cursorIndex - 1].value !== "(" &&
+                                ctx.symbolList[cursorIndex - 1].tag !== InputTag.FUNC
+                            ) ||
+                            cursorIndex === ctx.length - 1 ||
+                            cursorIndex === 0
+                        ) 
+                    ) ||
+                    Is.mathFunction(symbol)
+                ) { // Add right bracket automatically
                     ctx.input(new InputSymbol(symbol));
                     ctx.input(new InputSymbol(")"), ctx.getCursorIndex() + 1);
                     return;

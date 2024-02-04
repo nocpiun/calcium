@@ -16,7 +16,7 @@ import Compiler from "@/compiler/Compiler";
 import Compute from "@/compiler/Compute";
 import Is from "@/compiler/Is";
 import Logger from "@/utils/Logger";
-import { NumberSys, RecordType } from "@/types";
+import { InputTag, NumberSys, RecordType } from "@/types";
 
 import useEmitter from "@/hooks/useEmitter";
 import useEaster from "@/hooks/useEaster";
@@ -173,7 +173,23 @@ const Output: React.FC = () => {
                     return;
                 }
 
-                if(symbol === "(" || Is.mathFunction(symbol)) { // Add right bracket automatically
+                if(
+                    (
+                        symbol === "(" &&
+                        (
+                            !(
+                                cursorIndex + 1 < ctx.length &&
+                                cursorIndex - 1 >= 0 &&
+                                ctx.symbolList[cursorIndex + 1].value === ")" &&
+                                ctx.symbolList[cursorIndex - 1].value !== "(" &&
+                                ctx.symbolList[cursorIndex - 1].tag !== InputTag.FUNC
+                            ) ||
+                            cursorIndex === ctx.length - 1 ||
+                            cursorIndex === 0
+                        ) 
+                    ) ||
+                    Is.mathFunction(symbol)
+                ) { // Add right bracket automatically
                     setOutputContent("");
 
                     ctx.input(new InputSymbol(symbol));

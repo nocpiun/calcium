@@ -13,7 +13,7 @@ import useInnerRef from "@/hooks/useInnerRef";
 import Utils from "@/utils/Utils";
 import Emitter from "@/utils/Emitter";
 import Is from "@/compiler/Is";
-import { PropsWithRef, Mode } from "@/types";
+import { PropsWithRef, Mode, InputTag } from "@/types";
 import { acTable } from "@/global";
 
 import Dialog from "@/components/Dialog";
@@ -89,7 +89,23 @@ const FunctionEditorDialog: React.FC<FunctionEditorDialogProps> = forwardRef<Dia
                         return;
                     }
     
-                    if(symbol === "(" || Is.mathFunction(symbol)) { // Add right bracket automatically
+                    if(
+                        (
+                            symbol === "(" &&
+                            (
+                                !(
+                                    cursorIndex + 1 < ctx.length &&
+                                    cursorIndex - 1 >= 0 &&
+                                    ctx.symbolList[cursorIndex + 1].value === ")" &&
+                                    ctx.symbolList[cursorIndex - 1].value !== "(" &&
+                                    ctx.symbolList[cursorIndex - 1].tag !== InputTag.FUNC
+                                ) ||
+                                cursorIndex === ctx.length - 1 ||
+                                cursorIndex === 0
+                            ) 
+                        ) ||
+                        Is.mathFunction(symbol)
+                    ) { // Add right bracket automatically
                         ctx.input(new InputSymbol(symbol));
                         ctx.input(new InputSymbol(")"), ctx.getCursorIndex() + 1);
                         return;
