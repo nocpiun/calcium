@@ -20,13 +20,13 @@
 
 Calcium is a web-based calculator written in React + Typescript.
 
-If you have any problem or idea, it's welcome to open an issue to let me know.
+If you encounter any problems or have any ideas, feel free to open an issue to let me know.
 
 _[Here is the Wiki](https://github.com/nocpiun/calcium/wiki)_
 
 _[Here is the Manual](https://github.com/nocpiun/calcium/wiki/Manual)_
 
-#### Why its name is Calcium?
+#### Why is its name Calcium?
 
 ```
 Calculator -> calc -> Ca (Chemical Element) -> Calcium
@@ -45,11 +45,11 @@ Calculator -> calc -> Ca (Chemical Element) -> Calcium
 
 ## Deploy & Use
 
-**It's recommended to access Calcium by [calcium.js.org](https://calcium.js.org). But if you want to deploy it locally, please continue reading the following text.**
+**It is recommended to access Calcium via [calcium.js.org](https://calcium.js.org). However, if you prefer to deploy it locally, please proceed to read the following instructions.**
 
 #### Docker
 
-First, you need to make sure that your server (or computer) has installed [Docker](https://docker.com).
+First, you need to make sure you have had [Docker](https://docker.com) installed on your server (or computer).
 
 1. Pull docker repository
 
@@ -67,7 +67,7 @@ docker run -p 3000:3000 noahhrreion/calcium:main
 
 #### Launch directly
 
-First, you need to make sure that your server (or computer) has installed [Git](https://git-scm.com/downloads) & [Node.js](https://nodejs.org/en/download).
+First, you need to make sure you have had [Git](https://git-scm.com/downloads) & [Node.js](https://nodejs.org/en/download) installed on your server (or computer).
 
 1. Clone Git repo
 
@@ -81,7 +81,7 @@ git clone https://github.com/nocpiun/calcium.git
 npm i
 ```
 
-If it throws error at this step, you can try:
+If it throws error at this step, try:
 
 ```bash
 npm i --force
@@ -95,11 +95,11 @@ npm run start
 
 4. Enter `http://localhost:3000`, and you can start using Calcium.
 
-5. If you want to make contribution to this repo, then you can set out to modify the code and start debugging!
+5. If you want to make contribution to this repo, just simply begin by modifying the code and starting debugging!
 
 ## Contributing
 
-Contributions to Calcium are welcomed. You can fork this project and start your contributing. If you don't know how to do, please follow the instruction [Creating a Pull Request from a Fork](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request-from-a-fork). And I'll check the Pull Request list in my spare time. I can't make sure that every Pull Request will be checked at once.
+Contributions to Calcium are welcomed. You can fork this project and start your contributing. If you don't know how to do, please follow the instruction [Creating a Pull Request from a Fork](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request-from-a-fork). And I'll review the Pull Requests in my spare time.
 
 Also, you're supposed to run tests before submitting a commit to your PR.
 
