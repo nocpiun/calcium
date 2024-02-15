@@ -165,7 +165,7 @@ export default class Evaluator {
     }
 
     private readToken(): [List<NumberToken>, List<OperatorToken>] {
-        const root = this.token;
+        const root = RootToken.create(this.token);
 
         var numbers: List<NumberToken> = new List();
         var operators: List<OperatorToken> = new List();

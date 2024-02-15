@@ -391,7 +391,7 @@ export default class Compiler {
      * To resolve some professional-only symbols
      */
     private proResolve(symbol: string): number[] {
-        const resolved = symbol.match(/\d+/g) ?? ["0", "0"];
+        const resolved = symbol.match(/(|-)\d+/g) ?? ["0", "0"];
         return [parseFloat(resolved[0]), parseFloat(resolved[1])];
     }
 
