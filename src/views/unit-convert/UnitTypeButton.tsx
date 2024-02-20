@@ -17,7 +17,7 @@ const UnitTypeButton: React.FC<UnitTypeButtonProps> = (props) => {
     const [selected, setSelected] = useState<boolean>(props.default ?? false);
 
     const handleSelect = () => {
-        Emitter.get().emit("converting-type-select", id);
+        new Emitter().emit("converting-type-select", id);
     };
 
     // import icon

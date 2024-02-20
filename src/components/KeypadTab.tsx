@@ -13,11 +13,11 @@ const KeypadTab: React.FC<KeypadTabProps> = (props) => {
     const [open, setOpen] = useState<boolean>(props.default ?? false);
 
     const handleClick = () => {
-        Emitter.get().emit("open-keypad-tab", props.id);
+        new Emitter().emit("open-keypad-tab", props.id);
     };
 
     useEffect(() => {
-        Emitter.get().on("open-keypad-tab", (targetId: string) => {
+        new Emitter().on("open-keypad-tab", (targetId: string) => {
             setOpen(targetId === props.id);
         });
     }, []);

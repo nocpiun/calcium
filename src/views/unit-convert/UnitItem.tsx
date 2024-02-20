@@ -24,7 +24,7 @@ const UnitItem: React.FC<UnitItemType> = (props) => {
     }
 
     const handleClick = () => {
-        Emitter.get().emit("unit-value-reset");
+        new Emitter().emit("unit-value-reset");
     };
 
     const handleInput = (value: string) => {
@@ -32,7 +32,7 @@ const UnitItem: React.FC<UnitItemType> = (props) => {
         // This is in order to make the "." available for inputing
         if(value[value.length - 1] === ".") return;
 
-        Emitter.get().emit("unit-value-input", props.name, parseFloat(value) || 0);
+        new Emitter().emit("unit-value-input", props.name, parseFloat(value) || 0);
     };
 
     useEmitter([

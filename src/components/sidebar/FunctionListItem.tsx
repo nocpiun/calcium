@@ -27,13 +27,13 @@ const FunctionListItem: React.FC<ListItemProps> = (props) => {
     const handleRemove = () => {
         setIsRemoving(true);
         setTimeout(() => {
-            Emitter.get().emit("remove-function", props.id, props.index);
+            new Emitter().emit("remove-function", props.id, props.index);
             setIsRemoving(false);
         }, 200);
     };
 
     const handlePlay = () => {
-        Emitter.get().emit("play-function", props.index);
+        new Emitter().emit("play-function", props.index);
     };
 
     const { contextMenu, onContextMenu } = useContextMenu(

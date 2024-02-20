@@ -8,15 +8,15 @@ import Emitter from "@/utils/Emitter";
 
 const HistoryItem: React.FC<HistoryItemInfo> = (props) => {
     const handleClick = () => {
-        Emitter.get().emit("history-item-click", props);
+        new Emitter().emit("history-item-click", props);
     };
 
     const { contextMenu, onContextMenu } = useContextMenu(
         <>
-            <ContextMenuItem onSelect={() => Emitter.get().emit("remove-record", props.id)}>删除</ContextMenuItem>
+            <ContextMenuItem onSelect={() => new Emitter().emit("remove-record", props.id)}>删除</ContextMenuItem>
             <ContextMenuItem onSelect={() => handleClick()}>打开</ContextMenuItem>
             <ContextMenuDivider />
-            <ContextMenuItem onSelect={() => Emitter.get().emit("clear-record")}>清空历史</ContextMenuItem>
+            <ContextMenuItem onSelect={() => new Emitter().emit("clear-record")}>清空历史</ContextMenuItem>
         </>
     );
 

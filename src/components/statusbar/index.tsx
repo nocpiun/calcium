@@ -47,24 +47,24 @@ const StatusBar: React.FC = () => {
                 <div className="split">
                     {
                         mode === Mode.GENERAL &&
-                        <BarItem title="变量" onClick={() => Emitter.get().emit("open-vars-dialog")} tooltip="查看变量列表"/>
+                        <BarItem title="变量" onClick={() => new Emitter().emit("open-vars-dialog")} tooltip="查看变量列表"/>
                     }
                     {
                         (mode === Mode.GENERAL || mode === Mode.PROGRAMMING) &&
-                        <BarItem title="函数" onClick={() => Emitter.get().emit("open-funcs-dialog")} tooltip="查看函数列表"/>
+                        <BarItem title="函数" onClick={() => new Emitter().emit("open-funcs-dialog")} tooltip="查看函数列表"/>
                     }
                     {
                         mode === Mode.GRAPHING &&
-                        <BarItem title="捕捉图像" onClick={() => Emitter.get().emit("graphing-capture")} tooltip="捕捉并下载函数图像"/>
+                        <BarItem title="捕捉图像" onClick={() => new Emitter().emit("graphing-capture")} tooltip="捕捉并下载函数图像"/>
                     }
                     {
                         mode === Mode.GRAPHING &&
-                        <BarItem title="重载" onClick={() => Emitter.get().emit("graphing-reload")} tooltip="函数图像渲染重载"/>
+                        <BarItem title="重载" onClick={() => new Emitter().emit("graphing-reload")} tooltip="函数图像渲染重载"/>
                     }
                     <BarItem title="辈分计算" onClick={() => seniorityDialogRef.current?.open()}/>
                     <BarItem title="单位换算" onClick={() => convertingDialogRef.current?.open()}/>
                     <BarItem title="快捷键" onClick={() => shortcutDialogRef.current?.open()}/>
-                    <BarItem title={"Calcium "+ version} onClick={() => Emitter.get().emit("open-about-dialog")}/>
+                    <BarItem title={"Calcium "+ version} onClick={() => new Emitter().emit("open-about-dialog")}/>
                 </div>
             </footer>
 

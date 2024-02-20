@@ -105,7 +105,7 @@ const Output: React.FC = () => {
         if(error) return;
 
         // Add the result to history list
-        Emitter.get().emit("add-record", rawText, result, RecordType.GENERAL, NumberSys.DEC);
+        new Emitter().emit("add-record", rawText, result, RecordType.GENERAL, NumberSys.DEC);
     }, [isTofrac]);
 
     const handleInput = useCallback((symbol: string) => {
@@ -128,7 +128,7 @@ const Output: React.FC = () => {
                 setOutputContent("");
                 break;
             case "\\text{CH}":
-                Emitter.get().emit("clear-record");
+                new Emitter().emit("clear-record");
                 break;
             case "Enter":
             case "\\text{Result}":
@@ -247,7 +247,7 @@ const Output: React.FC = () => {
 
     const { contextMenu, onContextMenu } = useContextMenu(
         <>
-            <ContextMenuItem onSelect={() => Emitter.get().emit("clear-input")}>清空</ContextMenuItem>
+            <ContextMenuItem onSelect={() => new Emitter().emit("clear-input")}>清空</ContextMenuItem>
             <ContextMenuItem onSelect={() => Utils.writeClipboard(outputContent.substring(1))}>复制结果</ContextMenuItem>
         </>
     );

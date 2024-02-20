@@ -54,7 +54,7 @@ const IntDialog: React.FC<IntDialogProps> = forwardRef<Dialog, IntDialogProps>(
         };
         
         const handleSubmit = useCallback(() => {
-            Emitter.get().emit("do-input", "\\smallint_{"+ a +"}^{"+ b +"}(");
+            new Emitter().emit("do-input", "\\smallint_{"+ a +"}^{"+ b +"}(");
             (ref as React.MutableRefObject<Dialog>).current.close();
         }, [a, b, ref]);
 

@@ -105,7 +105,7 @@ const AboutDialog: React.FC<AboutDialogProps> = forwardRef<Dialog, AboutDialogPr
                     <li><AboutItem name="版本" content={
                         <button onClick={() => {
                             setReleasesVisible(true);
-                            Emitter.get().emit("release-indialog-open")}}>
+                            new Emitter().emit("release-indialog-open")}}>
                             {version}
                         </button>
                     }/></li>

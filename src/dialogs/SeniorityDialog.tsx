@@ -13,7 +13,7 @@ interface SeniorityDialogProps extends PropsWithRef<Dialog> {
 const SeniorityDialog: React.FC<SeniorityDialogProps> = forwardRef<Dialog, SeniorityDialogProps>(
     (props, ref) => {
         const handleClose = () => {
-            Emitter.get().emit("seniority-dialog-close");
+            new Emitter().emit("seniority-dialog-close");
         };
 
         return (

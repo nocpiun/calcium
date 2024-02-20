@@ -137,11 +137,11 @@ export default class InputBox extends Component<_Props, InputBoxState> {
     }
 
     public componentDidMount() {
-        Emitter.get().on("symbol-list-update", () => this.forceUpdate());
-        Emitter.get().on("input", (symbol: string) => this.handleInput(symbol));
-        Emitter.get().on("clear-input", () => this.reset());
-        Emitter.get().on("move-front", () => this.ctx.moveCursorTo(0));
-        Emitter.get().on("move-back", () => this.ctx.moveCursorTo(this.ctx.length - 1));
+        new Emitter().on("symbol-list-update", () => this.forceUpdate());
+        new Emitter().on("input", (symbol: string) => this.handleInput(symbol));
+        new Emitter().on("clear-input", () => this.reset());
+        new Emitter().on("move-front", () => this.ctx.moveCursorTo(0));
+        new Emitter().on("move-back", () => this.ctx.moveCursorTo(this.ctx.length - 1));
 
         document.body.addEventListener("keydown", (e: KeyboardEvent) => {
             if(e.key === cursor) return;
@@ -209,7 +209,7 @@ export class InputContext {
          * Manually emit the event that makes `InputBox` component being updated forcedly,
          * so that the value in the input box will be consistent with `symbolList`.
          */
-        Emitter.get().emit("symbol-list-update");
+        new Emitter().emit("symbol-list-update");
     }
 
     public get length(): number {

@@ -8,11 +8,11 @@ import Emitter from "@/utils/Emitter";
 const ProgrammingInput: React.FC = () => {
     const { contextMenu, onContextMenu } = useContextMenu(
         <>
-            <ContextMenuItem onSelect={() => Emitter.get().emit("do-input", "\\text{Result}")}>计算结果...</ContextMenuItem>
-            <ContextMenuItem onSelect={() => Emitter.get().emit("clear-input")}>清空</ContextMenuItem>
-            <ContextMenuItem onSelect={() => Emitter.get().emit("clear-record")}>清空历史</ContextMenuItem>
+            <ContextMenuItem onSelect={() => new Emitter().emit("do-input", "\\text{Result}")}>计算结果...</ContextMenuItem>
+            <ContextMenuItem onSelect={() => new Emitter().emit("clear-input")}>清空</ContextMenuItem>
+            <ContextMenuItem onSelect={() => new Emitter().emit("clear-record")}>清空历史</ContextMenuItem>
             <ContextMenuDivider />
-            <ContextMenuItem onSelect={() => Emitter.get().emit("open-funcs-dialog")}>函数...</ContextMenuItem>
+            <ContextMenuItem onSelect={() => new Emitter().emit("open-funcs-dialog")}>函数...</ContextMenuItem>
         </>
     );
 

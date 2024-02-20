@@ -14,11 +14,11 @@ const NumberBox: React.FC<NumberBoxProps> = (props) => {
     const [isActive, setIsActive] = useState<boolean>(false);
 
     const clickHandle = () => {
-        Emitter.get().emit("number-sys-chose", props.type);
+        new Emitter().emit("number-sys-chose", props.type);
     };
 
     useEffect(() => {
-        Emitter.get().on("number-sys-chose", (type: NumberSys) => {
+        new Emitter().on("number-sys-chose", (type: NumberSys) => {
             setIsActive(type === props.type);
         });
     }, []);

@@ -1,11 +1,8 @@
-export default class Storage {
-    private static instance: Storage | null;
-    private localStorage = window.localStorage;
+import Singleton from "@/utils/Singleton";
 
-    public static get(): Storage {
-        if(!Storage.instance) Storage.instance = new Storage();
-        return Storage.instance;
-    }
+@Singleton
+export default class Storage {
+    private localStorage = window.localStorage;
 
     public getItem(key: string, defaultValue: string): string {
         var result = this.localStorage.getItem(key);

@@ -20,14 +20,14 @@ const ModeButton: React.FC<ModeButtonProps> = (props) => {
     const id = useId();
 
     const handleClick = () => {
-        Emitter.get().emit("switch-mode", props.mode);
+        new Emitter().emit("switch-mode", props.mode);
     };
 
     useEffect(() => {
         // default
-        Emitter.get().emit("switch-mode", Mode.GENERAL);
+        new Emitter().emit("switch-mode", Mode.GENERAL);
 
-        Emitter.get().on("switch-mode", (newMode: Mode) => {
+        new Emitter().on("switch-mode", (newMode: Mode) => {
             setMode(newMode);
             setIsActive(newMode === props.mode);
 

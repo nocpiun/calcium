@@ -1,13 +1,11 @@
 import { EventEmitter } from "events";
 
-export default class Emitter extends EventEmitter {
-    private static instance: Emitter | null;
+import Singleton from "@/utils/Singleton";
 
-    public static get(): Emitter {
-        if(!Emitter.instance) {
-            Emitter.instance = new Emitter();
-            Emitter.instance.setMaxListeners(Infinity);
-        }
-        return Emitter.instance;
+@Singleton
+export default class Emitter extends EventEmitter {
+    constructor() {
+        super();
+        this.setMaxListeners(Infinity);
     }
 }

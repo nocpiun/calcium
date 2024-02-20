@@ -34,7 +34,7 @@ const History: React.FC = () => {
     useEffect(() => {
         Utils.scrollToEnd("history-list", 1, 0);
 
-        Emitter.get().once("add-record", (input: string, output: string, type: RecordType, numberSys: NumberSys) => {
+        new Emitter().once("add-record", (input: string, output: string, type: RecordType, numberSys: NumberSys) => {
             setList((currentList) => {
                 var newArr = [...currentList, { id: unusedId.id, input, output, type, numberSys }];
                 dispatchId({ type: "refresh", payload: 1 });
@@ -43,7 +43,7 @@ const History: React.FC = () => {
             });
         });
 
-        Emitter.get().once("clear-record", () => {
+        new Emitter().once("clear-record", () => {
             setList(() => []);
         });
     }, [unusedId.id]);
@@ -58,7 +58,7 @@ const History: React.FC = () => {
      * version of `setState` because this doesn't work at all.
      */
     useEffect(() => {
-        Emitter.get().once("remove-record", (id: number) => {
+        new Emitter().once("remove-record", (id: number) => {
             var newArr = [...list];
 
             for(let i = 0; i < newArr.length; i++) {
@@ -78,12 +78,12 @@ const History: React.FC = () => {
     }, [list]);
 
     useEffect(() => {
-        Emitter.get().on("input-last-result", async () => {
+        new Emitter().on("input-last-result", async () => {
             const currentList = await Utils.getCurrentState(setList);
-            Emitter.get().emit("set-content", currentList[currentList.length - 1].output.split("").join(" "));
+            new Emitter().emit("set-content", currentList[currentList.length - 1].output.split("").join(" "));
         });
 
-        Emitter.get().on("record-rollback", async (toward: RollbackToward) => {
+        new Emitter().on("record-rollback", async (toward: RollbackToward) => {
             const currentList = await Utils.getCurrentState(setList);
             const currentRollbackIndex = await Utils.getCurrentState(setRollbackIndex);
             if(currentList.length === 0) return;
@@ -100,14 +100,14 @@ const History: React.FC = () => {
                 )
             ) {
                 setRollbackIndex(currentRollbackIndex + toward);
-                Emitter.get().emit("set-content", record.input, record.output);
+                new Emitter().emit("set-content", record.input, record.output);
             }
         });
     }, []);
 
     const { contextMenu, onContextMenu } = useContextMenu(
         <>
-            <ContextMenuItem onSelect={() => Emitter.get().emit("clear-record")}>清空历史</ContextMenuItem>
+            <ContextMenuItem onSelect={() => new Emitter().emit("clear-record")}>清空历史</ContextMenuItem>
         </>
     );
 

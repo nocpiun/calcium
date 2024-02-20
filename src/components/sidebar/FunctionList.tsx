@@ -46,7 +46,7 @@ const FunctionList: React.FC = () => {
         var value = inputBox.value;
         if(value === cursor) return;
         setFunctionList([...currentList, { id: unusedId.id, value }]);
-        Emitter.get().emit("add-function", value, unusedId.id);
+        new Emitter().emit("add-function", value, unusedId.id);
         dispatchId({ type: "refresh", payload: 1 });
         Logger.info("Function rendered: "+ value.replaceAll(" ", ""));
 
@@ -135,10 +135,10 @@ const FunctionList: React.FC = () => {
 
     const { contextMenu, onContextMenu } = useContextMenu(
         <>
-            <ContextMenuItem onSelect={() => Emitter.get().emit("clear-function")}>清空列表</ContextMenuItem>
+            <ContextMenuItem onSelect={() => new Emitter().emit("clear-function")}>清空列表</ContextMenuItem>
             <ContextMenuDivider />
-            <ContextMenuItem onSelect={() => Emitter.get().emit("graphing-capture")}>捕捉图像</ContextMenuItem>
-            <ContextMenuItem onSelect={() => Emitter.get().emit("graphing-reload")}>重载</ContextMenuItem>
+            <ContextMenuItem onSelect={() => new Emitter().emit("graphing-capture")}>捕捉图像</ContextMenuItem>
+            <ContextMenuItem onSelect={() => new Emitter().emit("graphing-reload")}>重载</ContextMenuItem>
         </>
     );
 

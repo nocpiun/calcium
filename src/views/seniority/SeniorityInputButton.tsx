@@ -11,7 +11,7 @@ interface SeniorityInputButtonProps {
 
 const SeniorityInputButton: React.FC<SeniorityInputButtonProps> = (props) => {
     const handleClick = () => {
-        Emitter.get().emit("seniority-input", props.name, props.id);
+        new Emitter().emit("seniority-input", props.name, props.id);
     };
 
     return (

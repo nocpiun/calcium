@@ -27,11 +27,11 @@ const Sidebar: React.FC = () => {
     const { mode } = useContext(MainContext);
     const [sidebarOpen, setSidebarOpen] = useState<boolean>(!Utils.isMobile());
     const [width, setWidth] = useState<number>(382);
-    const themeValue = Storage.get().getItem("theme", useThemeDetector());
+    const themeValue = new Storage().getItem("theme", useThemeDetector());
 
     const handleToggle = (isActive: boolean) => {
         document.body.setAttribute("theme", isActive ? Theme.LIGHT : Theme.DARK);
-        Storage.get().setItem("theme", isActive ? Theme.LIGHT : Theme.DARK);
+        new Storage().setItem("theme", isActive ? Theme.LIGHT : Theme.DARK);
     };
 
     const layoutSwitch = (calcMode: Mode) => {
@@ -53,13 +53,13 @@ const Sidebar: React.FC = () => {
     };
 
     const handleCloseSidebar = () => {
-        Emitter.get().emit("sidebar-state-change");
+        new Emitter().emit("sidebar-state-change");
     };
 
     useEffect(() => {
         document.body.setAttribute("theme", themeValue);
 
-        Emitter.get().once("sidebar-state-change", () => {
+        new Emitter().once("sidebar-state-change", () => {
             setSidebarOpen(!sidebarOpen);
         });
     }, [sidebarOpen]);
@@ -87,7 +87,7 @@ const Sidebar: React.FC = () => {
                 {Utils.isMobile() && (
                     <div className="mobile-links">
                         <span onClick={() => window.open("https://github.com/nocpiun/calcium/issues/new/choose")}>反馈问题</span>
-                        <span onClick={() => Emitter.get().emit("open-about-dialog")}>关于</span>
+                        <span onClick={() => new Emitter().emit("open-about-dialog")}>关于</span>
                         <span onClick={() => window.open("https://nin.red/#/donate")}>支持我</span>
                     </div>
                 )}

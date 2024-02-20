@@ -13,7 +13,7 @@ const KeypadSection: React.FC<KeypadPageProps> = (props) => {
     const [open, setOpen] = useState<boolean>(props.default ?? false);
 
     useEffect(() => {
-        Emitter.get().on("open-keypad-tab", (targetId: string) => {
+        new Emitter().on("open-keypad-tab", (targetId: string) => {
             setOpen(targetId === props.id);
         });
     }, []);

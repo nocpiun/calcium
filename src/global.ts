@@ -127,57 +127,57 @@ export const shortcuts: Map<string[], Shortcut> = new Map([
     [["ctrl", "x"], {
         description: "清空输入框",
         action: () => {
-            Emitter.get().emit("clear-input");
+            new Emitter().emit("clear-input");
         }
     }],
     [["ctrl", "d"], {
         description: "清空历史记录",
         action: () => {
-            Emitter.get().emit("clear-record");
+            new Emitter().emit("clear-record");
         }
     }],
     [["ctrl", "r"], {
         description: "清空输入框、历史记录以及函数图像列表",
         action: () => {
-            Emitter.get().emit("clear-record");
-            Emitter.get().emit("clear-input");
-            Emitter.get().emit("clear-function");
+            new Emitter().emit("clear-record");
+            new Emitter().emit("clear-input");
+            new Emitter().emit("clear-function");
         }
     }],
     [["ctrl", "e"], {
         description: "打开或关闭分数模式",
         action: () => {
-            Emitter.get().emit("switch-tofrac");
+            new Emitter().emit("switch-tofrac");
         }
     }],
     [["shift", "ArrowLeft"], {
         description: "将光标移到前部",
         action: () => {
-            Emitter.get().emit("move-front");
+            new Emitter().emit("move-front");
         }
     }],
     [["shift", "ArrowRight"], {
         description: "将光标移到尾部",
         action: () => {
-            Emitter.get().emit("move-back");
+            new Emitter().emit("move-back");
         }
     }],
     [["ctrl", "f"], {
         description: "输入上一次的计算结果",
         action: () => {
-            Emitter.get().emit("input-last-result");
+            new Emitter().emit("input-last-result");
         }
     }],
     [["ArrowUp"], {
         description: "输入上一个算式",
         action: () => {
-            Emitter.get().emit("record-rollback", RollbackToward.PREV);
+            new Emitter().emit("record-rollback", RollbackToward.PREV);
         }
     }],
     [["ArrowDown"], {
         description: "输入下一个算式",
         action: () => {
-            Emitter.get().emit("record-rollback", RollbackToward.NEXT);
+            new Emitter().emit("record-rollback", RollbackToward.NEXT);
         }
     }],
 ]);

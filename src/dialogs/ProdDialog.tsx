@@ -46,7 +46,7 @@ const ProdDialog: React.FC<ProdDialogProps> = forwardRef<Dialog, ProdDialogProps
         };
         
         const handleSubmit = useCallback(() => {
-            Emitter.get().emit("do-input", "\\Pi_{i="+ i +"}^{"+ n +"}(");
+            new Emitter().emit("do-input", "\\Pi_{i="+ i +"}^{"+ n +"}(");
             (ref as React.MutableRefObject<Dialog>).current.close();
         }, [n, i, ref]);
 

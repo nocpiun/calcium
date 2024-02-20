@@ -10,7 +10,7 @@ const SidebarOpener: React.FC = () => {
     const handleOpenSidebar = () => {
         if(!Utils.isMobile()) return;
 
-        Emitter.get().emit("sidebar-state-change");
+        new Emitter().emit("sidebar-state-change");
     };
 
     return (

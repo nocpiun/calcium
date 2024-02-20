@@ -46,7 +46,7 @@ const SumDialog: React.FC<SumDialogProps> = forwardRef<Dialog, SumDialogProps>(
         };
         
         const handleSubmit = useCallback(() => {
-            Emitter.get().emit("do-input", "\\Sigma_{i="+ i +"}^{"+ n +"}(");
+            new Emitter().emit("do-input", "\\Sigma_{i="+ i +"}^{"+ n +"}(");
             (ref as React.MutableRefObject<Dialog>).current.close();
         }, [n, i, ref]);
 

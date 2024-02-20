@@ -82,7 +82,7 @@ const ProgrammingOutput: React.FC = () => {
         if(error) return;
 
         // Add the result to history list
-        Emitter.get().emit("add-record", rawText, "\\text{"+ displayValue +"}", RecordType.PROGRAMMING, numberSys);
+        new Emitter().emit("add-record", rawText, "\\text{"+ displayValue +"}", RecordType.PROGRAMMING, numberSys);
 
         // Update the values of all number systems
         dispatchNumberValue({ type: "set", payload: result });
@@ -107,7 +107,7 @@ const ProgrammingOutput: React.FC = () => {
                 setOutputContent("");
                 break;
             case "\\text{CH}":
-                Emitter.get().emit("clear-record");
+                new Emitter().emit("clear-record");
                 break;
             case "<":
                 setOutputContent("");
@@ -146,7 +146,7 @@ const ProgrammingOutput: React.FC = () => {
         }
     }, [inputRef, handleResult]);
 
-    Emitter.get().on("number-sys-chose", (type: NumberSys) => {
+    new Emitter().on("number-sys-chose", (type: NumberSys) => {
         setNumberSys(type);
 
         const value = numberValues[type];
@@ -165,7 +165,7 @@ const ProgrammingOutput: React.FC = () => {
 
             inputRef.current.ctx.setContent(itemInfo.input +" "+ cursor);
             setOutputContent("="+ itemInfo.output);
-            Emitter.get().emit("number-sys-chose", itemInfo.numberSys);
+            new Emitter().emit("number-sys-chose", itemInfo.numberSys);
         }],
         ["open-funcs-dialog", () => funcsDialogRef.current?.open()],
         ["do-input", (symbol: string) => handleInput(symbol)]
@@ -175,7 +175,7 @@ const ProgrammingOutput: React.FC = () => {
 
     const { contextMenu, onContextMenu } = useContextMenu(
         <>
-            <ContextMenuItem onSelect={() => Emitter.get().emit("clear-input")}>清空</ContextMenuItem>
+            <ContextMenuItem onSelect={() => new Emitter().emit("clear-input")}>清空</ContextMenuItem>
             <ContextMenuItem onSelect={() => {
                 Utils.writeClipboard(
                     Compiler.purifyNumber(outputContent.substring(1)).toUpperCase()

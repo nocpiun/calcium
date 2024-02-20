@@ -60,7 +60,7 @@ const Graphing: React.FC = memo(() => {
                     ctx.transferFromImageBitmap(e.data.imageBitmap);
                     break;
                 case "fps":
-                    Emitter.get().emit("graphing-fps", e.data.fps);
+                    new Emitter().emit("graphing-fps", e.data.fps);
                     break;
                 case "play":
                     const rawPitches = e.data.rawPitches;
@@ -139,7 +139,7 @@ const Graphing: React.FC = memo(() => {
         });
 
         // "graphing-reload" cannot be moved into `useEmitter` hook
-        Emitter.get().on("graphing-reload", () => {
+        new Emitter().on("graphing-reload", () => {
             if(!workerRef.current) return;
             workerRef.current.postMessage({ type: "reset" });
             workerRef.current.terminate();
@@ -166,7 +166,7 @@ const Graphing: React.FC = memo(() => {
     }, [reloadTrigger]);
 
     useEffect(() => {
-        Emitter.get().on("remove-function", async (id: number, index: number) => {
+        new Emitter().on("remove-function", async (id: number, index: number) => {
             if(!workerRef.current) return;
             workerRef.current.postMessage({ type: "remove-function", index });
             
@@ -182,7 +182,7 @@ const Graphing: React.FC = memo(() => {
             }
         });
 
-        Emitter.get().on("play-function", (index: number) => {
+        new Emitter().on("play-function", (index: number) => {
             if(!workerRef.current) return;
             workerRef.current.postMessage({ type: "play-function", index });
         });
@@ -276,8 +276,8 @@ const Graphing: React.FC = memo(() => {
 
     const { contextMenu, onContextMenu } = useContextMenu(
         <>
-            <ContextMenuItem onSelect={() => Emitter.get().emit("graphing-capture")}>捕捉图像</ContextMenuItem>
-            <ContextMenuItem onSelect={() => Emitter.get().emit("graphing-reload")}>重载</ContextMenuItem>
+            <ContextMenuItem onSelect={() => new Emitter().emit("graphing-capture")}>捕捉图像</ContextMenuItem>
+            <ContextMenuItem onSelect={() => new Emitter().emit("graphing-reload")}>重载</ContextMenuItem>
         </>
     );
 

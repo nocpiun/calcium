@@ -20,6 +20,7 @@
     "isolatedModules": false,
     "noEmit": true,
     "jsx": "react-jsx",
+    "experimentalDecorators": true,
     "paths": {
       "@/*": ["./src/*"]
     }

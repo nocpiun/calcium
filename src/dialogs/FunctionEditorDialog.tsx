@@ -37,7 +37,7 @@ const FunctionEditorDialog: React.FC<FunctionEditorDialogProps> = forwardRef<Dia
             if(!inputRef.current || !dialogRef.current) return;
             const newRawText = inputRef.current.value;
 
-            Emitter.get().emit("set-function", props.index, newRawText, props.id);
+            new Emitter().emit("set-function", props.index, newRawText, props.id);
             dialogRef.current.close();
         }, [dialogRef, props.index, props.id]);
 

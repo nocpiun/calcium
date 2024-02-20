@@ -28,20 +28,20 @@ const InputButton: React.FC<InputButtonProps> = (props) => {
             return;
         }
 
-        Emitter.get().emit("input", inputValue);
+        new Emitter().emit("input", inputValue);
     };
 
     useEffect(() => {
         if(!props.group) return;
 
-        Emitter.get().on("number-sys-chose", (type: NumberSys) => {
+        new Emitter().on("number-sys-chose", (type: NumberSys) => {
             if(!props.group) return;
 
             setDisabled(!props.group.includes(type));
         });
 
         // default
-        Emitter.get().emit("number-sys-chose", NumberSys.DEC);
+        new Emitter().emit("number-sys-chose", NumberSys.DEC);
     }, []);
 
     return (
