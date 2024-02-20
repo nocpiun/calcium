@@ -4,16 +4,15 @@ import { TokenType } from "@/compiler/token/Token";
 import DynamicToken from "@/compiler/token/DynamicToken";
 
 export default class SumToken extends DynamicToken {
-    public type: TokenType = TokenType.SIGMA;
+    public readonly type: TokenType = TokenType.SIGMA;
 
-    public i: number;
-    public n: number;
-
-    public constructor(i: number, n: number, raw: string[], variables: Map<string, string>) {
+    public constructor(
+        public i: number,
+        public n: number,
+        raw: string[],
+        variables: Map<string, string>
+    ) {
         super(raw, variables);
-
-        this.i = i;
-        this.n = n;
     }
 
     public evaluate(): number {

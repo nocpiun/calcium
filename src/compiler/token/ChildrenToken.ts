@@ -14,7 +14,7 @@ export default abstract class ChildrenToken extends PowerableToken<Token[]> {
         return this.value.length;
     }
 
-    public add(item: Token): void {
+    public add(item: Token) {
         this.value.push(item);
     }
 }

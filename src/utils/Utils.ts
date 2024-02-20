@@ -155,7 +155,7 @@ export default class Utils {
     /**
      * Scroll to the end of the whole page
      */
-    public static scrollToEnd(elem: string | HTMLElement, top: number = 1, left: number = 1): void {
+    public static scrollToEnd(elem: string | HTMLElement, top: number = 1, left: number = 1) {
         if(typeof elem === "string") elem = Utils.getElem(elem);
         elem.scrollTo({ top: elem.scrollHeight * top, left: elem.scrollWidth * left });
     }

@@ -42,12 +42,12 @@ export default class Graphics {
         if(!isDarkMode) Graphics.changeToDark();
     }
 
-    public static changeToDark(): void {
+    public static changeToDark() {
         Graphics.colors.primary = "#404041";
         Graphics.colors.highlight = "#222";
     }
 
-    public static changeToLight(): void {
+    public static changeToLight() {
         Graphics.colors.primary = "#cbd0df";
         Graphics.colors.highlight = "#fff";
     }
@@ -56,7 +56,7 @@ export default class Graphics {
         return new Point(this, x, y);
     }
 
-    protected refreshAxisLine(): void {
+    protected refreshAxisLine() {
         var unitPx = this.spacing * this.scale;
         var secondaryUnitPx = (this.spacing / 5) * this.scale;
         /**
@@ -136,7 +136,7 @@ export default class Graphics {
         }
     }
 
-    protected drawLine(begin: Point, end: Point, color: string, width: number = 1): void {
+    protected drawLine(begin: Point, end: Point, color: string, width: number = 1) {
         this.ctx.beginPath();
         this.ctx.strokeStyle = color;
         this.ctx.lineWidth = width * this.ratio;
@@ -148,7 +148,7 @@ export default class Graphics {
         this.ctx.closePath();
     }
 
-    protected drawPoint(point: Point, color: string): void {
+    protected drawPoint(point: Point, color: string) {
         this.ctx.beginPath();
         this.ctx.strokeStyle = color;
         this.ctx.fillRect(point.x, point.y, 2, 2);
@@ -156,27 +156,27 @@ export default class Graphics {
         this.ctx.closePath();
     }
 
-    protected drawStraightLine(y: number, color: string, width: number = 1): void {
+    protected drawStraightLine(y: number, color: string, width: number = 1) {
         this.drawLine(this.createPoint(0, y), this.createPoint(this.canvas.width, y), color, width);
     }
 
-    protected drawVerticalLine(x: number, color: string, width: number = 1): void {
+    protected drawVerticalLine(x: number, color: string, width: number = 1) {
         this.drawLine(this.createPoint(x, 0), this.createPoint(x, this.canvas.height), color, width);
     }
 
-    protected drawText(text: string, x: number, y: number, color: string, fontSize: number = 20): void {
+    protected drawText(text: string, x: number, y: number, color: string, fontSize: number = 20) {
         this.ctx.font = (fontSize * this.ratio) +"px Ubuntu-Regular";
         this.ctx.fillStyle = color;
         this.ctx.fillText(text, x, y);
     }
 
-    protected clear(): void {
+    protected clear() {
         this.canvas.width = this.canvas.width;
         this.canvas.height = this.canvas.height;
     }
 
     // To render each frame
-    public render(): void {
+    public render() {
         this.clear();
 
         this.refreshAxisLine();

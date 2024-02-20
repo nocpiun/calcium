@@ -19,7 +19,7 @@ export default class List<T = any> {
         return this.value.length;
     }
 
-    public add(item: T | T[]): void {
+    public add(item: T | T[]) {
         if(item instanceof Array) {
             for(let i = 0; i < item.length; i++) {
                 this.add(item[i]);
@@ -41,7 +41,7 @@ export default class List<T = any> {
         return oldItem;
     }
 
-    public remove(index: number): void {
+    public remove(index: number) {
         if(index < 0 || index >= this.length) Logger.error("Cannot find the specified item in the list.");
 
         var j = index;
@@ -52,7 +52,7 @@ export default class List<T = any> {
         this.value.pop();
     }
 
-    public clear(): void {
+    public clear() {
         this.value = [];
     }
 
@@ -65,7 +65,7 @@ export default class List<T = any> {
 
     public forEach(
         cb: (value: T, index: number, arr: T[]) => void
-    ): void {
+    ) {
         for(let i = 0; i < this.length; i++) {
             cb(this.value[i], i, this.value);
         }
@@ -78,7 +78,7 @@ export default class List<T = any> {
         return -1;
     }
 
-    // public deduplicate(): void {
+    // public deduplicate() {
     //     this.value = [...new Set(this.value)];
     // }
 

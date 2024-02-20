@@ -19,13 +19,10 @@ import { functions } from "@/global";
 import { NumberSys, Operator } from "@/types";
 
 export default class Evaluator {
-    public token: RootToken;
-    private variables: Map<string, string>;
-
-    public constructor(token: RootToken, variables: Map<string, string> = new Map([])) {
-        this.token = token;
-        this.variables = variables;
-    }
+    public constructor(
+        public token: RootToken,
+        private variables: Map<string, string> = new Map([])
+    ) { }
 
     public evaluate(): number {
         // Read token to make number list & operator list

@@ -4,16 +4,15 @@ import Compiler from "@/compiler/Compiler";
 import { NumberSys } from "@/types";
 
 export default class IntToken extends DynamicToken {
-    public type: TokenType = TokenType.INT;
+    public readonly type: TokenType = TokenType.INT;
 
-    public a: number;
-    public b: number;
-
-    public constructor(a: number, b: number, raw: string[], variables: Map<string, string>) {
+    public constructor(
+        public a: number,
+        public b: number,
+        raw: string[],
+        variables: Map<string, string>
+    ) {
         super(raw, variables);
-
-        this.a = a;
-        this.b = b;
     }
 
     public evaluate(): number {

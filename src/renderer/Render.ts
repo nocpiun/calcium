@@ -51,7 +51,7 @@ export default class Render extends Graphics {
      * Rendering thread: @/workers/graphing.worker.ts
      * Calculating thread: @/workers/calculating.worker.ts
      */
-    private handleCalculatingWorkerMessaging(e: MessageEvent): void {
+    private handleCalculatingWorkerMessaging(e: MessageEvent) {
         const res = e.data;
 
         switch(res.type) {
@@ -77,13 +77,13 @@ export default class Render extends Graphics {
         }
     }
 
-    public reset(): void {
+    public reset() {
         this.functionList.clear();
         this.displayedPoints.clear();
         clearInterval(this.fpsUpdater);
     }
 
-    public handleMouseDown(rect: DOMRect, cx: number, cy: number): void {
+    public handleMouseDown(rect: DOMRect, cx: number, cy: number) {
         this.mouseDown = true;
 
         cx *= this.ratio;
@@ -94,7 +94,7 @@ export default class Render extends Graphics {
         this.mouseDY = this.mousePoint.y - this.center.y;
     }
 
-    public handleMouseMove(rect: DOMRect, cx: number, cy: number, direction: MovingDirection): void {
+    public handleMouseMove(rect: DOMRect, cx: number, cy: number, direction: MovingDirection) {
         cx *= this.ratio;
         cy *= this.ratio;
 
@@ -108,11 +108,11 @@ export default class Render extends Graphics {
         this.moveFunctionImage(direction);
     }
 
-    public handleMouseUp(): void {
+    public handleMouseUp() {
         this.stopMoving();
     }
 
-    public handleWheel(dy: number): void {
+    public handleWheel(dy: number) {
         const delta = 7;
         const mouseOriginPoint = this.mousePoint.toCoordinates();
 
@@ -140,12 +140,12 @@ export default class Render extends Graphics {
         this.center.y -= centerDy * this.scale;
     }
 
-    private refreshMousePoint(rect: DOMRect, cx: number, cy: number): void {
+    private refreshMousePoint(rect: DOMRect, cx: number, cy: number) {
         var mousePoint = this.createPoint(cx - rect.left, cy - rect.top);
         this.mousePoint = mousePoint;
     }
 
-    private moveFunctionImage(direction: MovingDirection): void {
+    private moveFunctionImage(direction: MovingDirection) {
         if(this.displayedPoints.length === 0) return;
 
         var unitPx = this.scale;
@@ -171,7 +171,7 @@ export default class Render extends Graphics {
         }
     }
 
-    private zoomFunctionImage(direction: ZoomDirection): void {
+    private zoomFunctionImage(direction: ZoomDirection) {
         if(this.displayedPoints.length === 0) return;
 
         var unitPx = this.scale;
@@ -198,13 +198,13 @@ export default class Render extends Graphics {
         }
     }
 
-    private stopMoving(): void {
+    private stopMoving() {
         this.mouseDown = false;
         this.mouseDX = 0;
         this.mouseDY = 0;
     }
 
-    private drawCompleteFunction(): void {
+    private drawCompleteFunction() {
         var func = this.functionList.getLast();
 
         var unitPx = this.scale;
@@ -215,7 +215,7 @@ export default class Render extends Graphics {
         this.calculatePoints(func, beginX, endX);
     }
 
-    private fullyRefreshFunctions(): void {
+    private fullyRefreshFunctions() {
         this.displayedPoints.clear();
 
         var unitPx = this.scale;
@@ -226,7 +226,7 @@ export default class Render extends Graphics {
         this.functionList.forEach((func) => this.calculatePoints(func, beginX, endX));
     }
 
-    private updateFPS(): void {
+    private updateFPS() {
         const now = (+new Date());
         var fps = 1000 / (now - this.lastTime);
         this.lastTime = now;
@@ -235,7 +235,7 @@ export default class Render extends Graphics {
     }
 
     // To render each frame
-    public render(): void {
+    public render() {
         this.updateFPS();
         super.render();
 
@@ -258,11 +258,11 @@ export default class Render extends Graphics {
         this.workerCtx.postMessage({ type: "render", imageBitmap }, [imageBitmap]);
     }
 
-    public registerFunction(rawText: string, id: number): void {
+    public registerFunction(rawText: string, id: number) {
         this.calculatingWorker.postMessage({ type: "compile", rawText, id });
     }
 
-    public unregisterFunction(index: number): void {
+    public unregisterFunction(index: number) {
         this.functionList.remove(index);
         this.fullyRefreshFunctions();
     }

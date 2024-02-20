@@ -4,9 +4,6 @@ export enum TokenType {
 
 export default abstract class Token<T = any> {
     public abstract readonly type: TokenType;
-    public value: T;
-
-    public constructor(value: T) {
-        this.value = value;
-    }
+    
+    public constructor(public value: T) { }
 }

@@ -4,11 +4,11 @@ import List from "@/utils/List";
  * A type of list that doesn't include two same items
  */
 export default class Collection<T = any> extends List<T> {
-    public override add(item: T): void {
+    public override add(item: T) {
         this.value.push(item);
     }
 
-    public unshift(item: T): void {
+    public unshift(item: T) {
         this.value.unshift(item);
     }
 
@@ -16,7 +16,7 @@ export default class Collection<T = any> extends List<T> {
         return this.value.shift();
     }
 
-    public put(index: number, item: T): void {
+    public put(index: number, item: T) {
         var temp;
 
         for(let i = index; i < this.length; i++) {

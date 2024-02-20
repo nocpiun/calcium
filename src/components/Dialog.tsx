@@ -16,11 +16,11 @@ interface DialogProps extends PropsWithChildren {
 export default class Dialog extends Component<DialogProps, {}> {
     private dialogRef: React.RefObject<HTMLDialogElement> = React.createRef();
 
-    public open(): void {
+    public open() {
         this.dialogRef.current?.showModal();
     }
 
-    public close(): void {
+    public close() {
         if(this.props.onClose) this.props.onClose();
         this.dialogRef.current?.close();
     }

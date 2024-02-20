@@ -47,15 +47,15 @@ export default class InputBox extends Component<_Props, InputBoxState> {
         return this.ctx.getCombinedWithoutCursor();
     }
 
-    public reset(): void {
+    public reset() {
         this.ctx.reset();
     }
 
-    public input(symbol: string): void {
+    public input(symbol: string) {
         this.handleInput(symbol);
     }
 
-    public handleInput(symbol: string): void {
+    public handleInput(symbol: string) {
         var symbolList = this.ctx.symbolList;
         var cursorIndex = this.ctx.getCursorIndex();
 
@@ -90,7 +90,7 @@ export default class InputBox extends Component<_Props, InputBoxState> {
         }
     }
 
-    private handleSymbolClick(e: React.MouseEvent, index: number): void {
+    private handleSymbolClick(e: React.MouseEvent, index: number) {
         if(index > this.ctx.getCursorIndex()) index--;
 
         var symbolElem = e.target as HTMLElement;
@@ -136,7 +136,7 @@ export default class InputBox extends Component<_Props, InputBoxState> {
         );
     }
 
-    public componentDidMount(): void {
+    public componentDidMount() {
         Emitter.get().on("symbol-list-update", () => this.forceUpdate());
         Emitter.get().on("input", (symbol: string) => this.handleInput(symbol));
         Emitter.get().on("clear-input", () => this.reset());
@@ -174,7 +174,7 @@ export default class InputBox extends Component<_Props, InputBoxState> {
         });
     }
 
-    public componentDidUpdate(prevProps: Readonly<InputBoxProps>): void {
+    public componentDidUpdate(prevProps: Readonly<InputBoxProps>) {
         if(prevProps.onInputSymbol !== this.props.onInputSymbol) {
             this.setState({
                 onInputSymbol: this.props.onInputSymbol
@@ -222,7 +222,7 @@ export class InputContext {
         this.reset();
     }
 
-    public reset(): void {
+    public reset() {
         this.symbolList = [InputSymbol.cursor];
     }
 
@@ -246,7 +246,7 @@ export class InputContext {
         return -1;
     }
 
-    public moveCursorTo(index: number): void {
+    public moveCursorTo(index: number) {
         this.symbolList = Utils.arrayRemove(this.symbolList, this.getCursorIndex());
         this.symbolList = Utils.arrayPut(this.symbolList, index, InputSymbol.cursor);
     }
@@ -272,7 +272,7 @@ export class InputContext {
         : content.replace(" "+ cursor, "");
     }
 
-    public setContent(newValue: string): void {
+    public setContent(newValue: string) {
         var contentArray = newValue.split(" ");
         var newSymbolList = [];
 
@@ -283,11 +283,11 @@ export class InputContext {
         this.symbolList = newSymbolList;
     }
 
-    public input(symbol: InputSymbol, target: number = this.getCursorIndex()): void {
+    public input(symbol: InputSymbol, target: number = this.getCursorIndex()) {
         this.symbolList = Utils.arrayPut(this.symbolList, target, this.highlightSymbol(symbol));
     }
 
-    public backspace(): void {
+    public backspace() {
         var target = this.getCursorIndex() - 1;
         if(target < 0) return;
 

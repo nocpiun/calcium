@@ -17,11 +17,11 @@ export default class Storage {
         }
     }
 
-    public setItem(key: string, value: string): void {
+    public setItem(key: string, value: string) {
         this.localStorage.setItem(key, value);
     }
 
-    public remove(key: string): void {
+    public remove(key: string) {
         this.localStorage.removeItem(key);
     }
 }

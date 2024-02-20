@@ -22,11 +22,6 @@ import { Operator, NumberSys } from "@/types";
 export type NumberSymbol = string;
 
 export default class Compiler {
-    private variables: Map<string, NumberSymbol>;
-    private isProgrammingMode: boolean;
-    private numberSys: NumberSys;
-
-    private raw: string[];
     private root: RootToken;
 
     private layer: number = 0;
@@ -46,17 +41,12 @@ export default class Compiler {
     private prodN: number = -1;
     
     public constructor(
-        raw: string[],
-        variables: Map<string, string> = new Map([]),
-        isProgrammingMode: boolean = false,
-        numberSys: NumberSys = NumberSys.DEC
+        private raw: string[],
+        private variables: Map<string, string> = new Map([]),
+        private isProgrammingMode: boolean = false,
+        private numberSys: NumberSys = NumberSys.DEC
     ) {
-        this.raw = raw;
         this.root = new RootToken([]);
-
-        this.variables = variables;
-        this.isProgrammingMode = isProgrammingMode;
-        this.numberSys = numberSys;
     }
 
     public tokenize(): RootToken | void {
@@ -358,17 +348,17 @@ export default class Compiler {
         return "NaN";
     }
 
-    private pushNumber(numString: string): void {
+    private pushNumber(numString: string) {
         this.root.add(NumberToken.create(numString, this.numberSys));
     }
 
-    private pushVariable(varSymbol: string): void {
+    private pushVariable(varSymbol: string) {
         Is.constant(varSymbol)
         ? this.root.add(new NumberToken(constants.get(varSymbol) ?? NaN, NumberSys.DEC))
         : this.root.add(new VariableToken(varSymbol));
     }
 
-    private pushOperator(operator: Operator, isFirst: boolean = false): void {
+    private pushOperator(operator: Operator, isFirst: boolean = false) {
         this.root.add(new OperatorToken(operator, isFirst));
     }
 

@@ -9,21 +9,18 @@ export default class NumberToken extends PowerableToken<number> {
     public readonly type: TokenType = TokenType.NUMBER;
 
     public float: boolean;
-    public numberSys: NumberSys;
 
-    public constructor(value: number, numberSys: NumberSys) {
+    public constructor(value: number, public numberSys: NumberSys) {
         super(value);
 
-        this.value = value;
         this.float = Is.float(value);
-        this.numberSys = numberSys;
     }
 
     /**
      * You must use `setValue()` to change the value of a number token,
      * Because in this way, the float property will be changed by the value.
      */
-    public setValue(value: number): void {
+    public setValue(value: number) {
         this.value = value;
         this.float = Is.float(value);
     }
