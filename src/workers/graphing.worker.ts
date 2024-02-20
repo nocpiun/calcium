@@ -13,7 +13,7 @@ ctx.addEventListener("message", (e) => {
     switch(req.type) {
         case "init":
             var canvasCtx = req.canvas.getContext("2d");
-            renderer = new Render(req.canvas, canvasCtx, req.ratio, ctx, req.isDarkMode, req.isMobile);
+            renderer = new Render(req.canvas, canvasCtx, req.ratio, ctx, req.isMobile, req.isDarkMode);
             init(canvasCtx, req.ratio);
             break;
         case "reset":

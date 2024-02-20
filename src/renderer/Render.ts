@@ -11,7 +11,6 @@ import { MovingDirection, ZoomDirection } from "@/types";
 export const delta: number = .01;
 
 export default class Render extends Graphics {
-    private workerCtx: Worker;
     private calculatingWorker: Worker = new Worker(new URL("@/workers/calculating.worker.ts", import.meta.url));
 
     private mouseDown: boolean = false;
@@ -29,13 +28,12 @@ export default class Render extends Graphics {
         canvas: OffscreenCanvas,
         ctx: OffscreenCanvasRenderingContext2D,
         ratio: number,
-        workerCtx: Worker,
-        isDarkMode: boolean,
-        isMobile: boolean
+        private workerCtx: Worker,
+        isMobile: boolean,
+        isDarkMode: boolean
     ) {
-        super(canvas, ctx, ratio, isDarkMode, isMobile);
+        super(canvas, ctx, ratio, isMobile, isDarkMode);
 
-        this.workerCtx = workerCtx;
         this.center = this.createPoint(this.canvas.width / 2, this.canvas.height / 2);
 
         // FPS

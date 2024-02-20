@@ -3,13 +3,10 @@ import RootToken from "@/compiler/token/RootToken";
 import { delta } from "@/renderer/Render";
 
 export default class Function {
-    public id: number;
-    public root: RootToken;
-
-    public constructor(id: number, root: RootToken) {
-        this.id = id;
-        this.root = root;
-    }
+    public constructor(
+        public id: number,
+        public root: RootToken
+    ) { }
 
     public async play(workerCtx: Worker): Promise<void> {
         var rawPitches: number[] = [];

@@ -11,34 +11,24 @@ export default class Graphics {
         highlight: "#fff"
     };
 
-    public canvas: OffscreenCanvas;
-    protected ctx: OffscreenCanvasRenderingContext2D;
-    protected ratio: number;
-
     public scale: number = initialScale; // px per unit length
     public spacing: number = 1; // unit length
 
     public center: Point;
     protected mousePoint: Point;
 
-    protected isMobile: boolean;
-
     public constructor(
-        canvas: OffscreenCanvas,
-        ctx: OffscreenCanvasRenderingContext2D,
-        ratio: number,
-        isDarkMode: boolean,
-        isMobile: boolean
+        public canvas: OffscreenCanvas,
+        protected ctx: OffscreenCanvasRenderingContext2D,
+        protected ratio: number,
+        protected isMobile: boolean,
+        isDarkMode: boolean
     ) {
-        this.canvas = canvas;
-        this.ctx = ctx;
-        this.ratio = ratio;
         this.scale *= this.ratio;
         this.center = this.createPoint(this.canvas.width / 2, this.canvas.height / 2);
         this.mousePoint = this.center;
 
         // Appearance
-        this.isMobile = isMobile;
         if(!isDarkMode) Graphics.changeToDark();
     }
 

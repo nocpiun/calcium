@@ -1,16 +1,11 @@
 import Graphics from "@/renderer/Graphics";
 
 export default class Point {
-    private graphics: Graphics;
-
-    public x: number;
-    public y: number;
-
-    public constructor(graphics: Graphics, x: number, y: number) {
-        this.graphics = graphics;
-        this.x = x;
-        this.y = y;
-    }
+    public constructor(
+        private graphics: Graphics,
+        public x: number,
+        public y: number
+    ) { }
 
     public toCoordinates(): Point {
         var unitPx = this.graphics.scale;
