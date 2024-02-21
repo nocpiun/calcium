@@ -11,6 +11,7 @@ import { ReactSVG } from "react-svg";
 
 import type { PropsWithChildren } from "@/types";
 import Emitter from "@/utils/Emitter";
+import Utils from "@/utils/Utils";
 
 import useEmitter from "@/hooks/useEmitter";
 
@@ -75,10 +76,10 @@ export const Select: React.FC<SelectProps> = (props) => {
     }, []);
 
     useEmitter([
-        ["selector-select", (selectorId, itemId) => {
+        ["selector-select", async (selectorId, itemId) => {
             if(selectorId !== idRef.current) return;
             if(!list.includes(itemId)) return;
-            if(itemId === value) return;
+            if(itemId === await Utils.getCurrentState(setValue)) return;
 
             setValue(itemId);
             setActive(false);
