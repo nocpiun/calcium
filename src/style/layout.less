@@ -103,3 +103,67 @@ kbd {
         background-color: var(--ca-blue1);
     }
 }
+
+.select {
+    @height: 35px; // default height
+    width: 150px;  // default width
+    height: @height;
+    position: relative;
+    .select-button {
+        width: 100%;
+        height: @height;
+        button {
+            display: flex;
+            width: 100%;
+            padding: 0 5px;
+            border: none;
+            outline: none;
+            background-color: var(--ca-gray9);
+            border-radius: 3px;
+            flex-flow: row;
+            align-items: center;
+            cursor: pointer;
+            .select-icon {
+                height: 24px;
+                svg {
+                    fill: var(--ca-gray7);
+                    transition: transform ease .2s;
+                }
+            }
+        }
+    }
+    .select-panel {
+        display: none;
+        height: 240px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        background-color: var(--ca-gray9);
+        border-radius: 3px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        box-shadow: 0 0 16px rgb(0, 0, 0, .12), 0 16px 16px rgb(0, 0, 0, .24);
+        .scrollbar-style();
+        .select-item:hover {
+            background-color: var(--ca-gray5);
+        }
+    }
+    .select-item {
+        width: 100%;
+        height: @height;
+        padding: 0 5px;
+        font-size: 10pt;
+        cursor: pointer;
+    }
+    &.active {
+        .select-button .select-icon svg {
+            transform: rotate(180deg);
+        }
+        .select-panel {
+            display: block;
+        }
+    }
+    * {
+        user-select: none;
+    }
+}

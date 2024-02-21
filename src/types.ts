@@ -87,36 +87,8 @@ export enum ZoomDirection {
     ZOOM_IN, ZOOM_OUT
 }
 
-export interface UnitType {
-    id: string
-    name: string
-    isDefault: boolean
-    units: UnitInfo[]
-}
-
-export interface UnitInfo {
-    name: string
-    displayName: string
-    transform: number
-    isBase: boolean
-}
-
 export enum RecordType {
     GENERAL, PROGRAMMING
-}
-
-export interface RepoReleaseResponse {
-    html_url: string
-    tag_name: string
-    name: string
-    assets: RepoReleaseAsset[]
-    body: string
-}
-
-export interface RepoReleaseAsset {
-    name: string
-    size: number
-    browser_download_url: string
 }
 
 export enum RollbackToward {

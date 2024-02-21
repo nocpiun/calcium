@@ -1,0 +1,73 @@
+dialog.currency-dialog {
+    width: fit-content !important;
+    overflow: visible !important;
+    .main-container {
+        overflow: visible !important;
+        .currency-page {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            gap: 15px;
+            .currency-input {
+                border: 1px solid var(--ca-gray8);
+            }
+            .currency-output {
+                background-color: var(--ca-gray9);
+            }
+            .currency-input, .currency-output {
+                width: 300px;
+                display: flex;
+                flex-direction: column;
+                border-radius: 6px;
+                .currency-value {
+                    flex: 1;
+                    padding: 20px;
+                    textarea {
+                        width: 100%;
+                        height: 100%;
+                        padding: 0;
+                        border: none;
+                        outline: none;
+                        resize: none;
+                        background-color: transparent;
+                        font-size: 23pt;
+                        font-family: @font;
+                        color: var(--ca-gray-light);
+                        &::selection {
+                            background-color: var(--ca-selection);
+                        }
+                    }
+                }
+                .currency-type-selector {
+                    display: flex;
+                    height: 35px;
+                    padding: 15px;
+                    justify-content: flex-end;
+                    .select {
+                        width: 200px;
+                        .select-item {
+                            display: flex;
+                            div {
+                                display: flex;
+                                flex-direction: column;
+                                justify-content: center;
+                            }
+                            .currency-icon {
+                                padding-left: 5px;
+                            }
+                            .currency-name {
+                                flex: 1;
+                                padding-right: 10px;
+                                span {
+                                    text-align: right;
+                                    font-weight: bold;
+                                    color: var(--ca-gray-light);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

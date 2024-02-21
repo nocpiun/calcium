@@ -2,7 +2,7 @@ import React, { useRef } from "react";
 
 import Float from "@/compiler/Float";
 
-import type { UnitType, UnitInfo } from "@/types";
+import type { UnitType, UnitInfo } from "@/views/unit-convert/UnitsPage";
 import Emitter from "@/utils/Emitter";
 
 import useEmitter from "@/hooks/useEmitter";

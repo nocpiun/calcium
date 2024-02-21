@@ -3,10 +3,23 @@ import ReactMarkdown from "react-markdown";
 import Axios from "axios";
 
 import useEmitter from "@/hooks/useEmitter";
-import { RepoReleaseResponse } from "@/types";
 import Logger from "@/utils/Logger";
 
 const fetchURL = "https://api.github.com/repos/nocpiun/calcium/releases";
+
+interface RepoReleaseAsset {
+    name: string
+    size: number
+    browser_download_url: string
+}
+
+interface RepoReleaseResponse {
+    html_url: string
+    tag_name: string
+    name: string
+    assets: RepoReleaseAsset[]
+    body: string
+}
 
 const ReleasesIndialogPage: React.FC = () => {
     const [list, setList] = useState<RepoReleaseResponse[]>();

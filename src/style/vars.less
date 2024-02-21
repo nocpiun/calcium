@@ -24,6 +24,7 @@
         --ca-tag-var: #e6a87e;
         --ca-tag-const: #719be8;
         --ca-tag-func: #d2a8ff;
+        --ca-selection: #064185;
     }
 
     // Light Mode
@@ -51,13 +52,23 @@
         --ca-tag-var: #9a6700;
         --ca-tag-const: #4d7ed8;
         --ca-tag-func: #8250df;
+        --ca-selection: #afd2f3;
 
         kbd {
             background-color: #dad8d8;
             border-color: var(--ca-gray1);
         }
 
-        #dialogs dialog {
+        .select {
+            .select-button button, .select-panel {
+                background-color: var(--ca-light2);
+            }
+            .select-panel {
+                box-shadow: 0 0 5px 0 #636262, 0 16px 15px #7e7e7e;
+            }
+        }
+
+        #dialogs dialog, .select-panel {
             box-shadow: 0 0 11px 0px #636262, 0 16px 15px #7e7e7e;
         }
 

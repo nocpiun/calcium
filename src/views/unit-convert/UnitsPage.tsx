@@ -1,27 +1,24 @@
 import React from "react";
 
-import type { UnitType, UnitInfo } from "@/types";
 import unitsData from "@/views/unit-convert/unitsData.json";
 import UnitItem from "@/views/unit-convert/UnitItem";
 
-interface UnitsPageType {
+export interface UnitType {
     id: string
+    name: string
+    isDefault: boolean
+    units: UnitInfo[]
 }
 
-const UnitsPage: React.FC<UnitsPageType> = (props) => {
-    const id = props.id;
-    const unitType = getUnitType(id);
-    const unitList = getUnitList(id);
+export interface UnitInfo {
+    name: string
+    displayName: string
+    transform: number
+    isBase: boolean
+}
 
-    return (
-        <div className="units-page" id={id}>
-            {
-                unitList.map((unitInfo: UnitInfo, index: number) => {
-                    return <UnitItem {...unitInfo} unitType={unitType} key={index}/>
-                })
-            }
-        </div>
-    );
+interface UnitsPageProps {
+    id: string
 }
 
 function getUnitType(id: string): UnitType {
@@ -35,6 +32,22 @@ function getUnitList(id: string): UnitInfo[] {
     var unitType = getUnitType(id);
     if(unitType) return unitType.units;
     return [];
+}
+
+const UnitsPage: React.FC<UnitsPageProps> = (props) => {
+    const id = props.id;
+    const unitType = getUnitType(id);
+    const unitList = getUnitList(id);
+
+    return (
+        <div className="units-page" id={id}>
+            {
+                unitList.map((unitInfo: UnitInfo, index: number) => {
+                    return <UnitItem {...unitInfo} unitType={unitType} key={index}/>
+                })
+            }
+        </div>
+    );
 }
 
 export default UnitsPage;

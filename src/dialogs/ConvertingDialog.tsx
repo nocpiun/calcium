@@ -5,8 +5,9 @@ import UnitsPage from "@/views/unit-convert/UnitsPage";
 
 import useEmitter from "@/hooks/useEmitter";
 
-import type { PropsWithRef, UnitType } from "@/types";
+import type { PropsWithRef } from "@/types";
 import Dialog from "@/components/Dialog";
+import { UnitType } from "@/views/unit-convert/UnitsPage";
 import unitsData from "@/views/unit-convert/unitsData.json";
 
 interface ConvertingDialogProps extends PropsWithRef<Dialog> {

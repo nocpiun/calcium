@@ -77,6 +77,9 @@ dialog.converting-dialog .main-container {
                     input[type=text] {
                         width: auto !important;
                         .dialog-input-box-style();
+                        &::selection {
+                            background-color: var(--ca-selection);
+                        }
                     }
                 }
             }

@@ -10,6 +10,7 @@ import "katex/dist/katex.min.css";
 import "use-context-menu/styles.css";
 import "react-tooltip/dist/react-tooltip.css";
 import "@nocp/toggle/dist/toggle.css";
+import "flag-icons/css/flag-icons.min.css";
 import "@/style/layout.less";
 
 // Components
