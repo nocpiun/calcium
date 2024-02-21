@@ -8,13 +8,14 @@ import Float from "@/compiler/Float";
 
 import useEmitter from "@/hooks/useEmitter";
 
-const fetchURL = "https://api.frankfurter.app";
+const fetchURL = "https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies/";
 
 export enum CurrencyType {
     USD = "USD",
     EUR = "EUR",
     CNY = "CNY",
     HKD = "HKD",
+    TWD = "TWD",
     JPY = "JPY",
     BGN = "BGN",
     CZK = "CZK",
@@ -49,6 +50,7 @@ export const currencyNameList: Map<string | CurrencyType, string> = new Map([
     ["EUR", "欧元"],
     ["CNY", "人民币"],
     ["HKD", "港币"],
+    ["TWD", "新台币"],
     ["JPY", "日元"],
     ["BGN", "保加利亚列弗"],
     ["CZK", "捷克克朗"],
@@ -79,10 +81,8 @@ export const currencyNameList: Map<string | CurrencyType, string> = new Map([
 ]);
 
 interface ExchangeRateResponse {
-    amount: number
-    base: CurrencyType
     date: string
-    rates: { [key: string]: number }
+    [key: string]: { [key: string]: number } | any
 }
 
 const CurrencyPage: React.FC = () => {
@@ -93,15 +93,16 @@ const CurrencyPage: React.FC = () => {
     const rateData = useMemo(async () => {
         new Emitter().emit("currency-loading");
 
-        const { data } = await Axios.get<ExchangeRateResponse>(fetchURL +"/latest?from="+ inputCurrency);
-        data.rates[data.base] = 1;
-        
+        const { data } = await Axios.get<ExchangeRateResponse>(fetchURL + inputCurrency.toLowerCase() +".json");
         return data;
     }, [inputCurrency]);
 
     const handleExchange = useCallback(async () => {
-        new Emitter().emit("currency-output-change", Float.multiply(inputValue, (await rateData).rates[outputCurrency]));
-    }, [inputValue, outputCurrency, rateData]);
+        new Emitter().emit(
+            "currency-output-change",
+            Float.multiply(inputValue, (await rateData)[inputCurrency.toLowerCase()][outputCurrency.toLowerCase()])
+        );
+    }, [inputValue, inputCurrency, outputCurrency, rateData]);
 
     useEffect(() => {
         handleExchange();
