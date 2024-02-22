@@ -14,9 +14,12 @@ export enum CurrencyType {
     USD = "USD",
     EUR = "EUR",
     CNY = "CNY",
+    CNH = "CNH",
     HKD = "HKD",
     TWD = "TWD",
     JPY = "JPY",
+    RUB = "RUB",
+    UAH = "UAH",
     BGN = "BGN",
     CZK = "CZK",
     DKK = "DKK",
@@ -36,6 +39,7 @@ export enum CurrencyType {
     ILS = "ILS",
     INR = "INR",
     KRW = "KRW",
+    KPW = "KPW",
     MXN = "MXN",
     MYR = "MYR",
     NZD = "NZD",
@@ -43,15 +47,35 @@ export enum CurrencyType {
     SGD = "SGD",
     THB = "THB",
     ZAR = "ZAR",
+    VND = "VND",
+    MNT = "MNT",
+    JMD = "JMD",
+    ZWL = "ZWL",
+    
+    XAU = "$XAU",
+    XAG = "$XAG",
+    XCP = "$XCP",
+    XPD = "$XPD",
+    XPT = "$XPT",
+    BTC = "$BTC",
+    ETH = "$ETH",
+    LTC = "$LTC",
+    USDT = "$USDT",
+    AGLD = "$AGLD",
+    DOGE = "$DOGE",
+    SHIB = "$SHIB",
 }
 
 export const currencyNameList: Map<string | CurrencyType, string> = new Map([
     ["USD", "美元"],
     ["EUR", "欧元"],
     ["CNY", "人民币"],
+    ["CNH", "中国离岸人民币"],
     ["HKD", "港币"],
     ["TWD", "新台币"],
     ["JPY", "日元"],
+    ["RUB", "俄罗斯卢布"],
+    ["UAH", "乌克兰格里夫纳"],
     ["BGN", "保加利亚列弗"],
     ["CZK", "捷克克朗"],
     ["DKK", "丹麦克朗"],
@@ -71,6 +95,7 @@ export const currencyNameList: Map<string | CurrencyType, string> = new Map([
     ["ILS", "以色列谢克尔"],
     ["INR", "印度卢比"],
     ["KRW", "韩元"],
+    ["KPW", "朝鲜元"],
     ["MXN", "墨西哥比索"],
     ["MYR", "马来西亚林吉特"],
     ["NZD", "新西兰元"],
@@ -78,7 +103,28 @@ export const currencyNameList: Map<string | CurrencyType, string> = new Map([
     ["SGD", "新加坡元"],
     ["THB", "泰铢"],
     ["ZAR", "南非兰特"],
+    ["VND", "越南盾"],
+    ["MNT", "蒙古图格里克"],
+    ["JMD", "牙买加元"],
+    ["ZWL", "津巴布韦元"],
+
+    ["$XAU", "金价盎司"],
+    ["$XAG", "银价盎司"],
+    ["$XCP", "铜价盎司"],
+    ["$XPD", "钯价盎司"],
+    ["$XPT", "铂价盎司"],
+    ["$BTC", "比特币"],
+    ["$ETH", "以太坊"],
+    ["$LTC", "莱特币"],
+    ["$USDT", "泰达币"],
+    ["$AGLD", "Adventure Gold"],
+    ["$DOGE", "狗狗币"],
+    ["$SHIB", "柴犬币"],
 ]);
+
+function getCode(currency: CurrencyType): string {
+    return currency.toLowerCase().replaceAll("$", "");
+}
 
 interface ExchangeRateResponse {
     date: string
@@ -93,14 +139,14 @@ const CurrencyPage: React.FC = () => {
     const rateData = useMemo(async () => {
         new Emitter().emit("currency-loading");
 
-        const { data } = await Axios.get<ExchangeRateResponse>(fetchURL + inputCurrency.toLowerCase() +".json");
+        const { data } = await Axios.get<ExchangeRateResponse>(fetchURL + getCode(inputCurrency) +".json");
         return data;
     }, [inputCurrency]);
 
     const handleExchange = useCallback(async () => {
         new Emitter().emit(
             "currency-output-change",
-            Float.multiply(inputValue, (await rateData)[inputCurrency.toLowerCase()][outputCurrency.toLowerCase()])
+            Float.multiply(inputValue, (await rateData)[getCode(inputCurrency)][getCode(outputCurrency)])
         );
     }, [inputValue, inputCurrency, outputCurrency, rateData]);
 

@@ -47,7 +47,7 @@ const CurrencyOutput: React.FC<CurrencyOutputProps> = (props) => {
                         return (
                             <SelectItem id={type} key={index}>
                                 <div className="currency-icon">
-                                    <span className={"fi fi-"+ type.substring(0, 2).toLowerCase()}/>
+                                    {type.length <= 3 && <span className={"fi fi-"+ type.substring(0, 2).toLowerCase()}/>}
                                 </div>
                                 <div className="currency-name">
                                     <span>{name +" "+ type}</span>
