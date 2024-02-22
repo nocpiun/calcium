@@ -41,6 +41,7 @@ Calculator -> calc -> Ca (Chemical Element) -> Calcium
 - Base conversion
 - Unit conversion
 - Relationship calculating (Thanks to [relationship.js](https://github.com/mumuy/relationship))
+- Currency exchanging
 - History recording
 
 ## Deploy & Use
