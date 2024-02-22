@@ -11,7 +11,7 @@ interface CurrencyInputProps {
 const CurrencyInput: React.FC<CurrencyInputProps> = (props) => {
     const inputRef = useRef<HTMLTextAreaElement>(null);
 
-    const handleInput = (e: React.ChangeEvent, value: string) => {
+    const handleInput = (value: string) => {
         if(/[^\d.]+/.test(value) && inputRef.current) { // prevent non-number
             const str = inputRef.current.value;
             inputRef.current.value = str.replaceAll(/[^\d.]+/g, "");
@@ -34,7 +34,7 @@ const CurrencyInput: React.FC<CurrencyInputProps> = (props) => {
                     defaultValue={0}
                     autoComplete="off"
                     ref={inputRef}
-                    onChange={(e) => handleInput(e, e.target.value)}/>
+                    onChange={(e) => handleInput(e.target.value)}/>
             </div>
             <div className="currency-type-selector">
                 <Select
