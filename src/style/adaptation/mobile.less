@@ -118,12 +118,15 @@
         }
     }
     #dialogs dialog {
-        width: 100%;
+        width: 100% !important;
         height: 100% !important;
         border-radius: 0;
         .indialog-page {
             padding: 5px 17px !important;
             font-size: 10pt;
+        }
+        &.currency-dialog .main-container .currency-page { // maybe useless
+            flex-direction: column;
         }
     }
 }
