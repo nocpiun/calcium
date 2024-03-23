@@ -133,7 +133,6 @@ export default class Graphics {
 
     private drawPolarAxis() {
         var unitPx = this.spacing * this.scale;
-        var secondaryUnitPx = (this.spacing / 5) * this.scale;
 
         // X Axis
         this.drawStraightLine(this.center.y, this.colors.primary, 2);
