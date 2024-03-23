@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-redeclare */
-import Graphics from "@/renderer/Graphics";
+import Graphics, { Axis } from "@/renderer/Graphics";
 import Point from "@/renderer/Point";
 import Function from "@/renderer/Function";
 import RootToken from "@/compiler/token/RootToken";
@@ -30,9 +30,10 @@ export default class Render extends Graphics {
         ratio: number,
         private workerCtx: Worker,
         isMobile: boolean,
-        isDarkMode: boolean
+        isDarkMode: boolean,
+        axis: Axis
     ) {
-        super(canvas, ctx, ratio, isMobile, isDarkMode);
+        super(canvas, ctx, ratio, isMobile, isDarkMode, axis);
 
         this.center = this.createPoint(this.canvas.width / 2, this.canvas.height / 2);
 
@@ -233,23 +234,23 @@ export default class Render extends Graphics {
     }
 
     // To render each frame
-    public render() {
+    public override render() {
         this.updateFPS();
         super.render();
 
         // O point
-        this.drawText("O", this.center.x - 20 * this.ratio, this.center.y + 20 * this.ratio, Render.colors.primary, 17);
+        this.drawText("O", this.center.x - 20 * this.ratio, this.center.y + 20 * this.ratio, this.colors.primary, 17);
 
         // Mouse point
         var mouseCoordinatesPoint = this.mousePoint.toCoordinates();
-        this.drawText("("+ mouseCoordinatesPoint.x.toFixed(2) +", "+ mouseCoordinatesPoint.y.toFixed(2) +")", (!this.isMobile ? 30 : 50) * this.ratio, 30 * this.ratio, Render.colors.primary, 15);
+        this.drawText("("+ mouseCoordinatesPoint.x.toFixed(2) +", "+ mouseCoordinatesPoint.y.toFixed(2) +")", (!this.isMobile ? 30 : 50) * this.ratio, 30 * this.ratio, this.colors.primary, 15);
         
         // Is mouse down
-        this.drawText(this.mouseDown ? "Moving" : "", this.canvas.width - 80 * this.ratio, 30 * this.ratio, Render.colors.primary, 15);
+        this.drawText(this.mouseDown ? "Moving" : "", this.canvas.width - 80 * this.ratio, 30 * this.ratio, this.colors.primary, 15);
 
         // Draw function images
         for(let i = 0; i < this.displayedPoints.length; i++) {
-            this.drawPoint(this.displayedPoints.get(i).toScreen(), Render.colors.highlight);
+            this.drawPoint(this.displayedPoints.get(i).toScreen(), this.colors.highlight);
         }
 
         var imageBitmap = this.canvas.transferToImageBitmap();
@@ -265,8 +266,17 @@ export default class Render extends Graphics {
         this.fullyRefreshFunctions();
     }
 
+    public unregisterAllFunctions() {
+        this.functionList.forEach((func, index) => this.unregisterFunction(index));
+        // this.functionList.clear();
+    }
+
     public editFunction(index: number, rawText: string) {
         this.calculatingWorker.postMessage({ type: "compile-and-set", index, rawText });
+    }
+
+    public playFunction(index: number) {
+        this.functionList.get(index).play(this.workerCtx);
     }
 
     public async calculatePoints(func: Function, beginX: number, endX: number, direction: MovingDirection = MovingDirection.LEFT): Promise<void> {

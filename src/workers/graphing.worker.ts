@@ -1,5 +1,6 @@
 /* eslint-disable no-restricted-globals */
 import Render from "@/renderer/Render";
+import { Theme } from "@/types";
 
 const ctx: Worker = self as any;
 
@@ -13,7 +14,7 @@ ctx.addEventListener("message", (e) => {
     switch(req.type) {
         case "init":
             var canvasCtx = req.canvas.getContext("2d");
-            renderer = new Render(req.canvas, canvasCtx, req.ratio, ctx, req.isMobile, req.isDarkMode);
+            renderer = new Render(req.canvas, canvasCtx, req.ratio, ctx, req.isMobile, req.isDarkMode, req.axis);
             init(canvasCtx, req.ratio);
             break;
         case "reset":
@@ -26,14 +27,13 @@ ctx.addEventListener("message", (e) => {
             renderer.unregisterFunction(req.index);
             break;
         case "clear-function":
-            renderer.functionList.forEach((func, index) => renderer.unregisterFunction(index));
-            renderer.functionList.clear();
+            renderer.unregisterAllFunctions();
             break;
         case "set-function":
             renderer.editFunction(req.index, req.rawText);
             break;
         case "play-function":
-            renderer.functionList.get(req.index).play(ctx);
+            renderer.playFunction(req.index);
             break;
         case "mouse-down":
             renderer.handleMouseDown(req.rect, req.cx, req.cy);
@@ -49,8 +49,11 @@ ctx.addEventListener("message", (e) => {
             break;
         case "theme-change":
             req.isDarkMode
-            ? Render.changeToDark()
-            : Render.changeToLight()
+            ? renderer.config.setTheme(Theme.DARK)
+            : renderer.config.setTheme(Theme.LIGHT);
+            break;
+        case "axis-type-change":
+            renderer.config.setAxisType(req.axis);
             break;
     }
 });

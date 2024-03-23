@@ -17,11 +17,12 @@ import CurrencyDialog from "@/dialogs/CurrencyDialog";
 import Emitter from "@/utils/Emitter";
 import { version } from "@/global";
 import { Mode } from "@/types";
+import { Axis } from "@/renderer/Graphics";
 
 import MainContext from "@/contexts/MainContext";
 
 const StatusBar: React.FC = () => {
-    const { mode } = useContext(MainContext);
+    const { mode, axis, setAxisType } = useContext(MainContext);
     const [fps, setFPS] = useState<number>(0);
     const aboutDialogRef = useRef<Dialog>(null);
     const shortcutDialogRef = useRef<Dialog>(null);
@@ -54,6 +55,10 @@ const StatusBar: React.FC = () => {
                     {
                         (mode === Mode.GENERAL || mode === Mode.PROGRAMMING) &&
                         <BarItem title="函数" onClick={() => new Emitter().emit("open-funcs-dialog")} tooltip="查看函数列表"/>
+                    }
+                    {
+                        mode === Mode.GRAPHING &&
+                        <BarItem title={axis === Axis.CARTESIAN ? "直角坐标系" : "极坐标系"} onClick={() => setAxisType(axis === Axis.CARTESIAN ? Axis.POLAR : Axis.CARTESIAN)} tooltip="切换坐标系模式"/>
                     }
                     {
                         mode === Mode.GRAPHING &&

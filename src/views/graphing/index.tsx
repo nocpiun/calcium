@@ -22,7 +22,7 @@ import Logger from "@/utils/Logger";
 import { MovingDirection } from "@/types";
 
 const Graphing: React.FC = memo(() => {
-    const { setFunctionList } = useContext(MainContext);
+    const { setFunctionList, axis } = useContext(MainContext);
     const [reloadTrigger, reloader] = useState(0);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const workerRef = useRef<Worker | null>(null);
@@ -51,7 +51,8 @@ const Graphing: React.FC = memo(() => {
             canvas: offscreenCanvas,
             ratio: window.devicePixelRatio,
             isDarkMode: Utils.isDarkMode(),
-            isMobile: Utils.isMobile()
+            isMobile: Utils.isMobile(),
+            axis
         }, [offscreenCanvas]);
         workerRef.current.onmessage = (e: {data: any}) => {
             switch(e.data.type) {
@@ -153,7 +154,9 @@ const Graphing: React.FC = memo(() => {
             mutations.forEach((mutation) => {
                 if(!workerRef.current) return;
                 if(mutation.type === "attributes") {
-                    workerRef.current.postMessage({ type: "theme-change", isDarkMode: !Utils.isDarkMode() });
+                    // Why did I add a `!` here before the `Utils.isDarkMode()`????
+                    // workerRef.current.postMessage({ type: "theme-change", isDarkMode: !Utils.isDarkMode() });
+                    workerRef.current.postMessage({ type: "theme-change", isDarkMode: Utils.isDarkMode() });
                 }
             });
         }).observe(document.body, { attributes: true });
@@ -164,6 +167,11 @@ const Graphing: React.FC = memo(() => {
             workerRef.current.terminate();
         };
     }, [reloadTrigger]);
+
+    useEffect(() => {
+        if(!workerRef.current) return;
+        workerRef.current.postMessage({ type: "axis-type-change", axis });
+    }, [axis]);
 
     useEffect(() => {
         new Emitter().on("remove-function", async (id: number, index: number) => {

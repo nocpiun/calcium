@@ -1,16 +1,22 @@
 /* eslint-disable @typescript-eslint/no-redeclare */
 /* eslint-disable no-self-assign */
 import Point from "@/renderer/Point";
+import { Theme } from "@/types";
 
 const initialScale = 90;
 
-export default class Graphics {
-    public static colors = {
-        primary: "#cbd0df",
-        secondary: "#8c949e",
-        highlight: "#fff"
-    };
+export enum Axis {
+    CARTESIAN, POLAR
+}
 
+interface ColorScheme {
+    primary: string,
+    secondary: string,
+    highlight: string
+}
+
+export default class Graphics {
+    public config: GraphicsConfig;
     public scale: number = initialScale; // px per unit length
     public spacing: number = 1; // unit length
 
@@ -22,24 +28,17 @@ export default class Graphics {
         protected ctx: OffscreenCanvasRenderingContext2D,
         protected ratio: number,
         protected isMobile: boolean,
-        isDarkMode: boolean
+        isDarkMode: boolean,
+        axis: Axis
     ) {
+        this.config = new GraphicsConfig(isDarkMode ? Theme.DARK : Theme.LIGHT, axis);
         this.scale *= this.ratio;
         this.center = this.createPoint(this.canvas.width / 2, this.canvas.height / 2);
         this.mousePoint = this.center;
-
-        // Appearance
-        if(!isDarkMode) Graphics.changeToDark();
     }
 
-    public static changeToDark() {
-        Graphics.colors.primary = "#404041";
-        Graphics.colors.highlight = "#222";
-    }
-
-    public static changeToLight() {
-        Graphics.colors.primary = "#cbd0df";
-        Graphics.colors.highlight = "#fff";
+    protected get colors(): ColorScheme {
+        return this.config.getColors();
     }
 
     public createPoint(x: number, y: number): Point {
@@ -47,13 +46,19 @@ export default class Graphics {
     }
 
     protected refreshAxisLine() {
+        this.config.getAxisType() === Axis.CARTESIAN
+        ? this.drawCartesianAxis()
+        : this.drawPolarAxis();
+    }
+
+    private drawCartesianAxis() {
         var unitPx = this.spacing * this.scale;
         var secondaryUnitPx = (this.spacing / 5) * this.scale;
         /**
          * X Direction
          */
         // X Axis
-        this.drawStraightLine(this.center.y, Graphics.colors.primary, 2);
+        this.drawStraightLine(this.center.y, this.colors.primary, 2);
         // thicker line
         for(
             let i = 1;
@@ -65,12 +70,12 @@ export default class Graphics {
         ) {
             var y1 = this.center.y - i * unitPx;
             var y2 = this.center.y + i * unitPx;
-            this.drawStraightLine(y1, Graphics.colors.secondary);
-            this.drawStraightLine(y2, Graphics.colors.secondary);
+            this.drawStraightLine(y1, this.colors.secondary);
+            this.drawStraightLine(y2, this.colors.secondary);
 
             // number of the line
-            this.drawText((i * this.spacing).toString(), this.center.x - (this.getTextWidth((i * this.spacing).toString()) / this.ratio + 5) * this.ratio, y1 + 5 * this.ratio, Graphics.colors.primary, 15);
-            this.drawText((-i * this.spacing).toString(), this.center.x - (this.getTextWidth((-i * this.spacing).toString()) / this.ratio + 5) * this.ratio, y2 + 5 * this.ratio, Graphics.colors.primary, 15);
+            this.drawText((i * this.spacing).toString(), this.center.x - (this.getTextWidth((i * this.spacing).toString()) / this.ratio + 5) * this.ratio, y1 + 5 * this.ratio, this.colors.primary, 15);
+            this.drawText((-i * this.spacing).toString(), this.center.x - (this.getTextWidth((-i * this.spacing).toString()) / this.ratio + 5) * this.ratio, y2 + 5 * this.ratio, this.colors.primary, 15);
         }
         // thinner line
         for(
@@ -83,46 +88,94 @@ export default class Graphics {
         ) {
             var y1 = this.center.y - i * secondaryUnitPx;
             var y2 = this.center.y + i * secondaryUnitPx;
-            this.drawStraightLine(y1, Graphics.colors.secondary, .3);
-            this.drawStraightLine(y2, Graphics.colors.secondary, .3);
+            this.drawStraightLine(y1, this.colors.secondary, .3);
+            this.drawStraightLine(y2, this.colors.secondary, .3);
         }
 
         /**
          * Y Direction
          */
         // Y Axis
-        this.drawVerticalLine(this.center.x, Graphics.colors.primary, 2);
+        this.drawVerticalLine(this.center.x, this.colors.primary, 2);
         // thicker line
         for(
-            let k = 1;
+            let i = 1;
             (
-                this.center.x - k * unitPx >= 0 ||
-                this.center.x + k * unitPx <= this.canvas.width
+                this.center.x - i * unitPx >= 0 ||
+                this.center.x + i * unitPx <= this.canvas.width
             );
-            k++
+            i++
         ) {
-            var x1 = this.center.x - k * unitPx;
-            var x2 = this.center.x + k * unitPx;
-            this.drawVerticalLine(x1, Graphics.colors.secondary);
-            this.drawVerticalLine(x2, Graphics.colors.secondary);
+            var x1 = this.center.x - i * unitPx;
+            var x2 = this.center.x + i * unitPx;
+            this.drawVerticalLine(x1, this.colors.secondary);
+            this.drawVerticalLine(x2, this.colors.secondary);
 
             // number of the line
-            this.drawText((-k * this.spacing).toString(), x1 - (this.getTextWidth((-k * this.spacing).toString()) / this.ratio / 2) * this.ratio, this.center.y + 15 * this.ratio, Graphics.colors.primary, 15);
-            this.drawText((k * this.spacing).toString(), x2 - (this.getTextWidth((k * this.spacing).toString()) / this.ratio / 2) * this.ratio, this.center.y + 15 * this.ratio, Graphics.colors.primary, 15);
+            this.drawText((-i * this.spacing).toString(), x1 - (this.getTextWidth((-i * this.spacing).toString()) / this.ratio / 2) * this.ratio, this.center.y + 15 * this.ratio, this.colors.primary, 15);
+            this.drawText((i * this.spacing).toString(), x2 - (this.getTextWidth((i * this.spacing).toString()) / this.ratio / 2) * this.ratio, this.center.y + 15 * this.ratio, this.colors.primary, 15);
         }
         // thinner line
         for(
-            let l = 1;
+            let i = 1;
             (
-                this.center.x - l * secondaryUnitPx >= 0 ||
-                this.center.x + l * secondaryUnitPx <= this.canvas.width
+                this.center.x - i * secondaryUnitPx >= 0 ||
+                this.center.x + i * secondaryUnitPx <= this.canvas.width
             );
-            l++
+            i++
         ) {
-            var x1 = this.center.x - l * secondaryUnitPx;
-            var x2 = this.center.x + l * secondaryUnitPx;
-            this.drawVerticalLine(x1, Graphics.colors.secondary, .3);
-            this.drawVerticalLine(x2, Graphics.colors.secondary, .3);
+            var x1 = this.center.x - i * secondaryUnitPx;
+            var x2 = this.center.x + i * secondaryUnitPx;
+            this.drawVerticalLine(x1, this.colors.secondary, .3);
+            this.drawVerticalLine(x2, this.colors.secondary, .3);
+        }
+    }
+
+    private drawPolarAxis() {
+        var unitPx = this.spacing * this.scale;
+        var secondaryUnitPx = (this.spacing / 5) * this.scale;
+
+        // X Axis
+        this.drawStraightLine(this.center.y, this.colors.primary, 2);
+        // Y Axis
+        this.drawVerticalLine(this.center.x, this.colors.primary, 2);
+        // thicker line
+        for(
+            let i = 1;
+            i * unitPx <= Math.max(
+                this.getCenterToTopLeft(),
+                this.getCenterToTopRight(),
+                this.getCenterToBottomLeft(),
+                this.getCenterToBottomRight(),
+            );
+            i++
+        ) {
+            var x1 = this.center.x - i * unitPx;
+            var x2 = this.center.x + i * unitPx;
+            this.drawCircle(this.center, x2 - this.center.x, this.colors.secondary);
+
+            // number of the line
+            this.drawText((-i * this.spacing).toString(), x1 - (this.getTextWidth((-i * this.spacing).toString()) / this.ratio / 2) * this.ratio, this.center.y + 15 * this.ratio, this.colors.primary, 15);
+            this.drawText((i * this.spacing).toString(), x2 - (this.getTextWidth((i * this.spacing).toString()) / this.ratio / 2) * this.ratio, this.center.y + 15 * this.ratio, this.colors.primary, 15);
+        }
+        // thinner line
+        for(
+            let i = 1;
+            i * unitPx * (Math.PI / 2) <= Math.max(
+                this.getCenterToTopLeft(),
+                this.getCenterToTopRight(),
+                this.getCenterToBottomLeft(),
+                this.getCenterToBottomRight(),
+            );
+            i++
+        ) {
+            var x = this.center.x + i * unitPx * (Math.PI / 2);
+            this.drawCircle(this.center, x - this.center.x, this.colors.secondary, .3);
+        }
+
+        // ray line
+        for(let i = Math.PI / 12; i < 2 * Math.PI; i += Math.PI / 12) {
+            this.drawRay(this.center, i, this.colors.secondary);
         }
     }
 
@@ -131,11 +184,22 @@ export default class Graphics {
         this.ctx.strokeStyle = color;
         this.ctx.lineWidth = width * this.ratio;
         this.ctx.moveTo(begin.x, begin.y);
-        if(!(Math.abs(begin.y - end.y) > this.canvas.height && begin.y * end.y < 0)) {
-            this.ctx.lineTo(end.x, end.y);
-        }
+        this.ctx.lineTo(end.x, end.y);
         this.ctx.stroke();
         this.ctx.closePath();
+    }
+
+    protected drawCircle(center: Point, radius: number, color: string, width: number = 1) {
+        this.ctx.beginPath();
+        this.ctx.strokeStyle = color;
+        this.ctx.lineWidth = width * this.ratio;
+        this.ctx.arc(center.x, center.y, radius, 0, 2 * Math.PI);
+        this.ctx.stroke();
+        this.ctx.closePath();
+    }
+
+    protected drawRay(begin: Point, angle: number, color: string, width: number = 1) {
+        this.drawLine(begin, this.getBorderPoint(begin, angle), color, width);
     }
 
     protected drawPoint(point: Point, color: string) {
@@ -165,6 +229,40 @@ export default class Graphics {
         this.canvas.height = this.canvas.height;
     }
 
+    private getCenterToTopLeft(): number {
+        return Math.sqrt(this.center.x ** 2 + this.center.y ** 2);
+    }
+
+    private getCenterToTopRight(): number {
+        return Math.sqrt((this.canvas.width - this.center.x) ** 2 + this.center.y ** 2);
+    }
+
+    private getCenterToBottomLeft(): number {
+        return Math.sqrt(this.center.x ** 2 + (this.canvas.height - this.center.y) ** 2);
+    }
+
+    private getCenterToBottomRight(): number {
+        return Math.sqrt((this.canvas.width - this.center.x) ** 2 + (this.canvas.height - this.center.y) ** 2);
+    }
+
+    private getBorderPoint(begin: Point, angle: number): Point {
+        if(angle < 0 || angle > 2 * Math.PI) return this.createPoint(0, 0);
+
+        var x = 0;
+        var y = 0;
+        const d = Math.max(
+            this.getCenterToTopLeft(),
+            this.getCenterToTopRight(),
+            this.getCenterToBottomLeft(),
+            this.getCenterToBottomRight(),
+        );
+
+        x = begin.x + d * Math.cos(angle);
+        y = begin.y - d * Math.sin(angle);
+
+        return this.createPoint(x, y);
+    }
+
     // To render each frame
     public render() {
         this.clear();
@@ -174,5 +272,41 @@ export default class Graphics {
 
     public getTextWidth(text: string): number {
         return this.ctx.measureText(text).width;
+    }
+}
+
+class GraphicsConfig {
+    private static readonly lightColors: ColorScheme = {
+        primary: "#404041",
+        secondary: "#8c949e",
+        highlight: "#222"
+    };
+    private static readonly darkColors: ColorScheme = {
+        primary: "#cbd0df",
+        secondary: "#8c949e",
+        highlight: "#fff"
+    };
+
+    public constructor(
+        private theme: Theme,
+        private axis: Axis
+    ) { }
+
+    public getColors(): ColorScheme {
+        return this.theme === Theme.LIGHT
+        ? GraphicsConfig.lightColors
+        : GraphicsConfig.darkColors;
+    }
+
+    public getAxisType(): Axis {
+        return this.axis;
+    }
+
+    public setTheme(theme: Theme) {
+        this.theme = theme;
+    }
+
+    public setAxisType(axis: Axis) {
+        this.axis = axis;
     }
 }

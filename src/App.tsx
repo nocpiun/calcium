@@ -4,6 +4,7 @@ import { AliveScope } from "react-activation";
 import { shortcuts } from "@/global";
 import { Mode, RenderedFunction } from "@/types";
 import Utils from "@/utils/Utils";
+import { Axis } from "./renderer/Graphics";
 
 // Layout
 import "katex/dist/katex.min.css";
@@ -24,6 +25,7 @@ import MainContext from "@/contexts/MainContext";
 const App: React.FC = () => {
 	const [mode, setMode] = useState<Mode>(Mode.GENERAL);
 	const [functionList, setFunctionList] = useState<RenderedFunction[]>([]);
+	const [axis, setAxisType] = useState<Axis>(Axis.CARTESIAN);
 
 	useEffect(() => {
 		document.body.addEventListener("keydown", (e: KeyboardEvent) => {
@@ -57,7 +59,7 @@ const App: React.FC = () => {
 
 	return (
 		<main className="calcium" id="calcium-main">
-			<MainContext.Provider value={{ mode, setMode, functionList, setFunctionList }}>
+			<MainContext.Provider value={{ mode, setMode, functionList, setFunctionList, axis, setAxisType }}>
 				<AliveScope>
 					<div className="app">
 						<Sidebar />
