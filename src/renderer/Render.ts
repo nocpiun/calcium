@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-redeclare */
-import Graphics, { Axis } from "@/renderer/Graphics";
-import Point from "@/renderer/Point";
+import Graphics, { Axis, Point } from "@/renderer/Graphics";
 import Function from "@/renderer/Function";
 import RootToken from "@/compiler/token/RootToken";
 
@@ -16,6 +15,7 @@ export default class Render extends Graphics {
     private mouseDown: boolean = false;
     private mouseDX: number = 0; // mouse delta x
     private mouseDY: number = 0; // mouse delta y
+    private cameraPosition: [number, number]; // [camera begin X, camera end X]
 
     private fpsUpdater: NodeJS.Timer;
     private currentFPS: number = 0;
@@ -36,6 +36,7 @@ export default class Render extends Graphics {
         super(canvas, ctx, ratio, isMobile, isDarkMode, axis);
 
         this.center = this.createPoint(this.canvas.width / 2, this.canvas.height / 2);
+        this.cameraPosition = [-this.center.x / this.scale, (this.canvas.width - this.center.x) / this.scale];
 
         // FPS
         this.fpsUpdater = setInterval(() => this.workerCtx.postMessage({ type: "fps", fps: this.currentFPS }), 1000);
@@ -113,7 +114,7 @@ export default class Render extends Graphics {
 
     public handleWheel(dy: number) {
         const delta = 7;
-        const mouseOriginPoint = this.mousePoint.toCoordinates();
+        const mouseOriginPoint = this.pointToCoordinates(this.mousePoint);
 
         dy > 0
         ? this.scale -= delta / this.spacing
@@ -131,7 +132,7 @@ export default class Render extends Graphics {
 
         this.zoomFunctionImage(dy > 0 ? ZoomDirection.ZOOM_OUT : ZoomDirection.ZOOM_IN);
 
-        const mouseCurrentPoint = this.mousePoint.toCoordinates();
+        const mouseCurrentPoint = this.pointToCoordinates(this.mousePoint);
         var centerDx = mouseCurrentPoint.x - mouseOriginPoint.x,
             centerDy = mouseCurrentPoint.y - mouseOriginPoint.y;
         
@@ -148,9 +149,9 @@ export default class Render extends Graphics {
         if(this.displayedPoints.length === 0) return;
 
         var unitPx = this.scale;
-        var oldBegin = this.displayedPoints.get(0).x,
+        var oldBegin = this.cameraPosition[0],
             newBegin = -this.center.x / unitPx,
-            oldEnd = this.displayedPoints.get(this.displayedPoints.length - 1).x,
+            oldEnd = this.cameraPosition[1],
             newEnd = (this.canvas.width - this.center.x) / unitPx;
         var beginX = NaN, endX = NaN;
 
@@ -168,15 +169,18 @@ export default class Render extends Graphics {
 
             this.calculatePoints(func, beginX, endX, direction);
         }
+
+        // Refresh camera position
+        this.cameraPosition = [newBegin, newEnd];
     }
 
     private zoomFunctionImage(direction: ZoomDirection) {
         if(this.displayedPoints.length === 0) return;
 
         var unitPx = this.scale;
-        var oldBegin = this.displayedPoints.get(0).x,
+        var oldBegin = this.cameraPosition[0],
             newBegin = -this.center.x / unitPx,
-            oldEnd = this.displayedPoints.get(this.displayedPoints.length - 1).x,
+            oldEnd = this.cameraPosition[1],
             newEnd = (this.canvas.width - this.center.x) / unitPx;
 
         if(direction === ZoomDirection.ZOOM_IN) {
@@ -195,6 +199,9 @@ export default class Render extends Graphics {
                 this.calculatePoints(func, oldEnd, newEnd);
             }
         }
+
+        // Refresh camera position
+        this.cameraPosition = [newBegin, newEnd];
     }
 
     private stopMoving() {
@@ -242,7 +249,7 @@ export default class Render extends Graphics {
         this.drawText("O", this.center.x - 20 * this.ratio, this.center.y + 20 * this.ratio, this.colors.primary, 17);
 
         // Mouse point
-        var mouseCoordinatesPoint = this.mousePoint.toCoordinates();
+        var mouseCoordinatesPoint = this.pointToCoordinates(this.mousePoint);
         this.drawText("("+ mouseCoordinatesPoint.x.toFixed(2) +", "+ mouseCoordinatesPoint.y.toFixed(2) +")", (!this.isMobile ? 30 : 50) * this.ratio, 30 * this.ratio, this.colors.primary, 15);
         
         // Is mouse down
@@ -250,7 +257,7 @@ export default class Render extends Graphics {
 
         // Draw function images
         for(let i = 0; i < this.displayedPoints.length; i++) {
-            this.drawPoint(this.displayedPoints.get(i).toScreen(), this.colors.highlight);
+            this.drawPoint(this.pointToScreen(this.displayedPoints.get(i)), this.colors.highlight);
         }
 
         var imageBitmap = this.canvas.transferToImageBitmap();

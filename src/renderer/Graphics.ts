@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-redeclare */
 /* eslint-disable no-self-assign */
-import Point from "@/renderer/Point";
 import { Theme } from "@/types";
 
 const initialScale = 90;
@@ -13,6 +12,11 @@ interface ColorScheme {
     primary: string,
     secondary: string,
     highlight: string
+}
+
+export interface Point {
+    x: number
+    y: number
 }
 
 export default class Graphics {
@@ -42,7 +46,7 @@ export default class Graphics {
     }
 
     public createPoint(x: number, y: number): Point {
-        return new Point(this, x, y);
+        return { x, y };
     }
 
     protected refreshAxisLine() {
@@ -133,41 +137,24 @@ export default class Graphics {
 
     private drawPolarAxis() {
         var unitPx = this.spacing * this.scale;
+        const maxRange = this.getMaxDrawingRange();
 
         // X Axis
         this.drawStraightLine(this.center.y, this.colors.primary, 2);
         // Y Axis
         this.drawVerticalLine(this.center.x, this.colors.primary, 2);
         // thicker line
-        for(
-            let i = 1;
-            i * unitPx <= Math.max(
-                this.getCenterToTopLeft(),
-                this.getCenterToTopRight(),
-                this.getCenterToBottomLeft(),
-                this.getCenterToBottomRight(),
-            );
-            i++
-        ) {
+        for(let i = 1; i * unitPx <= maxRange; i++) {
             var x1 = this.center.x - i * unitPx;
             var x2 = this.center.x + i * unitPx;
             this.drawCircle(this.center, x2 - this.center.x, this.colors.secondary);
 
             // number of the line
-            this.drawText((-i * this.spacing).toString(), x1 - (this.getTextWidth((-i * this.spacing).toString()) / this.ratio / 2) * this.ratio, this.center.y + 15 * this.ratio, this.colors.primary, 15);
+            this.drawText((i * this.spacing).toString(), x1 - (this.getTextWidth((-i * this.spacing).toString()) / this.ratio / 2) * this.ratio, this.center.y + 15 * this.ratio, this.colors.primary, 15);
             this.drawText((i * this.spacing).toString(), x2 - (this.getTextWidth((i * this.spacing).toString()) / this.ratio / 2) * this.ratio, this.center.y + 15 * this.ratio, this.colors.primary, 15);
         }
         // thinner line
-        for(
-            let i = 1;
-            i * unitPx * (Math.PI / 2) <= Math.max(
-                this.getCenterToTopLeft(),
-                this.getCenterToTopRight(),
-                this.getCenterToBottomLeft(),
-                this.getCenterToBottomRight(),
-            );
-            i++
-        ) {
+        for(let i = 1; i * unitPx * (Math.PI / 2) <= maxRange; i++) {
             var x = this.center.x + i * unitPx * (Math.PI / 2);
             this.drawCircle(this.center, x - this.center.x, this.colors.secondary, .3);
         }
@@ -228,20 +215,13 @@ export default class Graphics {
         this.canvas.height = this.canvas.height;
     }
 
-    private getCenterToTopLeft(): number {
-        return Math.sqrt(this.center.x ** 2 + this.center.y ** 2);
-    }
-
-    private getCenterToTopRight(): number {
-        return Math.sqrt((this.canvas.width - this.center.x) ** 2 + this.center.y ** 2);
-    }
-
-    private getCenterToBottomLeft(): number {
-        return Math.sqrt(this.center.x ** 2 + (this.canvas.height - this.center.y) ** 2);
-    }
-
-    private getCenterToBottomRight(): number {
-        return Math.sqrt((this.canvas.width - this.center.x) ** 2 + (this.canvas.height - this.center.y) ** 2);
+    private getMaxDrawingRange(): number {
+        return Math.max(
+            Math.sqrt(this.center.x ** 2 + this.center.y ** 2),
+            Math.sqrt((this.canvas.width - this.center.x) ** 2 + this.center.y ** 2),
+            Math.sqrt(this.center.x ** 2 + (this.canvas.height - this.center.y) ** 2),
+            Math.sqrt((this.canvas.width - this.center.x) ** 2 + (this.canvas.height - this.center.y) ** 2),
+        ); // Max length of center point to corners
     }
 
     private getBorderPoint(begin: Point, angle: number): Point {
@@ -249,15 +229,10 @@ export default class Graphics {
 
         var x = 0;
         var y = 0;
-        const d = Math.max(
-            this.getCenterToTopLeft(),
-            this.getCenterToTopRight(),
-            this.getCenterToBottomLeft(),
-            this.getCenterToBottomRight(),
-        );
+        const maxRange = this.getMaxDrawingRange();
 
-        x = begin.x + d * Math.cos(angle);
-        y = begin.y - d * Math.sin(angle);
+        x = begin.x + maxRange * Math.cos(angle);
+        y = begin.y - maxRange * Math.sin(angle);
 
         return this.createPoint(x, y);
     }
@@ -271,6 +246,22 @@ export default class Graphics {
 
     public getTextWidth(text: string): number {
         return this.ctx.measureText(text).width;
+    }
+
+    protected pointToCoordinates(point: Point): Point {
+        var unitPx = this.scale;
+        return {
+            x: (point.x - this.center.x) / unitPx,
+            y: -(point.y - this.center.y) / unitPx
+        };
+    }
+
+    protected pointToScreen(point: Point): Point {
+        var unitPx = this.scale;
+        return {
+            x: this.center.x + (point.x * unitPx),
+            y: this.center.y - (point.y * unitPx)
+        };
     }
 }
 
