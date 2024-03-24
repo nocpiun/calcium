@@ -274,8 +274,8 @@ export default class Render extends Graphics {
     }
 
     public unregisterAllFunctions() {
-        this.functionList.forEach((func, index) => this.unregisterFunction(index));
-        // this.functionList.clear();
+        this.functionList.clear();
+        this.fullyRefreshFunctions();
     }
 
     public editFunction(index: number, rawText: string) {
