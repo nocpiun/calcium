@@ -44,12 +44,12 @@ export const functions: Map<string, FunctionInfo> = new Map([
     ["text{max}",    [(...n) => Math.max(...n),                             -1]],
     ["text{nPr}",    [(n, r) => Compute.nPr(n, r),                           2]],
     ["text{nCr}",    [(n, r) => Compute.nCr(n, r),                           2]],
-    ["text{xPx}",    [(x) => Compute.safePow(x, x),                          1]],
-    ["exp",          [(x) => Compute.safePow(Math.E, x),                     1]],
+    ["text{xPx}",    [(x) => Compute.unsafePow(x, x),                        1]],
+    ["exp",          [(x) => Compute.unsafePow(Math.E, x),                   1]],
     ["text{floor}",  [(x) => Math.floor(x),                                  1]],
     ["text{round}",  [(x) => Math.round(x),                                  1]],
     ["text{rand}",   [(a, b) => Math.floor(Math.random() * (b - a + 1) + a), 2]],
-    ["W_0",          [(x) => lambertW0(x), 1]],
+    ["W_0",          [(x) => lambertW0(x),                                   1]],
 ]);
 
 export const constants: Map<string, number> = new Map([
