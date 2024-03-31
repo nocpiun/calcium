@@ -42,7 +42,7 @@ export default class Is {
             "A", "B", "C", "D", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",
             "\\alpha", "\\beta", "\\gamma", "\\delta", "\\epsilon", "\\zeta", "\\eta", "\\theta", "\\iota", "\\kappa", "\\lambda",
             "\\mu", "\\nu", "\\xi", "\\omicron", "\\rho", "\\sigma", "\\tau", "\\upsilon", "\\chi", "\\psi", "\\omega",
-            "\\Delta", "dx", "\\text{坤}"
+            "\\Delta", "dx", "\\text{坤}", "N_A"
         ];
         return variableSymbol.indexOf(symbol) > -1;
     }

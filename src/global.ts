@@ -42,7 +42,7 @@ export const functions: Map<string, FunctionInfo> = new Map([
     ["text{total}",  [(...n) => Compute.total(...n),                        -1]],
     ["text{min}",    [(...n) => Math.min(...n),                             -1]],
     ["text{max}",    [(...n) => Math.max(...n),                             -1]],
-    ["text{nPr}",    [(n, r) => Compute.nPr(n, r),                           2]],
+    ["text{nAr}",    [(n, r) => Compute.nAr(n, r),                           2]],
     ["text{nCr}",    [(n, r) => Compute.nCr(n, r),                           2]],
     ["text{xPx}",    [(x) => Compute.unsafePow(x, x),                        1]],
     ["exp",          [(x) => Compute.unsafePow(Math.E, x),                   1]],
@@ -56,6 +56,7 @@ export const constants: Map<string, number> = new Map([
     ["\\pi",      Math.PI],
     ["e",         Math.E],
     ["\\phi",     (Math.sqrt(5) - 1) / 2],
+    ["N_A",       6.02214076e23],
     ["\\text{坤}", Math.sqrt(2 * Math.PI)],
 ]);
 
@@ -120,6 +121,7 @@ export const acTable: Map<string, string> = new Map([
     ["rand",    "\\text{rand}("],
     ["lambert", "W_0("],
 
+    ["na",      "N_A"],
     ["kun",     "\\text{坤}"],
 ]);
 

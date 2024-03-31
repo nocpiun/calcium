@@ -98,7 +98,7 @@ export default class Compute {
         return Math.sqrt(Compute.total(...devPowList) / nums.length);
     }
 
-    public static nPr(n: number, r: number): number {
+    public static nAr(n: number, r: number): number {
         if(n < r || n < 0 || r < 0) return NaN;
         return Compute.factorial(n) / Compute.factorial(n - r);
     }

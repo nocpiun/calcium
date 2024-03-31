@@ -234,7 +234,7 @@ const MobileInput: React.FC<MobileInputProps> = memo((props) => {
                         <InputButton symbol="\text{rand}" inputValue="\text{rand}(" grow={3}/>
                     </div>
                     <div className="keypad-row">
-                        <InputButton symbol="\text{P}_n^r" inputValue="\text{nPr}(" grow={1}/>
+                        <InputButton symbol="\text{A}_n^r" inputValue="\text{nAr}(" grow={1}/>
                         <InputButton symbol="\text{C}_n^r" inputValue="\text{nCr}(" grow={1}/>
                         <div style={{ flexGrow: 2 }}/>
                         <InputButton symbol="\text{Del}" grow={1}/>
@@ -249,7 +249,9 @@ const MobileInput: React.FC<MobileInputProps> = memo((props) => {
                     </div>
                     <div className="keypad-row">
                         <InputButton symbol="\int_a^b" inputValue="\int" grow={2}/>
-                        <div style={{ flexGrow: 3 }}/>
+                        <InputButton symbol="M" inputValue="\atom" grow={1}/>
+                        <InputButton symbol="N_A" inputValue="N_A" grow={1}/>
+                        <div style={{ flexGrow: 1 }}/>
                     </div>
                     <div className="keypad-row">
                         <InputButton symbol="\prod" grow={2}/>

@@ -128,5 +128,15 @@
         &.currency-dialog .main-container .currency-page { // maybe useless
             flex-direction: column;
         }
+        &.atomic-weights-dialog .main-container {
+            width: auto;
+            .atom-input {
+                overflow: auto;
+                .scrollbar-style();
+                .periodic-table {
+                    width: 750px;
+                }
+            }
+        }
     }
 }
