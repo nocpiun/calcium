@@ -64,7 +64,7 @@ describe("Compiler tests", () => {
         const f5 = "\\text{mean}( 1 , 7 , 8 , ( 3 + 9 7 ) , ( 1 1 4 5 1 5 - 1 ) )";
         expect(calculate(f5)).toBe("22926");
 
-        const f6 = "\\text{nPr}( 2 , 1 )";
+        const f6 = "\\text{nAr}( 2 , 1 )";
         expect(calculate(f6)).toBe("2");
     });
 

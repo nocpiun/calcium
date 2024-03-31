@@ -112,7 +112,7 @@ export const acTable: Map<string, string> = new Map([
     ["total",   "\\text{total}("],
     ["min",     "\\text{min}("],
     ["max",     "\\text{max}("],
-    ["npr",     "\\text{nPr}("],
+    ["nar",     "\\text{nAr}("],
     ["ncr",     "\\text{nCr}("],
     ["xpx",     "\\text{xPx}("],
     ["exp",     "\\exp("],
@@ -121,7 +121,6 @@ export const acTable: Map<string, string> = new Map([
     ["rand",    "\\text{rand}("],
     ["lambert", "W_0("],
 
-    ["na",      "N_A"],
     ["kun",     "\\text{坤}"],
 ]);
 
