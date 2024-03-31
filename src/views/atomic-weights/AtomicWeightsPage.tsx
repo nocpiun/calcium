@@ -20,7 +20,7 @@ export function getAtomicWeight(number: number): number {
 }
 
 const AtomicWeightsPage: React.FC = () => {
-    const { result, setResult } = useContext(AtomicWeightsContext);
+    const { setResult } = useContext(AtomicWeightsContext);
     const [inputElements, setInputElements] = useState<number[]>([]);
 
     const handleClear = () => {
@@ -49,7 +49,7 @@ const AtomicWeightsPage: React.FC = () => {
 
     return (
         <>
-            <AtomicWeightsOutput inputElements={inputElements} result={result}/>
+            <AtomicWeightsOutput inputElements={inputElements}/>
             <AtomicWeightsInput />
         </>
     );

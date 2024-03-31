@@ -1,12 +1,15 @@
-import React from "react";
+import React, { useContext } from "react";
 import { elements } from "chemical-elements";
+
+import AtomicWeightsContext from "@/contexts/AtomicWeightsContext";
 
 interface AtomicWeightsOutputProps {
     inputElements: number[]
-    result: number
 }
 
 const AtomicWeightsOutput: React.FC<AtomicWeightsOutputProps> = (props) => {
+    const { result } = useContext(AtomicWeightsContext);
+
     return (
         <div className="atom-output">
             <div className="atom-input-display">
@@ -15,7 +18,7 @@ const AtomicWeightsOutput: React.FC<AtomicWeightsOutputProps> = (props) => {
                 })}
             </div>
             <div className="atom-output-result">
-                <span>{props.result}</span>
+                <span>{result}</span>
             </div>
         </div>
     );
