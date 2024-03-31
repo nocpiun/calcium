@@ -1,0 +1,73 @@
+dialog.atomic-weights-dialog {
+    width: fit-content !important;
+    height: fit-content !important;
+    .main-container {
+        display: flex;
+        flex-direction: column;
+        width: 750px;
+        .atom-output {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 20px;
+            border: 1px solid var(--ca-gray8);
+            border-radius: 6px;
+            cursor: default;
+            * {
+                font-family: @font-katex;
+            }
+            .atom-input-display {
+                display: flex;
+                width: 100%;
+                min-height: 35px;
+                padding-bottom: 5px;
+                overflow-x: auto;
+                .scrollbar-style();
+                .atom-symbol {
+                    font-size: 18pt;
+                    &:before {
+                        content: var(--ca-atom-split);
+                    }
+                    &:nth-child(1):before {
+                        content: "" !important;
+                    }
+                }
+            }
+            .atom-output-result {
+                display: flex;
+                justify-content: flex-end;
+                font-size: 20pt;
+            }
+        }
+        .atom-input {
+            flex: 1;
+            .periodic-table {
+                display: flex;
+                flex-direction: column;
+                .table-row {
+                    display: flex;
+                    height: 45px;
+                    .keypad-button-container {
+                        max-width: 45px;
+                        position: relative;
+                        button {
+                            .button-style();
+                            width: 45px;
+                            background-color: transparent;
+                            * {
+                                font-family: @font-katex;
+                            }
+                            &:hover {
+                                background-color: var(--ca-gray9);
+                            }
+                            &:active {
+                                background-color: var(--ca-gray8);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

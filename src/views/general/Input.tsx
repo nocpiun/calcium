@@ -65,7 +65,7 @@ const Input: React.FC = () => {
                         <div className="keypad-placeholder"/>
                         <InputButton symbol="\prod" grow={2} title="求积"/>
                         <InputButton symbol="W_0" inputValue="W_0(" grow={2} title="Lambert W"/>
-                        <div style={{ flexGrow: 1 }}/>
+                        <InputButton symbol="M" inputValue="\atom" grow={1} title="相对原子质量"/>
                     </div>
                     <div className="keypad-row">
                         <InputButton symbol="\cosh" inputValue="\cosh(" grow={1}/>

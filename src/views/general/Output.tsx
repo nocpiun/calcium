@@ -29,6 +29,7 @@ import FunctionDialog from "@/dialogs/FunctionDialog";
 import SumDialog from "@/dialogs/SumDialog";
 import IntDialog from "@/dialogs/IntDialog";
 import ProdDialog from "@/dialogs/ProdDialog";
+import AtomicWeightsDialog from "@/dialogs/AtomicWeightsDialog";
 
 const Output: React.FC = () => {
     const [outputContent, setOutputContent] = useState<string>("");
@@ -40,6 +41,7 @@ const Output: React.FC = () => {
     const sumDialogRef = useRef<Dialog>(null);
     const intDialogRef = useRef<Dialog>(null);
     const prodDialogRef = useRef<Dialog>(null);
+    const atomDialogRef = useRef<Dialog>(null);
 
     const handleTofracSwitch = () => {
         setIsTofrac((current) => !current);
@@ -142,6 +144,9 @@ const Output: React.FC = () => {
                 break;
             case "\\prod":
                 prodDialogRef.current?.open();
+                break;
+            case "\\atom":
+                atomDialogRef.current?.open();
                 break;
             default:
                 // Auto complete
@@ -281,6 +286,7 @@ const Output: React.FC = () => {
                 <SumDialog ref={sumDialogRef}/>
                 <IntDialog ref={intDialogRef}/>
                 <ProdDialog ref={prodDialogRef}/>
+                <AtomicWeightsDialog ref={atomDialogRef}/>
             </div>
             {contextMenu}
         </>

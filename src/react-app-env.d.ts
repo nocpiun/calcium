@@ -97,3 +97,13 @@ declare module "relationship.js" {
   export default relationship;
   export function setMode(name: string, data: ModeData);
 }
+
+declare module "chemical-elements" {
+  export const elements: {
+    number: number
+    symbol: string
+    mass: number | null
+    name: string
+    monoisotopicMass?: number
+  }[];
+}
