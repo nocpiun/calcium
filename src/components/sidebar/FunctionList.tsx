@@ -1,4 +1,5 @@
 import React, {
+    useState,
     useEffect,
     useRef,
     useContext,
@@ -8,6 +9,7 @@ import React, {
 import { createPortal } from "react-dom";
 import { InlineMath } from "react-katex";
 import { useContextMenu, ContextMenuItem, ContextMenuDivider } from "use-context-menu";
+import { Tooltip } from "react-tooltip";
 
 import useEmitter from "@/hooks/useEmitter";
 
@@ -15,13 +17,14 @@ import SidebarPage from "@/components/sidebar/SidebarPage";
 import InputBox, { cursor, InputSymbol } from "@/components/InputBox";
 import FunctionListItem from "@/components/sidebar/FunctionListItem";
 import MobileInput from "@/views/general/MobileInput";
+import { Select, SelectItem } from "@/components/Select";
 
 import Is from "@/compiler/Is";
 import Emitter from "@/utils/Emitter";
 import Logger from "@/utils/Logger";
 import Utils from "@/utils/Utils";
 import { acTable } from "@/global";
-import { Mode, InputTag } from "@/types";
+import { Mode, InputTag, FunctionInputtingType } from "@/types";
 
 import MainContext from "@/contexts/MainContext";
 
@@ -31,8 +34,16 @@ const maxFunctionAmount: number = 50;
 
 const FunctionList: React.FC = () => {
     const { mode, functionList, setFunctionList } = useContext(MainContext);
+    const [functionInputtingType, setFunctionInputtingType] = useState<FunctionInputtingType>(FunctionInputtingType.NORMAL);
     const [unusedId, dispatchId] = useReducer(IdReducer, { id: 0 });
     const inputRef = useRef<InputBox>(null);
+
+    const handleSelectInputtingType = (type: FunctionInputtingType) => {
+        if(!inputRef.current) return;
+
+        setFunctionInputtingType(type);
+        inputRef.current.reset();
+    };
 
     const handleAddFunction = useCallback(async () => {
         if(!inputRef.current) return;
@@ -45,13 +56,13 @@ const FunctionList: React.FC = () => {
 
         var value = inputBox.value;
         if(value === cursor) return;
-        setFunctionList([...currentList, { id: unusedId.id, value }]);
-        new Emitter().emit("add-function", value, unusedId.id);
+        setFunctionList([...currentList, { id: unusedId.id, value, mode: functionInputtingType }]);
+        new Emitter().emit("add-function", value, unusedId.id, functionInputtingType);
         dispatchId({ type: "refresh", payload: 1 });
-        Logger.info("Function rendered: "+ value.replaceAll(" ", ""));
+        Logger.info("Function rendered ("+ functionInputtingType +"): "+ value.replaceAll(" ", ""));
 
         inputBox.reset();
-    }, [inputRef, mode, setFunctionList, unusedId.id]);
+    }, [inputRef, mode, setFunctionList, unusedId.id, functionInputtingType]);
 
     const handleInput = useCallback((symbol: string) => {
         if(!inputRef.current) return;
@@ -60,6 +71,11 @@ const FunctionList: React.FC = () => {
 
         var ctx = inputBox.ctx;
         var cursorIndex = ctx.getCursorIndex();
+
+        // Special: Replace "x" with "theta" if the inputting type is `polar`.
+        if(symbol === "x" && functionInputtingType === FunctionInputtingType.POLAR) {
+            symbol = "\\theta";
+        }
 
         switch(symbol) {
             case "Backspace":
@@ -119,7 +135,7 @@ const FunctionList: React.FC = () => {
                 // Default (normal) Input
                 ctx.input(new InputSymbol(symbol));
         }
-    }, [inputRef, mode, handleAddFunction]);
+    }, [inputRef, mode, handleAddFunction, functionInputtingType]);
 
     useEffect(() => {
         Utils.scrollToEnd("function-list", 1, 0);
@@ -146,7 +162,16 @@ const FunctionList: React.FC = () => {
         <>
             <div className="function-input-box">
                 <div className="function-input-box-tag">
-                    <span><InlineMath>y =</InlineMath></span>
+                    <Select
+                        defaultValue={FunctionInputtingType.NORMAL}
+                        onSelect={(itemId) => handleSelectInputtingType(itemId as FunctionInputtingType)}>
+                            <SelectItem id={FunctionInputtingType.NORMAL}>
+                                <InlineMath>y</InlineMath>
+                            </SelectItem>
+                            <SelectItem id={FunctionInputtingType.POLAR}>
+                                <InlineMath>\rho</InlineMath>
+                            </SelectItem>
+                    </Select>
                 </div>
                 <InputBox
                     ref={inputRef}

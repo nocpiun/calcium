@@ -5,7 +5,7 @@ import RootToken from "@/compiler/token/RootToken";
 
 import List from "@/utils/List";
 import Collection from "@/utils/Collection";
-import { MovingDirection, ZoomDirection } from "@/types";
+import { FunctionInputtingType, MovingDirection, ZoomDirection } from "@/types";
 
 export const delta: number = .01;
 
@@ -56,21 +56,25 @@ export default class Render extends Graphics {
 
         switch(res.type) {
             case "compile":
-                this.functionList.add(new Function(res.id, RootToken.create(res.root)));
+                this.functionList.add(new Function(res.id, res.mode, RootToken.create(res.root)));
                 this.drawCompleteFunction();
                 break;
             case "compile-and-set":
                 var oldFunction = this.functionList.get(res.index);
-                this.functionList.set(res.index, new Function(oldFunction.id, RootToken.create(res.root)));
+                this.functionList.set(res.index, new Function(oldFunction.id, res.mode, RootToken.create(res.root)));
                 this.fullyRefreshFunctions();
                 break;
             case "evaluate":
                 switch(res.operate) {
                     case "add":
-                        this.displayedPoints.add(this.createPoint(res.x, res.y));
+                        res.mode === FunctionInputtingType.NORMAL
+                        ? this.displayedPoints.add(this.createPoint(res.x, res.y))
+                        : this.displayedPoints.add(this.createPoint(res.y * Math.cos(res.x), res.y * Math.sin(res.x)));
                         break;
                     case "unshift":
-                        this.displayedPoints.unshift(this.createPoint(res.x, res.y));
+                        res.mode === FunctionInputtingType.NORMAL
+                        ? this.displayedPoints.unshift(this.createPoint(res.x, res.y))
+                        : this.displayedPoints.unshift(this.createPoint(res.y * Math.cos(res.x), res.y * Math.sin(res.x)));
                         break;
                 }
                 break;
@@ -264,8 +268,8 @@ export default class Render extends Graphics {
         this.workerCtx.postMessage({ type: "render", imageBitmap }, [imageBitmap]);
     }
 
-    public registerFunction(rawText: string, id: number) {
-        this.calculatingWorker.postMessage({ type: "compile", rawText, id });
+    public registerFunction(rawText: string, id: number, mode: FunctionInputtingType) {
+        this.calculatingWorker.postMessage({ type: "compile", rawText, id, mode });
     }
 
     public unregisterFunction(index: number) {
@@ -278,8 +282,8 @@ export default class Render extends Graphics {
         this.fullyRefreshFunctions();
     }
 
-    public editFunction(index: number, rawText: string) {
-        this.calculatingWorker.postMessage({ type: "compile-and-set", index, rawText });
+    public editFunction(index: number, rawText: string, mode: FunctionInputtingType) {
+        this.calculatingWorker.postMessage({ type: "compile-and-set", index, rawText, mode });
     }
 
     public playFunction(index: number) {
@@ -287,17 +291,22 @@ export default class Render extends Graphics {
     }
 
     public async calculatePoints(func: Function, beginX: number, endX: number, direction: MovingDirection = MovingDirection.LEFT): Promise<void> {
+        if(func.mode === FunctionInputtingType.POLAR) {
+            if(beginX < 0) beginX = 0;
+            if(endX < 0) return;
+        }
+        
         if(direction === MovingDirection.LEFT) {
             for(let x = beginX; x <= endX; x += delta * this.spacing) {
                 // var y = await func.calculate(x);
                 // this.displayedPoints.add(this.createPoint(x, y));
-                this.calculatingWorker.postMessage({ type: "evaluate", id: func.id, root: func.root, x, operate: "add" });
+                this.calculatingWorker.postMessage({ type: "evaluate", id: func.id, mode: func.mode, root: func.root, x, operate: "add" });
             }
         } else {
             for(let x = endX; x >= beginX; x -= delta * this.spacing) {
                 // var y = await func.calculate(x);
                 // this.displayedPoints.unshift(this.createPoint(x, y));
-                this.calculatingWorker.postMessage({ type: "evaluate", id: func.id, root: func.root, x, operate: "unshift" });
+                this.calculatingWorker.postMessage({ type: "evaluate", id: func.id, mode: func.mode, root: func.root, x, operate: "unshift" });
             }
         }
     }

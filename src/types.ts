@@ -51,6 +51,7 @@ export type FunctionInfo = [(...params: number[]) => number, number /* amount of
 export interface RenderedFunction {
     id: number
     value: string
+    mode: FunctionInputtingType
 }
 
 export type WorkerResponse = {
@@ -93,4 +94,8 @@ export enum RecordType {
 
 export enum RollbackToward {
     PREV = -1, NEXT = 1
+}
+
+export enum FunctionInputtingType {
+    NORMAL = "normal", POLAR = "polar"
 }

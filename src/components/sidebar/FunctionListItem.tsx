@@ -6,6 +6,7 @@ import { useContextMenu, ContextMenuItem } from "use-context-menu";
 import Emitter from "@/utils/Emitter";
 import Dialog from "@/components/Dialog";
 import FunctionEditorDialog from "@/dialogs/FunctionEditorDialog";
+import { FunctionInputtingType } from "@/types";
 
 import moreIcon from "@/icons/more.svg";
 import removeIcon from "@/icons/remove.svg";
@@ -13,6 +14,7 @@ import removeIcon from "@/icons/remove.svg";
 interface ListItemProps {
     id: number
     value: string
+    mode: FunctionInputtingType
     index: number
 }
 
@@ -49,7 +51,7 @@ const FunctionListItem: React.FC<ListItemProps> = (props) => {
                 id={"rendered-function--"+ props.id}
                 onContextMenu={onContextMenu}>
                 <div className="function-list-item-tag">
-                    <span><InlineMath>{"y_{"+ (props.index + 1).toString() +"} ="}</InlineMath></span>
+                    <span><InlineMath>{(props.mode === FunctionInputtingType.NORMAL ? "y" : "\\rho") +"_{"+ (props.index + 1).toString() +"} ="}</InlineMath></span>
                 </div>
                 <div className="function-list-item-value">
                     <span><InlineMath>{props.value}</InlineMath></span>
@@ -65,7 +67,7 @@ const FunctionListItem: React.FC<ListItemProps> = (props) => {
                 </div>
             </div>
 
-            <FunctionEditorDialog ref={functionEditorDialogRef} index={props.index} id={props.id} value={props.value}/>
+            <FunctionEditorDialog ref={functionEditorDialogRef} index={props.index} id={props.id} value={props.value} mode={props.mode}/>
 
             {contextMenu}
         </>

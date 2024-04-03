@@ -27,21 +27,23 @@ interface SelectProps {
     children: JSX.Element[]
     defaultValue: string // id
     width?: number
-    onSelect?: (itemId: number) => void
+    onSelect?: (itemId: string) => void
 }
 
 export const SelectItem: React.FC<SelectItemProps> = (props) => {
+    const { id, ...data } = props;
     const { selectorId, selectorValue } = useContext(SelectContext);
 
     const handleSelect = () => {
-        new Emitter().emit("selector-select", selectorId, props.id);
+        new Emitter().emit("selector-select", selectorId, id);
     };
 
     return (
         <div
-            className={"select-item"+ (selectorValue === props.id ? " selected" : "")}
-            id={"select-item--"+ props.id}
-            onClick={() => handleSelect()}>
+            className={"select-item"+ (selectorValue === id ? " selected" : "")}
+            id={"select-item--"+ id}
+            onClick={() => handleSelect()}
+            {...data}>
             {props.children}
         </div>
     );
@@ -80,7 +82,6 @@ export const Select: React.FC<SelectProps> = (props) => {
         ["selector-select", async (selectorId, itemId) => {
             if(selectorId !== idRef.current) return;
             if(!list.includes(itemId)) return;
-            if(itemId === await Utils.getCurrentState(setValue)) return;
 
             setValue(itemId);
             setActive(false);

@@ -1,10 +1,12 @@
 import Evaluator from "@/compiler/Evaluator";
 import RootToken from "@/compiler/token/RootToken";
 import { delta } from "@/renderer/Render";
+import { FunctionInputtingType } from "@/types";
 
 export default class Function {
     public constructor(
         public id: number,
+        public mode: FunctionInputtingType,
         public root: RootToken
     ) { }
 

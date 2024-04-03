@@ -214,8 +214,25 @@
                             display: flex;
                             &-tag {
                                 flex: 1;
-                                margin-left: 5px;
-                                .function-tag();
+                                display: flex;
+                                flex-direction: column;
+                                justify-content: center;
+                                .select {
+                                    width: 100%;
+                                    z-index: 100;
+                                    .select-button {
+                                        margin-right: 5px;
+                                        button {
+                                            background-color: transparent;
+                                        }
+                                    }
+                                    .select-item {
+                                        color: var(--ca-gray-light);
+                                        padding-top: 7px;
+                                        padding-left: 13px;
+                                        padding-right: 0;
+                                    }
+                                }
                             }
                             .input-box {
                                 flex: 3.5;

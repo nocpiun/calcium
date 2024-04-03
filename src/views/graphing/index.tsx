@@ -19,7 +19,7 @@ import useEmitter from "@/hooks/useEmitter";
 import Utils from "@/utils/Utils";
 import Emitter from "@/utils/Emitter";
 import Logger from "@/utils/Logger";
-import { MovingDirection } from "@/types";
+import { FunctionInputtingType, MovingDirection } from "@/types";
 
 const Graphing: React.FC = memo(() => {
     const { setFunctionList, axis } = useContext(MainContext);
@@ -197,16 +197,16 @@ const Graphing: React.FC = memo(() => {
     }, []);
 
     useEmitter([
-        ["add-function", (rawText: string, id: number) => {
+        ["add-function", (rawText: string, id: number, mode: FunctionInputtingType) => {
             if(!workerRef.current) return;
-            workerRef.current.postMessage({ type: "add-function", rawText, id });
+            workerRef.current.postMessage({ type: "add-function", rawText, id, mode });
         }],
         ["clear-function", () => {
             if(!workerRef.current) return;
             setFunctionList([]);
             workerRef.current.postMessage({ type: "clear-function" });
         }],
-        ["set-function", async (index: number, value: string, id: number) => {
+        ["set-function", async (index: number, value: string, id: number, mode: FunctionInputtingType) => {
             if(!workerRef.current) return;
             
             const currentList = await Utils.getCurrentState(setFunctionList);
@@ -218,7 +218,7 @@ const Graphing: React.FC = memo(() => {
                     break;
                 }
             }
-            workerRef.current.postMessage({ type: "set-function", index, rawText: value });
+            workerRef.current.postMessage({ type: "set-function", index, rawText: value, mode });
         }],
         ["graphing-capture", () => {
             const canvas = Utils.getElem<HTMLCanvasElement>("graphing");

@@ -21,7 +21,7 @@ ctx.addEventListener("message", (e) => {
             reset();
             break;
         case "add-function":
-            renderer.registerFunction(req.rawText, req.id);
+            renderer.registerFunction(req.rawText, req.id, req.mode);
             break;
         case "remove-function":
             renderer.unregisterFunction(req.index);
@@ -30,7 +30,7 @@ ctx.addEventListener("message", (e) => {
             renderer.unregisterAllFunctions();
             break;
         case "set-function":
-            renderer.editFunction(req.index, req.rawText);
+            renderer.editFunction(req.index, req.rawText, req.mode);
             break;
         case "play-function":
             renderer.playFunction(req.index);

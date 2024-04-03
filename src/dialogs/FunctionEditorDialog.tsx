@@ -13,7 +13,7 @@ import useInnerRef from "@/hooks/useInnerRef";
 import Utils from "@/utils/Utils";
 import Emitter from "@/utils/Emitter";
 import Is from "@/compiler/Is";
-import { PropsWithRef, Mode, InputTag } from "@/types";
+import { PropsWithRef, Mode, InputTag, FunctionInputtingType } from "@/types";
 import { acTable } from "@/global";
 
 import Dialog from "@/components/Dialog";
@@ -25,6 +25,7 @@ interface FunctionEditorDialogProps extends PropsWithRef<Dialog> {
     index: number
     id: number
     value: string
+    mode: FunctionInputtingType
 }
 
 const FunctionEditorDialog: React.FC<FunctionEditorDialogProps> = forwardRef<Dialog, FunctionEditorDialogProps>(
@@ -37,9 +38,9 @@ const FunctionEditorDialog: React.FC<FunctionEditorDialogProps> = forwardRef<Dia
             if(!inputRef.current || !dialogRef.current) return;
             const newRawText = inputRef.current.value;
 
-            new Emitter().emit("set-function", props.index, newRawText, props.id);
+            new Emitter().emit("set-function", props.index, newRawText, props.id, props.mode);
             dialogRef.current.close();
-        }, [dialogRef, props.index, props.id]);
+        }, [dialogRef, props.index, props.id, props.mode]);
 
         const handleClose = () => {
             if(!inputRef.current) return;
@@ -55,6 +56,11 @@ const FunctionEditorDialog: React.FC<FunctionEditorDialogProps> = forwardRef<Dia
     
             var ctx = inputBox.ctx;
             var cursorIndex = ctx.getCursorIndex();
+
+            // Special: Replace "x" with "theta" if the inputting type is `polar`.
+            if(symbol === "x" && props.mode === FunctionInputtingType.POLAR) {
+                symbol = "\\theta";
+            }
     
             switch(symbol) {
                 case "Backspace":
@@ -114,7 +120,7 @@ const FunctionEditorDialog: React.FC<FunctionEditorDialogProps> = forwardRef<Dia
                     // Default (normal) Input
                     ctx.input(new InputSymbol(symbol));
             }
-        }, [inputRef, dialogRef, mode, handleSave]);
+        }, [inputRef, dialogRef, mode, handleSave, props.mode]);
 
         useEffect(() => {
             if(!inputRef.current) return;
@@ -133,7 +139,7 @@ const FunctionEditorDialog: React.FC<FunctionEditorDialogProps> = forwardRef<Dia
                 onClose={() => handleClose()}>
                 <div className="value-editor">
                     <div className="function-tag">
-                        <span><InlineMath>{"y_{"+ (props.index + 1).toString() +"} ="}</InlineMath></span>
+                        <span><InlineMath>{(props.mode === FunctionInputtingType.NORMAL ? "y" : "\\rho") +"_{"+ (props.index + 1).toString() +"} ="}</InlineMath></span>
                     </div>
                     <div className="function-value">
                         <InputBox

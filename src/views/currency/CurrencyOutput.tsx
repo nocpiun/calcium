@@ -43,7 +43,7 @@ const CurrencyOutput: React.FC<CurrencyOutputProps> = (props) => {
                 <Select
                     defaultValue={props.defaultCurrency}
                     width={170}
-                    onSelect={(itemId) => handleSelectCurrency(itemId as unknown as CurrencyType)}>
+                    onSelect={(itemId) => handleSelectCurrency(itemId as CurrencyType)}>
                     {Array.from(currencyNameList).map(([type, name], index) => {
                         return (
                             <SelectItem id={type} key={index}>
