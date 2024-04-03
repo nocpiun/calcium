@@ -11,7 +11,6 @@ import { ReactSVG } from "react-svg";
 
 import type { PropsWithChildren } from "@/types";
 import Emitter from "@/utils/Emitter";
-import Utils from "@/utils/Utils";
 
 import useEmitter from "@/hooks/useEmitter";
 

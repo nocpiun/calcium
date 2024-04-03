@@ -9,7 +9,6 @@ import React, {
 import { createPortal } from "react-dom";
 import { InlineMath } from "react-katex";
 import { useContextMenu, ContextMenuItem, ContextMenuDivider } from "use-context-menu";
-import { Tooltip } from "react-tooltip";
 
 import useEmitter from "@/hooks/useEmitter";
 
