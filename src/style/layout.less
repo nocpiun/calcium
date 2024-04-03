@@ -110,8 +110,8 @@ kbd {
     height: @height;
     position: relative;
     .select-button {
-        width: 100%;
         height: @height;
+        float: right;
         button {
             display: flex;
             width: 100%;
@@ -132,22 +132,32 @@ kbd {
             }
         }
     }
-    .select-panel {
+    .select-panel-wrapper {
         display: none;
         width: 100%;
         height: 240px;
+        overflow: hidden;
+        border-radius: 3px;
         position: absolute;
-        top: @height;
+        top: calc(@height + 10px);
         left: 0;
-        background-color: var(--ca-gray9);
-        border-bottom-left-radius: 3px;
-        border-bottom-right-radius: 3px;
-        overflow-y: auto;
-        overflow-x: hidden;
         box-shadow: 0 0 16px rgb(0, 0, 0, .12), 0 16px 16px rgb(0, 0, 0, .24);
-        .scrollbar-style();
-        .select-item:hover {
-            background-color: var(--ca-gray5);
+        .select-panel {
+            width: 100%;
+            height: 100%;
+            background-color: var(--ca-gray9);
+            overflow-y: auto;
+            overflow-x: hidden;
+            .scrollbar-style();
+            .select-item:hover {
+                background-color: var(--ca-gray5);
+            }
+            .select-item.selected {
+                background-color: var(--ca-blue1);
+                * {
+                    color: #fff !important;
+                }
+            }
         }
     }
     .select-item {
@@ -165,7 +175,7 @@ kbd {
                 transform: rotate(180deg);
             }
         }
-        .select-panel {
+        .select-panel-wrapper {
             display: block;
         }
     }

@@ -26,6 +26,7 @@ interface SelectItemProps extends PropsWithChildren {
 interface SelectProps {
     children: JSX.Element[]
     defaultValue: string // id
+    width?: number
     onSelect?: (itemId: number) => void
 }
 
@@ -90,7 +91,7 @@ export const Select: React.FC<SelectProps> = (props) => {
     return (
         <SelectContext.Provider value={{ selectorId: idRef.current, selectorValue: value }}>
             <div className={"select"+ (active ? " active" : "")} id={"select--"+ useId()} ref={elemRef}>
-                <div className="select-button">
+                <div className="select-button" style={{ width: props.width ? (props.width +"px") : "100%" }}>
                     <button onClick={() => handleClick()}>
                         {props.children[getIndexByValue(value)]}
                         <div className="select-icon">
@@ -98,8 +99,10 @@ export const Select: React.FC<SelectProps> = (props) => {
                         </div>
                     </button>
                 </div>
-                <div className="select-panel">
-                    {props.children}
+                <div className="select-panel-wrapper">
+                    <div className="select-panel">
+                        {props.children}
+                    </div>
                 </div>
             </div>
         </SelectContext.Provider>

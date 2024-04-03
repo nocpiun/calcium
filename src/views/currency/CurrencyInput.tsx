@@ -39,6 +39,7 @@ const CurrencyInput: React.FC<CurrencyInputProps> = (props) => {
             <div className="currency-type-selector">
                 <Select
                     defaultValue={props.defaultCurrency}
+                    width={170}
                     onSelect={(itemId) => handleSelectCurrency(itemId as unknown as CurrencyType)}>
                     {Array.from(currencyNameList).map(([type, name], index) => {
                         return (
