@@ -26,6 +26,7 @@ interface SelectProps {
     children: JSX.Element[]
     defaultValue: string // id
     width?: number
+    iconPosition?: "left" | "right"
     onSelect?: (itemId: string) => void
 }
 
@@ -92,7 +93,7 @@ export const Select: React.FC<SelectProps> = (props) => {
         <SelectContext.Provider value={{ selectorId: idRef.current, selectorValue: value }}>
             <div className={"select"+ (active ? " active" : "")} id={"select--"+ useId()} ref={elemRef}>
                 <div className="select-button" style={{ width: props.width ? (props.width +"px") : "100%" }}>
-                    <button onClick={() => handleClick()}>
+                    <button onClick={() => handleClick()} style={{ flexDirection: !props.iconPosition || props.iconPosition === "right" ? "row" : "row-reverse" }}>
                         {props.children[getIndexByValue(value)]}
                         <div className="select-icon">
                             <ReactSVG src={expandIcon}/>

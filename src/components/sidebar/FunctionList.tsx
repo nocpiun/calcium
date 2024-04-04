@@ -163,12 +163,13 @@ const FunctionList: React.FC = () => {
                 <div className="function-input-box-tag">
                     <Select
                         defaultValue={FunctionInputtingType.NORMAL}
+                        iconPosition="left"
                         onSelect={(itemId) => handleSelectInputtingType(itemId as FunctionInputtingType)}>
                             <SelectItem id={FunctionInputtingType.NORMAL}>
-                                <InlineMath>y</InlineMath>
+                                <InlineMath>y=</InlineMath>
                             </SelectItem>
                             <SelectItem id={FunctionInputtingType.POLAR}>
-                                <InlineMath>\rho</InlineMath>
+                                <InlineMath>\rho=</InlineMath>
                             </SelectItem>
                     </Select>
                 </div>

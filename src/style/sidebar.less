@@ -218,19 +218,23 @@
                                 flex-direction: column;
                                 justify-content: center;
                                 .select {
+                                    margin-left: 5px;
                                     width: 100%;
                                     z-index: 50;
-                                    .select-button {
-                                        margin-right: 5px;
-                                        button {
-                                            background-color: transparent;
+                                    .select-button button {
+                                        height: 100%;
+                                        background-color: transparent;
+                                        .select-item {
+                                            color: var(--ca-gray-light);
+                                            padding-top: 7px;
+                                            padding-left: 0;
+                                            padding-right: 0;
                                         }
                                     }
-                                    .select-item {
+                                    .select-panel .select-item {
                                         color: var(--ca-gray-light);
-                                        padding-top: 7px;
-                                        padding-left: 13px;
-                                        padding-right: 0;
+                                        padding-top: 10px;
+                                        padding-left: 10px;
                                     }
                                 }
                             }
@@ -242,7 +246,7 @@
                                 border: 1px solid var(--ca-gray4);
                                 border-radius: @border-radius;
                                 margin: 5px;
-                                margin-left: 0;
+                                margin-left: 10px;
                                 padding-left: 7px;
                                 padding-right: 7px;
                                 overflow-x: auto;
