@@ -262,6 +262,9 @@ export default class Render extends Graphics {
         // Draw function images
         for(let i = 0; i < this.displayedPoints.length; i++) {
             this.drawPoint(this.pointToScreen(this.displayedPoints.get(i)), this.colors.highlight);
+            // if(i < this.displayedPoints.length - 1) {
+            //     this.drawLine(this.pointToScreen(this.displayedPoints.get(i)), this.pointToScreen(this.displayedPoints.get(i + 1)), this.colors.highlight);
+            // }
         }
 
         var imageBitmap = this.canvas.transferToImageBitmap();
@@ -295,15 +298,17 @@ export default class Render extends Graphics {
             if(beginX < 0) beginX = 0;
             if(endX < 0) return;
         }
+
+        const dx = delta * this.spacing;
         
         if(direction === MovingDirection.LEFT) {
-            for(let x = beginX; x <= endX; x += delta * this.spacing) {
+            for(let x = beginX; x <= endX; x += dx) {
                 // var y = await func.calculate(x);
                 // this.displayedPoints.add(this.createPoint(x, y));
                 this.calculatingWorker.postMessage({ type: "evaluate", id: func.id, mode: func.mode, root: func.root, x, operate: "add" });
             }
         } else {
-            for(let x = endX; x >= beginX; x -= delta * this.spacing) {
+            for(let x = endX; x >= beginX; x -= dx) {
                 // var y = await func.calculate(x);
                 // this.displayedPoints.unshift(this.createPoint(x, y));
                 this.calculatingWorker.postMessage({ type: "evaluate", id: func.id, mode: func.mode, root: func.root, x, operate: "unshift" });

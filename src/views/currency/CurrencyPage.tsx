@@ -8,7 +8,7 @@ import Float from "@/compiler/Float";
 
 import useEmitter from "@/hooks/useEmitter";
 
-const fetchURL = "https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/";
+const fetchURL = "https://unpkg.com/@fawazahmed0/currency-api@latest/v1/currencies/";
 
 export enum CurrencyType {
     USD = "USD",
