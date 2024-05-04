@@ -28,7 +28,7 @@ export default class Evaluator {
         // Read token to make number list & operator list
         var [numbers, operators] = this.readToken();
 
-        // Logical Operator
+        // MARK: Logical Operator
         for(let i = 0; i < operators.length; i++) {
             var operator = operators.get(i).value;
 
@@ -77,7 +77,7 @@ export default class Evaluator {
             }
         }
         
-        // Multiply & Divide
+        // MARK: Multiply & Divide
         var firstLoop = true;
         for(let i = 0; i < operators.length; i++) {
             var operator = operators.get(i).value;
@@ -116,7 +116,7 @@ export default class Evaluator {
             }
         }
 
-        // Add & Sub
+        // MARK: Add & Sub
         var firstLoop = true;
         for(let i = 0; i < operators.length; i++) {
             var operator = operators.get(i).value;
@@ -160,6 +160,8 @@ export default class Evaluator {
         if(isNaN(result)) return NaN;
         return Float.calibrate(parseFloat(result.toFixed(14)));
     }
+
+    // MARK: Read Token
 
     private readToken(): [List<NumberToken>, List<OperatorToken>] {
         const root = RootToken.create(this.token);

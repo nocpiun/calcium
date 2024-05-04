@@ -49,6 +49,13 @@ export default class Compiler {
         this.root = new RootToken([]);
     }
 
+    public compile(): NumberSymbol {
+        var tokenized = this.tokenize();
+        
+        if(tokenized && !this.hasError) return new Evaluator(tokenized, this.variables).evaluate().toString();
+        return "NaN";
+    }
+
     public tokenize(): RootToken | void {
 
         /**
@@ -69,6 +76,7 @@ export default class Compiler {
              * 
              * Mountain of shit be like:
              */
+            // MARK: Layers
 
             if(this.layer > 0) { // in bracket or function
                 if(Is.leftBracket(symbol) || Is.mathFunction(symbol)) this.layer++;
@@ -117,7 +125,7 @@ export default class Compiler {
              * Main
              */
 
-            if(Is.number(symbol, this.isProgrammingMode) || (Is.variable(symbol) && this.raw[1] !== "=")) { // number
+            if(Is.number(symbol, this.isProgrammingMode) || (Is.variable(symbol) && this.raw[1] !== "=")) { // MARK: Number
 
                 // Variable and Constant
                 if((Is.variable(symbol) || Is.constant(symbol)) && !this.isProgrammingMode) {
@@ -149,11 +157,11 @@ export default class Compiler {
                 }
                 if(tempNumber !== "NaN") this.pushNumber(tempNumber);
 
-            } else if(Is.operator(symbol)) { // operator
+            } else if(Is.operator(symbol)) { // MARK: Operator
 
                 this.pushOperator(symbol as Operator, i === 0);
 
-            } else if(Is.leftBracket(symbol)) { // left bracket
+            } else if(Is.leftBracket(symbol)) { // MARK: Left Bracket
 
                 // Process something like `3(5-2)`
                 if(i !== 0 && !Is.operator(this.raw[i - 1])) {
@@ -162,7 +170,7 @@ export default class Compiler {
                 
                 this.layer++;
 
-            } else if(Is.rightBracket(symbol)) { // right bracket
+            } else if(Is.rightBracket(symbol)) { // MARK: Right Bracket
 
                 if(this.sigmaI > -1 && this.sigmaN > -1) { // sum (sigma)
                     this.root.add(new SumToken(this.sigmaI, this.sigmaN, this.secondaryRaw, this.variables));
@@ -221,7 +229,7 @@ export default class Compiler {
                     this.pushOperator(Operator.MUL);
                 }
 
-            } else if(symbol === "|") { // absolute value
+            } else if(symbol === "|") { // MARK: Absolute Value
 
                 if(this.inAbs) {
                     var secondaryCompiler = new Compiler(this.secondaryRaw, this.variables, this.isProgrammingMode, this.numberSys);
@@ -244,7 +252,7 @@ export default class Compiler {
                     this.inAbs = true;
                 }
 
-            } else if(symbol.indexOf("\\Sigma") > -1) { // sum (sigma)
+            } else if(symbol.indexOf("\\Sigma") > -1) { // MARK: Sum (sigma)
 
                 if(i !== 0 && (Is.number(this.raw[i - 1], this.isProgrammingMode) || Is.constant(this.raw[i - 1]) || Is.variable(this.raw[i - 1]))) {
                     this.pushOperator(Operator.MUL);
@@ -256,7 +264,7 @@ export default class Compiler {
 
                 this.layer++;
             
-            } else if(symbol.indexOf("\\Pi") > -1) { // prod
+            } else if(symbol.indexOf("\\Pi") > -1) { // MARK: Product
 
                 if(i !== 0 && (Is.number(this.raw[i - 1], this.isProgrammingMode) || Is.constant(this.raw[i - 1]) || Is.variable(this.raw[i - 1]))) {
                     this.pushOperator(Operator.MUL);
@@ -268,7 +276,7 @@ export default class Compiler {
 
                 this.layer++;
             
-            } else if(symbol.indexOf("\\smallint") > -1) { // integral
+            } else if(symbol.indexOf("\\smallint") > -1) { // MARK: Integral
 
                 if(i !== 0 && (Is.number(this.raw[i - 1], this.isProgrammingMode) || Is.constant(this.raw[i - 1]) || Is.variable(this.raw[i - 1]))) {
                     this.pushOperator(Operator.MUL);
@@ -280,7 +288,7 @@ export default class Compiler {
 
                 this.layer++;
 
-            } else if(Is.mathFunction(symbol)) { // function
+            } else if(Is.mathFunction(symbol)) { // MARK: Function
 
                 // Process something like `2sin(pi/6)`
                 if(i !== 0 && !Is.operator(this.raw[i - 1])) {
@@ -296,7 +304,7 @@ export default class Compiler {
                 this.currentFunction = functionName ?? "";
                 this.layer++;
 
-            } else if(symbol[0] === "^") { // pow
+            } else if(symbol[0] === "^") { // MARK: Power
 
                 var exponential = parseInt(symbol[1]);
                 var poweredToken = this.root.getLastChild<NumberToken | VariableToken>();
@@ -304,7 +312,7 @@ export default class Compiler {
                 ? poweredToken.exponential = exponential
                 : poweredToken.setValue(Compute.safePow(this.root.getLastChild().value, exponential));
 
-            } else if(symbol[0] === "!") { // factorial
+            } else if(symbol[0] === "!") { // MARK: Factorial
 
                 var factorialToken = this.root.getLastChild();
                 if(factorialToken instanceof VariableToken) {
@@ -341,12 +349,7 @@ export default class Compiler {
         return this.root;
     }
 
-    public compile(): NumberSymbol {
-        var tokenized = this.tokenize();
-        
-        if(tokenized && !this.hasError) return new Evaluator(tokenized, this.variables).evaluate().toString();
-        return "NaN";
-    }
+    // MARK: Token Operations
 
     private pushNumber(numString: string) {
         this.root.add(NumberToken.create(numString, this.numberSys));
@@ -376,6 +379,8 @@ export default class Compiler {
     private hasExponential(i: number, di: number = 1): boolean {
         return i + di < this.raw.length && this.raw[i + di][0] === "^";
     }
+
+    // MARK: Utilities
 
     /**
      * To resolve some professional-only symbols

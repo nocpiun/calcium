@@ -28,6 +28,8 @@ const Graphing: React.FC = memo(() => {
     const workerRef = useRef<Worker | null>(null);
 
     useEffect(() => {
+        // MARK: Initialization
+
         // Create worker
         workerRef.current = new Worker(new URL("@/workers/graphing.worker.ts", import.meta.url));
 
@@ -81,6 +83,8 @@ const Graphing: React.FC = memo(() => {
                     break;
             }
         };
+
+        // MARK: Event Handlers
 
         // Init events
         canvas.addEventListener("mousedown", (e: MouseEvent) => {
@@ -281,6 +285,8 @@ const Graphing: React.FC = memo(() => {
             };
         }]
     ]);
+
+    // MARK: Dom
 
     const { contextMenu, onContextMenu } = useContextMenu(
         <>

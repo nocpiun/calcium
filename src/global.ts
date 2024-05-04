@@ -8,6 +8,7 @@ import { FunctionInfo, Shortcut, RollbackToward } from "@/types";
 export const version = "1.5.1a";
 export const errorText = "\\text{Error}";
 
+// MARK: Function List
 export const functions: Map<string, FunctionInfo> = new Map([
     ["sin",          [(x) => Math.sin(x),                                    1]],
     ["cos",          [(x) => Math.cos(x),                                    1]],
@@ -52,6 +53,7 @@ export const functions: Map<string, FunctionInfo> = new Map([
     ["W_0",          [(x) => lambertW0(x),                                   1]],
 ]);
 
+// MARK: Constant List
 export const constants: Map<string, number> = new Map([
     ["\\pi",      Math.PI],
     ["e",         Math.E],
@@ -63,6 +65,7 @@ export const constants: Map<string, number> = new Map([
 /**
  * Auto Complete symbols Table (AC Table)
  */
+// MARK: Auto Complete Table
 export const acTable: Map<string, string> = new Map([
     ["alpha",   "\\alpha"],
     ["beta",    "\\beta"],
@@ -124,6 +127,7 @@ export const acTable: Map<string, string> = new Map([
     ["kun",     "\\text{坤}"],
 ]);
 
+// MARK: Shortcut List
 export const shortcuts: Map<string[], Shortcut> = new Map([
     [["ctrl", "x"], {
         description: "清空输入框",

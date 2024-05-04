@@ -43,6 +43,8 @@ const Output: React.FC = () => {
     const prodDialogRef = useRef<Dialog>(null);
     const atomDialogRef = useRef<Dialog>(null);
 
+    // MARK: Event Handlers
+
     const handleTofracSwitch = () => {
         setIsTofrac((current) => !current);
     };
@@ -249,6 +251,8 @@ const Output: React.FC = () => {
     ]);
 
     useEaster(setOutputContent); // K U N
+
+    // MARK: Dom
 
     const { contextMenu, onContextMenu } = useContextMenu(
         <>

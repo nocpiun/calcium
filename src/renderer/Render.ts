@@ -45,6 +45,8 @@ export default class Render extends Graphics {
         this.calculatingWorker.addEventListener("message", (e) => this.handleCalculatingWorkerMessaging(e));
     }
 
+    // MARK: Thread Messaging
+
     /**
      * Messaging between rendering thread and calculating thread
      * 
@@ -81,11 +83,30 @@ export default class Render extends Graphics {
         }
     }
 
-    public reset() {
-        this.functionList.clear();
-        this.displayedPoints.clear();
-        clearInterval(this.fpsUpdater);
+    public async calculatePoints(func: Function, beginX: number, endX: number, direction: MovingDirection = MovingDirection.LEFT): Promise<void> {
+        if(func.mode === FunctionInputtingType.POLAR) {
+            if(beginX < 0) beginX = 0;
+            if(endX < 0) return;
+        }
+
+        const dx = delta * this.spacing;
+        
+        if(direction === MovingDirection.LEFT) {
+            for(let x = beginX; x <= endX; x += dx) {
+                // var y = await func.calculate(x);
+                // this.displayedPoints.add(this.createPoint(x, y));
+                this.calculatingWorker.postMessage({ type: "evaluate", id: func.id, mode: func.mode, root: func.root, x, operate: "add" });
+            }
+        } else {
+            for(let x = endX; x >= beginX; x -= dx) {
+                // var y = await func.calculate(x);
+                // this.displayedPoints.unshift(this.createPoint(x, y));
+                this.calculatingWorker.postMessage({ type: "evaluate", id: func.id, mode: func.mode, root: func.root, x, operate: "unshift" });
+            }
+        }
     }
+
+    // MARK: Event Handlers
 
     public handleMouseDown(rect: DOMRect, cx: number, cy: number) {
         this.mouseDown = true;
@@ -148,6 +169,8 @@ export default class Render extends Graphics {
         var mousePoint = this.createPoint(cx - rect.left, cy - rect.top);
         this.mousePoint = mousePoint;
     }
+
+    // MARK: Function Image Operations
 
     private moveFunctionImage(direction: MovingDirection) {
         if(this.displayedPoints.length === 0) return;
@@ -236,15 +259,32 @@ export default class Render extends Graphics {
         this.functionList.forEach((func) => this.calculatePoints(func, beginX, endX));
     }
 
-    private updateFPS() {
-        const now = (+new Date());
-        var fps = 1000 / (now - this.lastTime);
-        this.lastTime = now;
+    // MARK: Function Operations
 
-        this.currentFPS = fps;
+    public registerFunction(rawText: string, id: number, mode: FunctionInputtingType) {
+        this.calculatingWorker.postMessage({ type: "compile", rawText, id, mode });
+    }
+
+    public unregisterFunction(index: number) {
+        this.functionList.remove(index);
+        this.fullyRefreshFunctions();
+    }
+
+    public unregisterAllFunctions() {
+        this.functionList.clear();
+        this.fullyRefreshFunctions();
+    }
+
+    public editFunction(index: number, rawText: string, mode: FunctionInputtingType) {
+        this.calculatingWorker.postMessage({ type: "compile-and-set", index, rawText, mode });
+    }
+
+    public playFunction(index: number) {
+        this.functionList.get(index).play(this.workerCtx);
     }
 
     // To render each frame
+    // MARK: Render
     public override render() {
         this.updateFPS();
         super.render();
@@ -270,49 +310,18 @@ export default class Render extends Graphics {
         var imageBitmap = this.canvas.transferToImageBitmap();
         this.workerCtx.postMessage({ type: "render", imageBitmap }, [imageBitmap]);
     }
+    
+    private updateFPS() {
+        const now = (+new Date());
+        var fps = 1000 / (now - this.lastTime);
+        this.lastTime = now;
 
-    public registerFunction(rawText: string, id: number, mode: FunctionInputtingType) {
-        this.calculatingWorker.postMessage({ type: "compile", rawText, id, mode });
+        this.currentFPS = fps;
     }
 
-    public unregisterFunction(index: number) {
-        this.functionList.remove(index);
-        this.fullyRefreshFunctions();
-    }
-
-    public unregisterAllFunctions() {
+    public reset() {
         this.functionList.clear();
-        this.fullyRefreshFunctions();
-    }
-
-    public editFunction(index: number, rawText: string, mode: FunctionInputtingType) {
-        this.calculatingWorker.postMessage({ type: "compile-and-set", index, rawText, mode });
-    }
-
-    public playFunction(index: number) {
-        this.functionList.get(index).play(this.workerCtx);
-    }
-
-    public async calculatePoints(func: Function, beginX: number, endX: number, direction: MovingDirection = MovingDirection.LEFT): Promise<void> {
-        if(func.mode === FunctionInputtingType.POLAR) {
-            if(beginX < 0) beginX = 0;
-            if(endX < 0) return;
-        }
-
-        const dx = delta * this.spacing;
-        
-        if(direction === MovingDirection.LEFT) {
-            for(let x = beginX; x <= endX; x += dx) {
-                // var y = await func.calculate(x);
-                // this.displayedPoints.add(this.createPoint(x, y));
-                this.calculatingWorker.postMessage({ type: "evaluate", id: func.id, mode: func.mode, root: func.root, x, operate: "add" });
-            }
-        } else {
-            for(let x = endX; x >= beginX; x -= dx) {
-                // var y = await func.calculate(x);
-                // this.displayedPoints.unshift(this.createPoint(x, y));
-                this.calculatingWorker.postMessage({ type: "evaluate", id: func.id, mode: func.mode, root: func.root, x, operate: "unshift" });
-            }
-        }
+        this.displayedPoints.clear();
+        clearInterval(this.fpsUpdater);
     }
 }

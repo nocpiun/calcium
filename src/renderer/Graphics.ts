@@ -49,6 +49,8 @@ export default class Graphics {
         return { x, y };
     }
 
+    // MARK: Axis
+
     protected refreshAxisLine() {
         this.config.getAxisType() === Axis.CARTESIAN
         ? this.drawCartesianAxis()
@@ -165,6 +167,8 @@ export default class Graphics {
         }
     }
 
+    // MARK: Basic Methods
+
     protected drawLine(begin: Point, end: Point, color: string, width: number = 1) {
         this.ctx.beginPath();
         this.ctx.strokeStyle = color;
@@ -215,6 +219,8 @@ export default class Graphics {
         this.canvas.height = this.canvas.height;
     }
 
+    // MARK: Utilities
+
     private getMaxDrawingRange(): number {
         return Math.max(
             Math.sqrt(this.center.x ** 2 + this.center.y ** 2),
@@ -237,13 +243,6 @@ export default class Graphics {
         return this.createPoint(x, y);
     }
 
-    // To render each frame
-    public render() {
-        this.clear();
-
-        this.refreshAxisLine();
-    }
-
     public getTextWidth(text: string): number {
         return this.ctx.measureText(text).width;
     }
@@ -263,8 +262,17 @@ export default class Graphics {
             y: this.center.y - (point.y * unitPx)
         };
     }
+
+    // To render each frame
+    // MARK: Render
+    public render() {
+        this.clear();
+
+        this.refreshAxisLine();
+    }
 }
 
+// MARK: Configuration
 class GraphicsConfig {
     private static readonly lightColors: ColorScheme = {
         primary: "#404041",

@@ -42,6 +42,8 @@ const ProgrammingOutput: React.FC = () => {
     const inputRef = useRef<InputBox>(null);
     const funcsDialogRef = useRef<Dialog>(null);
 
+    // MARK: Event Handlers
+
     const handleResult = useCallback((currentContent: string) => {
         if(currentContent.split(" ").length <= 1) return;
 
@@ -172,6 +174,8 @@ const ProgrammingOutput: React.FC = () => {
     ]);
 
     useEaster(setOutputContent); // Sing, Dance, Rap, Basketball
+
+    // MARK: Dom
 
     const { contextMenu, onContextMenu } = useContextMenu(
         <>
