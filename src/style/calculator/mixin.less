@@ -39,6 +39,26 @@
     }
 }
 
+.scrollbar-style() {
+    @size: 7px;
+    &::-webkit-scrollbar {
+        width: @size;
+        height: @size;
+    }
+    &::-webkit-scrollbar-thumb {
+        background-color: var(--ca-gray8);
+        &:hover {
+            background-color: var(--ca-gray7);
+        }
+        &:active {
+            background-color: var(--ca-gray6);
+        }
+    }
+    &::-webkit-scrollbar-track {
+        background-color: transparent;
+    }
+}
+
 .function-tag() {
     display: flex;
     align-items: center;
