@@ -136,11 +136,11 @@ const Graphing: React.FC = memo(() => {
         });
         canvas.addEventListener("touchend", () => {
             if(!workerRef.current) return;
-            workerRef.current.postMessage({ type: "mouse-leave" });
+            workerRef.current.postMessage({ type: "mouse-up" });
         });
         canvas.addEventListener("touchcancel", () => {
             if(!workerRef.current) return;
-            workerRef.current.postMessage({ type: "mouse-leave" });
+            workerRef.current.postMessage({ type: "mouse-up" });
         });
 
         // "graphing-reload" cannot be moved into `useEmitter` hook

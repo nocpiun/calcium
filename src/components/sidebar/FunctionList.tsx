@@ -78,6 +78,7 @@ const FunctionList: React.FC = () => {
 
         switch(symbol) {
             case "Backspace":
+            case "\\text{Del}":
                 ctx.backspace();
                 break;
             case "Enter":
@@ -194,13 +195,13 @@ const FunctionList: React.FC = () => {
 
     return (
         <>
-            <SidebarPage
+            {!Utils.isMobile() && <SidebarPage
                 id="function-list"
                 title="函数列表"
                 tip={<>最多添加{maxFunctionAmount}个函数</>} 
                 onContextMenu={onContextMenu}>
                 <div className="function-list-main">{mainSection}</div>
-            </SidebarPage>
+            </SidebarPage>}
             {contextMenu}
 
             {/* Portal to `/src/views/graphing/index.tsx` */}

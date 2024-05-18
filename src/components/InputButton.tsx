@@ -22,7 +22,7 @@ const InputButton: React.FC<InputButtonProps> = (props) => {
     const inputValue = props.inputValue ?? props.symbol;
     const id = useId();
 
-    const clickHandle = () => {
+    const handleClick = () => {
         if(props.onClick) {
             props.onClick();
             return;
@@ -48,7 +48,7 @@ const InputButton: React.FC<InputButtonProps> = (props) => {
         <div className="keypad-button-container" style={{ flexGrow: props.grow }}>
             <button
                 className="keypad-button"
-                onClick={() => clickHandle()}
+                onClick={() => handleClick()}
                 disabled={disabled}
                 style={props.style}
                 tabIndex={-1}
