@@ -113,7 +113,7 @@ const Graphing: React.FC = memo(() => {
         });
 
         // Init mobile events
-        var lastTouch: Touch;
+        var lastTouch: Touch | null = null;
         var isTouchZooming = false;
         canvas.addEventListener("touchstart", async (e: TouchEvent) => {
             if(!workerRef.current) return;
@@ -144,13 +144,18 @@ const Graphing: React.FC = memo(() => {
                 return;
             }
 
-            if(!lastTouch) lastTouch = e.changedTouches[0];
+            if(!lastTouch) {
+                lastTouch = e.changedTouches[0];
+                return;
+            }
 
             var direction: MovingDirection;
             if(lastTouch.clientX > e.changedTouches[0].clientX) {
                 direction = MovingDirection.LEFT;
-            } else {
+            } else if(lastTouch.clientX < e.changedTouches[0].clientX) {
                 direction = MovingDirection.RIGHT;
+            } else {
+                return;
             }
             lastTouch = e.changedTouches[0];
 
@@ -159,12 +164,14 @@ const Graphing: React.FC = memo(() => {
         canvas.addEventListener("touchend", () => {
             if(!workerRef.current) return;
 
+            lastTouch = null;
             isTouchZooming = false;
             workerRef.current.postMessage({ type: "mouse-up" });
         });
         canvas.addEventListener("touchcancel", () => {
             if(!workerRef.current) return;
 
+            lastTouch = null;
             isTouchZooming = false;
             workerRef.current.postMessage({ type: "mouse-up" });
         });
