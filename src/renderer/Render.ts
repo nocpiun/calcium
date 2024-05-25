@@ -17,6 +17,10 @@ export default class Render extends Graphics {
     private mouseDY: number = 0; // mouse delta y
     private cameraPosition: [number, number]; // [camera begin X, camera end X]
 
+    // Mobile zooming
+    private zoomingScale: number | null = null;
+    private lastZoomingSize: number | null = null;
+
     private fpsUpdater: NodeJS.Timer;
     private currentFPS: number = 0;
     private lastTime: number = 0; // for FPS calculating
@@ -135,6 +139,8 @@ export default class Render extends Graphics {
 
     public handleMouseUp() {
         this.stopMoving();
+        this.zoomingScale = null;
+        this.lastZoomingSize = null;
     }
 
     public handleWheel(dy: number) {
@@ -144,16 +150,7 @@ export default class Render extends Graphics {
         dy > 0
         ? this.scale -= delta / this.spacing
         : this.scale += delta / this.spacing;
-
-        if(this.scale * this.spacing <= 66) {
-            this.spacing === 2
-            ? this.spacing = 5
-            : this.spacing *= 2;
-        } else if(this.scale * this.spacing >= 138) {
-            this.spacing === 5
-            ? this.spacing = 2
-            : this.spacing /= 2;
-        }
+        this.scalingAdapt();
 
         this.zoomFunctionImage(dy > 0 ? ZoomDirection.ZOOM_OUT : ZoomDirection.ZOOM_IN);
 
@@ -163,6 +160,35 @@ export default class Render extends Graphics {
         
         this.center.x += centerDx * this.scale;
         this.center.y -= centerDy * this.scale;
+    }
+
+    public handleTouchZoom(rect: DOMRect, cxA: number, cyA: number, cxB: number, cyB: number) {
+        cxA *= this.ratio;
+        cyA *= this.ratio;
+        cxB *= this.ratio;
+        cyB *= this.ratio;
+
+        const screenA = this.createPoint(cxA - rect.left, cyA - rect.top);
+        const screenB = this.createPoint(cxB - rect.left, cyB - rect.top);
+        const zoomingSize = Math.sqrt((screenA.x - screenB.x) ** 2 + (screenA.y - screenB.y) ** 2);
+
+        if(!this.lastZoomingSize) this.lastZoomingSize = zoomingSize;
+
+        if(!this.zoomingScale) {
+            this.zoomingScale = zoomingSize / this.scale;
+            return;
+        }
+        
+        this.scale = zoomingSize / this.zoomingScale;
+        this.scalingAdapt();
+
+        this.zoomFunctionImage(
+            (this.lastZoomingSize && this.lastZoomingSize > zoomingSize)
+            ? ZoomDirection.ZOOM_OUT
+            : ZoomDirection.ZOOM_IN
+        );
+
+        this.lastZoomingSize = zoomingSize;
     }
 
     private refreshMousePoint(rect: DOMRect, cx: number, cy: number) {
@@ -323,5 +349,17 @@ export default class Render extends Graphics {
         this.functionList.clear();
         this.displayedPoints.clear();
         clearInterval(this.fpsUpdater);
+    }
+
+    public scalingAdapt() {
+        if(this.scale * this.spacing <= 66) {
+            this.spacing === 2
+            ? this.spacing = 5
+            : this.spacing *= 2;
+        } else if(this.scale * this.spacing >= 138) {
+            this.spacing === 5
+            ? this.spacing = 2
+            : this.spacing /= 2;
+        }
     }
 }

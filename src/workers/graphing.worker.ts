@@ -47,6 +47,9 @@ ctx.addEventListener("message", (e) => {
         case "wheel":
             renderer.handleWheel(req.dy);
             break;
+        case "touch-zoom":
+            renderer.handleTouchZoom(req.rect, req.cxA, req.cyA, req.cxB, req.cyB);
+            break;
         case "theme-change":
             req.isDarkMode
             ? renderer.config.setTheme(Theme.DARK)

@@ -114,14 +114,36 @@ const Graphing: React.FC = memo(() => {
 
         // Init mobile events
         var lastTouch: Touch;
-        canvas.addEventListener("touchstart", (e: TouchEvent) => {
+        var isTouchZooming = false;
+        canvas.addEventListener("touchstart", async (e: TouchEvent) => {
             if(!workerRef.current) return;
-            workerRef.current.postMessage({ type: "mouse-down", rect: canvas.getBoundingClientRect(), cx: e.touches[0].clientX, cy: e.touches[0].clientY });
+            
+            if(e.touches.length === 1) {
+                workerRef.current.postMessage({ type: "mouse-down", rect: canvas.getBoundingClientRect(), cx: e.touches[0].clientX, cy: e.touches[0].clientY });
+            } else if(!isTouchZooming && e.touches.length === 2) {
+                isTouchZooming = true;
+            }
         });
         canvas.addEventListener("touchmove", (e: TouchEvent) => {
             if(!workerRef.current) return;
 
             e.preventDefault();
+
+            if(isTouchZooming && e.touches.length === 2) {
+                const touchA = e.touches[0];
+                const touchB = e.touches[1];
+                
+                workerRef.current.postMessage({
+                    type: "touch-zoom",
+                    rect: canvas.getBoundingClientRect(),
+                    cxA: touchA.clientX,
+                    cyA: touchA.clientY,
+                    cxB: touchB.clientX,
+                    cyB: touchB.clientY
+                });
+                return;
+            }
+
             if(!lastTouch) lastTouch = e.changedTouches[0];
 
             var direction: MovingDirection;
@@ -136,10 +158,14 @@ const Graphing: React.FC = memo(() => {
         });
         canvas.addEventListener("touchend", () => {
             if(!workerRef.current) return;
+
+            isTouchZooming = false;
             workerRef.current.postMessage({ type: "mouse-up" });
         });
         canvas.addEventListener("touchcancel", () => {
             if(!workerRef.current) return;
+
+            isTouchZooming = false;
             workerRef.current.postMessage({ type: "mouse-up" });
         });
 
