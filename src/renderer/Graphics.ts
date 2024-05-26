@@ -221,6 +221,17 @@ export default class Graphics {
         this.canvas.height = this.canvas.height;
     }
 
+    protected resize(width: number, height: number) {
+        const oldWidth = this.canvas.width;
+        const oldHeight = this.canvas.height;
+
+        this.canvas.width = width;
+        this.canvas.height = height;
+
+        this.center.x = width * (this.center.x / oldWidth);
+        this.center.y = height * (this.center.y / oldHeight);
+    }
+
     // MARK: Utilities
 
     private getMaxDrawingRange(): number {

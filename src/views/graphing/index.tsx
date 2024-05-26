@@ -111,6 +111,18 @@ const Graphing: React.FC = memo(() => {
             if(!workerRef.current) return;
             workerRef.current.postMessage({ type: "wheel", dy: e.deltaY });
         });
+        window.addEventListener("resize", () => {
+            if(!workerRef.current) return;
+
+            const width = Utils.getElem("display-frame").clientWidth;
+            const height = Utils.getElem("display-frame").clientHeight;
+            canvas.style.width = width +"px";
+            canvas.style.height = height +"px";
+            canvas.width = width * window.devicePixelRatio;
+            canvas.height = height * window.devicePixelRatio;
+            
+            workerRef.current.postMessage({ type: "resize", width, height });
+        });
 
         // Init mobile events
         var lastTouch: Touch | null = null;

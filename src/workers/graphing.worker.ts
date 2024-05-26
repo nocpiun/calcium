@@ -50,6 +50,9 @@ ctx.addEventListener("message", (e) => {
         case "touch-zoom":
             renderer.handleTouchZoom(req.rect, req.cxA, req.cyA, req.cxB, req.cyB);
             break;
+        case "resize":
+            renderer.handleResize(req.width, req.height);
+            break;
         case "theme-change":
             req.isDarkMode
             ? renderer.config.setTheme(Theme.DARK)

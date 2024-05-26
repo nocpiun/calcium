@@ -208,6 +208,10 @@ export default class Render extends Graphics {
         this.center.y -= centerDy * this.scale;
     }
 
+    public handleResize(width: number, height: number) {
+        this.resize(width, height);
+    }
+
     private refreshMousePoint(rect: DOMRect, cx: number, cy: number) {
         var mousePoint = this.createPoint(cx - rect.left, cy - rect.top);
         this.mousePoint = mousePoint;
