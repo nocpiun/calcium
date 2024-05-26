@@ -5,6 +5,8 @@ import RootToken from "@/compiler/token/RootToken";
 
 import List from "@/utils/List";
 import Collection from "@/utils/Collection";
+import Is from "@/compiler/Is";
+import Float from "@/compiler/Float";
 import { FunctionInputtingType, MovingDirection, ZoomDirection } from "@/types";
 
 export const delta: number = .01;
@@ -153,15 +155,16 @@ export default class Render extends Graphics {
     }
 
     public handleWheel(dy: number) {
-        const delta = 7;
+        const delta = 5;
         const mouseOriginPoint = this.pointToCoordinates(this.mousePoint);
+        const direction = dy > 0 ? ZoomDirection.ZOOM_OUT : ZoomDirection.ZOOM_IN;
 
         dy > 0
         ? this.scale -= delta / this.spacing
         : this.scale += delta / this.spacing;
-        this.scalingAdapt();
 
-        this.zoomFunctionImage(dy > 0 ? ZoomDirection.ZOOM_OUT : ZoomDirection.ZOOM_IN);
+        this.scalingAdapt(direction);
+        this.zoomFunctionImage(direction);
 
         const mouseCurrentPoint = this.pointToCoordinates(this.mousePoint);
         var centerDx = mouseCurrentPoint.x - mouseOriginPoint.x,
@@ -180,6 +183,9 @@ export default class Render extends Graphics {
         const screenA = this.createPoint(cxA - rect.left, cyA - rect.top);
         const screenB = this.createPoint(cxB - rect.left, cyB - rect.top);
         const zoomingSize = Math.sqrt((screenA.x - screenB.x) ** 2 + (screenA.y - screenB.y) ** 2);
+        const direction = (this.lastZoomingSize && this.lastZoomingSize > zoomingSize)
+        ? ZoomDirection.ZOOM_OUT
+        : ZoomDirection.ZOOM_IN;
 
         if(!this.lastZoomingSize) this.lastZoomingSize = zoomingSize;
 
@@ -190,13 +196,9 @@ export default class Render extends Graphics {
         }
         
         this.scale = zoomingSize / this.zoomingScale;
-        this.scalingAdapt();
 
-        this.zoomFunctionImage(
-            (this.lastZoomingSize && this.lastZoomingSize > zoomingSize)
-            ? ZoomDirection.ZOOM_OUT
-            : ZoomDirection.ZOOM_IN
-        );
+        this.scalingAdapt(direction);
+        this.zoomFunctionImage(direction);
 
         this.lastZoomingSize = zoomingSize;
 
@@ -304,6 +306,18 @@ export default class Render extends Graphics {
         this.functionList.forEach((func) => this.calculatePoints(func, beginX, endX));
     }
 
+    public scalingAdapt(direction: ZoomDirection) {
+        if(this.scale * this.spacing <= 66 && direction === ZoomDirection.ZOOM_OUT) {
+            !Is.float(Math.log10(this.spacing / 2))
+            ? this.spacing *= 2.5
+            : this.spacing *= 2;
+        } else if(this.scale * this.spacing >= 138 && direction === ZoomDirection.ZOOM_IN) {
+            !Is.float(Math.log10(this.spacing / 5))
+            ? this.spacing = Float.divide(this.spacing, 2.5)
+            : this.spacing /= 2;
+        }
+    }
+
     // MARK: Function Operations
 
     public registerFunction(rawText: string, id: number, mode: FunctionInputtingType) {
@@ -374,17 +388,5 @@ export default class Render extends Graphics {
         this.functionList.clear();
         this.displayedPoints.clear();
         clearInterval(this.fpsUpdater);
-    }
-
-    public scalingAdapt() {
-        if(this.scale * this.spacing <= 66) {
-            this.spacing === 2
-            ? this.spacing = 5
-            : this.spacing *= 2;
-        } else if(this.scale * this.spacing >= 138) {
-            this.spacing === 5
-            ? this.spacing = 2
-            : this.spacing /= 2;
-        }
     }
 }
