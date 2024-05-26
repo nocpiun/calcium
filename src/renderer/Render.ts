@@ -19,6 +19,7 @@ export default class Render extends Graphics {
 
     // Mobile zooming
     private zoomingScale: number | null = null;
+    private zoomingFocus: Point | null = null;
     private lastZoomingSize: number | null = null;
 
     private fpsUpdater: NodeJS.Timer;
@@ -148,6 +149,7 @@ export default class Render extends Graphics {
         this.stopMoving();
         this.zoomingScale = null;
         this.lastZoomingSize = null;
+        this.zoomingFocus = null;
     }
 
     public handleWheel(dy: number) {
@@ -181,8 +183,9 @@ export default class Render extends Graphics {
 
         if(!this.lastZoomingSize) this.lastZoomingSize = zoomingSize;
 
-        if(!this.zoomingScale) {
+        if(!this.zoomingScale || !this.zoomingFocus) {
             this.zoomingScale = zoomingSize / this.scale;
+            this.zoomingFocus = this.pointToCoordinates(this.createPoint((screenA.x + screenB.x) / 2, (screenA.y + screenB.y) / 2));
             return;
         }
         
@@ -196,6 +199,13 @@ export default class Render extends Graphics {
         );
 
         this.lastZoomingSize = zoomingSize;
+
+        const currentFocusPoint = this.pointToCoordinates(this.createPoint((screenA.x + screenB.x) / 2, (screenA.y + screenB.y) / 2));
+        var centerDx = currentFocusPoint.x - this.zoomingFocus.x,
+            centerDy = currentFocusPoint.y - this.zoomingFocus.y;
+
+        this.center.x += centerDx * this.scale;
+        this.center.y -= centerDy * this.scale;
     }
 
     private refreshMousePoint(rect: DOMRect, cx: number, cy: number) {
