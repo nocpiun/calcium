@@ -10,7 +10,7 @@ import { FunctionInputtingType, MovingDirection, ZoomDirection } from "@/types";
 export const delta: number = .01;
 
 export default class Render extends Graphics {
-    private calculatingWorker: Worker = new Worker(new URL("@/workers/calculating.worker.ts", import.meta.url));
+    private calculatingWorker: Worker | null = null;
 
     private mouseDown: boolean = false;
     private mouseDX: number = 0; // mouse delta x
@@ -45,11 +45,16 @@ export default class Render extends Graphics {
         // FPS
         this.fpsUpdater = setInterval(() => this.workerCtx.postMessage({ type: "fps", fps: this.currentFPS }), 1000);
 
-        // Worker listener
-        this.calculatingWorker.addEventListener("message", (e) => this.handleCalculatingWorkerMessaging(e));
+        this.resetCalculatingWorker();
     }
 
     // MARK: Thread Messaging
+
+    private resetCalculatingWorker() {
+        this.calculatingWorker?.terminate();
+        this.calculatingWorker = new Worker(new URL("@/workers/calculating.worker.ts", import.meta.url));
+        this.calculatingWorker.addEventListener("message", (e) => this.handleCalculatingWorkerMessaging(e));
+    }
 
     /**
      * Messaging between rendering thread and calculating thread
@@ -88,6 +93,8 @@ export default class Render extends Graphics {
     }
 
     public async calculatePoints(func: Function, beginX: number, endX: number, direction: MovingDirection = MovingDirection.LEFT): Promise<void> {
+        if(!this.calculatingWorker) return;
+        
         if(func.mode === FunctionInputtingType.POLAR) {
             if(beginX < 0) beginX = 0;
             if(endX < 0) return;
@@ -237,8 +244,6 @@ export default class Render extends Graphics {
             newEnd = (this.canvas.width - this.center.x) / unitPx;
 
         if(direction === ZoomDirection.ZOOM_IN) {
-            this.displayedPoints.clear();
-            
             for(let i = 0; i < this.functionList.length; i++) {
                 var func = this.functionList.get(i);
 
@@ -288,20 +293,26 @@ export default class Render extends Graphics {
     // MARK: Function Operations
 
     public registerFunction(rawText: string, id: number, mode: FunctionInputtingType) {
+        if(!this.calculatingWorker) return;
+
         this.calculatingWorker.postMessage({ type: "compile", rawText, id, mode });
     }
 
     public unregisterFunction(index: number) {
+        this.resetCalculatingWorker();
         this.functionList.remove(index);
         this.fullyRefreshFunctions();
     }
 
     public unregisterAllFunctions() {
+        this.resetCalculatingWorker();
         this.functionList.clear();
-        this.fullyRefreshFunctions();
+        this.displayedPoints.clear();
     }
 
     public editFunction(index: number, rawText: string, mode: FunctionInputtingType) {
+        if(!this.calculatingWorker) return;
+
         this.calculatingWorker.postMessage({ type: "compile-and-set", index, rawText, mode });
     }
 

@@ -193,9 +193,11 @@ export default class Graphics {
     }
 
     protected drawPoint(point: Point, color: string) {
+        const size = this.isMobile ? 5 : 2;
+
         this.ctx.beginPath();
         this.ctx.strokeStyle = color;
-        this.ctx.fillRect(point.x, point.y, 2, 2);
+        this.ctx.fillRect(point.x, point.y, size, size);
         this.ctx.stroke();
         this.ctx.closePath();
     }
