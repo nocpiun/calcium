@@ -30,6 +30,10 @@ const Graphing: React.FC = memo(() => {
     useEffect(() => {
         // MARK: Initialization
 
+        // Create a controller to remove event handlers after the component being unmounted
+        const controller = new AbortController();
+        const { signal } = controller;
+
         // Create worker
         workerRef.current = new Worker(new URL("@/workers/graphing.worker.ts", import.meta.url));
 
@@ -90,7 +94,7 @@ const Graphing: React.FC = memo(() => {
         canvas.addEventListener("mousedown", (e: MouseEvent) => {
             if(!workerRef.current) return;
             workerRef.current.postMessage({ type: "mouse-down", rect: canvas.getBoundingClientRect(), cx: e.clientX, cy: e.clientY });
-        });
+        }, { signal });
         window.addEventListener("mousemove", (e: MouseEvent) => {
             if(!workerRef.current) return;
 
@@ -102,15 +106,15 @@ const Graphing: React.FC = memo(() => {
             }
 
             workerRef.current.postMessage({ type: "mouse-move", rect: canvas.getBoundingClientRect(), cx: e.clientX, cy: e.clientY, direction });
-        });
+        }, { signal });
         window.addEventListener("mouseup", () => {
             if(!workerRef.current) return;
             workerRef.current.postMessage({ type: "mouse-up" });
-        });
+        }, { signal });
         canvas.addEventListener("wheel", (e: WheelEvent) => {
             if(!workerRef.current) return;
             workerRef.current.postMessage({ type: "wheel", dy: e.deltaY });
-        });
+        }, { signal });
         window.addEventListener("resize", () => {
             if(!workerRef.current) return;
 
@@ -122,7 +126,7 @@ const Graphing: React.FC = memo(() => {
             canvas.height = height * window.devicePixelRatio;
             
             workerRef.current.postMessage({ type: "resize", width, height });
-        });
+        }, { signal });
 
         // Init mobile events
         var lastTouch: Touch | null = null;
@@ -135,7 +139,7 @@ const Graphing: React.FC = memo(() => {
             } else if(!isTouchZooming && e.touches.length === 2) {
                 isTouchZooming = true;
             }
-        });
+        }, { signal });
         canvas.addEventListener("touchmove", (e: TouchEvent) => {
             if(!workerRef.current) return;
 
@@ -172,21 +176,21 @@ const Graphing: React.FC = memo(() => {
             lastTouch = e.changedTouches[0];
 
             workerRef.current.postMessage({ type: "mouse-move", rect: canvas.getBoundingClientRect(), cx: e.changedTouches[0].clientX, cy: e.changedTouches[0].clientY, direction });
-        });
+        }, { signal });
         canvas.addEventListener("touchend", () => {
             if(!workerRef.current) return;
 
             lastTouch = null;
             isTouchZooming = false;
             workerRef.current.postMessage({ type: "mouse-up" });
-        });
+        }, { signal });
         canvas.addEventListener("touchcancel", () => {
             if(!workerRef.current) return;
 
             lastTouch = null;
             isTouchZooming = false;
             workerRef.current.postMessage({ type: "mouse-up" });
-        });
+        }, { signal });
 
         // "graphing-reload" cannot be moved into `useEmitter` hook
         new Emitter().on("graphing-reload", () => {
@@ -210,10 +214,15 @@ const Graphing: React.FC = memo(() => {
             });
         }).observe(document.body, { attributes: true });
 
-        return () => { // Unregister renderer and worker
+        return () => {
             if(!workerRef.current) return;
+
+            // Unregister render & worker
             workerRef.current.postMessage({ type: "reset" });
             workerRef.current.terminate();
+
+            // Unregister event handlers
+            controller.abort();
         };
     }, [reloadTrigger]);
 
