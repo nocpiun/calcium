@@ -227,7 +227,7 @@ export default class Utils {
             /Windows Phone/i
         ];
 
-        return mobileClients.some((reg) => window.navigator.userAgent.match(reg));
+        return mobileClients.some((reg) => navigator.userAgent.match(reg));
     }
 
     /**

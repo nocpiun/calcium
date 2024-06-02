@@ -1,8 +1,12 @@
 /* eslint-disable @typescript-eslint/no-redeclare */
 /* eslint-disable no-self-assign */
 import { Theme } from "@/types";
+import Float from "@/compiler/Float";
+import Utils from "@/utils/Utils";
 
 const initialScale = 90;
+const minSn = !Utils.isMobile() ? 100000 : 10000; // Minimum scientific notation
+const maxSn = 0.0005;
 
 export enum Axis {
     CARTESIAN, POLAR
@@ -60,11 +64,14 @@ export default class Graphics {
     private drawCartesianAxis() {
         var unitPx = this.spacing * this.scale;
         var secondaryUnitPx = (this.spacing / 5) * this.scale;
+        const numberFontSize = !this.isMobile ? 15 : 13;
+
         /**
          * X Direction
          */
         // X Axis
         this.drawStraightLine(this.center.y, this.colors.primary, 2);
+
         // thicker line
         for(
             let i = 1;
@@ -80,8 +87,21 @@ export default class Graphics {
             this.drawStraightLine(y2, this.colors.secondary);
 
             // number of the line
-            this.drawText((i * this.spacing).toString(), this.center.x - (this.getTextWidth((i * this.spacing).toString()) / this.ratio + 5) * this.ratio, y1 + 5 * this.ratio, this.colors.primary, 15);
-            this.drawText((-i * this.spacing).toString(), this.center.x - (this.getTextWidth((-i * this.spacing).toString()) / this.ratio + 5) * this.ratio, y2 + 5 * this.ratio, this.colors.primary, 15);
+            const n = Float.multiply(i, this.spacing);
+            this.drawNumber(
+                n,
+                this.center.x - (this.getTextWidth(Graphics.numberToString(n), numberFontSize) / this.ratio + 5) * this.ratio,
+                y1 + 5 * this.ratio,
+                this.colors.primary,
+                numberFontSize
+            );
+            this.drawNumber(
+                -n,
+                this.center.x - (this.getTextWidth(Graphics.numberToString(-n), numberFontSize) / this.ratio + 5) * this.ratio,
+                y2 + 5 * this.ratio,
+                this.colors.primary,
+                numberFontSize
+            );
         }
         // thinner line
         for(
@@ -118,8 +138,21 @@ export default class Graphics {
             this.drawVerticalLine(x2, this.colors.secondary);
 
             // number of the line
-            this.drawText((-i * this.spacing).toString(), x1 - (this.getTextWidth((-i * this.spacing).toString()) / this.ratio / 2) * this.ratio, this.center.y + 15 * this.ratio, this.colors.primary, 15);
-            this.drawText((i * this.spacing).toString(), x2 - (this.getTextWidth((i * this.spacing).toString()) / this.ratio / 2) * this.ratio, this.center.y + 15 * this.ratio, this.colors.primary, 15);
+            const n = Float.multiply(i, this.spacing);
+            this.drawNumber(
+                n,
+                x2 - (this.getTextWidth(Graphics.numberToString(n), numberFontSize) / this.ratio / 2) * this.ratio,
+                this.center.y + 15 * this.ratio,
+                this.colors.primary,
+                numberFontSize
+            );
+            this.drawNumber(
+                -n,
+                x1 - (this.getTextWidth(Graphics.numberToString(-n), numberFontSize) / this.ratio / 2) * this.ratio,
+                this.center.y + 15 * this.ratio,
+                this.colors.primary,
+                numberFontSize
+            );
         }
         // thinner line
         for(
@@ -152,8 +185,9 @@ export default class Graphics {
             this.drawCircle(this.center, x2 - this.center.x, this.colors.secondary);
 
             // number of the line
-            this.drawText((i * this.spacing).toString(), x1 - (this.getTextWidth((-i * this.spacing).toString()) / this.ratio / 2) * this.ratio, this.center.y + 15 * this.ratio, this.colors.primary, 15);
-            this.drawText((i * this.spacing).toString(), x2 - (this.getTextWidth((i * this.spacing).toString()) / this.ratio / 2) * this.ratio, this.center.y + 15 * this.ratio, this.colors.primary, 15);
+            const n = Float.multiply(i, this.spacing);
+            this.drawNumber(n, x1 - (this.getTextWidth(Graphics.numberToString(n), 15) / this.ratio / 2) * this.ratio, this.center.y + 15 * this.ratio, this.colors.primary, 15);
+            this.drawNumber(n, x2 - (this.getTextWidth(Graphics.numberToString(n), 15) / this.ratio / 2) * this.ratio, this.center.y + 15 * this.ratio, this.colors.primary, 15);
         }
         // thinner line
         for(let i = 1; i * unitPx * (Math.PI / 2) <= maxRange; i++) {
@@ -216,6 +250,29 @@ export default class Graphics {
         this.ctx.fillText(text, x, y);
     }
 
+    protected drawNumber(n: number, x: number, y: number, color: string, fontSize: number = 20) {
+        const abs = Math.abs(n);
+        var str = Graphics.numberToString(n);
+
+        if(abs < minSn && abs > maxSn) {
+            this.drawText(str, x, y, color, fontSize);
+            return;
+        }
+
+        const base = str.split("^")[0];
+        const exponent = str.split("^")[1];
+
+        var baseWidth = this.getTextWidth(base, fontSize);
+
+        if(!this.isMobile) {
+            this.drawText(base, x + 7, y, color, fontSize);
+            this.drawText(exponent, x + baseWidth + 7, y - 3, color, 11);
+        } else {
+            this.drawText(base, x + 15, y, color, fontSize);
+            this.drawText(exponent, x + baseWidth + 15, y - 7, color, 11);
+        }
+    }
+
     protected clear() {
         this.canvas.width = this.canvas.width;
         this.canvas.height = this.canvas.height;
@@ -256,7 +313,8 @@ export default class Graphics {
         return this.createPoint(x, y);
     }
 
-    public getTextWidth(text: string): number {
+    public getTextWidth(text: string, fontSize: number = 20): number {
+        this.ctx.font = (fontSize * this.ratio) + "px Ubuntu-Regular";
         return this.ctx.measureText(text).width;
     }
 
@@ -274,6 +332,19 @@ export default class Graphics {
             x: this.center.x + (point.x * unitPx),
             y: this.center.y - (point.y * unitPx)
         };
+    }
+
+    public static numberToString(n: number, fractionDigits?: number): string {
+        const abs = Math.abs(n);
+
+        if(abs < minSn && abs > maxSn) {
+            return fractionDigits !== undefined ? n.toFixed(fractionDigits) : n.toString();
+        }
+
+        var exponent = Math.floor(Math.log10(abs));
+        var coefficient = Float.divide(n, 10 ** exponent);
+
+        return `${fractionDigits !== undefined ? coefficient.toFixed(fractionDigits) : coefficient}×10^${exponent}`;
     }
 
     // To render each frame

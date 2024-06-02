@@ -155,7 +155,7 @@ export default class Render extends Graphics {
     }
 
     public handleWheel(dy: number) {
-        const delta = 5;
+        const delta = 10;
         const mouseOriginPoint = this.pointToCoordinates(this.mousePoint);
         const direction = dy > 0 ? ZoomDirection.ZOOM_OUT : ZoomDirection.ZOOM_IN;
 
@@ -307,14 +307,26 @@ export default class Render extends Graphics {
     }
 
     public scalingAdapt(direction: ZoomDirection) {
-        if(this.scale * this.spacing <= 66 && direction === ZoomDirection.ZOOM_OUT) {
+        if(
+            direction === ZoomDirection.ZOOM_OUT &&
+            (
+                (!this.isMobile && this.scale * this.spacing <= 66) ||
+                (this.isMobile && this.scale * this.spacing <= 87)
+            )
+        ) {
             !Is.float(Math.log10(this.spacing / 2))
-            ? this.spacing *= 2.5
-            : this.spacing *= 2;
-        } else if(this.scale * this.spacing >= 138 && direction === ZoomDirection.ZOOM_IN) {
+            ? this.spacing = Float.multiply(this.spacing, 2.5)
+            : this.spacing = Float.multiply(this.spacing, 2);
+        } else if(
+            direction === ZoomDirection.ZOOM_IN &&
+            (
+                (!this.isMobile && this.scale * this.spacing >= 138) ||
+                (this.isMobile && this.scale * this.spacing >= 190)
+            )
+        ) {
             !Is.float(Math.log10(this.spacing / 5))
             ? this.spacing = Float.divide(this.spacing, 2.5)
-            : this.spacing /= 2;
+            : this.spacing = Float.divide(this.spacing, 2);
         }
     }
 
@@ -359,7 +371,7 @@ export default class Render extends Graphics {
 
         // Mouse point
         var mouseCoordinatesPoint = this.pointToCoordinates(this.mousePoint);
-        this.drawText("("+ mouseCoordinatesPoint.x.toFixed(2) +", "+ mouseCoordinatesPoint.y.toFixed(2) +")", (!this.isMobile ? 30 : 50) * this.ratio, 30 * this.ratio, this.colors.primary, 15);
+        this.drawText("("+ Graphics.numberToString(mouseCoordinatesPoint.x, 2) +", "+ Graphics.numberToString(mouseCoordinatesPoint.y, 2) +")", (!this.isMobile ? 30 : 50) * this.ratio, 30 * this.ratio, this.colors.primary, 15);
         
         // Is mouse down
         this.drawText(this.mouseDown ? "Moving" : "", this.canvas.width - 80 * this.ratio, 30 * this.ratio, this.colors.primary, 15);
