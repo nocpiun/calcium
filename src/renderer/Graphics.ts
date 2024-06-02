@@ -13,9 +13,10 @@ export enum Axis {
 }
 
 interface ColorScheme {
-    primary: string,
-    secondary: string,
+    primary: string
+    secondary: string
     highlight: string
+    background: string
 }
 
 export interface Point {
@@ -274,6 +275,13 @@ export default class Graphics {
     }
 
     protected drawText(text: string, x: number, y: number, color: string, fontSize: number = 20) {
+        // Outline
+        this.ctx.font = (fontSize * this.ratio) +"px Ubuntu-Regular";
+        this.ctx.strokeStyle = this.colors.background;
+        this.ctx.lineWidth = 3;
+        this.ctx.strokeText(text, x, y);
+
+        // Text
         this.ctx.font = (fontSize * this.ratio) +"px Ubuntu-Regular";
         this.ctx.fillStyle = color;
         this.ctx.fillText(text, x, y);
@@ -388,6 +396,11 @@ export default class Graphics {
     public render() {
         this.clear();
 
+        // Background
+        this.ctx.fillStyle = this.colors.background;
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+        // Axis line
         this.refreshAxisLine();
     }
 }
@@ -397,12 +410,14 @@ class GraphicsConfig {
     private static readonly lightColors: ColorScheme = {
         primary: "#404041",
         secondary: "#8c949e",
-        highlight: "#222"
+        highlight: "#222",
+        background: "#f7f7f7",
     };
     private static readonly darkColors: ColorScheme = {
         primary: "#cbd0df",
         secondary: "#8c949e",
-        highlight: "#fff"
+        highlight: "#fff",
+        background: "#0e1117",
     };
 
     public constructor(

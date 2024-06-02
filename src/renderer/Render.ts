@@ -372,9 +372,6 @@ export default class Render extends Graphics {
         // Mouse point
         var mouseCoordinatesPoint = this.pointToCoordinates(this.mousePoint);
         this.drawText("("+ Graphics.numberToString(mouseCoordinatesPoint.x, 2) +", "+ Graphics.numberToString(mouseCoordinatesPoint.y, 2) +")", (!this.isMobile ? 30 : 50) * this.ratio, 30 * this.ratio, this.colors.primary, 15);
-        
-        // Is mouse down
-        this.drawText(this.mouseDown ? "Moving" : "", this.canvas.width - 80 * this.ratio, 30 * this.ratio, this.colors.primary, 15);
 
         // Draw function images
         for(let i = 0; i < this.displayedPoints.length; i++) {
