@@ -379,9 +379,6 @@ export default class Render extends Graphics {
         // Draw function images
         for(let i = 0; i < this.displayedPoints.length; i++) {
             this.drawPoint(this.pointToScreen(this.displayedPoints.get(i)), this.colors.highlight);
-            // if(i < this.displayedPoints.length - 1) {
-            //     this.drawLine(this.pointToScreen(this.displayedPoints.get(i)), this.pointToScreen(this.displayedPoints.get(i + 1)), this.colors.highlight);
-            // }
         }
 
         var imageBitmap = this.canvas.transferToImageBitmap();

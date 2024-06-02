@@ -88,16 +88,33 @@ export default class Graphics {
 
             // number of the line
             const n = Float.multiply(i, this.spacing);
+            const n1Width = this.getTextWidth(Graphics.numberToString(n), numberFontSize);
+            const n2Width = this.getTextWidth(Graphics.numberToString(-n), numberFontSize);
+
+            var x1 = this.center.x - (n1Width / this.ratio + 5) * this.ratio;
+            var x2 = this.center.x - (n2Width / this.ratio + 5) * this.ratio;
+
+            if(this.center.x - n1Width - 2 * 5 * this.ratio <= 0) {
+                x1 = 5 * this.ratio;
+            }
+            if(this.center.x - n2Width - 2 * 5 * this.ratio <= 0) {
+                x2 = 5 * this.ratio;
+            }
+            if(this.center.x >= this.canvas.width) {
+                x1 = this.canvas.width - n1Width - 5 * this.ratio;
+                x2 = this.canvas.width - n2Width - 5 * this.ratio;
+            }
+
             this.drawNumber(
                 n,
-                this.center.x - (this.getTextWidth(Graphics.numberToString(n), numberFontSize) / this.ratio + 5) * this.ratio,
+                x1,
                 y1 + 5 * this.ratio,
                 this.colors.primary,
                 numberFontSize
             );
             this.drawNumber(
                 -n,
-                this.center.x - (this.getTextWidth(Graphics.numberToString(-n), numberFontSize) / this.ratio + 5) * this.ratio,
+                x2,
                 y2 + 5 * this.ratio,
                 this.colors.primary,
                 numberFontSize
@@ -139,17 +156,29 @@ export default class Graphics {
 
             // number of the line
             const n = Float.multiply(i, this.spacing);
+            const n1Width = this.getTextWidth(Graphics.numberToString(n), numberFontSize);
+            const n2Width = this.getTextWidth(Graphics.numberToString(-n), numberFontSize);
+            const height = this.getTextHeight(Graphics.numberToString(n), numberFontSize);
+
+            var y = this.center.y + 15 * this.ratio;
+            if(this.center.y <= 0) {
+                y = 15 * this.ratio;
+            }
+            if(this.center.y + height + 2 * (15 * this.ratio - height) >= this.canvas.height) {
+                y = this.canvas.height - (15 * this.ratio - height);
+            }
+
             this.drawNumber(
                 n,
-                x2 - (this.getTextWidth(Graphics.numberToString(n), numberFontSize) / this.ratio / 2) * this.ratio,
-                this.center.y + 15 * this.ratio,
+                x2 - (n1Width / this.ratio / 2) * this.ratio,
+                y,
                 this.colors.primary,
                 numberFontSize
             );
             this.drawNumber(
                 -n,
-                x1 - (this.getTextWidth(Graphics.numberToString(-n), numberFontSize) / this.ratio / 2) * this.ratio,
-                this.center.y + 15 * this.ratio,
+                x1 - (n2Width / this.ratio / 2) * this.ratio,
+                y,
                 this.colors.primary,
                 numberFontSize
             );
@@ -316,6 +345,13 @@ export default class Graphics {
     public getTextWidth(text: string, fontSize: number = 20): number {
         this.ctx.font = (fontSize * this.ratio) + "px Ubuntu-Regular";
         return this.ctx.measureText(text).width;
+    }
+
+    public getTextHeight(text: string, fontSize: number = 20): number {
+        this.ctx.font = (fontSize * this.ratio) + "px Ubuntu-Regular";
+        
+        var metrics = this.ctx.measureText(text);
+        return metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent;
     }
 
     protected pointToCoordinates(point: Point): Point {
