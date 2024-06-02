@@ -1,8 +1,8 @@
 import Is from "@/compiler/Is";
 import Utils from "@/utils/Utils";
-import Float from "@/compiler/Float";
+import ComputeKits from "@/compiler/ComputeKits";
 
-export default class Compute {
+export default class MathKits {
     /** @see https://www.cnblogs.com/jialuchun/p/6559422.html */
     public static factorial(x: number): number {
         if(x < 0) {
@@ -16,7 +16,7 @@ export default class Compute {
             return x;
         }
 
-        return Compute.gamma(x + 1);
+        return MathKits.gamma(x + 1);
     }
 
     /** @see https://rosettacode.org/wiki/Gamma_function#JavaScript */
@@ -29,7 +29,7 @@ export default class Compute {
     
         const g = 7;
         if(x < 0.5) {
-            return Math.PI / (Math.sin(Math.PI * x) * Compute.gamma(1 - x));
+            return Math.PI / (Math.sin(Math.PI * x) * MathKits.gamma(1 - x));
         }
     
         x -= 1;
@@ -66,47 +66,47 @@ export default class Compute {
     }
 
     public static mean(...nums: number[]): number {
-        return Compute.total(...nums) / nums.length;
+        return MathKits.total(...nums) / nums.length;
     }
 
     public static median(...nums: number[]): number {
-        var ordered = Compute.order([...nums]);
+        var ordered = MathKits.order([...nums]);
         return (
             ordered.length % 2 !== 0
             ? ordered[ordered.length / 2 - .5]
-            : Compute.mean(ordered[ordered.length / 2], ordered[ordered.length / 2 - 1])
+            : MathKits.mean(ordered[ordered.length / 2], ordered[ordered.length / 2 - 1])
         );
     }
 
     public static stdev(...nums: number[]): number {
-        var average = Compute.mean(...nums);
+        var average = MathKits.mean(...nums);
         var devPowList = [];
         for(let i = 0; i < nums.length; i++) {
-            devPowList.push(Compute.safePow(nums[i] - average, 2));
+            devPowList.push(MathKits.safePow(nums[i] - average, 2));
         }
 
-        return Math.sqrt(Compute.total(...devPowList) / (nums.length - 1));
+        return Math.sqrt(MathKits.total(...devPowList) / (nums.length - 1));
     }
 
     public static stdevp(...nums: number[]): number {
-        var average = Compute.mean(...nums);
+        var average = MathKits.mean(...nums);
         var devPowList = [];
         for(let i = 0; i < nums.length; i++) {
-            devPowList.push(Compute.safePow(nums[i] - average, 2));
+            devPowList.push(MathKits.safePow(nums[i] - average, 2));
         }
 
-        return Math.sqrt(Compute.total(...devPowList) / nums.length);
+        return Math.sqrt(MathKits.total(...devPowList) / nums.length);
     }
 
     public static nAr(n: number, r: number): number {
         if(n < r || n < 0 || r < 0) return NaN;
-        return Compute.factorial(n) / Compute.factorial(n - r);
+        return MathKits.factorial(n) / MathKits.factorial(n - r);
     }
 
     public static nCr(n: number, r: number): number {
         if(n < r || n < 0 || r < 0) return NaN;
         if(r === 0) return 1;
-        return Compute.factorial(n) / (Compute.factorial(r) * Compute.factorial(n - r));
+        return MathKits.factorial(n) / (MathKits.factorial(r) * MathKits.factorial(n - r));
     }
 
     public static safeTan(x: number): number {
@@ -117,11 +117,11 @@ export default class Compute {
     }
 
     public static safePow(x: number, y: number): number {
-        if(y < 0) return 1 / Compute.safePow(x, -y);
+        if(y < 0) return 1 / MathKits.safePow(x, -y);
 
         var p = 1;
         for(let i = 0; i < y; i++) {
-            p = Float.multiply(p, x);
+            p = ComputeKits.multiply(p, x);
         }
 
         return p;
@@ -145,8 +145,8 @@ export default class Compute {
     }
 
     public static reduction(a: number, b: number): [number, number] {
-        const commonDivisor = Compute.gcd(a, b);
-        return [Float.divide(a, commonDivisor), Float.divide(b, commonDivisor)];
+        const commonDivisor = MathKits.gcd(a, b);
+        return [ComputeKits.divide(a, commonDivisor), ComputeKits.divide(b, commonDivisor)];
     }
 
     public static toFrac(n: number): [number, number] {
@@ -154,6 +154,6 @@ export default class Compute {
         if(numStr.indexOf(".") === -1) return [n, 1];
 
         const exp = numStr.split(".")[1].length;
-        return Compute.reduction(parseInt(numStr.replace(".", "")), 10 ** exp);
+        return MathKits.reduction(parseInt(numStr.replace(".", "")), 10 ** exp);
     }
 }

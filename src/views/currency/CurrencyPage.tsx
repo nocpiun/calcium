@@ -4,7 +4,7 @@ import Axios from "axios";
 import CurrencyInput from "@/views/currency/CurrencyInput";
 import CurrencyOutput from "@/views/currency/CurrencyOutput";
 import Emitter from "@/utils/Emitter";
-import Float from "@/compiler/Float";
+import ComputeKits from "@/compiler/ComputeKits";
 
 import useEmitter from "@/hooks/useEmitter";
 
@@ -146,7 +146,7 @@ const CurrencyPage: React.FC = () => {
     const handleExchange = useCallback(async () => {
         new Emitter().emit(
             "currency-output-change",
-            Float.multiply(inputValue, (await rateData)[getCode(inputCurrency)][getCode(outputCurrency)])
+            ComputeKits.multiply(inputValue, (await rateData)[getCode(inputCurrency)][getCode(outputCurrency)])
         );
     }, [inputValue, inputCurrency, outputCurrency, rateData]);
 

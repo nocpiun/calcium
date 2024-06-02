@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 
-import Float from "@/compiler/Float";
+import ComputeKits from "@/compiler/ComputeKits";
 
 import type { UnitType, UnitInfo } from "@/views/unit-convert/UnitsPage";
 import Emitter from "@/utils/Emitter";
@@ -55,7 +55,7 @@ const UnitItem: React.FC<UnitItemType> = (props) => {
              * `0.01` is the transform rate of cm.
              * `0.1` is the transform rate of dm.
              */
-            inputRef.current.value = Float.eTransfer(Float.divide(Float.multiply(value, originRate), targetRate));
+            inputRef.current.value = ComputeKits.eTransfer(ComputeKits.divide(ComputeKits.multiply(value, originRate), targetRate));
         }]
     ]);
 

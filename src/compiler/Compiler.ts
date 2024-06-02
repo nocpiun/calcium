@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-redeclare */
 import Evaluator from "@/compiler/Evaluator";
 import Is from "@/compiler/Is";
-import Compute from "@/compiler/Compute";
+import MathKits from "@/compiler/MathKits";
 
 import Token, { TokenType } from "@/compiler/token/Token";
 import PowerableToken from "@/compiler/token/PowerableToken";
@@ -310,7 +310,7 @@ export default class Compiler {
                 var poweredToken = this.root.getLastChild<NumberToken | VariableToken>();
                 poweredToken instanceof VariableToken
                 ? poweredToken.exponential = exponential
-                : poweredToken.setValue(Compute.safePow(this.root.getLastChild().value, exponential));
+                : poweredToken.setValue(MathKits.safePow(this.root.getLastChild().value, exponential));
 
             } else if(symbol[0] === "!") { // MARK: Factorial
 
@@ -325,12 +325,12 @@ export default class Compiler {
 
                 if(!(factorialToken instanceof NumberToken)) continue;
 
-                var value = Compute.factorial(factorialToken.value);
+                var value = MathKits.factorial(factorialToken.value);
                 factorialToken.setValue(value);
 
                 // pow
                 if(this.hasExponential(i)) {
-                    this.root.getLastChild<NumberToken>().setValue(Compute.safePow(value, parseInt(this.raw[i + 1][1])));
+                    this.root.getLastChild<NumberToken>().setValue(MathKits.safePow(value, parseInt(this.raw[i + 1][1])));
                     i++;
                     continue;
                 }

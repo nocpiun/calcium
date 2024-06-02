@@ -13,7 +13,7 @@ import { errorText, acTable } from "@/global";
 import Emitter from "@/utils/Emitter";
 import Utils from "@/utils/Utils";
 import Compiler from "@/compiler/Compiler";
-import Compute from "@/compiler/Compute";
+import MathKits from "@/compiler/MathKits";
 import Is from "@/compiler/Is";
 import Logger from "@/utils/Logger";
 import { InputTag, NumberSys, RecordType } from "@/types";
@@ -92,7 +92,7 @@ const Output: React.FC = () => {
 
         // tofrac
         if(isTofrac && result.indexOf(".") > -1 && result.split(".")[1].length <= 7) {
-            const [a, b] = Compute.toFrac(parseFloat(result));
+            const [a, b] = MathKits.toFrac(parseFloat(result));
             result = "\\frac{"+ a +"}{"+ b +"}";
         }
 

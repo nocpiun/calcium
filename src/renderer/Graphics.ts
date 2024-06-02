@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-redeclare */
 /* eslint-disable no-self-assign */
 import { Theme } from "@/types";
-import Float from "@/compiler/Float";
+import ComputeKits from "@/compiler/ComputeKits";
 import Utils from "@/utils/Utils";
 
 const initialScale = 90;
@@ -87,7 +87,7 @@ export default class Graphics {
             this.drawStraightLine(y2, this.colors.secondary);
 
             // number of the line
-            const n = Float.multiply(i, this.spacing);
+            const n = ComputeKits.multiply(i, this.spacing);
             const n1Width = this.getTextWidth(Graphics.numberToString(n), numberFontSize);
             const n2Width = this.getTextWidth(Graphics.numberToString(-n), numberFontSize);
 
@@ -155,7 +155,7 @@ export default class Graphics {
             this.drawVerticalLine(x2, this.colors.secondary);
 
             // number of the line
-            const n = Float.multiply(i, this.spacing);
+            const n = ComputeKits.multiply(i, this.spacing);
             const n1Width = this.getTextWidth(Graphics.numberToString(n), numberFontSize);
             const n2Width = this.getTextWidth(Graphics.numberToString(-n), numberFontSize);
             const height = this.getTextHeight(Graphics.numberToString(n), numberFontSize);
@@ -214,7 +214,7 @@ export default class Graphics {
             this.drawCircle(this.center, x2 - this.center.x, this.colors.secondary);
 
             // number of the line
-            const n = Float.multiply(i, this.spacing);
+            const n = ComputeKits.multiply(i, this.spacing);
             this.drawNumber(n, x1 - (this.getTextWidth(Graphics.numberToString(n), 15) / this.ratio / 2) * this.ratio, this.center.y + 15 * this.ratio, this.colors.primary, 15);
             this.drawNumber(n, x2 - (this.getTextWidth(Graphics.numberToString(n), 15) / this.ratio / 2) * this.ratio, this.center.y + 15 * this.ratio, this.colors.primary, 15);
         }
@@ -378,7 +378,7 @@ export default class Graphics {
         }
 
         var exponent = Math.floor(Math.log10(abs));
-        var coefficient = Float.divide(n, 10 ** exponent);
+        var coefficient = ComputeKits.divide(n, 10 ** exponent);
 
         return `${fractionDigits !== undefined ? coefficient.toFixed(fractionDigits) : coefficient}×10^${exponent}`;
     }

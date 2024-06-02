@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-redeclare */
 import List from "@/utils/List";
-import Float from "@/compiler/Float";
+import ComputeKits from "@/compiler/ComputeKits";
 import Transformer from "@/compiler/Transformer";
-import Compute from "@/compiler/Compute";
+import MathKits from "@/compiler/MathKits";
 
 import { TokenType } from "@/compiler/token/Token";
 import PowerableToken from "@/compiler/token/PowerableToken";
@@ -98,12 +98,12 @@ export default class Evaluator {
                 switch(operator) {
                     case Operator.MUL:
                         a.float || b.float
-                        ? result = Float.multiply(a.value, b.value)
+                        ? result = ComputeKits.multiply(a.value, b.value)
                         : result = a.value * b.value;
                         break;
                     case Operator.DIV:
                         a.float || b.float
-                        ? result = Float.divide(a.value, b.value)
+                        ? result = ComputeKits.divide(a.value, b.value)
                         : result = a.value / b.value;
                         break;
                 }
@@ -137,12 +137,12 @@ export default class Evaluator {
                 switch(operator) {
                     case Operator.ADD:
                         a.float || b.float
-                        ? result = Float.add(a.value, b.value)
+                        ? result = ComputeKits.add(a.value, b.value)
                         : result = a.value + b.value;
                         break;
                     case Operator.SUB:
                         a.float || b.float
-                        ? result = Float.sub(a.value, b.value)
+                        ? result = ComputeKits.sub(a.value, b.value)
                         : result = a.value - b.value;
                         break;
                 }
@@ -158,7 +158,7 @@ export default class Evaluator {
         var result = numbers.get(0)?.value ?? NaN;
 
         if(isNaN(result)) return NaN;
-        return Float.calibrate(parseFloat(result.toFixed(14)));
+        return ComputeKits.calibrate(parseFloat(result.toFixed(14)));
     }
 
     // MARK: Read Token
@@ -194,7 +194,7 @@ export default class Evaluator {
                     }
 
                     numbers.add(new NumberToken(
-                        Compute.safePow(transformedValue, exponential),
+                        MathKits.safePow(transformedValue, exponential),
                         NumberSys.DEC
                     ));
                     break;
@@ -205,7 +205,7 @@ export default class Evaluator {
 
                     if(!varToken.factorial) {
                         numbers.add(new NumberToken(
-                            Compute.safePow(varValue, exponential),
+                            MathKits.safePow(varValue, exponential),
                             NumberSys.DEC
                         ));
                         continue;
@@ -213,8 +213,8 @@ export default class Evaluator {
 
                     numbers.add(new NumberToken(
                         varToken.factorial?.first
-                        ? Compute.safePow(Compute.factorial(varValue), exponential)
-                        : Compute.factorial(Compute.safePow(varValue, exponential)),
+                        ? MathKits.safePow(MathKits.factorial(varValue), exponential)
+                        : MathKits.factorial(MathKits.safePow(varValue, exponential)),
                         NumberSys.DEC
                     ));
                     break;
@@ -224,22 +224,22 @@ export default class Evaluator {
                 case TokenType.BRACKET:
                     var rawValue = new Evaluator(token as BracketToken, this.variables).evaluate();
                     var value = (token as BracketToken).factorial
-                    ? Compute.factorial(rawValue)
+                    ? MathKits.factorial(rawValue)
                     : rawValue;
                     
                     numbers.add(new NumberToken(
-                        Compute.safePow(value, exponential),
+                        MathKits.safePow(value, exponential),
                         NumberSys.DEC
                     ));
                     break;
                 case TokenType.ABS:
                     var rawValue = Math.abs(new Evaluator(token as AbsToken, this.variables).evaluate());
                     var value = (token as AbsToken).factorial
-                    ? Compute.factorial(rawValue)
+                    ? MathKits.factorial(rawValue)
                     : rawValue;
 
                     numbers.add(new NumberToken(
-                        Compute.safePow(value, exponential),
+                        MathKits.safePow(value, exponential),
                         NumberSys.DEC
                     ));
                     break;
@@ -250,21 +250,21 @@ export default class Evaluator {
                         calculatedParam.push(new Evaluator(RootToken.create(param[i] as RootToken), this.variables).evaluate());
                     }
 
-                    var value = Float.calibrate(parseFloat(
+                    var value = ComputeKits.calibrate(parseFloat(
                         (functions.get(func) ?? [(x) => x, 1])[0](...calculatedParam).toFixed(14)
                     ));
                     
                     numbers.add(new NumberToken(
-                        Compute.safePow(value, exponential),
+                        MathKits.safePow(value, exponential),
                         NumberSys.DEC
                     ));
                     break;
                 case TokenType.SIGMA:
                 case TokenType.INT:
                 case TokenType.PROD:
-                    var value = Float.calibrate((token as DynamicToken).evaluate());
+                    var value = ComputeKits.calibrate((token as DynamicToken).evaluate());
                     numbers.add(new NumberToken(
-                        Compute.safePow(value, exponential),
+                        MathKits.safePow(value, exponential),
                         NumberSys.DEC
                     ));
                     break;

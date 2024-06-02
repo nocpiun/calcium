@@ -6,7 +6,7 @@ import RootToken from "@/compiler/token/RootToken";
 import List from "@/utils/List";
 import Collection from "@/utils/Collection";
 import Is from "@/compiler/Is";
-import Float from "@/compiler/Float";
+import ComputeKits from "@/compiler/ComputeKits";
 import { FunctionInputtingType, MovingDirection, ZoomDirection } from "@/types";
 
 export const delta: number = .01;
@@ -315,8 +315,8 @@ export default class Render extends Graphics {
             )
         ) {
             !Is.float(Math.log10(this.spacing / 2))
-            ? this.spacing = Float.multiply(this.spacing, 2.5)
-            : this.spacing = Float.multiply(this.spacing, 2);
+            ? this.spacing = ComputeKits.multiply(this.spacing, 2.5)
+            : this.spacing = ComputeKits.multiply(this.spacing, 2);
         } else if(
             direction === ZoomDirection.ZOOM_IN &&
             (
@@ -325,8 +325,8 @@ export default class Render extends Graphics {
             )
         ) {
             !Is.float(Math.log10(this.spacing / 5))
-            ? this.spacing = Float.divide(this.spacing, 2.5)
-            : this.spacing = Float.divide(this.spacing, 2);
+            ? this.spacing = ComputeKits.divide(this.spacing, 2.5)
+            : this.spacing = ComputeKits.divide(this.spacing, 2);
         }
     }
 

@@ -1,6 +1,6 @@
 import { lambertW0 } from "lambert-w-function";
 
-import Compute from "@/compiler/Compute";
+import MathKits from "@/compiler/MathKits";
 
 import Emitter from "@/utils/Emitter";
 import { FunctionInfo, Shortcut, RollbackToward } from "@/types";
@@ -12,8 +12,8 @@ export const errorText = "\\text{Error}";
 export const functions: Map<string, FunctionInfo> = new Map([
     ["sin",          [(x) => Math.sin(x),                                    1]],
     ["cos",          [(x) => Math.cos(x),                                    1]],
-    ["tan",          [(x) => Compute.safeTan(x),                             1]],
-    ["cot",          [(x) => 1 / Compute.safeTan(x),                         1]],
+    ["tan",          [(x) => MathKits.safeTan(x),                             1]],
+    ["cot",          [(x) => 1 / MathKits.safeTan(x),                         1]],
     ["sec",          [(x) => 1 / Math.cos(x),                                1]],
     ["csc",          [(x) => 1 / Math.sin(x),                                1]],
     ["sin^{-1}",     [(x) => Math.asin(x),                                   1]],
@@ -34,19 +34,19 @@ export const functions: Map<string, FunctionInfo> = new Map([
     ["^3√",          [(x) => Math.cbrt(x),                                   1]],
     ["%",            [(x) => x / 100,                                        1]],
     ["text{not}",    [(x) => ~x,                                             1]],
-    ["text{mean}",   [(...n) => Compute.mean(...n),                         -1]],
-    ["text{median}", [(...n) => Compute.median(...n),                       -1]],
-    ["text{stdev}",  [(...n) => Compute.stdev(...n),                        -1]],
-    ["text{stdevp}", [(...n) => Compute.stdevp(...n),                       -1]],
-    ["text{var}",    [(...n) => Compute.safePow(Compute.stdev(...n), 2),    -1]],
+    ["text{mean}",   [(...n) => MathKits.mean(...n),                         -1]],
+    ["text{median}", [(...n) => MathKits.median(...n),                       -1]],
+    ["text{stdev}",  [(...n) => MathKits.stdev(...n),                        -1]],
+    ["text{stdevp}", [(...n) => MathKits.stdevp(...n),                       -1]],
+    ["text{var}",    [(...n) => MathKits.safePow(MathKits.stdev(...n), 2),    -1]],
     ["text{count}",  [(...n) => n.length,                                   -1]],
-    ["text{total}",  [(...n) => Compute.total(...n),                        -1]],
+    ["text{total}",  [(...n) => MathKits.total(...n),                        -1]],
     ["text{min}",    [(...n) => Math.min(...n),                             -1]],
     ["text{max}",    [(...n) => Math.max(...n),                             -1]],
-    ["text{nAr}",    [(n, r) => Compute.nAr(n, r),                           2]],
-    ["text{nCr}",    [(n, r) => Compute.nCr(n, r),                           2]],
-    ["text{xPx}",    [(x) => Compute.unsafePow(x, x),                        1]],
-    ["exp",          [(x) => Compute.unsafePow(Math.E, x),                   1]],
+    ["text{nAr}",    [(n, r) => MathKits.nAr(n, r),                           2]],
+    ["text{nCr}",    [(n, r) => MathKits.nCr(n, r),                           2]],
+    ["text{xPx}",    [(x) => MathKits.unsafePow(x, x),                        1]],
+    ["exp",          [(x) => MathKits.unsafePow(Math.E, x),                   1]],
     ["text{floor}",  [(x) => Math.floor(x),                                  1]],
     ["text{round}",  [(x) => Math.round(x),                                  1]],
     ["text{rand}",   [(a, b) => Math.floor(Math.random() * (b - a + 1) + a), 2]],

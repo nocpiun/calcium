@@ -4,8 +4,8 @@ import React from "react";
 import { NumberSys } from "@/types";
 import Transformer from "@/compiler/Transformer";
 import Is from "@/compiler/Is";
-import Compute from "@/compiler/Compute";
-import Float from "@/compiler/Float";
+import MathKits from "@/compiler/MathKits";
+import ComputeKits from "@/compiler/ComputeKits";
 
 export default class Utils {
     /**
@@ -262,7 +262,7 @@ export default class Utils {
      * and return it in KaTeX grammar
      */
     public static strToFrac(str: string): string {
-        const [a, b] = Compute.toFrac(parseFloat(str));
+        const [a, b] = MathKits.toFrac(parseFloat(str));
         return "\\frac{"+ a +"}{"+ b +"}";
     }
 
@@ -277,7 +277,7 @@ export default class Utils {
         var a = parseInt(matchedStr[0]),
             b = parseInt(matchedStr[1]);
         
-        return Float.divide(a, b).toString();
+        return ComputeKits.divide(a, b).toString();
     }
 
     /**
