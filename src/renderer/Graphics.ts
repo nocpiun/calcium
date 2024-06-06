@@ -381,6 +381,8 @@ export default class Graphics {
     public static numberToString(n: number, fractionDigits?: number): string {
         const abs = Math.abs(n);
 
+        if(abs === 0) return fractionDigits !== undefined ? (0).toFixed(fractionDigits) : "0";
+
         if(abs < minSn && abs > maxSn) {
             return fractionDigits !== undefined ? n.toFixed(fractionDigits) : n.toString();
         }
