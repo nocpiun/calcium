@@ -4,7 +4,9 @@ import { AliveScope } from "react-activation";
 import { shortcuts } from "@/global";
 import { Mode, RenderedFunction } from "@/types";
 import Utils from "@/utils/Utils";
-import { Axis } from "./renderer/Graphics";
+import { Axis } from "@/renderer/Graphics";
+
+import usePreloader from "@/hooks/usePreloader";
 
 // Layout
 import "katex/dist/katex.min.css";
@@ -27,6 +29,9 @@ const App: React.FC = () => {
 	const [mode, setMode] = useState<Mode>(Mode.GENERAL);
 	const [functionList, setFunctionList] = useState<RenderedFunction[]>([]);
 	const [axis, setAxisType] = useState<Axis>(Axis.CARTESIAN);
+
+	usePreloader(new URL("@/workers/graphing.worker.ts", import.meta.url), "script");
+	usePreloader(new URL("@/workers/calculating.worker.ts", import.meta.url), "script");
 
 	useEffect(() => {
 		document.body.addEventListener("keydown", (e: KeyboardEvent) => {
