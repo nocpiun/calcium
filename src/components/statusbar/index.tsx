@@ -10,9 +10,6 @@ import BarItem from "@/components/statusbar/BarItem";
 import Dialog from "@/components/Dialog";
 import AboutDialog from "@/dialogs/AboutDialog";
 import ShortcutDialog from "@/dialogs/ShortcutDialog";
-import ConvertingDialog from "@/dialogs/ConvertingDialog";
-import SeniorityDialog from "@/dialogs/SeniorityDialog";
-import CurrencyDialog from "@/dialogs/CurrencyDialog";
 
 import Emitter from "@/utils/Emitter";
 import { version } from "@/global";
@@ -26,9 +23,6 @@ const StatusBar: React.FC = () => {
     const [fps, setFPS] = useState<number>(0);
     const aboutDialogRef = useRef<Dialog>(null);
     const shortcutDialogRef = useRef<Dialog>(null);
-    const convertingDialogRef = useRef<Dialog>(null);
-    const seniorityDialogRef = useRef<Dialog>(null);
-    const currencyDialogRef = useRef<Dialog>(null);
 
     useEmitter([
         ["graphing-fps", (currentFPS: number) => setFPS(currentFPS)],
@@ -68,9 +62,6 @@ const StatusBar: React.FC = () => {
                         mode === Mode.GRAPHING &&
                         <BarItem title="重载" onClick={() => new Emitter().emit("graphing-reload")} tooltip="函数图像渲染重载"/>
                     }
-                    <BarItem title="汇率" onClick={() => currencyDialogRef.current?.open()}/>
-                    <BarItem title="辈分计算" onClick={() => seniorityDialogRef.current?.open()}/>
-                    <BarItem title="单位换算" onClick={() => convertingDialogRef.current?.open()}/>
                     <BarItem title="快捷键" onClick={() => shortcutDialogRef.current?.open()}/>
                     <BarItem title={"Calcium "+ version} onClick={() => new Emitter().emit("open-about-dialog")}/>
                 </div>
@@ -79,9 +70,6 @@ const StatusBar: React.FC = () => {
             {/* Dialogs */}
             <AboutDialog ref={aboutDialogRef}/>
             <ShortcutDialog ref={shortcutDialogRef}/>
-            <ConvertingDialog ref={convertingDialogRef}/>
-            <SeniorityDialog ref={seniorityDialogRef}/>
-            <CurrencyDialog ref={currencyDialogRef}/>
         </>
     );
 }

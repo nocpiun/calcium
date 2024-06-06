@@ -20,7 +20,7 @@ import MainContext from "@/contexts/MainContext";
 const Sidebar: React.FC = () => {
     const { mode } = useContext(MainContext);
     const [sidebarOpen, setSidebarOpen] = useState<boolean>(!Utils.isMobile());
-    const [width, setWidth] = useState<number>(382);
+    const [width, setWidth] = useState<number>(362);
     const themeValue = new Storage().getItem("theme", useThemeDetector());
 
     const layoutSwitch = (calcMode: Mode) => {
@@ -84,7 +84,7 @@ const Sidebar: React.FC = () => {
             <Sash
                 direction="vertical"
                 defaultValue={width}
-                minValue={362}
+                minValue={342}
                 maxValue={620}
                 side="left"
                 disabled={mode === Mode.GRAPHING}

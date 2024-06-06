@@ -5,7 +5,10 @@ nav.navbar {
     background-color: var(--ca-light1);
     box-shadow: 0 4px 10px -2px rgba(0, 0, 0, 0.1);
     z-index: 2;
-    .mode-switcher {
+    .split {
+        display: flex;
+    }
+    .split .mode-switcher {
         display: flex;
         .mode-button-container {
             display: flex;
@@ -30,9 +33,7 @@ nav.navbar {
                     height: 100%;
                     margin-left: 7px;
                     span {
-                        color: var(--ca-gray10);
-                        font-size: 11pt;
-                        font-weight: bold;
+                        .navbar-label-style(var(--ca-gray10));
                     }
                 }
                 &:hover {
@@ -54,22 +55,44 @@ nav.navbar {
             }
         }
     }
-    .title-container {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        span {
-            color: var(--ca-gray1);
-            font-size: 13pt;
+    .split {
+        .toolbar {
+            display: flex;
+            margin-right: 15px;
+            .toolbar-item {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                margin: 0 10px;
+                cursor: pointer;
+                span {
+                    .navbar-label-style(var(--ca-gray6));
+                    transition: color 70ms ease;
+                    &:hover {
+                        color: var(--ca-gray-light);
+                    }
+                }
+            }
         }
-    }
-    .theme-switcher {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        margin: 15px 10px;
-        .toggle {
-            margin: 0 auto;
+        .theme-switcher-container {
+            display: flex;
+            .theme-switcher-name {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                span {
+                    .navbar-label-style();
+                }
+            }
+            .theme-switcher {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                margin: 15px;
+                .toggle {
+                    margin: 0 auto;
+                }
+            }
         }
     }
 }

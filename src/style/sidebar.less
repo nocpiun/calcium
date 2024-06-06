@@ -107,6 +107,7 @@
     .ka-wrapper {
         flex: 4;
         background-color: var(--ca-light2);
+        position: relative;
         .border-line(right);
         .ka-content {
             height: 100%;
@@ -133,63 +134,67 @@
                     }
                 }
                 &#history .sidebar-page-body {
+                    height: 100%;
                     overflow-x: hidden;
                     overflow-y: auto;
                     .scrollbar-style();
         
-                    .history-main {
-                        width: 100%;
-                        height: 100%;
-                        .history-item {
-                            display: flex;
-                            flex-direction: column;
+                    .history-container {
+                        position: relative;
+                        .history-main {
                             width: 100%;
-                            height: 60px;
-                            padding: 10px 30px;
-                            transition: background-color .08s;
-                            cursor: pointer;
-                            .item-input {
-                                flex: 1;
-                                width: 310px;
-                                color: var(--ca-gray1);
-                                font-size: 10pt;
-                                overflow: hidden;
-                                white-space: nowrap;
-                            }
-                            .item-output {
-                                flex: 1;
-                                width: 200px;
-                                color: var(--ca-gray-light);
-                                font-size: 13pt;
-                                white-space: nowrap;
-                                span .item-number-sys {
-                                    display: inline-block;
-                                    border-radius: 3px;
-                                    margin-left: 10px;
-                                    padding: 3px 5px;
-                                    height: 15px;
-                                    color: #fff;
+                            position: absolute;
+                            .history-item {
+                                display: flex;
+                                flex-direction: column;
+                                width: 100%;
+                                height: 70px;
+                                position: relative;
+                                padding: 10px 30px;
+                                transition: background-color .08s;
+                                box-sizing: border-box;
+                                cursor: pointer;
+                                .item-input {
+                                    flex: 1;
+                                    color: var(--ca-gray1);
                                     font-size: 10pt;
-                                    vertical-align: text-bottom;
-                                    &.sys-hex {
-                                        background-color: #d33333;
-                                    }
-                                    &.sys-dec {
-                                        background-color: #2a64e2;
-                                    }
-                                    &.sys-oct {
-                                        background-color: #e48810;
-                                    }
-                                    &.sys-bin {
-                                        background-color: #359134;
+                                    overflow: hidden;
+                                    white-space: nowrap;
+                                }
+                                .item-output {
+                                    flex: 1;
+                                    color: var(--ca-gray-light);
+                                    font-size: 13pt;
+                                    white-space: nowrap;
+                                    span .item-number-sys {
+                                        display: inline-block;
+                                        border-radius: 3px;
+                                        margin-left: 10px;
+                                        padding: 3px 5px;
+                                        height: 15px;
+                                        color: #fff;
+                                        font-size: 10pt;
+                                        vertical-align: text-bottom;
+                                        &.sys-hex {
+                                            background-color: #d33333;
+                                        }
+                                        &.sys-dec {
+                                            background-color: #2a64e2;
+                                        }
+                                        &.sys-oct {
+                                            background-color: #e48810;
+                                        }
+                                        &.sys-bin {
+                                            background-color: #359134;
+                                        }
                                     }
                                 }
-                            }
-                            &:hover {
-                                background-color: var(--ca-gray5);
-                            }
-                            &:active {
-                                background-color: var(--ca-gray3);
+                                &:hover {
+                                    background-color: var(--ca-gray5);
+                                }
+                                &:active {
+                                    background-color: var(--ca-gray3);
+                                }
                             }
                         }
                     }

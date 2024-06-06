@@ -118,10 +118,12 @@ const History: React.FC = () => {
                 title="历史记录"
                 tip={<><kbd>ctrl+d</kbd> 清空记录</>}
                 onContextMenu={onContextMenu}>
-                <div className="history-main" id="history-list" ref={listElemRef}>
-                    {
-                        list.map((item, index) => <HistoryItem {...item} key={index}/>)
-                    }
+                <div className="history-container">
+                    <div className="history-main" id="history-list" ref={listElemRef}>
+                        {
+                            list.map((item, index) => <HistoryItem {...item} key={index}/>)
+                        }
+                    </div>
                 </div>
             </SidebarPage>
             {contextMenu}
