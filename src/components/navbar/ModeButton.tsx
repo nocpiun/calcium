@@ -1,6 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect, useContext, useId } from "react";
-import { Tooltip } from "react-tooltip";
 
 import { Mode } from "@/types";
 import Utils from "@/utils/Utils";
@@ -9,9 +8,9 @@ import Emitter from "@/utils/Emitter";
 import MainContext from "@/contexts/MainContext";
 
 interface ModeButtonProps {
-    modeName: string
+    name: string
     mode: Mode
-    icon: string
+    icon?: string
 }
 
 const ModeButton: React.FC<ModeButtonProps> = (props) => {
@@ -32,7 +31,7 @@ const ModeButton: React.FC<ModeButtonProps> = (props) => {
             setIsActive(newMode === props.mode);
 
             if(newMode === props.mode) {
-                document.title = "Calcium - "+ props.modeName;
+                document.title = "Calcium - "+ props.name;
             }
         });
     }, []);
@@ -42,23 +41,21 @@ const ModeButton: React.FC<ModeButtonProps> = (props) => {
             {
                 !Utils.isMobile()
                 ? (
-                    <>
-                        <button
-                            className={"mode-button"+ (isActive ? " active" : "")}
-                            data-tooltip-id={id}
-                            data-tooltip-content={props.modeName}
-                            onClick={() => handleClick()}
+                    <button
+                        className={"mode-button"+ (isActive ? " active" : "")}
+                        data-tooltip-id={id}
+                        data-tooltip-content={props.name}
+                        onClick={() => handleClick()}>
+                        <div
+                            className="icon-container"
                             style={{
                                 maskImage: "url("+ props.icon +")",
                                 WebkitMaskImage: "url("+ props.icon +")"
                             }}/>
-                        
-                        <Tooltip
-                            id={id}
-                            place="right"
-                            opacity={1}
-                            border="1px solid var(--ca-gray2)"/>
-                    </>
+                        <div className="name-container">
+                            <span>{props.name}</span>
+                        </div>
+                    </button>
                 )
                 : (
                     <div
@@ -66,7 +63,7 @@ const ModeButton: React.FC<ModeButtonProps> = (props) => {
                         onClick={() => handleClick()}>
                         <div className="mobile-mode-button-bar"/>
                         <div className="mobile-mode-button-name">
-                            <span>{props.modeName}</span>
+                            <span>{props.name}</span>
                         </div>
                     </div>
                 )

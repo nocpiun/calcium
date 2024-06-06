@@ -17,6 +17,7 @@ import "@/style/layout.less";
 // Components
 import Calculator from "@/views/Calculator";
 import Sidebar from "@/components/sidebar";
+import Navbar from "@/components/navbar";
 import StatusBar from "@/components/statusbar";
 
 // Contexts
@@ -61,6 +62,7 @@ const App: React.FC = () => {
 		<main className="calcium" id="calcium-main">
 			<MainContext.Provider value={{ mode, setMode, functionList, setFunctionList, axis, setAxisType }}>
 				<AliveScope>
+					{!Utils.isMobile() && <Navbar />}
 					<div className="app">
 						<Sidebar />
 						<Calculator />

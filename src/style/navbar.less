@@ -1,0 +1,75 @@
+nav.navbar {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 15px;
+    background-color: var(--ca-light1);
+    box-shadow: 0 4px 10px -2px rgba(0, 0, 0, 0.1);
+    z-index: 2;
+    .mode-switcher {
+        display: flex;
+        .mode-button-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            button {
+                display: flex;
+                background-color: transparent;
+                border: none;
+                outline: none;
+                margin: 0 5px;
+                cursor: pointer;
+                .icon-container {
+                    width: 23px;
+                    height: 23px;
+                    background-color: var(--ca-gray10);
+                }
+                .name-container {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    height: 100%;
+                    margin-left: 7px;
+                    span {
+                        color: var(--ca-gray10);
+                        font-size: 11pt;
+                        font-weight: bold;
+                    }
+                }
+                &:hover {
+                    .icon-container {
+                        background-color: var(--ca-gray6);
+                    }
+                    .name-container span {
+                        color: var(--ca-gray6);
+                    }
+                }
+                &.active {
+                    .icon-container {
+                        background-color: var(--ca-gray-light);
+                    }
+                    .name-container span {
+                        color: var(--ca-gray-light);
+                    }
+                }
+            }
+        }
+    }
+    .title-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        span {
+            color: var(--ca-gray1);
+            font-size: 13pt;
+        }
+    }
+    .theme-switcher {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        margin: 15px 10px;
+        .toggle {
+            margin: 0 auto;
+        }
+    }
+}
