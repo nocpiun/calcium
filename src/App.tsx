@@ -50,6 +50,12 @@ const App: React.FC = () => {
 			e.preventDefault();
 		});
 
+		window.addEventListener("beforeunload", (e) => {
+			e.preventDefault();
+			alert("确定要关闭此页面吗？");
+			e.returnValue = "";
+		});
+
 		// To prevent some part of the page being covered by the bottom toolbar of mobile browsers
 		if(Utils.isMobile()) {
 			const { height } = Utils.getWindowConfig();
