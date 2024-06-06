@@ -11,10 +11,62 @@
     <meta name="keywords" content="calcium,calculator,计算器,网页计算器,多功能计算器,函数图像,函数绘制"/>
     <link rel="manifest" href="/manifest.webmanifest">
     <title>Calcium</title>
+    <style>
+      /* Loading animation */
+      #root:not(:empty) + .loading {
+        display: none;
+      }
+      .loading {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        text-align: center;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #f7f7f7;
+      }
+      .loading-title {
+        color: #d4d6d8;
+        font-size: 50pt;
+        margin-bottom: 45px;
+      }
+      .loading-bar {
+        width: 330px;
+        height: 5px;
+        background-color: #d4d6d8;
+        margin: 0 auto;
+        overflow: hidden;
+      }
+      .loading-bar .loading-bar-tablet {
+        width: 130px;
+        height: 100%;
+        background-color: #0165e1;
+        animation: loading 1.5s ease infinite;
+      }
+      
+      @keyframes loading {
+        from {
+          transform: translateX(-130px);
+        }
+
+        to {
+          transform: translateX(calc(330px + 130px));
+        }
+      }
+    </style>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
+    <div class="loading">
+      <div class="loading-title">Calcium</div>
+      <div class="loading-bar">
+        <div class="loading-bar-tablet"></div>
+      </div>
+    </div>
     <div id="dialogs"></div>
     <script src="https://unpkg.com/hidpi-canvas@1.0.10/dist/hidpi-canvas.min.js"></script>
   </body>
