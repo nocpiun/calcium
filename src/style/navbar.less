@@ -3,22 +3,28 @@ nav.navbar {
     justify-content: space-between;
     padding: 0 15px;
     background-color: var(--ca-light1);
+    box-sizing: border-box;
     z-index: 2;
     .split {
         display: flex;
     }
     .split .mode-switcher {
         display: flex;
+        margin-top: 1px;
+        min-height: 40px;
         .mode-button-container {
             display: flex;
             flex-direction: column;
             justify-content: center;
+            border-top: 1px solid transparent;
+            border-left: 1px solid transparent;
+            border-right: 1px solid transparent;
             button {
                 display: flex;
                 background-color: transparent;
                 border: none;
                 outline: none;
-                margin: 0 5px;
+                margin: 0 7px;
                 cursor: pointer;
                 .icon-container {
                     width: 23px;
@@ -44,6 +50,7 @@ nav.navbar {
                     }
                 }
                 &.active {
+                    padding-bottom: 1px;
                     .icon-container {
                         background-color: var(--ca-gray-light);
                     }
@@ -51,6 +58,12 @@ nav.navbar {
                         color: var(--ca-gray-light);
                     }
                 }
+            }
+            &:has(button.active) {
+                background-color: var(--ca-light2);
+                .border-line(top);
+                .border-line(left);
+                .border-line(right);
             }
         }
     }
