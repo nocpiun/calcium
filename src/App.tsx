@@ -4,6 +4,7 @@ import { AliveScope } from "react-activation";
 import { shortcuts } from "@/global";
 import { Mode, RenderedFunction } from "@/types";
 import Utils from "@/utils/Utils";
+import Storage from "@/utils/Storage";
 import { Axis } from "@/renderer/Graphics";
 
 import usePreloader from "@/hooks/usePreloader";
@@ -26,7 +27,7 @@ import StatusBar from "@/components/statusbar";
 import MainContext from "@/contexts/MainContext";
 
 const App: React.FC = () => {
-	const [mode, setMode] = useState<Mode>(Mode.GENERAL);
+	const [mode, setMode] = useState<Mode>(new Storage().getItem("ca-mode", Mode.GENERAL) as Mode);
 	const [functionList, setFunctionList] = useState<RenderedFunction[]>([]);
 	const [axis, setAxisType] = useState<Axis>(Axis.CARTESIAN);
 

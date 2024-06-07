@@ -8,9 +8,9 @@ export interface ReducerAction<T, P> {
 }
 
 export enum Mode {
-    GENERAL = 0,
-    GRAPHING = 1,
-    PROGRAMMING = 2
+    GENERAL = "general",
+    GRAPHING = "graphing",
+    PROGRAMMING = "programming"
 }
 
 export enum Theme {

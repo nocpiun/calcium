@@ -21,7 +21,7 @@ const Sidebar: React.FC = () => {
     const { mode } = useContext(MainContext);
     const [sidebarOpen, setSidebarOpen] = useState<boolean>(!Utils.isMobile());
     const [width, setWidth] = useState<number>(362);
-    const themeValue = new Storage().getItem("theme", useThemeDetector());
+    const themeValue = new Storage().getItem("ca-theme", useThemeDetector());
 
     const layoutSwitch = (calcMode: Mode) => {
         switch(calcMode) {

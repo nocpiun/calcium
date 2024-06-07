@@ -1,9 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useEffect, useContext, useId } from "react";
+import React, { useState, useContext, useId } from "react";
 
 import { Mode } from "@/types";
 import Utils from "@/utils/Utils";
 import Emitter from "@/utils/Emitter";
+import Storage from "@/utils/Storage";
+
+import useEmitter from "@/hooks/useEmitter";
 
 import MainContext from "@/contexts/MainContext";
 
@@ -22,19 +25,17 @@ const ModeButton: React.FC<ModeButtonProps> = (props) => {
         new Emitter().emit("switch-mode", props.mode);
     };
 
-    useEffect(() => {
-        // default
-        new Emitter().emit("switch-mode", Mode.GENERAL);
-
-        new Emitter().on("switch-mode", (newMode: Mode) => {
+    useEmitter([
+        ["switch-mode", (newMode: Mode) => {
             setMode(newMode);
             setIsActive(newMode === props.mode);
 
             if(newMode === props.mode) {
                 document.title = "Calcium - "+ props.name;
+                new Storage().setItem("ca-mode", props.mode);
             }
-        });
-    }, []);
+        }]
+    ]);
 
     return (
         <div className="mode-button-container">
