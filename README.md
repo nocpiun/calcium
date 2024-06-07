@@ -14,7 +14,7 @@
 
 </div>
 
-![Banner](./images/banner.png)
+![Poster](./images/poster.png)
 
 ## Description
 
