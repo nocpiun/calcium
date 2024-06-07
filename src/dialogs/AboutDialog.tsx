@@ -1,5 +1,6 @@
 import React, { ReactElement, forwardRef, useState, useId } from "react";
 import { InlineMath } from "react-katex";
+import { ReactSVG } from "react-svg";
 
 import Emitter from "@/utils/Emitter";
 import type { PropsWithRef } from "@/types";
@@ -100,29 +101,43 @@ const AboutDialog: React.FC<AboutDialogProps> = forwardRef<Dialog, AboutDialogPr
         const [isReleasesVisible, setReleasesVisible] = useState<boolean>(false);
 
         return (
-            <Dialog title="关于" height={530} className="about-dialog" id={"about-dialog--"+ useId()} ref={ref}>
-                <p><img src="/icon.png" alt="icon" width={18}/> <b>Calcium</b> 是一个由React+Typescript编写的基于web的网页计算器.</p>
+            <Dialog
+                title="关于"
+                height={530}
+                className="about-dialog"
+                id={"about-dialog--"+ useId()}
+                footer={
+                    <>
+                        <button
+                            className="footer-button"
+                            onClick={() => {
+                                setReleasesVisible(true);
+                                new Emitter().emit("release-indialog-open")
+                        }}>更新日志</button>
+                    </>
+                }
+                ref={ref}>
+                
+                <div className="basic-info-container">
+                    <div className="basic-info">
+                        <ReactSVG src="/icon.svg"/>
 
+                        <p className="version">{"v"+ version}</p>
+                        <p className="copy">By Nocpiun Org / Copyright (c) 2024 NriotHrreion</p>
+                    </div>
+                </div>
+                
                 <ul>
-                    <li><AboutItem name="版本" content={
-                        <button onClick={() => {
-                            setReleasesVisible(true);
-                            new Emitter().emit("release-indialog-open")}}>
-                            {version}
-                        </button>
-                    }/></li>
-                    <li><AboutItem name="作者" content="NoahHrreion"/></li>
                     <li><AboutItem name="数学显示" content={<a href="https://katex.org" target="_blank" rel="noreferrer" className="katex-logo"><InlineMath>\KaTeX</InlineMath></a>}/></li>
                     <li><AboutItem name="支持我" content={<a href="https://nin.red/#/donate" target="_blank" rel="noreferrer">打赏</a>}/></li>
                     <li><AboutItem name="Github Repo" content={<a href="https://github.com/nocpiun/calcium" target="_blank" rel="noreferrer">nocpiun/calcium</a>}/></li>
                     <li><AboutItem name="依赖" content={<button onClick={() => setDependencyListVisible(true)}>查看</button>}/></li>
-                    <li><AboutItem name="License" content={<button onClick={() => setLicenseVisible(true)}>查看</button>}/></li>
+                    <li><AboutItem name="许可" content={<button onClick={() => setLicenseVisible(true)}>查看</button>}/></li>
                 </ul>
 
-                <p style={{ textAlign: "center" }}>如果有任何问题或想法, 欢迎提交 <a href="https://github.com/nocpiun/calcium/issues" target="_blank" rel="noreferrer">issue</a> 来让我知道.</p>
-                <h3 style={{ textAlign: "center" }}>感谢使用 Calcium!</h3>
+                <h3 className="thanks">感谢使用 Calcium!</h3>
 
-                <IndialogPage title="License" visible={isLicenseVisible} onBack={() => setLicenseVisible(false)}>
+                <IndialogPage title="许可 (MIT)" visible={isLicenseVisible} onBack={() => setLicenseVisible(false)}>
                     <textarea className="license-content" value={licenseContent} disabled/>
                 </IndialogPage>
 

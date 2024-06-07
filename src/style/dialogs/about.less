@@ -1,4 +1,27 @@
 dialog.about-dialog .main-container {
+    .basic-info-container {
+        display: flex;
+        justify-content: center;
+        .basic-info {
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+            svg {
+                width: 100px;
+                height: 100px;
+                rect {
+                    fill: transparent;
+                }
+            }
+            p.version {
+                color: var(--ca-gray7);
+            }
+            p.copy {
+                color: var(--ca-gray7);
+                font-size: 10pt;
+            }
+        }
+    }
     button {
         background-color: transparent;
         outline: none;
@@ -15,6 +38,13 @@ dialog.about-dialog .main-container {
     }
     ul {
         margin: 0;
+        li {
+            margin-bottom: 7px !important;
+        }
+    }
+    h3 {
+        text-align: center;
+        margin-top: 3px;
     }
     .indialog-page .indialog-page-content {
         .license-content {
