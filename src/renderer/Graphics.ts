@@ -84,6 +84,8 @@ export default class Graphics {
         ) {
             var y1 = this.center.y - i * unitPx;
             var y2 = this.center.y + i * unitPx;
+            if(!this.isPointVisible(this.createPoint(0, y1)) && !this.isPointVisible(this.createPoint(0, y2))) continue;
+
             this.drawStraightLine(y1, this.colors.secondary);
             this.drawStraightLine(y2, this.colors.secondary);
 
@@ -132,6 +134,8 @@ export default class Graphics {
         ) {
             var y1 = this.center.y - i * secondaryUnitPx;
             var y2 = this.center.y + i * secondaryUnitPx;
+            if(!this.isPointVisible(this.createPoint(0, y1)) && !this.isPointVisible(this.createPoint(0, y2))) continue;
+
             this.drawStraightLine(y1, this.colors.secondary, .3);
             this.drawStraightLine(y2, this.colors.secondary, .3);
         }
@@ -152,6 +156,8 @@ export default class Graphics {
         ) {
             var x1 = this.center.x - i * unitPx;
             var x2 = this.center.x + i * unitPx;
+            if(!this.isPointVisible(this.createPoint(x1, 0)) && !this.isPointVisible(this.createPoint(x2, 0))) continue;
+
             this.drawVerticalLine(x1, this.colors.secondary);
             this.drawVerticalLine(x2, this.colors.secondary);
 
@@ -195,6 +201,8 @@ export default class Graphics {
         ) {
             var x1 = this.center.x - i * secondaryUnitPx;
             var x2 = this.center.x + i * secondaryUnitPx;
+            if(!this.isPointVisible(this.createPoint(x1, 0)) && !this.isPointVisible(this.createPoint(x2, 0))) continue;
+
             this.drawVerticalLine(x1, this.colors.secondary, .3);
             this.drawVerticalLine(x2, this.colors.secondary, .3);
         }
@@ -376,6 +384,13 @@ export default class Graphics {
             x: this.center.x + (point.x * unitPx),
             y: this.center.y - (point.y * unitPx)
         };
+    }
+
+    protected isPointVisible(point: Point): boolean {
+        return (
+            point.x >= 0 && point.x <= this.canvas.width &&
+            point.y >= 0 && point.y <= this.canvas.height
+        );
     }
 
     public static numberToString(n: number, fractionDigits?: number): string {
