@@ -1,6 +1,6 @@
 {
   "name": "calcium",
-  "version": "1.5.1b",
+  "version": "1.5.1c",
   "private": true,
   "dependencies": {
     "@babel/core": "^7.16.0",
