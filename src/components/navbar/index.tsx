@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useRef } from "react";
 import Toggle from "@nocp/toggle";
 
 import ModeButton from "@/components/navbar/ModeButton";
@@ -8,7 +8,6 @@ import ConvertingDialog from "@/dialogs/ConvertingDialog";
 import SeniorityDialog from "@/dialogs/SeniorityDialog";
 import CurrencyDialog from "@/dialogs/CurrencyDialog";
 
-import Emitter from "@/utils/Emitter";
 import Storage from "@/utils/Storage";
 import useThemeDetector from "@/hooks/useThemeDetector";
 import { Mode, Theme } from "@/types";
@@ -27,11 +26,6 @@ const Navbar: React.FC = () => {
         document.body.setAttribute("theme", isActive ? Theme.LIGHT : Theme.DARK);
         new Storage().setItem("ca-theme", isActive ? Theme.LIGHT : Theme.DARK);
     };
-
-    useEffect(() => {
-        // default
-        new Emitter().emit("switch-mode", new Storage().getItem("ca-mode", Mode.GENERAL) as Mode);
-    }, []);
 
     return (
         <>

@@ -56,13 +56,12 @@ const Sidebar: React.FC = () => {
     return (
         <aside className={"sidebar-container"+ (sidebarOpen ? " open" : "")} style={!Utils.isMobile() ? { width } : {}}>
             {/* Mobile only */}
-            {Utils.isMobile() && <div className="mobile-control-panel">
+            {<div className="mobile-control-panel">
                 <div className="sidebar-title">
                     <span>Calcium {version}</span>
                 </div>
 
                 <div className="mode-switcher-wrapper">
-                    <div className="mode-switcher-tab-slider" style={{ transform: "translateY("+ mode * 100 +"%)" }}/>
                     <div className="mode-switcher">
                         <ModeButton name="通用" mode={Mode.GENERAL}/>
                         <ModeButton name="图像" mode={Mode.GRAPHING}/>

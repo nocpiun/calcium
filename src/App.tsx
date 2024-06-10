@@ -5,9 +5,10 @@ import { shortcuts } from "@/global";
 import { Mode, RenderedFunction } from "@/types";
 import Utils from "@/utils/Utils";
 import Storage from "@/utils/Storage";
+import Emitter from "@/utils/Emitter";
 import { Axis } from "@/renderer/Graphics";
 
-import usePreloader from "@/hooks/usePreloader";
+// import usePreloader from "@/hooks/usePreloader";
 
 // Layout
 import "katex/dist/katex.min.css";
@@ -31,10 +32,13 @@ const App: React.FC = () => {
 	const [functionList, setFunctionList] = useState<RenderedFunction[]>([]);
 	const [axis, setAxisType] = useState<Axis>(Axis.CARTESIAN);
 
-	usePreloader(new URL("@/workers/graphing.worker.ts", import.meta.url), "script");
-	usePreloader(new URL("@/workers/calculating.worker.ts", import.meta.url), "script");
+	// usePreloader(new URL("@/workers/graphing.worker.ts", import.meta.url), "script");
+	// usePreloader(new URL("@/workers/calculating.worker.ts", import.meta.url), "script");
 
 	useEffect(() => {
+		// Default Mode
+		new Emitter().emit("switch-mode", new Storage().getItem("ca-mode", Mode.GENERAL) as Mode);
+
 		document.body.addEventListener("keydown", (e: KeyboardEvent) => {
 			shortcuts.forEach((shortcut, key) => {
 				if(
@@ -74,7 +78,7 @@ const App: React.FC = () => {
 		<main className="calcium" id="calcium-main">
 			<MainContext.Provider value={{ mode, setMode, functionList, setFunctionList, axis, setAxisType }}>
 				<AliveScope>
-					{!Utils.isMobile() && <Navbar />}
+					<Navbar />
 					<div className="app">
 						<Sidebar />
 						<Calculator />

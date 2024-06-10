@@ -3,7 +3,7 @@
     flex-direction: row;
     .border-line(top);
     .mobile-control-panel {
-        display: flex;
+        display: none;
         flex-direction: column;
         justify-content: space-between;
         width: 65px;
@@ -18,14 +18,6 @@
         }
         .mode-switcher-wrapper {
             position: relative;
-            .mode-switcher-tab-slider {
-                position: absolute;
-                left: 0;
-                width: 3px;
-                height: 33%;
-                background-color: var(--ca-blue4);
-                transition: transform .15s ease;
-            }
             .mode-switcher {
                 font-size: 0;
                 .mode-button-container {
