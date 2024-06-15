@@ -120,7 +120,7 @@ const AboutDialog: React.FC<AboutDialogProps> = forwardRef<Dialog, AboutDialogPr
                 
                 <div className="basic-info-container">
                     <div className="basic-info">
-                        <ReactSVG src="/icon.svg"/>
+                        <ReactSVG src="/icon-pure.svg"/>
 
                         <p className="version">{"v"+ version}</p>
                         <p className="copy">By Nocpiun Org / Copyright (c) 2024 NriotHrreion</p>
