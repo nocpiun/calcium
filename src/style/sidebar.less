@@ -1,7 +1,9 @@
 .sidebar-container {
     display: flex;
     flex-direction: row;
+    overflow: hidden;
     .border-line(top);
+    .border-line(right);
     .mobile-control-panel {
         display: none;
         flex-direction: column;
@@ -99,10 +101,11 @@
     }
     .ka-wrapper {
         flex: 4;
+        width: 100%;
         background-color: var(--ca-light2);
         position: relative;
-        .border-line(right);
         .ka-content {
+            width: 100%;
             height: 100%;
             .sidebar-page {
                 display: flex;
@@ -286,5 +289,8 @@
     }
     .sash {
         height: calc(100% - 26px - 40px);
+    }
+    &:has(.sidebar-page#function-list) {
+        z-index: 1;
     }
 }

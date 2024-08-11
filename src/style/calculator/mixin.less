@@ -147,13 +147,11 @@
     overflow-y: auto;
     .scrollbar-style();
     &-item {
-        @transition-delay: 90ms;
         display: flex;
         height: 25px;
         margin: 3px 20px;
         padding: 3px 7px;
         border-radius: 5px;
-        transition: background-color @transition-delay ease;
         animation: function-item-added 100ms ease;
         animation-iteration-count: 1;
         &-tag {
@@ -163,9 +161,20 @@
         }
         &-value {
             flex: 5;
+            width: 100%;
             display: flex;
             align-items: center;
             color: var(--ca-gray-light);
+            overflow: hidden;
+            position: relative;
+            &-shadow {
+                width: 30px;
+                position: absolute;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                background: linear-gradient(to left, var(--ca-light2), transparent);
+            }
         }
         &-buttons {
             flex: .5;
@@ -181,7 +190,6 @@
                     width: 19px;
                     height: 19px;
                     margin-top: 3px;
-                    transition: fill @transition-delay ease;
                     cursor: pointer;
                 }
             }
@@ -193,6 +201,9 @@
             background-color: var(--ca-gray9);
             .function-list-item-buttons svg:hover {
                 fill: var(--ca-gray1);
+            }
+            .function-list-item-value .function-list-item-value-shadow {
+                background: linear-gradient(to left, var(--ca-gray9), transparent);
             }
         }
     }

@@ -54,7 +54,10 @@ const FunctionListItem: React.FC<ListItemProps> = (props) => {
                     <span><InlineMath>{(props.mode === FunctionInputtingType.NORMAL ? "y" : "\\rho") +"_{"+ (props.index + 1).toString() +"} ="}</InlineMath></span>
                 </div>
                 <div className="function-list-item-value">
-                    <span><InlineMath>{props.value}</InlineMath></span>
+                    <span>
+                        <InlineMath>{props.value}</InlineMath>
+                        <div className="function-list-item-value-shadow"/>
+                    </span>
                 </div>
 
                 <div className="function-list-item-buttons">
