@@ -10,6 +10,7 @@ import { FunctionInputtingType } from "@/types";
 
 import moreIcon from "@/icons/more.svg";
 import removeIcon from "@/icons/remove.svg";
+import OverflowShadow from "../OverflowShadow";
 
 interface ListItemProps {
     id: number
@@ -56,7 +57,7 @@ const FunctionListItem: React.FC<ListItemProps> = (props) => {
                 <div className="function-list-item-value">
                     <span>
                         <InlineMath>{props.value}</InlineMath>
-                        <div className="function-list-item-value-shadow"/>
+                        <OverflowShadow />
                     </span>
                 </div>
 

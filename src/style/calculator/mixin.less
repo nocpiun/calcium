@@ -155,9 +155,9 @@
         animation: function-item-added 100ms ease;
         animation-iteration-count: 1;
         &-tag {
-            flex: 1;
-            .function-tag();
+            width: 45px;
             padding: 0 3px;
+            .function-tag();
         }
         &-value {
             flex: 5;
@@ -167,8 +167,7 @@
             color: var(--ca-gray-light);
             overflow: hidden;
             position: relative;
-            &-shadow {
-                width: 30px;
+            .overflow-shadow {
                 position: absolute;
                 top: 0;
                 right: 0;
@@ -178,7 +177,7 @@
         }
         &-buttons {
             flex: .5;
-            display: flex;
+            display: none;
             button {
                 display: flex;
                 align-items: center;
@@ -187,6 +186,7 @@
                 outline: none;
                 background-color: transparent;
                 svg {
+                    fill: var(--ca-gray1);
                     width: 19px;
                     height: 19px;
                     margin-top: 3px;
@@ -199,10 +199,10 @@
         }
         &:hover {
             background-color: var(--ca-gray9);
-            .function-list-item-buttons svg:hover {
-                fill: var(--ca-gray1);
+            .function-list-item-buttons {
+                display: flex;
             }
-            .function-list-item-value .function-list-item-value-shadow {
+            .function-list-item-value .overflow-shadow {
                 background: linear-gradient(to left, var(--ca-gray9), transparent);
             }
         }

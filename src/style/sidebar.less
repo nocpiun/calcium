@@ -147,7 +147,6 @@
                                 height: 70px;
                                 position: relative;
                                 padding: 10px 30px;
-                                transition: background-color .08s;
                                 box-sizing: border-box;
                                 cursor: pointer;
                                 .item-input {
@@ -156,6 +155,14 @@
                                     font-size: 10pt;
                                     overflow: hidden;
                                     white-space: nowrap;
+                                    position: relative;
+                                    .overflow-shadow {
+                                        position: absolute;
+                                        top: 0;
+                                        right: 0;
+                                        bottom: 0;
+                                        background: linear-gradient(to left, var(--ca-light2), transparent);
+                                    }
                                 }
                                 .item-output {
                                     flex: 1;
@@ -187,9 +194,15 @@
                                 }
                                 &:hover {
                                     background-color: var(--ca-gray5);
+                                    .item-input .overflow-shadow {
+                                        background: linear-gradient(to left, var(--ca-gray5), transparent);
+                                    }
                                 }
                                 &:active {
                                     background-color: var(--ca-gray3);
+                                    .item-input .overflow-shadow {
+                                        background: linear-gradient(to left, var(--ca-gray3), transparent);
+                                    }
                                 }
                             }
                         }

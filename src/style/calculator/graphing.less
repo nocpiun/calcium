@@ -27,7 +27,7 @@
         flex: 1;
         display: none; // flex
         flex-direction: column;
-        width: 100%;
+        width: 100vw;
         height: 0;
         background-color: var(--ca-light1);
         .function-input-box {
@@ -81,6 +81,14 @@
         .function-list {
             flex: 1;
             .function-list-style();
+            &-item {
+                &-value {
+                    width: 100%;
+                    .overflow-shadow {
+                        background: linear-gradient(to left, var(--ca-light1), transparent);
+                    }
+                }
+            }
         }
         .mobile-input-container {
             border-top: 1px solid var(--ca-gray2);

@@ -5,6 +5,7 @@ import { useContextMenu, ContextMenuItem, ContextMenuDivider } from "use-context
 import { HistoryItemInfo } from "@/components/sidebar/History";
 
 import Emitter from "@/utils/Emitter";
+import OverflowShadow from "../OverflowShadow";
 
 const HistoryItem: React.FC<HistoryItemInfo> = (props) => {
     const handleClick = () => {
@@ -29,6 +30,7 @@ const HistoryItem: React.FC<HistoryItemInfo> = (props) => {
                 onContextMenu={onContextMenu}>
                 <div className="item-input">
                     <span><InlineMath>{props.input}</InlineMath></span>
+                    <OverflowShadow />
                 </div>
                 <div className="item-output">
                     <span>
