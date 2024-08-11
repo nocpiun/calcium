@@ -1,4 +1,5 @@
 import React, { useRef } from "react";
+import BigNumber from "bignumber.js";
 
 import ComputeKits from "@/compiler/ComputeKits";
 
@@ -32,7 +33,7 @@ const UnitItem: React.FC<UnitItemType> = (props) => {
         // This is in order to make the "." available for inputing
         if(value[value.length - 1] === ".") return;
 
-        new Emitter().emit("unit-value-input", props.name, parseFloat(value) || 0);
+        new Emitter().emit("unit-value-input", props.name, new BigNumber(value).toNumber() || 0);
     };
 
     useEmitter([
@@ -45,6 +46,9 @@ const UnitItem: React.FC<UnitItemType> = (props) => {
             if(!inputRef.current) return;
             var originRate = getTransformRate(originUnitId);
             var targetRate = getTransformRate(props.name);
+
+            if(originRate === targetRate) return; // self -> self is meaningless
+
             /**
              * result = value * originRate / targetRate
              * 
