@@ -5,7 +5,7 @@ import MathKits from "@/compiler/MathKits";
 import Emitter from "@/utils/Emitter";
 import { FunctionInfo, Shortcut, RollbackToward } from "@/types";
 
-export const version = "2.0.0rc1";
+export const version = "2.0.0rc2";
 export const errorText = "\\text{Error}";
 
 // MARK: Function List
