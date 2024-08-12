@@ -78,22 +78,20 @@
 .input-box-style(@ltr: true) {
     .display {
         display: flex;
-        // justify-content: flex-end;
+        align-items: center;
         color: var(--ca-gray-light);
         overflow-x: auto;
         overflow-y: hidden;
         cursor: text;
         .scrollbar-style();
         & > span {
-            display: inline;
-        }
-        & > *:first-child when (@ltr = false) {
-            // see https://www.zhangxinxu.com/wordpress/2021/12/flex-end-overflow/
-            margin-left: auto !important;
+            display: inline-flex;
+            align-items: center;
+            .katex-display {
+                margin: 0;
+            }
         }
         .cursor {
-            margin: 1em 0; // keep the cursor fixed on the middle
-            
             // make the symbols fixed when the cursor moves
             margin-left: if(@ltr = true, 0, -1px);
             margin-right: if(@ltr = true, -1px, 0);
