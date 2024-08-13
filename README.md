@@ -20,7 +20,7 @@
 
 Calcium is a web-based calculator written in React + Typescript.
 
-If you encounter any problems or have any ideas, feel free to open an issue to let me know.
+If you encountered any problems or have any ideas, feel free to open an issue to let me know.
 
 _[Here is the Wiki](https://github.com/nocpiun/calcium/wiki)_
 
@@ -32,7 +32,7 @@ _[Here is the Manual](https://github.com/nocpiun/calcium/wiki/Manual)_
 Calculator -> calc -> Ca (Chemical Element) -> Calcium
 ```
 
-#### What features does it include?
+#### What features does it support?
 
 - Basic calculating
 - Sigma & Integral & Product calculating
@@ -46,37 +46,37 @@ Calculator -> calc -> Ca (Chemical Element) -> Calcium
 
 ## Deploy & Use
 
-**It is recommended to access Calcium via [calcium.js.org](https://calcium.js.org). However, if you prefer to deploy it locally, please proceed to read the following instructions.**
+**It is recommended to access Calcium via [calcium.js.org](https://calcium.js.org). However, if you prefer to deploy it locally or want to contribute to the source code, please proceed to read the following instructions.**
 
 #### Docker
 
-First, you need to make sure you have had [Docker](https://docker.com) installed on your server (or computer).
+To begin with, you need to make sure you have had [Docker](https://docker.com) installed on your server (or computer).
 
-1. Pull docker repository
+1. **Pull docker repository**
 
 ```bash
 docker pull noahhrreion/calcium:main
 ```
 
-2. Create container
+2. **Create container**
 
 ```bash
 docker run -p 3000:3000 noahhrreion/calcium:main
 ```
 
-3. Enter `http://localhost:3000`, and you can start using Calcium.
+3. **Enter `http://localhost:3000`, and you can start using Calcium.**
 
 #### Launch directly
 
-First, you need to make sure you have had [Git](https://git-scm.com/downloads) & [Node.js](https://nodejs.org/en/download) installed on your server (or computer).
+To begin with, you need to make sure you have had [Git](https://git-scm.com/downloads) & [Node.js](https://nodejs.org/en/download) installed on your server (or computer).
 
-1. Clone Git repo
+1. **Clone Git repo**
 
 ```bash
 git clone https://github.com/nocpiun/calcium.git
 ```
 
-2. Install dependencies
+2. **Install dependencies**
 
 ```bash
 npm i
@@ -88,15 +88,15 @@ If it throws error at this step, try:
 npm i --force
 ```
 
-3. Launch Calcium
+3. **Launch Calcium**
 
 ```bash
 npm run start
 ```
 
-4. Enter `http://localhost:3000`, and you can start using Calcium.
+4. **Enter `http://localhost:3000`, and you can start using Calcium.**
 
-5. If you want to make contribution to this repo, just simply begin by modifying the code and starting debugging!
+If you want to make contribution to this repo, just simply begin by modifying the code and starting debugging!
 
 ## Contributing
 
