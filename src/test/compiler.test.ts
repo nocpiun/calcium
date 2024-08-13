@@ -138,17 +138,20 @@ describe("Compiler tests", () => {
         const f9 = "( 2 e ) \\pi";
         expect(calculate(f9)).toBe("17.07946844534713");
 
-        const f10 = "( e \\pi ) 2";
-        expect(calculate(f10)).toBe("17.07946844534714");
+        const f10 = "( e 2 ) \\pi";
+        expect(calculate(f10)).toBe("17.07946844534713");
 
-        const f11 = "2 ^2 e";
-        expect(calculate(f11)).toBe("10.87312731383618");
+        const f11 = "( e \\pi ) 2";
+        expect(calculate(f11)).toBe("17.07946844534714");
 
-        const f12 = "3 1 b";
-        expect(calculate(f12, variables)).toBe("403");
+        const f12 = "2 ^2 e";
+        expect(calculate(f12)).toBe("10.87312731383618");
 
-        const f13 = "b 3 1";
+        const f13 = "3 1 b";
         expect(calculate(f13, variables)).toBe("403");
+
+        const f14 = "b 3 1";
+        expect(calculate(f14, variables)).toBe("403");
     });
 
     test("Integrated Calculations", () => {

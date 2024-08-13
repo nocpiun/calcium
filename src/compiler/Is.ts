@@ -11,6 +11,13 @@ export default class Is {
             return number.indexOf(symbol) > -1;
         }
     }
+
+    public static pureNumber(symbol: string): boolean {
+        const number = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "."];
+        if(!symbol) return false;
+
+        return number.indexOf(symbol) > -1;
+    }
     
     public static operator(symbol: string): boolean {
         const operator = [

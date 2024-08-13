@@ -143,7 +143,7 @@ export default class Compiler {
                     } else {
                         this.pushVariable(symbol);
 
-                        if(Is.variable(symbol) && Is.number(this.raw[i + 1], this.isProgrammingMode)) {
+                        if(Is.pureNumber(this.raw[i + 1])) {
                             this.pushOperator(Operator.MUL);
                         }
                     }
