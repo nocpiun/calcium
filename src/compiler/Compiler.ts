@@ -142,6 +142,10 @@ export default class Compiler {
                         this.pushExponential(i) && i++;
                     } else {
                         this.pushVariable(symbol);
+
+                        if(Is.variable(symbol) && Is.number(this.raw[i + 1], this.isProgrammingMode)) {
+                            this.pushOperator(Operator.MUL);
+                        }
                     }
                     continue;
                 }
@@ -338,9 +342,9 @@ export default class Compiler {
             }
         }
 
-        if(process.env.NODE_ENV === "test") {
+        if(process.env.NODE_ENV === "development") {
             console.log(
-                this.raw.join(""),
+                this.raw,
                 "\n",
                 this.root
             );

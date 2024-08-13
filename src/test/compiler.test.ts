@@ -123,28 +123,42 @@ describe("Compiler tests", () => {
         const f4 = "( 2 a ) b";
         expect(calculate(f4, variables)).toBe("130");
 
-        const f5 = "( a b ) 2";
+        const f5 = "( a 2 ) b";
         expect(calculate(f5, variables)).toBe("130");
 
-        const f6 = "2 e \\pi";
-        expect(calculate(f6)).toBe("17.07946844534713");
+        const f6 = "( a b ) 2";
+        expect(calculate(f6, variables)).toBe("130");
 
-        const f7 = "2 ( e \\pi )";
-        expect(calculate(f7)).toBe("17.07946844534714");
+        const f7 = "2 e \\pi";
+        expect(calculate(f7)).toBe("17.07946844534713");
 
-        const f8 = "( 2 e ) \\pi";
-        expect(calculate(f8)).toBe("17.07946844534713");
+        const f8 = "2 ( e \\pi )";
+        expect(calculate(f8)).toBe("17.07946844534714");
 
-        const f9 = "( e \\pi ) 2";
-        expect(calculate(f9)).toBe("17.07946844534714");
+        const f9 = "( 2 e ) \\pi";
+        expect(calculate(f9)).toBe("17.07946844534713");
 
-        const f10 = "2 ^2 e";
-        expect(calculate(f10)).toBe("10.87312731383618");
+        const f10 = "( e \\pi ) 2";
+        expect(calculate(f10)).toBe("17.07946844534714");
+
+        const f11 = "2 ^2 e";
+        expect(calculate(f11)).toBe("10.87312731383618");
+
+        const f12 = "3 1 b";
+        expect(calculate(f12, variables)).toBe("403");
+
+        const f13 = "b 3 1";
+        expect(calculate(f13, variables)).toBe("403");
     });
 
     test("Integrated Calculations", () => {
-        const f1 = "1 1 4 + 5 1 4 × ( 1 5 7 + 2 4 6 - 3 / ( 2 9 - 2 8 + 1 3 \\sin( \\pi / 6 ) ^2 - \\text{mean}( 1 , 2 , 3 , ( 2 3 - 1 2 ) + | - 1 5 | ^2 - 3 ! ^2 + 4 ! ) ) ) + \\ln( e )";
-        expect(calculate(f1)).toBe("207285.95774647893");
+        const variables = new Map([
+            ["a", "57"],
+            ["b", "15"],
+        ]);
+
+        const f1 = "a 2 + 5 1 4 × ( 1 5 7 + 2 4 6 - 3 / ( 2 9 - 2 8 + 1 3 \\sin( \\pi / 6 ) ^2 - \\text{mean}( 1 , 2 , 3 , ( 2 3 - 1 2 ) + | - b | ^2 - 3 ! ^2 + 4 ! ) ) ) + \\ln( e )";
+        expect(calculate(f1, variables)).toBe("207285.95774647893");
     });
 
 });
