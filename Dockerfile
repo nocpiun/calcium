@@ -1,4 +1,4 @@
-FROM node:16-alpine
+FROM node:20-bullseye
 
 COPY . /calcium/
 WORKDIR /calcium/
@@ -7,4 +7,4 @@ RUN npm i
 
 EXPOSE 3000
 
-ENTRYPOINT npm run start
+ENTRYPOINT npm run docker:start
