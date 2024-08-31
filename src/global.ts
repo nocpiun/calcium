@@ -135,6 +135,12 @@ export const shortcuts: Map<string[], Shortcut> = new Map([
             new Emitter().emit("clear-input");
         }
     }],
+    [["ctrl", "c"], {
+        description: "复制计算结果",
+        action: () => {
+            new Emitter().emit("copy-result");
+        }
+    }],
     [["ctrl", "d"], {
         description: "清空历史记录",
         action: () => {

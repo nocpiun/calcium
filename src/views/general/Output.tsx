@@ -6,6 +6,7 @@ import React, {
 } from "react";
 import { BlockMath, InlineMath } from "react-katex";
 import { useContextMenu, ContextMenuItem } from "use-context-menu";
+import { ReactSVG } from "react-svg";
 
 import { HistoryItemInfo } from "@/components/sidebar/History";
 
@@ -31,6 +32,8 @@ import IntDialog from "@/dialogs/IntDialog";
 import ProdDialog from "@/dialogs/ProdDialog";
 import AtomicWeightsDialog from "@/dialogs/AtomicWeightsDialog";
 
+import CopyIcon from "@/icons/copy.svg";
+
 const Output: React.FC = () => {
     const [outputContent, setOutputContent] = useState<string>("");
     const [isTofrac, setIsTofrac] = useState<boolean>(false);
@@ -47,6 +50,11 @@ const Output: React.FC = () => {
 
     const handleTofracSwitch = () => {
         setIsTofrac((current) => !current);
+    };
+
+    const handleCopyResult = async () => {
+        Utils.writeClipboard((await Utils.getCurrentState(setOutputContent)).substring(1));
+        alert("复制成功");
     };
 
     const handleResult = useCallback((currentContent: string) => {
@@ -227,6 +235,7 @@ const Output: React.FC = () => {
 
     useEmitter([
         ["clear-input", () => setOutputContent("")],
+        ["copy-result", () => handleCopyResult()],
         ["switch-tofrac", () => handleTofracSwitch()],
         ["history-item-click", (itemInfo: HistoryItemInfo) => {
             if(itemInfo.type !== RecordType.GENERAL) return;
@@ -257,7 +266,7 @@ const Output: React.FC = () => {
     const { contextMenu, onContextMenu } = useContextMenu(
         <>
             <ContextMenuItem onSelect={() => new Emitter().emit("clear-input")}>清空</ContextMenuItem>
-            <ContextMenuItem onSelect={() => Utils.writeClipboard(outputContent.substring(1))}>复制结果</ContextMenuItem>
+            <ContextMenuItem onSelect={() => new Emitter().emit("copy-result")}>复制结果</ContextMenuItem>
         </>
     );
 
@@ -270,9 +279,15 @@ const Output: React.FC = () => {
                 {Utils.isMobile() && <SidebarOpener />}
 
                 <span className="output-tag">Output</span>
-                <button className={"tofrac-switcher"+ (isTofrac ? " active" : "")} onClick={() => handleTofracSwitch()}>
-                    <InlineMath math="\frac{a}{b}"/>
-                </button>
+                <div className="output-toolbar">
+                    <button className={"output-tool-button tofrac-switcher"+ (isTofrac ? " active" : "")} onClick={() => handleTofracSwitch()}>
+                        <InlineMath math="\frac{a}{b}"/>
+                    </button>
+                    <button className="output-tool-button copy-button" onClick={() => handleCopyResult()}>
+                        <ReactSVG src={CopyIcon}/>
+                    </button>
+                </div>
+
                 <InputBox
                     ref={inputRef}
                     ltr={false}
