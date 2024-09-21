@@ -55,7 +55,7 @@ jobs:
         run: ls ./android/app/build/outputs/bundle/release
       
       - name: Upload artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: calcium-apk
           path: ./android/app/build/outputs/apk/debug/app-debug.apk
