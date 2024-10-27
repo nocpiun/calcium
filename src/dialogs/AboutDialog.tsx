@@ -129,7 +129,7 @@ const AboutDialog: React.FC<AboutDialogProps> = forwardRef<Dialog, AboutDialogPr
                 
                 <ul>
                     <li><AboutItem name="数学显示" content={<a href="https://katex.org" target="_blank" rel="noreferrer" className="katex-logo"><InlineMath>\KaTeX</InlineMath></a>}/></li>
-                    <li><AboutItem name="支持我" content={<a href="https://nin.red/#/donate" target="_blank" rel="noreferrer">打赏</a>}/></li>
+                    <li><AboutItem name="支持我" content={<a href="https://nocp.space/donate" target="_blank" rel="noreferrer">打赏</a>}/></li>
                     <li><AboutItem name="Github Repo" content={<a href="https://github.com/nocpiun/calcium" target="_blank" rel="noreferrer">nocpiun/calcium</a>}/></li>
                     <li><AboutItem name="依赖" content={<button onClick={() => setDependencyListVisible(true)}>查看</button>}/></li>
                     <li><AboutItem name="许可" content={<button onClick={() => setLicenseVisible(true)}>查看</button>}/></li>

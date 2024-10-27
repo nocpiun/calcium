@@ -72,7 +72,7 @@ const Sidebar: React.FC = () => {
                 <div className="links">
                     <span onClick={() => window.open("https://github.com/nocpiun/calcium/issues/new/choose")}>反馈问题</span>
                     <span onClick={() => new Emitter().emit("open-about-dialog")}>关于</span>
-                    <span onClick={() => window.open("https://nin.red/#/donate")}>支持我</span>
+                    <span onClick={() => window.open("https://nocp.space/donate")}>支持我</span>
                 </div>
 
                 <div className="sidebar-backdrop" onClick={() => handleCloseSidebar()}/>

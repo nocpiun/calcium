@@ -35,7 +35,7 @@ const StatusBar: React.FC = () => {
                 <div className="split">
                     <BarItem title="Repo" to="https://github.com/nocpiun/calcium" className="primary" tooltip="查看GitHub源代码仓库"/>
                     <BarItem title="反馈" to="https://github.com/nocpiun/calcium/issues/new/choose" tooltip="Issues"/>
-                    <BarItem title="支持我" to="https://nin.red/#/donate"/>
+                    <BarItem title="支持我" to="https://nocp.space/donate"/>
                     {
                         mode === Mode.GRAPHING &&
                         <BarItem title={"FPS: "+ fps.toFixed(0)} disabled/>
