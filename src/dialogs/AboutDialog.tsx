@@ -123,7 +123,7 @@ const AboutDialog: React.FC<AboutDialogProps> = forwardRef<Dialog, AboutDialogPr
                         <ReactSVG src="/icon-pure.svg"/>
 
                         <p className="version">{"v"+ version}</p>
-                        <p className="copy">By Nocpiun Org / Copyright (c) 2024 NriotHrreion</p>
+                        <p className="copy">By Nocpiun Org / Copyright (c) {new Date().getFullYear()} NriotHrreion</p>
                     </div>
                 </div>
                 
