@@ -44,16 +44,20 @@ const dependencies: [string, string][] = [
     ["react-activation@0.12.4", "CJY0208/react-activation"],
     ["react-tooltip@5.21.3", "https://react-tooltip.com"],
     ["@nocp/toggle@0.5.0", "nocpiun/toggle"],
-    ["react-markdown@8.0.7", "https://remarkjs.github.io/react-markdown/"],
+    ["react-markdown@8.0.7", "https://remarkjs.github.io/react-markdown"],
     ["react-app-polyfill@3.0.0", "https://create-react-app.dev"],
+    ["react-dev-utils@12.0.1", "https://create-react-app.dev"],
     ["eslint@8.3.0", "https://eslint.org"],
     ["downloadjs@1.4.7", "rndme/download"],
     ["use-context-menu@0.4.12", "https://use-context-menu.vercel.app"],
     ["tone@14.7.77", "https://tonejs.github.io"],
+    ["flag-icons@7.1.0", "https://flagicons.lipis.dev"],
+
     ["relationship.js@1.2.3", "mumuy/relationship"],
     ["lambert-w-function@3.0.0", "howion/lambert-w-function"],
     ["chemical-elements@2.0.3", "cheminfo/mass-tools"],
-    ["flag-icons@7.1.0", "https://flagicons.lipis.dev"],
+    ["bignumber.js@9.1.2", "https://mikemcl.github.io/bignumber.js"],
+
     ["webpack@5.64.4", "https://webpack.js.org"],
     ["css-loader@6.5.1", "webpack-contrib/css-loader"],
     ["style-loader@3.3.1", "webpack-contrib/style-loader"],
@@ -74,6 +78,7 @@ const dependencies: [string, string][] = [
     ["jest@27.4.3", "https://jestjs.io"],
     ["jest-resolve@27.4.2", "https://jestjs.io"],
     ["jest-watch-typeahead@1.0.0", "jest-community/jest-watch-typeahead"],
+    ["browserslist@4.18.1", "https://browsersl.ist"],
 ];
 
 interface AboutDialogProps extends PropsWithRef<Dialog> {
