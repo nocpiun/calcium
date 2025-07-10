@@ -5,7 +5,7 @@
 # Calcium Calculator
 
 [![Author](https://img.shields.io/badge/Author-NriotHrreion-red.svg "Author")](https://github.com/NriotHrreion)
-[![LICENSE](https://img.shields.io/badge/License-MIT-green.svg "LICENSE")](./LICENSE)
+[![LICENSE](https://img.shields.io/badge/License-MPL_2.0-green.svg "LICENSE")](./LICENSE)
 [![Stars](https://img.shields.io/github/stars/nocpiun/calcium.svg?label=Stars&style=flat)](https://github.com/nocpiun/calcium/stargazers)
 [![Github Workflow Status](https://img.shields.io/github/actions/workflow/status/nocpiun/calcium/test.yml)](https://github.com/nocpiun/calcium/actions/workflows/test.yml)
 [![Netlify Status](https://api.netlify.com/api/v1/badges/41b2bd01-9404-4d8b-99c4-7dea623f720a/deploy-status)](https://app.netlify.com/sites/courageous-bublanina-6857c1/deploys)
@@ -118,4 +118,4 @@ An explanation of the `package.json` scripts.
 
 ## LICENSE
 
-[MIT](./LICENSE)
+[MPL-2.0](./LICENSE)
