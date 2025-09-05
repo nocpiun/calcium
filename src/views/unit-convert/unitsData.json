@@ -395,6 +395,61 @@
         ]
     },
     {
+        "id": "data",
+        "name": "数据",
+        "isDefault": false,
+        "units": [
+            {
+                "name": "bit",
+                "displayName": "比特",
+                "transform": 0.125,
+                "isBase": false
+            },
+            {
+                "name": "b",
+                "displayName": "字节",
+                "transform": 1,
+                "isBase": true
+            },
+            {
+                "name": "kb",
+                "displayName": "千字节",
+                "transform": 1024,
+                "isBase": false
+            },
+            {
+                "name": "Mb",
+                "displayName": "兆字节",
+                "transform": 1048576,
+                "isBase": false
+            },
+            {
+                "name": "Gb",
+                "displayName": "千兆字节",
+                "transform": 1073741824,
+                "isBase": false
+            },
+            {
+                "name": "Tb",
+                "displayName": "太字节",
+                "transform": 1099511627776,
+                "isBase": false
+            },
+            {
+                "name": "Pb",
+                "displayName": "拍字节",
+                "transform": 1125900000000000,
+                "isBase": false
+            },
+            {
+                "name": "Eb",
+                "displayName": "艾字节",
+                "transform": 1152900000000000000,
+                "isBase": false
+            }
+        ]
+    },
+    {
         "id": "temperature",
         "name": "温度",
         "isDefault": false,
@@ -439,10 +494,16 @@
         ]
     },
     {
-        "id": "thermal",
-        "name": "热能",
+        "id": "energy",
+        "name": "能量",
         "isDefault": false,
         "units": [
+            {
+                "name": "erg",
+                "displayName": "尔格",
+                "transform": 0.0000001,
+                "isBase": false
+            },
             {
                 "name": "J",
                 "displayName": "焦耳",
@@ -450,9 +511,33 @@
                 "isBase": true
             },
             {
+                "name": "cal",
+                "displayName": "卡路里",
+                "transform": 4.184,
+                "isBase": false
+            },
+            {
                 "name": "kJ",
                 "displayName": "千焦",
                 "transform": 1000,
+                "isBase": false
+            },
+            {
+                "name": "kcal",
+                "displayName": "千卡",
+                "transform": 4184,
+                "isBase": false
+            },
+            {
+                "name": "ps·h",
+                "displayName": "米制马力时",
+                "transform": 2647795.5,
+                "isBase": false
+            },
+            {
+                "name": "hp·h",
+                "displayName": "英制马力时",
+                "transform": 2684519.54,
                 "isBase": false
             },
             {
@@ -519,10 +604,187 @@
         ]
     },
     {
+        "id": "electric_current",
+        "name": "电流",
+        "isDefault": false,
+        "units": [
+            {
+                "name": "nA",
+                "displayName": "纳安",
+                "transform": 0.000000001,
+                "isBase": false
+            },
+            {
+                "name": "μA",
+                "displayName": "微安",
+                "transform": 0.000001,
+                "isBase": false
+            },
+            {
+                "name": "mA",
+                "displayName": "毫安",
+                "transform": 0.001,
+                "isBase": false
+            },
+            {
+                "name": "A",
+                "displayName": "安培",
+                "transform": 1,
+                "isBase": true
+            },
+            {
+                "name": "abA",
+                "displayName": "绝对安培",
+                "transform": 10,
+                "isBase": false
+            },
+            {
+                "name": "kA",
+                "displayName": "千安",
+                "transform": 1000,
+                "isBase": false
+            },
+            {
+                "name": "MA",
+                "displayName": "兆安",
+                "transform": 1000000,
+                "isBase": false
+            }
+        ]
+    },
+    {
+        "id": "voltage",
+        "name": "电压",
+        "isDefault": false,
+        "units": [
+            {
+                "name": "abV",
+                "displayName": "绝对伏特",
+                "transform": 0.00000001,
+                "isBase": false
+            },
+            {
+                "name": "nV",
+                "displayName": "纳伏",
+                "transform": 0.000000001,
+                "isBase": false
+            },
+            {
+                "name": "μV",
+                "displayName": "微伏",
+                "transform": 0.000001,
+                "isBase": false
+            },
+            {
+                "name": "mV",
+                "displayName": "毫伏",
+                "transform": 0.001,
+                "isBase": false
+            },
+            {
+                "name": "V",
+                "displayName": "伏特",
+                "transform": 1,
+                "isBase": true
+            },
+            {
+                "name": "stV",
+                "displayName": "静伏特",
+                "transform": 299.792458,
+                "isBase": false
+            },
+            {
+                "name": "kV",
+                "displayName": "千伏",
+                "transform": 1000,
+                "isBase": false
+            },
+            {
+                "name": "MV",
+                "displayName": "兆伏",
+                "transform": 1000000,
+                "isBase": false
+            }
+        ]
+    },
+    {
+        "id": "resistance",
+        "name": "电阻",
+        "isDefault": false,
+        "units": [
+            {
+                "name": "abΩ",
+                "displayName": "绝对欧姆",
+                "transform": 0.000000001,
+                "isBase": false
+            },
+            {
+                "name": "nΩ",
+                "displayName": "纳欧",
+                "transform": 0.000000001,
+                "isBase": false
+            },
+            {
+                "name": "μΩ",
+                "displayName": "微欧",
+                "transform": 0.000001,
+                "isBase": false
+            },
+            {
+                "name": "mΩ",
+                "displayName": "毫欧",
+                "transform": 0.001,
+                "isBase": false
+            },
+            {
+                "name": "Ω",
+                "displayName": "欧姆",
+                "transform": 1,
+                "isBase": true
+            },
+            {
+                "name": "kΩ",
+                "displayName": "千欧",
+                "transform": 1000,
+                "isBase": false
+            },
+            {
+                "name": "MΩ",
+                "displayName": "兆欧",
+                "transform": 1000000,
+                "isBase": false
+            },
+            {
+                "name": "stΩ",
+                "displayName": "静欧姆",
+                "transform": 898755178740,
+                "isBase": false
+            }
+        ]
+    },
+    {
         "id": "power",
         "name": "功率",
         "isDefault": false,
         "units": [
+            {
+                "name": "nW",
+                "displayName": "纳瓦",
+                "transform": 0.000000001,
+                "isBase": false
+            },
+            {
+                "name": "μW",
+                "displayName": "微瓦",
+                "transform": 0.000001,
+                "isBase": false
+            },
+            {
+                "name": "mW",
+                "displayName": "毫瓦",
+                "transform": 0.001,
+                "isBase": false
+            },
             {
                 "name": "W",
                 "displayName": "瓦特",
@@ -530,9 +792,33 @@
                 "isBase": true
             },
             {
+                "name": "ps",
+                "displayName": "米制马力",
+                "transform": 735.5,
+                "isBase": false
+            },
+            {
+                "name": "hp",
+                "displayName": "英制马力",
+                "transform": 745.7,
+                "isBase": false
+            },
+            {
                 "name": "kW",
                 "displayName": "千瓦",
                 "transform": 1000,
+                "isBase": false
+            },
+            {
+                "name": "kcal/s",
+                "displayName": "千卡每秒",
+                "transform": 4184.1,
+                "isBase": false
+            },
+            {
+                "name": "MW",
+                "displayName": "兆瓦",
+                "transform": 1000000,
                 "isBase": false
             }
         ]
@@ -563,56 +849,44 @@
         ]
     },
     {
-        "id": "data",
-        "name": "数据",
+        "id": "illuminance",
+        "name": "光照度",
         "isDefault": false,
         "units": [
             {
-                "name": "bit",
-                "displayName": "比特",
-                "transform": 0.125,
+                "name": "μlx",
+                "displayName": "微勒",
+                "transform": 0.000001,
                 "isBase": false
             },
             {
-                "name": "b",
-                "displayName": "字节",
+                "name": "mlx",
+                "displayName": "毫勒",
+                "transform": 0.001,
+                "isBase": false
+            },
+            {
+                "name": "lx",
+                "displayName": "勒克斯",
                 "transform": 1,
                 "isBase": true
             },
             {
-                "name": "kb",
-                "displayName": "千字节",
-                "transform": 1024,
+                "name": "fc",
+                "displayName": "英尺烛光",
+                "transform": 10.76,
                 "isBase": false
             },
             {
-                "name": "mb",
-                "displayName": "兆字节",
-                "transform": 1048576,
+                "name": "klx",
+                "displayName": "千勒",
+                "transform": 1000,
                 "isBase": false
             },
             {
-                "name": "gb",
-                "displayName": "千兆字节",
-                "transform": 1073741824,
-                "isBase": false
-            },
-            {
-                "name": "tb",
-                "displayName": "太字节",
-                "transform": 1099511627776,
-                "isBase": false
-            },
-            {
-                "name": "pb",
-                "displayName": "拍字节",
-                "transform": 1125900000000000,
-                "isBase": false
-            },
-            {
-                "name": "eb",
-                "displayName": "艾字节",
-                "transform": 1152900000000000000,
+                "name": "ph",
+                "displayName": "辐透",
+                "transform": 10000,
                 "isBase": false
             }
         ]
