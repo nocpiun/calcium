@@ -23,9 +23,27 @@
                 "isBase": false
             },
             {
+                "name": "hao",
+                "displayName": "毫",
+                "transform": 0.0000333,
+                "isBase": false
+            },
+            {
+                "name": "li",
+                "displayName": "厘",
+                "transform": 0.000333,
+                "isBase": false
+            },
+            {
                 "name": "mm",
                 "displayName": "毫米",
                 "transform": 0.001,
+                "isBase": false
+            },
+            {
+                "name": "fen",
+                "displayName": "分",
+                "transform": 0.00333,
                 "isBase": false
             },
             {
@@ -41,6 +59,12 @@
                 "isBase": false
             },
             {
+                "name": "cun",
+                "displayName": "寸",
+                "transform": 0.0333,
+                "isBase": false
+            },
+            {
                 "name": "dm",
                 "displayName": "分米",
                 "transform": 0.1,
@@ -53,10 +77,22 @@
                 "isBase": false
             },
             {
+                "name": "chi",
+                "displayName": "尺",
+                "transform": 0.333,
+                "isBase": false
+            },
+            {
                 "name": "m",
                 "displayName": "米",
                 "transform": 1,
                 "isBase": true
+            },
+            {
+                "name": "zhang",
+                "displayName": "丈",
+                "transform": 3.33,
+                "isBase": false
             },
             {
                 "name": "li",
@@ -254,15 +290,33 @@
                 "isBase": true
             },
             {
+                "name": "fen",
+                "displayName": "分",
+                "transform": 66.67,
+                "isBase": false
+            },
+            {
                 "name": "are",
                 "displayName": "公亩",
                 "transform": 100,
                 "isBase": false
             },
             {
+                "name": "mu",
+                "displayName": "亩",
+                "transform": 666.67,
+                "isBase": false
+            },
+            {
                 "name": "ha",
                 "displayName": "公顷",
                 "transform": 10000,
+                "isBase": false
+            },
+            {
+                "name": "qing",
+                "displayName": "顷",
+                "transform": 66666.67,
                 "isBase": false
             },
             {
