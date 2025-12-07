@@ -107,6 +107,12 @@
                 "isBase": false
             },
             {
+                "name": "nmi",
+                "displayName": "海里",
+                "transform": 1852,
+                "isBase": false
+            },
+            {
                 "name": "mi",
                 "displayName": "英里",
                 "transform": 1609.26939,
